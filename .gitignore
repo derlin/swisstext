@@ -1,0 +1,10 @@
+.vscode
+.idea
+*.iml
+
+__pycache__
+*.pyc
+
+venv
+virtualenv
+mongodir

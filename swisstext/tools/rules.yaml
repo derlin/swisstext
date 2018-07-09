@@ -1,0 +1,84 @@
+- min_letters:
+  descr: not enough letters
+  find:
+    pattern: '[^\W\d]'
+    count:
+      min: 30
+
+- max_length:
+  descr: too long
+  length:
+    max: 1000
+
+- ascii_letters:
+  descr: not enough ascii letter
+  find:
+    pattern: '[a-zA-Z]'
+    ratio:
+      min: 1.5
+
+- min_words:
+  descr: not enough words
+  find:
+    pattern: '\S+'
+    count:
+      min: 5
+
+- letters_proportional:
+  descr: not enough letters proportion
+  find:
+    pattern: '[\W|\d]'
+    ratio:
+      max: 1.4
+
+- start:
+  descr: start character
+  find:
+    pattern: '^[\W|\d]'
+    count:
+      max: 0
+
+- has_tabs:
+  descr: tabular data
+  find:
+    pattern: \t|\s{4,}
+    count:
+      max: 0
+
+- bad_chars:
+  descr: strange symbols
+  find:
+    pattern: '[|\[\]]|(>>)|(<<)|…|(---)|©|°|§|·|( > )|{|}'
+    count:
+      max: 0
+
+- spelled_words:
+  descr: W O R D
+  find:
+    pattern: ' ([^\W\d] ){3,}'
+    count:
+      max: 0
+
+- many_commas:
+  descr: too many commas
+  find:
+    pattern: ','
+    count:
+      max: 10
+
+- many_dots:
+  descr: too many dots
+  find:
+    pattern: '\.'
+    count:
+      max: 5
+
+- ellipsis:
+  descr: ellispsis on short sentences.
+  if:
+    length:
+      max: 30
+  find:
+    pattern: '(\.\s?){3}$'
+    count:
+      max: 0
