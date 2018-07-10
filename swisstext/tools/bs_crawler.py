@@ -4,11 +4,11 @@ import requests
 from bs4 import BeautifulSoup
 
 from swisstext.interfaces import ICrawler
+from swisstext.common.link_utils import filter_links
 import logging
 
 # suppress warning for invalid SSL certificates
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 # define a user-agent other than "python"
 DEFAULT_HEADERS = {
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class BsCrawler(ICrawler):
-    
+
     def crawl(self, url: str) -> ICrawler.CrawlResults:
         soup = self._download(url)
         return ICrawler.CrawlResults(text=self._extract_text(soup), links=self._extract_links(url, soup))
@@ -56,8 +56,5 @@ class BsCrawler(ICrawler):
         return "\n".join((chunk.replace(u'\u200B', '') for chunk in chunks if chunk))
 
     def _extract_links(self, url, soup):
-        links = [a.get('href') for a in soup.find_all('a', href=True)]
-        # resolve relative links and drop links to anchors
-        absolute_links = [urljoin(url, link) for link in links if not link.startswith("#")]
-        # keep only absolute links
-        return [l for l in absolute_links if l.startswith("http")]
+        links = (a.get('href') for a in soup.find_all('a', href=True))
+        return [l for l in filter_links(url, links)]

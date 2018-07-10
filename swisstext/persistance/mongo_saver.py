@@ -1,5 +1,3 @@
-from typing import List
-
 from swisstext.interfaces import IPageSaver
 from swisstext.page import Page, PageScore
 from mongoengine import *
@@ -14,37 +12,49 @@ class MongoSaver(IPageSaver):
     def __init__(self):
         connect('st1')
 
-    def get_page(self, url: str):
+    def get_page(self, url: str, **kwargs):
         mu: MongoURL = MongoURL.objects.with_id(url)
         score = PageScore()
         if mu:
             score.count = mu.count
             score.delta_count = mu.delta
             score.delta_date = mu.delta_date
-        return Page(url, mu)
+        return Page(url, score, **kwargs)
 
     def sentence_exists(self, sentence: str):
         return MongoSentence.exists(sentence)
 
-    def save_page(self, page: Page) -> List[str]:
+    def save_page(self, page: Page):
         # save sentences first
-        new_sentences = []
-        for (sentence, proba) in page.sg:
-            if not self.sentence_exists(sentence):
-                MongoSentence.create(sentence, page.url, proba)
-                new_sentences.append(sentence)
+        for sentence in page.new_sg:
+            MongoSentence.create(sentence.text, page.url, sentence.proba)
 
         # save or update url
-        new_count = len(new_sentences)
+        new_count = len(page.new_sg)
         if not MongoURL.exists(page.url) and new_count == 0:
-            logger.debug("skipped '%s': no SG found.")
+            logger.debug("skipped '%s' (last crawl=%s): no new SG found." % (page, page.score.delta_date))
         else:
-            MongoURL.create_or_update(page.url, new_count)
-            logger.debug("Saved [cnt=%-3d] %s" % (new_count, page.url))
-        return new_sentences
+            MongoURL.create_or_update(page.url, new_count, source=page.source)
+            logger.debug("saved %s (new_count=%d)" % (page, new_count))
+
+    def is_url_blacklisted(self, url: str):
+        return MongoBlacklist.exists(url)
+
+    def blacklist_url(self, url: str):
+        MongoBlacklist(url=url).save()
 
 
 # ----------------- URL
+
+class MongoBlacklist(Document):
+    url = StringField(primary_key=True)
+    date_added = DateTimeField(default=datetime.utcnow())
+    meta = {'collection': 'blacklist'}
+
+    @staticmethod
+    def exists(url) -> bool:
+        return MongoBlacklist.objects(url=url).count() == 1
+
 
 class MongoCrawlMeta(EmbeddedDocument):
     date = DateTimeField(default=datetime.utcnow())
@@ -74,7 +84,7 @@ class MongoURL(Document):
             mu = MongoURL.objects.with_id(url)
         else:
             logging.debug("Creating new url '%s'" % url)
-            mu = MongoURL(id=url)
+            mu = MongoURL(id=url, source=source)
             mu.count = count
 
         meta = MongoCrawlMeta(count=count)
@@ -83,6 +93,7 @@ class MongoURL(Document):
         mu.delta_date = meta.date
 
         mu.save()
+        return mu
 
 
 # ----------- Sentence

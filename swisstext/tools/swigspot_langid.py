@@ -20,7 +20,7 @@ class SwigspotLangid(ISgDetector):
             self.pipe = pickle.load(f)
 
     def predict(self, sentences: List[str]) -> List[float]:
-        san = [self.sanitize(s) for s in sentences]
+        san = (self.sanitize(s) for s in sentences)
         if san:
             return [proba[4] for proba in self.pipe.predict_proba(san)]
         else:

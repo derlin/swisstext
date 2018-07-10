@@ -1,6 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import List
 
+
 class ICrawler(ABC):
     class CrawlError(Exception):
         def __init__(self, message: str):
@@ -53,10 +54,32 @@ class ISeedCreator(ABC):
         pass
 
 
+class IDecider(ABC):
+    @abstractmethod
+    def should_url_be_blacklisted(self, page) -> bool:
+        pass
+
+    @abstractmethod
+    def should_page_be_crawled(self, page) -> bool:
+        pass
+
+    @abstractmethod
+    def should_children_be_crawled(self, page) -> bool:
+        pass
+
+
 class IPageSaver(ABC):
 
     @abstractmethod
-    def sentence_exists(self, sentence: str):
+    def blacklist_url(self, url: str):
+        pass
+
+    @abstractmethod
+    def is_url_blacklisted(self, url: str) -> bool:
+        pass
+
+    @abstractmethod
+    def sentence_exists(self, sentence: str) -> bool:
         pass
 
     @abstractmethod

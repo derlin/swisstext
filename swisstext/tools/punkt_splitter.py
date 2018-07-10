@@ -9,7 +9,7 @@ class PunktSplitter(ISplitter):
         self.tokenizer = PunktSentenceTokenizer()
 
     def split(self, text: str) -> List[str]:
-        paragraphs = [p for p in text.split('\n') if p]
+        paragraphs = (p for p in text.split('\n') if p)
         sentences = []
         for p in paragraphs:
             sentences.extend(self.tokenizer.tokenize(p))
