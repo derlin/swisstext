@@ -1,0 +1,49 @@
+{% extends '_layout.html' %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        function delete_sentence(id) {
+            let $td = $('#' + id);
+            if (!$td.hasClass('deleted')) {
+                $.ajax({url: `/api/sentences/${id}`, method: "DELETE", contentType: 'application/json'})
+                    .done(() => $('#' + id).addClass("deleted"))
+                    .always((msg) => console.log(msg))
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block header_include %}
+    <style type="text/css">
+        .deleted {
+            visibility: hidden;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <p>Hello World</p>
+    <table class="table table-sm">
+        <tr>
+            <td>actions</td>
+            <td>proba</td>
+            <td>text</td>
+        </tr>
+        {% for s in sentences.items %}
+            <tr id="{{ s.id }}">
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="delete_sentence('{{ s.id }}')">
+                        <span class="oi oi-delete" title="icon delete" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
+                <td>{{ s.text }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+    {% from 'includes/_macros.html' import render_navigation %}
+    {{ render_navigation(sentences, 'index') }}
+
+{% endblock %}

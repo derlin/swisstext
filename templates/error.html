@@ -1,0 +1,48 @@
+{% extends '_layout.html' %}
+{% set title = 'Erreur' %}
+
+{% block header_include %}
+    <style type="text/css">
+        .align-center {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        table.table {
+            width: auto;
+            margin: 30px auto;
+        }
+
+        table td + td {
+            padding-left: 1em;
+            font-family: monospace;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="align-center">
+
+        <h1>Erreur {{ status_code }}</h1>
+        <p>Oups, une erreur est survenue.</p>
+
+        <table class="table">
+            <tr>
+                <td>code</td>
+                <td><code>{{ status_code }}</code></td>
+            </tr>
+            <tr>
+                <td>message</td>
+                <td><code>{{ message }}</code></td>
+            </tr>
+            <tr>
+                <td>cause</td>
+                <td><code>{{ cause }}</code></td>
+            </tr>
+        </table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- Image and text -->
+{% from 'includes/_macros.html' import icon %}
+<nav class="navbar navbar-dark bg-primary navbar-expand-lg">
+    <a class="navbar-brand" href="#">
+        <img src="/static/switzerland.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+        SG
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse justify-content-between">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Crawler</a></li>
+            <li class="nav-item"><a class="nav-link" href="/text">Lang ID</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if current_user.is_authenticated %}
+                <li class="nav-item"><span class="nav-link">{{ current_user.name }}</span></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">{{ icon('account-logout') }}</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">{{ icon('account-login') }}</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+</nav>
