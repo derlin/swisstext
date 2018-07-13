@@ -83,9 +83,9 @@ class IPageSaver(ABC):
         pass
 
     @abstractmethod
-    def save_page(self, page) -> List[str]:
+    def save_page(self, page):
         pass
 
     @abstractmethod
-    def get_page(self, url: str):
+    def get_page(self, url: str, **kwargs):
         pass
