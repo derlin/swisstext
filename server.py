@@ -1,5 +1,5 @@
 import click
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, logout_user
 
@@ -33,7 +33,7 @@ def load_user(user_id):
 @login_required
 def logout():
     logout_user()
-    return redirect('/')
+    return redirect(url_for('users.login'))
 
 #  blueprints
 app.register_blueprint(errorhandlers)
@@ -45,8 +45,8 @@ app.register_blueprint(blueprint_sentence_validation, url_prefix='/validate')
 
 @app.route('/')
 @templated('index.html')
+@login_required
 def index():
-    page = int(request.args.get('page', 1))
     return dict()
 
 

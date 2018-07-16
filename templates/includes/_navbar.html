@@ -10,22 +10,25 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="navbar-collapse collapse justify-content-between">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="/">Crawler</a></li>
-            <li class="nav-item"><a class="nav-link" href="/text">Lang ID</a></li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            {% if current_user.is_authenticated %}
+        {% if current_user.is_authenticated %}
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('sentence_validation.validate') }}">
+                    Validate sentences</a></li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><span class="nav-link">{{ current_user.name }}</span></li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">{{ icon('account-logout') }}</a>
                 </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">{{ icon('account-login') }}</a>
-                </li>
-            {% endif %}
-        </ul>
+            </ul>
+
+        {% else %}
+        {#<ul class="navbar-nav mr-auto">#}
+        {#    <li class="nav-item">#}
+        {#        <a class="nav-link" href="/login">{{ icon('account-login') }}</a>#}
+        {#    </li>#}
+        {#</ul>#}
+        {% endif %}
     </div>
 
 </nav>
