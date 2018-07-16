@@ -1,13 +1,15 @@
-from flask import Flask, render_template, request
 import click
-from flask_login import LoginManager
+from flask import Flask, request, redirect
+from flask_bootstrap import Bootstrap
+from flask_login import LoginManager, login_required, logout_user
 
-from blueprints.errorhandlers import errorhandlers
-from blueprints.api import blueprint_api
-from blueprints.users import blueprint_users
-from mongo import MongoSentence, init_db, User
-from utils.utils import templated
 import utils.jinja_utils as junja
+from blueprints.api import blueprint_api
+from blueprints.errorhandlers import errorhandlers
+from blueprints.sentence_validation.sentence_validation import blueprint_sentence_validation
+from blueprints.users import blueprint_users
+from mongo import init_db, User
+from utils.utils import templated
 
 app = Flask(__name__)
 app.config.update(dict(
@@ -18,19 +20,26 @@ app.config.update(dict(
 # flask-login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "users.login"
 
+# bootstrap
+bootstrap = Bootstrap(app)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
 #  blueprints
 app.register_blueprint(errorhandlers)
 app.register_blueprint(blueprint_api, url_prefix='/api')
 app.register_blueprint(blueprint_users)
-
+app.register_blueprint(blueprint_sentence_validation, url_prefix='/validate')
 
 # -- jinja
 
@@ -38,7 +47,7 @@ app.register_blueprint(blueprint_users)
 @templated('index.html')
 def index():
     page = int(request.args.get('page', 1))
-    return dict(sentences=MongoSentence.objects.paginate(page=page, per_page=50))
+    return dict()
 
 
 def init_app():
@@ -56,6 +65,7 @@ def run(debug, host, port):
         app.config['TEMPLATES_AUTO_RELOAD'] = True
 
     init_app()
+    app.url_map.strict_slashes = False
     app.run(host=host, port=port, debug=debug)
 
 

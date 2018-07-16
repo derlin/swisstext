@@ -3,12 +3,6 @@
 {% block body %}
     <h1>Login</h1>
 
-    {% from "includes/_formhelpers.html" import render_field %}
-    <form method="post">
-        {{ form.hidden_tag() }}
-        {{ render_field(form.name, class_="form-control") }}
-        {{ render_field(form.password) }}
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    {% from 'bootstrap/form.html' import render_form %}
+    {{ render_form(form, button_map={'submit': 'primary'}) }}
 {% endblock %}

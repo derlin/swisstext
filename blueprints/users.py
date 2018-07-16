@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for, request
 from flask_login import current_user, login_user
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField
+from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import Length, InputRequired
 
 from mongo import User
@@ -20,6 +20,7 @@ class LoginForm(FlaskForm):
         'password',
         validators=[InputRequired(), Length(min=8, max=20)])
 
+    submit = SubmitField('submit')
 
 class RegisterForm(LoginForm):
     password_bis = PasswordField(

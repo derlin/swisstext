@@ -1,0 +1,80 @@
+{% extends '_layout.html' %}
+{% block header_include %}
+    <style type="text/css">
+        .action-button {
+            background: white;
+            color: #F57A00;
+        }
+        .action-button span:before {
+            content: '\e050'; /* delete icon */
+        }
+        .deleted {
+            background: #efefef;
+            font-style: italic;
+            text-decoration: line-through;
+            color: #666;
+        }
+        .deleted .action-button {
+            color: #5cae5c;
+            border-color: #5cae5c;
+        }
+        .deleted .action-button:hover {
+            background: #5cae5c;
+            color: white;
+        }
+        .deleted .action-button span:before {
+            content: '\e003'; /* action-undo icon */
+        }
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        function delete_sentence(id) {
+            let $tr = $('#' + id);
+            if ($tr.hasClass('deleted')) {
+                $.ajax({url: `/api/sentences/${id}/restore`, method: "GET", contentType: 'application/json'})
+                    .done(() => $tr
+                        .removeClass("deleted")
+                        .find('td:first-child span')
+                        .removeClass('oi-delete').addClass('oi-action-undo')
+                    )
+                    .always((msg) => console.log(msg))
+            } else {
+                $.ajax({url: `/api/sentences/${id}`, method: "DELETE", contentType: 'application/json'})
+                    .done(() => $tr
+                        .addClass("deleted")
+                        .find('td:first-child span')
+                        .removeClass('oi-action-undo').addClass('oi-delete')
+                    )
+                    .always((msg) => console.log(msg))
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <p>Hello World</p>
+    <table class="table table-sm table-hover">
+        <tr>
+            <td>actions</td>
+            <td>proba</td>
+            <td>text</td>
+        </tr>
+        {% for s in sentences %}
+            <tr id="{{ s.id }}">
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm action-button"
+                            onclick="delete_sentence('{{ s.id }}')">
+                        <span class="oi oi-delete" title="icon delete" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
+                <td>{{ s.text }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% from 'bootstrap/form.html' import render_form %}
+    {{ render_form(form, button_map={'submit': 'primary'}) }}
+{% endblock %}

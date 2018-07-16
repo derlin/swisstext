@@ -26,3 +26,18 @@
         {% endfor %}
     </ul>
 {% endmacro %}
+
+{# Render a field using Bootstrap 4 #}
+{% macro render_field(field, class_="form-control" ) %}
+    <div class="form-group">
+        <label for="{{ field.name }}">{{ field.label }} </label>
+        {{ field(class="form-control", **kwargs) }}
+        {% if field.errors %}
+            <small class="invalid-feedback">
+                {% for error in field.errors %}
+                    <span class="help-inline">{{ error }}</span>
+                {% endfor %}
+            </small>
+        {% endif %}
+    </div>
+{% endmacro %}
