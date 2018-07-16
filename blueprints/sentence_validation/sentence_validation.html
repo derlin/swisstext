@@ -1,29 +1,45 @@
 {% extends '_layout.html' %}
 {% block header_include %}
     <style type="text/css">
+        /* delete action button */
         .action-button {
             background: white;
             color: #F57A00;
         }
+
         .action-button span:before {
             content: '\e050'; /* delete icon */
         }
+
+        /* deleted row style */
         .deleted {
             background: #efefef;
             font-style: italic;
             text-decoration: line-through;
             color: #666;
         }
+
         .deleted .action-button {
             color: #5cae5c;
             border-color: #5cae5c;
         }
+
         .deleted .action-button:hover {
             background: #5cae5c;
             color: white;
         }
+
         .deleted .action-button span:before {
             content: '\e003'; /* action-undo icon */
+        }
+
+        /* dropdown menu */
+        .oi-ellipses {
+            transform: rotate(90deg);
+        }
+
+        a.dropdown-toggle {
+            padding: 4px;
         }
     </style>
 {% endblock %}
@@ -57,7 +73,8 @@
     <p>Hello World</p>
     <table class="table table-sm table-hover">
         <tr>
-            <td>actions</td>
+            <td></td>
+            <td></td>
             <td>proba</td>
             <td>text</td>
         </tr>
@@ -68,6 +85,19 @@
                             onclick="delete_sentence('{{ s.id }}')">
                         <span class="oi oi-delete" title="icon delete" aria-hidden="true"></span>
                     </button>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <a class="btn bg-light dropdown-toggle" href="#" role="button" id="dropdownMore"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="oi oi-ellipses"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMore">
+                            <a class="dropdown-item" href="{{ s.url }}" target="_blank">View site</a>
+                            <a class="dropdown-item" href="{{ url_for('.remove_url', url=s.url) }}">
+                                Discard site</a>
+                        </div>
+                    </div>
                 </td>
                 <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
                 <td>{{ s.text }}</td>
