@@ -25,9 +25,9 @@ def index():
 
     if request.method == 'POST' and form.validate():
         ss = MongoSentence.objects(id__in=form.sentences_ids.data.split(","))
-        ss.update(add_to_set__validation=current_user.id)
+        ss.update(add_to_set__validated_by=current_user.id)
 
-    sentences = MongoSentence.objects(validation__nin=[current_user.id], deleted_by__exists=False) \
+    sentences = MongoSentence.objects(validated_by__nin=[current_user.id], deleted_by__exists=False) \
         .order_by('crawl_proba') \
         .limit(_per_page)
     form.sentences_ids.data = ",".join((s.id for s in sentences))

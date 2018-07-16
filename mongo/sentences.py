@@ -16,7 +16,7 @@ class MongoSentence(Document):
     url = db.StringField()
     crawl_date = db.DateTimeField(default=datetime.utcnow())
     crawl_proba = db.FloatField()
-    validation = db.ListField(db.ObjectIdField(), default=[])
+    validated_by = db.ListField(db.ObjectIdField(), default=[])
     deleted_by = db.ObjectIdField()
     meta = {'collection': 'sentences'}
 
