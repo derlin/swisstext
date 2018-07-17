@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class PatternSentenceFilter(ISentenceFilter):
     def __init__(self, rulespath=None):
         if rulespath is None:
-            rulespath = path.join(path.dirname(path.realpath(__file__)), 'rules.yaml')
+            rulespath = path.join(path.dirname(path.realpath(__file__)), 'pattern_sentence_filter.yaml')
 
         self.rules = Rules(yaml.safe_load(open(rulespath)))
 

@@ -1,9 +1,8 @@
 import logging
-from multiprocessing import Lock
 from queue import Queue
 
 from swisstext.interfaces import *
-from swisstext.page import Sentence, Page
+from swisstext.common.data import Sentence, Page
 
 logger = logging.getLogger(__name__)
 
@@ -63,8 +62,11 @@ class PipelineWorker:
                             added_children = 0
                             for l in page.crawl_results.links:
                                 if not p.saver.is_url_blacklisted(l):
-                                    queue.put((p.saver.get_page(l, source=page.url), page_depth + 1))
-                                    added_children += 1
+                                    child_page = p.saver.get_page(l, source=page.url)
+                                    # TODO redondant ?
+                                    if p.decider.should_page_be_crawled(child_page):
+                                        queue.put((child_page, page_depth + 1))
+                                        added_children += 1
                             logger.debug("%s: added %d child URLs" % (page.url, added_children))
 
                 except Exception as e:

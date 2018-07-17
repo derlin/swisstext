@@ -5,7 +5,7 @@ import re
 from os import path
 from typing import List
 
-_model_file = "langid_model.pickle"
+_model_file = "swigspot_langid.pickle"
 _model_version = 1
 _model_version_description = "TfidfVectorizer_ngrams3-5_f6000_logreg"
 _model_labels = ['de', 'fr', 'en', 'it', 'sg']

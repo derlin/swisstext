@@ -25,3 +25,10 @@ class BasicSeedCreator(ISeedCreator):
         vocab = vectorizer.vocabulary_
         count_values = n_grams.toarray().sum(axis=0)
         return sorted([(count_values[i], k) for k, i in vocab.items()], reverse=True)
+
+
+if __name__ == "__main__":
+    sentences = [l.strip()[1:-1] for l in open('/tmp/st1_mongo_3levels_17336_sentences/sentences_only.csv')][1:]
+    sc = BasicSeedCreator()
+    seeds = sc.generate_seeds(sentences, max=100)
+    print("\n".join(seeds))

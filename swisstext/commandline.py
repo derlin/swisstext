@@ -7,8 +7,8 @@ import click
 
 from swisstext.common.page_queue import PageQueue
 from swisstext.interfaces import *
-from swisstext.persistance.console_saver import ConsoleSaver
-from swisstext.persistance.mongo_saver import MongoSaver
+from swisstext.tools.console_saver import ConsoleSaver
+from swisstext.tools.mongo_saver import MongoSaver
 from swisstext.pipeline import Pipeline, PipelineWorker
 from swisstext.tools.basic_decider import BasicDecider
 from swisstext.tools.basic_seed_creator import BasicSeedCreator

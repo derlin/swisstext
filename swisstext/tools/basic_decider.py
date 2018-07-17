@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from swisstext.interfaces import IDecider
-from swisstext.page import Page
+from swisstext.common.data import Page
 
 MIN_RECRAWL_DELTA = timedelta(days=7)
 MIN_RATIO = 0
@@ -20,3 +20,8 @@ class BasicDecider(IDecider):
 
     def should_url_be_blacklisted(self, page: Page) -> bool:
         return page.is_new() and page.sg_count == 0
+
+class OnlyNewDecider(BasicDecider):
+
+    def should_page_be_crawled(self, page: Page) -> bool:
+        return page.is_new()
