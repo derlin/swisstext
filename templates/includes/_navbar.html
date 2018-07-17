@@ -14,6 +14,8 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('sentence_validation.validate') }}">
                     Validate sentences</a></li>
+             <li class="nav-item"><a class="nav-link" href="{{ url_for('labelling.add_labels') }}">
+                    Dialect-tagging</a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><span class="nav-link">{{ current_user.name }}</span></li>
