@@ -20,6 +20,13 @@ class MongoURL(Document):
 
     meta = {'collection': 'urls'}
 
+    @staticmethod
+    def blacklist(url):
+        murl = MongoURL.objects.with_id(url)
+        if murl:
+            MongoBlacklist(url=url, date_added=murl.delta_date).save()
+            murl.delete()
+
 
 class MongoBlacklist(Document):
     url = StringField(primary_key=True)

@@ -2,6 +2,10 @@ from functools import wraps
 import flask
 
 
+def validate_no_csrf(form):
+    return all((form._fields[k].validate(form) for (k,_) in form._unbound_fields))
+
+
 def templated(template=None):
     def decorator(f):
         @wraps(f)

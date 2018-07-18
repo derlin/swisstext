@@ -5,19 +5,26 @@
             margin: 30px auto;
         }
 
-        .inline {
-            display: inline;
-        }
-
         table label {
             display: block;
             width: 100%;
             height: 100%;
+            padding: 0.3rem;
+            margin: 0;
         }
 
-        .clicked {
+        table td.sentence-td {
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        tr:not([data-selected]) {
             text-decoration: line-through;
             color: #777;
+        }
+
+        .hl {
+            background: yellow;
         }
     </style>
 {% endblock %}
@@ -28,8 +35,9 @@
             let dialect_default = '{{ form.dialect.data }}';
 
             $('table [type=checkbox]').on('change', (e) => {
-                $elt = $(e.target || e.sourceElement);
-                $elt.next().val($elt.is(':checked') ? 'None' : dialect_default).trigger('change');
+                $select = $(e.target || e.sourceElement).next();
+                $select.val($select.val() === dialect_default ? '{{ form.dialect.default }}' : dialect_default);
+                $select.trigger('change');
             });
 
             $('table select').on('change', (e) => {
@@ -60,20 +68,26 @@
         {% if has_results %}
 
             {% if sentences %}
+                <h2 class="margins">Results</h2>
+
                 <table class="table table-sm table-hover">
                     {% for s in sentences %}
                         <tr data-selected="default">
                             <td>
                                 <input style="display:none" id="checkbox-{{ s.id }}" type="checkbox" checked="checked">
-                                {# render_field(form.dialect, form_type="inline") #}
-                                <select name="sentence-{{ s.id }}">
+                                <select name="sentence-{{ s.id }}"> <!-- TODO class="form-control-sm" ? -->
                                     {% for (v,d) in form.dialect.choices %}
                                         <option value="{{ v }}"
                                                 {{ 'selected' if v == form.dialect.data else '' }}>{{ d }}</option>
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><label for="checkbox-{{ s.id }}">{{ s.text }}</label></td>
+                            <td class="sentence-td">
+                                <label for="checkbox-{{ s.id }}">
+                                    {{ s.text| replace(form.search.data,
+                                        (('<span class="hl">%s</span>' % form.search.data)|safe)) }}
+                                </label>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

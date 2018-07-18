@@ -26,7 +26,6 @@
                 <span class="oi oi-warning"></span> This action will blacklist the URL, so it will no longer be crawled.
                 Please, go through only if you are sure there will never be Swiss German on this page.
             </p>
-            <a href="{{ url_for('.validate') }}" class="btn btn-secondary">Cancel</a>
             {% from 'bootstrap/form.html' import render_form %}
             {{ render_form(form, extra_classes="inline", button_map={'submit': 'primary'}) }}
         </div>

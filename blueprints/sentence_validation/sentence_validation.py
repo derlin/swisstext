@@ -1,9 +1,10 @@
 from flask import Blueprint, request, redirect, url_for
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, SubmitField
+from wtforms import HiddenField, SubmitField, validators, StringField
 
 from mongo import MongoSentence
+from mongo.sentences import Deleted
 from mongo.urls import MongoURL, MongoBlacklist
 from utils.utils import templated
 from utils import responses, flash
@@ -22,7 +23,8 @@ class ValidationForm(FlaskForm):
 
 
 class RemoveSiteForm(FlaskForm):
-    submit = SubmitField('blacklist URL')
+    cancel = SubmitField('cancel')
+    submit = SubmitField('remove sentences & blacklist URL')
 
 
 @blueprint_sentence_validation.route('', methods=['GET', 'POST'])
@@ -35,8 +37,9 @@ def validate():
         ss = MongoSentence.objects(id__in=form.sentences_ids.data.split(","))
         ss.update(add_to_set__validated_by=current_user.id)
         flash.flash_success('%d sentences validated.' % ss.count())
+        return redirect(url_for('.validate'))  # avoid form resubmission on refresh
 
-    sentences = MongoSentence.objects(validated_by__nin=[current_user.id], deleted_by__exists=False) \
+    sentences = MongoSentence.objects(validated_by__nin=[current_user.id], deleted__exists=False) \
         .order_by('crawl_proba') \
         .limit(_per_page)
     form.sentences_ids.data = ",".join((s.id for s in sentences))
@@ -52,16 +55,17 @@ def remove_url():
     if not url:
         return responses.bad_param("Missing query parameter 'url'")
 
-    sentences = MongoSentence.objects(url=url, deleted_by__exists=False).fields(id=True, text=True, crawl_proba=True)
+    sentences = MongoSentence.objects(url=url, deleted__exists=False).fields(id=True, text=True, crawl_proba=True)
 
     if request.method == 'POST' and form.validate():
-        sentences.update(deleted_by=current_user.id)
-        # TODO blacklist url as well
-        murl = MongoURL.objects.with_id(url)
-        MongoBlacklist(url=url, date_added=murl.delta_date).save()
-        murl.delete()
-        flash.flash_success("URL '%s' has been blacklisted." % unquote(url))
-        return redirect(url_for('.validate'))
+        if form.submit.data:
+            MongoSentence.mark_deleted(sentences)
+            MongoURL.blacklist(url)
+            flash.flash_success("URL '%s' has been blacklisted." % unquote(url))
+            return redirect(url_for('.validate'))
+
+        elif form.cancel.data:
+            return redirect(url_for('.validate'))
 
     return dict(url=url, form=form, sentences=sentences)
 

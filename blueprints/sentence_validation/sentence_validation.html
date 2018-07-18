@@ -2,11 +2,6 @@
 {% block header_include %}
     <style type="text/css">
         /* delete action button */
-        .action-button {
-            background: white;
-            color: #F57A00;
-        }
-
         .action-button span:before {
             content: '\e050'; /* delete icon */
         }
@@ -19,16 +14,7 @@
             color: #666;
         }
 
-        .deleted .action-button {
-            color: #5cae5c;
-            border-color: #5cae5c;
-        }
-
-        .deleted .action-button:hover {
-            background: #5cae5c;
-            color: white;
-        }
-
+        /* undo button */
         .deleted .action-button span:before {
             content: '\e003'; /* action-undo icon */
         }
@@ -52,16 +38,16 @@
                 $.ajax({url: `/api/sentences/${id}/restore`, method: "GET", contentType: 'application/json'})
                     .done(() => $tr
                         .removeClass("deleted")
-                        .find('td:first-child span')
-                        .removeClass('oi-delete').addClass('oi-action-undo')
+                        .find('button')
+                        .removeClass('btn-outline-danger').addClass('btn-outline-success')
                     )
                     .always((msg) => console.log(msg))
             } else {
                 $.ajax({url: `/api/sentences/${id}`, method: "DELETE", contentType: 'application/json'})
                     .done(() => $tr
                         .addClass("deleted")
-                        .find('td:first-child span')
-                        .removeClass('oi-action-undo').addClass('oi-delete')
+                        .find('button')
+                        .removeClass('btn-outline-success').addClass('btn-outline-danger')
                     )
                     .always((msg) => console.log(msg))
             }
@@ -70,7 +56,7 @@
 {% endblock %}
 
 {% block body %}
-    <p>Hello World</p>
+    <p>Validate sentences</p>
     <table class="table table-sm table-hover">
         <tr>
             <td></td>
@@ -81,7 +67,7 @@
         {% for s in sentences %}
             <tr id="{{ s.id }}">
                 <td>
-                    <button type="button" class="btn btn-danger btn-sm action-button"
+                    <button type="button" class="btn btn-outline-success btn-sm action-button"
                             onclick="delete_sentence('{{ s.id }}')">
                         <span class="oi oi-delete" title="icon delete" aria-hidden="true"></span>
                     </button>
@@ -106,5 +92,5 @@
     </table>
 
     {% from 'bootstrap/form.html' import render_form %}
-    {{ render_form(form, button_map={'submit': 'primary'}) }}
+    {{ render_form(form) }}
 {% endblock %}

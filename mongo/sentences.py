@@ -14,6 +14,13 @@ _user_unknown = ObjectId('0' * 24)
 class DialectEntry(EmbeddedDocument):
     user = db.ObjectIdField()
     label = db.StringField()
+    date = db.DateTimeField(default=datetime.utcnow())
+
+
+class Deleted(EmbeddedDocument):
+    by = db.ObjectIdField()
+    comment = db.StringField()
+    date = db.DateTimeField(default=datetime.utcnow())
 
 
 class MongoSentence(Document):
@@ -23,7 +30,7 @@ class MongoSentence(Document):
     crawl_date = db.DateTimeField(default=datetime.utcnow())
     crawl_proba = db.FloatField()
     validated_by = db.ListField(db.ObjectIdField(), default=[])
-    deleted_by = db.ObjectIdField()
+    deleted = db.EmbeddedDocumentField(Deleted)
     current_dialect = db.StringField()
     current_dialect_count = db.IntField()
     current_dialect_confidence = db.FloatField()
@@ -39,15 +46,17 @@ class MongoSentence(Document):
     def get_hash(text) -> str:
         return str(CityHash64(text))
 
-    def mark_deleted(self):
-        self.deleted_by = current_user.id or _user_unknown
-        self.save()
+    @staticmethod
+    def mark_deleted(obj, comment=None):
+        if isinstance(obj, str): obj = MongoSentence.objects.with_id(obj)
+        obj.update(set__deleted=Deleted(by=current_user.id or _user_unknown, comment=comment))
 
-    def unmark_deleted(self):
+    @staticmethod
+    def unmark_deleted(obj):
         # in mongo shell, use $unset:
         # db.sentences.find({_id: xxx}, {$unset: {deleted_by:1}})
-        self.deleted_by = None
-        self.save()
+        if isinstance(obj, str): obj = MongoSentence.objects.with_id(obj)
+        obj.update(unset__deleted=True)
 
     def add_label(self, label):
         if not label or current_user.id in [i.user for i in self.dialects]:
