@@ -1,0 +1,16 @@
+pipeline:
+  crawler: swisstext.tools.bs_crawler.BsCrawler
+  splitter: swisstext.tools.punkt_splitter.PunktSplitter
+  filter: swisstext.tools.pattern_sentence_filter.PatternSentenceFilter
+  detector: swisstext.tools.swigspot_langid.SwigspotLangid
+  seed_creator: swisstext.tools.basic_seed_creator.BasicSeedCreator
+  decider: swisstext.tools.basic_decider.BasicDecider
+  saver: swisstext.tools.console_saver.ConsoleSaver
+
+options:
+  min_proba: 0.85
+  crawl_depth: 2
+  mongo:
+    host: localhot
+    port: 27017
+    db: tmp

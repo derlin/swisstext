@@ -6,48 +6,33 @@ from queue import Queue
 import click
 
 from swisstext.common.page_queue import PageQueue
+from swisstext.config import Config
 from swisstext.interfaces import *
-from swisstext.tools.console_saver import ConsoleSaver
-from swisstext.tools.mongo_saver import MongoSaver
-from swisstext.pipeline import Pipeline, PipelineWorker
-from swisstext.tools.basic_decider import BasicDecider
-from swisstext.tools.basic_seed_creator import BasicSeedCreator
-from swisstext.tools.bs_crawler import BsCrawler
-from swisstext.tools.pattern_sentence_filter import PatternSentenceFilter
-from swisstext.tools.punkt_splitter import PunktSplitter
-from swisstext.tools.swigspot_langid import SwigspotLangid
+from swisstext.pipeline import PipelineWorker
 
 logger = logging.getLogger('swisstext.pipeline')
 
 
 @click.command()
-@click.option('-p', '--proba', type=float, default=0.85, help="Min proba for SG")
-@click.option('-d', '--depth', type=int, default=2, help="crawl depth")
 @click.option('-s', '--source', type=str, default="recrawl")
+@click.option('-c', '--config', type=click.Path(dir_okay=False), default=None)
 @click.argument('urlfile', type=click.File('r'))
-def crawl(proba, depth, source, urlfile):
+def crawl(source, config, urlfile):
+    config = Config(config)
+
     # one thread, 18 urls = ~ 30 seconds
     import time
     start = time.time()
 
-    MAX_DEPTH = 1
-    NUM_WORKERS = 1
-    DB_NAME = "tmp"
+    MAX_DEPTH = config.options.crawl_depth
+    NUM_WORKERS = config.options.num_workers
+    DB_NAME = config.options.mongo['db']
 
     logging.basicConfig(stream=sys.stderr, format="[%(name)-15s %(levelname)-5s] %(message)s")
     logging.getLogger('swisstext').setLevel(level=logging.DEBUG)
     logging.getLogger('swisstext.tools.pattern_sentence_filter').setLevel(level=logging.WARNING)
 
-    pipeline = Pipeline(
-        BsCrawler(),
-        PunktSplitter(),
-        PatternSentenceFilter(),
-        SwigspotLangid(),
-        BasicSeedCreator(),
-        BasicDecider(),
-        ConsoleSaver(),  # MongoSaver(db_name=DB_NAME),
-        min_proba=proba
-    )
+    pipeline = config.create_pipeline()
 
     queue: Queue = PageQueue()
 
@@ -56,17 +41,24 @@ def crawl(proba, depth, source, urlfile):
             queue.put((pipeline.saver.get_page(u.strip(), source=source), 1))
 
     new_sentences: List[str] = []
+    args = (queue, pipeline, new_sentences, MAX_DEPTH)
 
     # launch multiple workers
-    threads = []
-    for i in range(NUM_WORKERS):
-        t = threading.Thread(target=PipelineWorker().run, args=(queue, pipeline, new_sentences, MAX_DEPTH))
-        t.start()
-        threads.append(t)
+    if NUM_WORKERS > 1:
+        threads = []
+        for i in range(NUM_WORKERS):
+            t = threading.Thread(target=PipelineWorker().run, args=args)
+            t.start()
+            threads.append(t)
 
-    # block until all tasks are done
-    for t in threads:
-        t.join()
+        # block until all tasks are done
+        for t in threads:
+            t.join()
+
+    else:
+        # only one worker -> don't bother with threads
+        worker = PipelineWorker()
+        worker.run(*args)
 
     logger.info("Found %d new sentences." % len(new_sentences))
 
@@ -82,6 +74,7 @@ def crawl(proba, depth, source, urlfile):
 
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))
+
 
 if __name__ == "__main__":
     crawl()
