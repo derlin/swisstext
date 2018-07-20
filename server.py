@@ -9,8 +9,8 @@ from blueprints.errorhandlers import errorhandlers
 from blueprints.labelling.labelling import blueprint_labelling
 from blueprints.sentence_validation.sentence_validation import blueprint_sentence_validation
 from blueprints.users import blueprint_users
-from mongo import init_db, User
 from utils.utils import templated
+from db import init_db, User
 
 app = Flask(__name__)
 app.config.update(dict(

@@ -1,6 +1,15 @@
 {% extends '_layout.html' %}
+{% set title = 'Validate sentences' %}
 {% block header_include %}
     <style type="text/css">
+        /* remove border on top and bottom of the table*/
+        tr:first-child, tr:first-child td {
+            border-top: none;
+        }
+        tr:last-child, tr:last-child td {
+            border-bottom: none;
+        }
+
         /* delete action button */
         .action-button span:before {
             content: '\e050'; /* delete icon */
@@ -56,14 +65,7 @@
 {% endblock %}
 
 {% block body %}
-    <p>Validate sentences</p>
-    <table class="table table-sm table-hover">
-        <tr>
-            <td></td>
-            <td></td>
-            <td>proba</td>
-            <td>text</td>
-        </tr>
+    <table class="table table-sm table-hover mt-4 mb-4">
         {% for s in sentences %}
             <tr id="{{ s.id }}">
                 <td>
@@ -92,5 +94,5 @@
     </table>
 
     {% from 'bootstrap/form.html' import render_form %}
-    {{ render_form(form) }}
+    {{ render_form(form, button_map={'submit': 'primary'}) }}
 {% endblock %}

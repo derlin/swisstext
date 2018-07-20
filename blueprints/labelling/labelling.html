@@ -1,4 +1,5 @@
 {% extends '_layout.html' %}
+{% set title = 'Dialect labelling' %}
 {% block header_include %}
     <style type="text/css">
         .margins {
@@ -50,7 +51,6 @@
 
 {% block body %}
 
-    <h2>Dialect labelling</h2>
     <form method="post">
 
         {% from 'bootstrap/form.html' import render_form, render_field %}

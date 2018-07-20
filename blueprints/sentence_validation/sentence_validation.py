@@ -59,8 +59,8 @@ def remove_url():
 
     if request.method == 'POST' and form.validate():
         if form.submit.data:
-            MongoSentence.mark_deleted(sentences)
-            MongoURL.blacklist(url)
+            MongoSentence.mark_deleted(sentences, current_user.id)
+            MongoBlacklist.add_url(url)
             flash.flash_success("URL '%s' has been blacklisted." % unquote(url))
             return redirect(url_for('.validate'))
 

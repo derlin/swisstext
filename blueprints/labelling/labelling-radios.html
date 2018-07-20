@@ -1,0 +1,65 @@
+{% extends '_layout.html' %}
+{% set title = 'Dialect labelling' %}
+{% block header_include %}
+    <style type="text/css">
+        .margins {
+            margin: 30px auto;
+        }
+
+        label {
+            margin: 0;
+            padding: .1rem .6rem;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        form .btn {
+            margin: 0 3px;
+            background: white;
+        }
+
+        .card-text {
+            padding: 2rem 1.25rem;
+            min-height: 10rem;
+        }
+
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        $(function () {
+            $('[type=radio]').click(function () {
+                $('form').submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    {% from 'bootstrap/form.html' import render_form, render_field %}
+    <form method="post">
+        <div class="card margins">
+            <div class="card-body">
+                {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}
+                <div class="card-text text-center">{{ sentence.text }}</div>
+            </div>
+            <div class="card-footer">
+                {{ form.csrf_token }}
+                {{ form.sentence_id }}
+                <div>
+                    {% for subfield in form.dialect %}
+                        <div class="btn btn {{ 'btn-outline-info' if subfield.data != '?' else 'btn-outline-danger mr-3' }}">
+                            <span class="d-none">{{ subfield }}</span>
+                            <span>{{ subfield.label }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

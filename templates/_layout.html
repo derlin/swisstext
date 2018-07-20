@@ -23,13 +23,13 @@
 
 {% include 'includes/_navbar.html' %}
 <div class="container">
-    {% include 'includes/_messages.html' %}
     {% if title %}
-        <div class="page-header">
+        <div class="pb-1 mt-2 mb-4 border-bottom">
             {% block before_title %}{% endblock %}
             <h1>{{ title }}</h1>
         </div>
     {% endif %}
+    {% include 'includes/_messages.html' %}
     {% block body %}{% endblock %}
 </div>
 
