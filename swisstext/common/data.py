@@ -18,9 +18,9 @@ class Sentence:
 
 
 class Page:
-    def __init__(self, url, score=None, source=None):
+    def __init__(self, url, score=None, parent_url=None):
         self.url = url
-        self.source = source
+        self.parent_url = parent_url
         self.blacklisted = False
         self.crawl_results = None
         self.new_sg: List[Sentence] = []

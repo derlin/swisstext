@@ -14,10 +14,9 @@ logger = logging.getLogger('swisstext.pipeline')
 
 
 @click.command()
-@click.option('-s', '--source', type=str, default="recrawl")
 @click.option('-c', '--config', type=click.Path(dir_okay=False), default=None)
 @click.argument('urlfile', type=click.File('r'))
-def crawl(source, config, urlfile):
+def crawl(config, urlfile):
     config = Config(config)
 
     # one thread, 18 urls = ~ 30 seconds
@@ -37,7 +36,7 @@ def crawl(source, config, urlfile):
 
     for u in urlfile:
         if u.startswith("http") and not pipeline.saver.is_url_blacklisted(u):
-            queue.put((pipeline.saver.get_page(u.strip(), source=source), 1))
+            queue.put((pipeline.saver.get_page(u.strip()), 1))
 
     new_sentences: List[str] = []
     args = (queue, pipeline, new_sentences, MAX_DEPTH)

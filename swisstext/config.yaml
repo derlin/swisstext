@@ -12,7 +12,7 @@ options:
   crawl_depth: 2
   num_workers: 1
 
-saver_options:
+page_saver_options:
   host: localhost
   port: 27017
   db: tmp

@@ -62,7 +62,7 @@ class PipelineWorker:
                             added_children = 0
                             for l in page.crawl_results.links:
                                 if not p.saver.is_url_blacklisted(l):
-                                    child_page = p.saver.get_page(l, source=page.url)
+                                    child_page = p.saver.get_page(l, parent_url=page.url)
                                     # TODO redondant ?
                                     if p.decider.should_page_be_crawled(child_page):
                                         queue.put((child_page, page_depth + 1))
@@ -75,4 +75,5 @@ class PipelineWorker:
                         logger.exception(e)
             else:
                 logger.debug("Skipped '%s'" % page.url)
-        queue.task_done()
+
+            queue.task_done()
