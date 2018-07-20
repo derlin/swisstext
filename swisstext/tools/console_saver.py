@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class ConsoleSaver(IPageSaver):
 
-    def __init__(self, sentences_file: str = None):
+    def __init__(self, sentences_file: str = None, **kwargs):
         self._blacklist = set()
         self._sentences = set()
         self.sfile = None

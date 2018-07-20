@@ -1,6 +1,8 @@
 from mongoengine import *
 from datetime import datetime
+import logging
 
+logger = logging.getLogger(__name__)
 
 # ----------------- URL
 
@@ -38,10 +40,10 @@ class MongoURL(Document):
     @staticmethod
     def create_or_update(url, count, source=None):
         if MongoURL.exists(url):
-            logging.debug("Updated url '%s'" % url)
+            logger.debug("Updated url '%s'" % url)
             mu = MongoURL.objects.with_id(url)
         else:
-            logging.debug("Creating new url '%s'" % url)
+            logger.debug("Creating new url '%s'" % url)
             mu = MongoURL(id=url, source=source)
             mu.count = count
 

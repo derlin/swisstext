@@ -3,21 +3,28 @@ import sys
 import importlib
 from os import path
 from swisstext.pipeline import Pipeline
+import logging
+
+logger = logging.getLogger(__name__)
+
+# should be the same as the interface name (but camelcase => underscore)
+# and in the order expected by the Pipeline's __init__ method.
+_pipeline_entries = [
+    'crawler',
+    'splitter',
+    'sentence_filter',
+    'sg_detector',
+    'seed_creator',
+    'decider',
+    'page_saver']
 
 
 class Config:
     class Options:
-        def __init__(self,
-                     num_workers=1,
-                     min_proba=0.85,
-                     crawl_depth=2,
-                     mongo=None):
+        def __init__(self, num_workers=1, min_proba=0.85, crawl_depth=2):
             self.num_workers = num_workers
             self.min_proba = min_proba
             self.crawl_depth = crawl_depth
-            self.mongo = dict(host='localhost', port=27017, db='tmp')
-            if mongo:
-                self.mongo.update(mongo)
 
     def __init__(self, config_path=None):
         if config_path is None:
@@ -27,20 +34,32 @@ class Config:
         self.options = Config.Options(**self.conf['options'])
 
     def create_pipeline(self) -> Pipeline:
-        entries = ['crawler', 'splitter', 'filter', 'detector', 'seed_creator', 'decider', 'saver']
         tools = []
 
-        for e in entries:
+        for e in _pipeline_entries:
             if e not in self.conf['pipeline']:
-                print("Error: missing configuration pipeline.%s" % e)
-                sys.exit(1)
+                logger.warning("missing configuration entry 'pipeline.%s'" % e)
+                module_name = "swisstext.interfaces"
+                class_name = "I%s" % self.to_camelcase(e)
+            else:
+                module_name, class_name = self.conf['pipeline'][e].rsplit(".", 1)
+
+            arguments = self.conf.get("%s_options" % e) or {}
 
             try:
-                module_name, class_name = self.conf['pipeline'][e].rsplit(".", 1)
                 ToolClass = getattr(importlib.import_module(module_name), class_name)
-                tools.append(ToolClass())
+                tools.append(ToolClass(**arguments))
             except Exception as err:
-                print("Error instantiating %s: %s" % (e, err))
+                logger.exception("Error instantiating %s (%s.%s(%s))" %
+                                 (e, module_name, class_name, arguments))
                 sys.exit(1)
 
         return Pipeline(*tools, min_proba=self.options.min_proba)
+
+    @staticmethod
+    def to_camelcase(text):
+        """
+        Converts underscore_delimited_text to camelCase.
+        Useful for JSON output
+        """
+        return ''.join(word.title() for word in text.split('_'))

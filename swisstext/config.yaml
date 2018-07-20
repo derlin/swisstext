@@ -1,16 +1,18 @@
 pipeline:
   crawler: swisstext.tools.bs_crawler.BsCrawler
   splitter: swisstext.tools.punkt_splitter.PunktSplitter
-  filter: swisstext.tools.pattern_sentence_filter.PatternSentenceFilter
-  detector: swisstext.tools.swigspot_langid.SwigspotLangid
-  seed_creator: swisstext.tools.basic_seed_creator.BasicSeedCreator
+  sentence_filter: swisstext.tools.pattern_sentence_filter.PatternSentenceFilter
+  sg_detector: swisstext.tools.swigspot_langid.SwigspotLangid
   decider: swisstext.tools.basic_decider.BasicDecider
-  saver: swisstext.tools.console_saver.ConsoleSaver
+  page_saver: swisstext.tools.mongo_saver.MongoSaver #swisstext.tools.console_saver.ConsoleSaver
+  seed_creator: swisstext.tools.basic_seed_creator.BasicSeedCreator
 
 options:
   min_proba: 0.85
   crawl_depth: 2
-  mongo:
-    host: localhot
-    port: 27017
-    db: tmp
+  num_workers: 1
+
+saver_options:
+  host: localhost
+  port: 27017
+  db: tmp

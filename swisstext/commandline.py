@@ -26,7 +26,6 @@ def crawl(source, config, urlfile):
 
     MAX_DEPTH = config.options.crawl_depth
     NUM_WORKERS = config.options.num_workers
-    DB_NAME = config.options.mongo['db']
 
     logging.basicConfig(stream=sys.stderr, format="[%(name)-15s %(levelname)-5s] %(message)s")
     logging.getLogger('swisstext').setLevel(level=logging.DEBUG)

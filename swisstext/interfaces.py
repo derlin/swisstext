@@ -17,21 +17,19 @@ class ICrawler(ABC):
         pass
 
 
-class ISplitter(ABC):
+class ISplitter:
 
-    @abstractmethod
     def split(self, text: str) -> List[str]:
-        pass
+        return text.split("\n")
 
     def split_all(self, texts: List[str]) -> List[str]:
         return [splitted for t in texts for splitted in self.split(t)]
 
 
-class ISentenceFilter(ABC):
+class ISentenceFilter:
 
-    @abstractmethod
     def is_valid(self, sentence):
-        pass
+        return True
 
     def filter(self, sentences: List[str]) -> List[str]:
         return [s for s in sentences if self.is_valid(s)]
@@ -54,21 +52,22 @@ class ISeedCreator(ABC):
         pass
 
 
-class IDecider(ABC):
-    @abstractmethod
+class IDecider:
+
     def should_url_be_blacklisted(self, page) -> bool:
-        pass
+        return page.is_new() and page.sg_count == 0
 
-    @abstractmethod
     def should_page_be_crawled(self, page) -> bool:
-        pass
+        return True
 
-    @abstractmethod
     def should_children_be_crawled(self, page) -> bool:
-        pass
+        return True
 
 
 class IPageSaver(ABC):
+
+    def __init__(self, **kwargs):
+        pass
 
     @abstractmethod
     def blacklist_url(self, url: str):
