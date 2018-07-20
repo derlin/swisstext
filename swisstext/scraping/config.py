@@ -35,6 +35,7 @@ class Config:
 
     def create_pipeline(self) -> Pipeline:
         tools = []
+        base_package = self.conf['pipeline'].get('_base_package', '')
 
         for e in _pipeline_entries:
             if e not in self.conf['pipeline']:
@@ -42,7 +43,10 @@ class Config:
                 module_name = "swisstext.interfaces"
                 class_name = "I%s" % self.to_camelcase(e)
             else:
-                module_name, class_name = self.conf['pipeline'][e].rsplit(".", 1)
+                qualified_name = self.conf['pipeline'][e]
+                if base_package and qualified_name.startswith("."):
+                    qualified_name = base_package + qualified_name
+                module_name, class_name = qualified_name.rsplit(".", 1)
 
             arguments = self.conf.get("%s_options" % e) or {}
 
