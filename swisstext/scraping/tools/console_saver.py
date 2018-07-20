@@ -1,7 +1,7 @@
 from multiprocessing import Lock
 
-from swisstext.interfaces import IPageSaver
-from swisstext.common.data import Page, PageScore
+from swisstext.scraping.interfaces import IPageSaver
+from swisstext.scraping.common.data import Page, PageScore
 import logging
 
 logger = logging.getLogger(__name__)

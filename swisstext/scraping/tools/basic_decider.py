@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from swisstext.interfaces import IDecider
-from swisstext.common.data import Page
+from swisstext.scraping.interfaces import IDecider
+from swisstext.scraping.common.data import Page
 
 MIN_RECRAWL_DELTA = timedelta(days=7)
 MIN_RATIO = 0

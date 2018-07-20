@@ -2,7 +2,7 @@ import yaml
 import sys
 import importlib
 from os import path
-from swisstext.pipeline import Pipeline
+from swisstext.scraping.pipeline import Pipeline
 import logging
 
 logger = logging.getLogger(__name__)

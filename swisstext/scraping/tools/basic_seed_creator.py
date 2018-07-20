@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from swisstext.interfaces import ISeedCreator
+from swisstext.scraping.interfaces import ISeedCreator
 
 import logging
 from sklearn.feature_extraction.text import CountVectorizer

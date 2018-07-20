@@ -1,8 +1,8 @@
 import logging
 from queue import Queue
 
-from swisstext.interfaces import *
-from swisstext.common.data import Sentence, Page
+from swisstext.scraping.interfaces import *
+from swisstext.scraping.common.data import Sentence
 
 logger = logging.getLogger(__name__)
 

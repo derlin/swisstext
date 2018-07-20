@@ -1,4 +1,4 @@
-from swisstext.interfaces import ISgDetector
+from swisstext.scraping.interfaces import ISgDetector
 
 import pickle
 import re

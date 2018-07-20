@@ -3,8 +3,8 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-from swisstext.interfaces import ICrawler
-from swisstext.common.link_utils import filter_links
+from swisstext.scraping.interfaces import ICrawler
+from swisstext.scraping.common.link_utils import filter_links
 import logging
 
 # suppress warning for invalid SSL certificates

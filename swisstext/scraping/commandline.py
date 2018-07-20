@@ -5,10 +5,10 @@ from queue import Queue
 
 import click
 
-from swisstext.common.page_queue import PageQueue
-from swisstext.config import Config
-from swisstext.interfaces import *
-from swisstext.pipeline import PipelineWorker
+from swisstext.scraping.common.page_queue import PageQueue
+from swisstext.scraping.config import Config
+from swisstext.scraping.interfaces import *
+from swisstext.scraping.pipeline import PipelineWorker
 
 logger = logging.getLogger('swisstext.pipeline')
 
@@ -27,8 +27,8 @@ def crawl(config, urlfile):
     NUM_WORKERS = config.options.num_workers
 
     logging.basicConfig(stream=sys.stderr, format="[%(name)-15s %(levelname)-5s] %(message)s")
-    logging.getLogger('swisstext').setLevel(level=logging.DEBUG)
-    logging.getLogger('swisstext.tools.pattern_sentence_filter').setLevel(level=logging.WARNING)
+    logging.getLogger('swisstext.scraping').setLevel(level=logging.DEBUG)
+    logging.getLogger('swisstext.scraping.tools.pattern_sentence_filter').setLevel(level=logging.WARNING)
 
     pipeline = config.create_pipeline()
 

@@ -1,6 +1,6 @@
 from typing import List
 from nltk.tokenize.punkt import PunktSentenceTokenizer
-from swisstext.interfaces import ISplitter
+from swisstext.scraping.interfaces import ISplitter
 
 
 class PunktSplitter(ISplitter):

@@ -3,7 +3,7 @@ import yaml
 import logging
 from os import path
 
-from swisstext.interfaces import ISentenceFilter
+from swisstext.scraping.interfaces import ISentenceFilter
 
 logger = logging.getLogger(__name__)
 
