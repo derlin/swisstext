@@ -7,6 +7,7 @@ class SourceType:
     UNKNOWN = "unknown"
     USER = "user"
     AUTO = "auto"
+    SEED = "seed"
 
 
 class Source(EmbeddedDocument):

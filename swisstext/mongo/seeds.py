@@ -9,3 +9,14 @@ class MongoSeed(Document):
     search_history = EmbeddedDocumentListField(CrawlMeta, default=[])
 
     meta = {'collection': 'seeds'}
+
+    @staticmethod
+    def get(seed):
+        return MongoSeed.objects.with_id(seed)
+
+    @staticmethod
+    def create(seed):
+        return MongoSeed(id=seed)
+
+    def add_search_history(self, new_links_count):
+        self.search_history.append(CrawlMeta(count=new_links_count))

@@ -1,0 +1,17 @@
+options:
+  max_results: 10
+  force_x_new: 0
+
+search_engine:
+  _base_package: swisstext.searching.tools
+
+  searcher: .start_page.StartPageGeneratorFactory
+  saver: .console_saver.ConsoleSaver #.mongo_saver.MongoSaver
+
+searcher_options:
+  apikey: TODO
+
+saver_options:
+  host: localhost
+  port: 27017
+  db: tmp
