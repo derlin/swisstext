@@ -9,7 +9,7 @@ search_engine:
   saver: .console_saver.ConsoleSaver #.mongo_saver.MongoSaver
 
 searcher_options:
-  apikey: TODO
+  apikey: AIzaSyDMk87ekl3J8frp_ykFeGVDxP_i_grMTYo
 
 saver_options:
   host: localhost

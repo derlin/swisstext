@@ -33,7 +33,7 @@ class BaseConfig(ABC):
     def tool_entry_name(self) -> str:
         pass
 
-    def get_tools(self) -> List[object]:
+    def instantiate_tools(self) -> List[object]:
         tools = []
         root = self.conf[self.tool_entry_name]
         base_package = root.get('_base_package', '')

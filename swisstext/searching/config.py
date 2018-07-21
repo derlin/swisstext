@@ -44,4 +44,4 @@ class Config(BaseConfig):
         return 'search_engine'
 
     def create_search_engine(self) -> SearchEngine:
-        return SearchEngine(*self.get_tools())
+        return SearchEngine(*self.instantiate_tools())
