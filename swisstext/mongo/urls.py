@@ -44,7 +44,7 @@ class MongoURL(Document):
 
 class MongoBlacklist(Document):
     url = StringField(primary_key=True)
-    date_added = DateTimeField(default=datetime.utcnow())
+    date_added = DateTimeField(default=lambda: datetime.utcnow())
     source = EmbeddedDocumentField(Source, default=Source())
 
     meta = {'collection': 'blacklist'}

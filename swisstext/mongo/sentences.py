@@ -10,7 +10,7 @@ from .users import MongoUser
 class DialectEntry(EmbeddedDocument):
     user = StringField()
     label = StringField()
-    date = DateTimeField(default=datetime.utcnow())
+    date = DateTimeField(default=lambda: datetime.utcnow())
 
 
 class DialectInfo(EmbeddedDocument):
@@ -51,7 +51,7 @@ class MongoSentence(Document):
     text = StringField()
     url = StringField()
     # -- crawl info
-    crawl_date = DateTimeField(default=datetime.utcnow())
+    crawl_date = DateTimeField(default=lambda: datetime.utcnow())
     crawl_proba = FloatField()
     # -- validation info
     validated_by = ListField(MongoUser._id_type(), default=[])

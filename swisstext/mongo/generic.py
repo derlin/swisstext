@@ -15,11 +15,11 @@ class Source(EmbeddedDocument):
     extra = StringField()
 
 class CrawlMeta(EmbeddedDocument):
-    date = DateTimeField(default=datetime.utcnow())
+    date = DateTimeField(default=lambda: datetime.utcnow())
     count = IntField(default=0)
 
 
 class Deleted(EmbeddedDocument):
     by = MongoUser._id_type()
     comment = StringField()
-    date = DateTimeField(default=datetime.utcnow())
+    date = DateTimeField(default=lambda: datetime.utcnow())

@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class MongoBlacklist(Document):
     url = StringField(primary_key=True)
-    date_added = DateTimeField(default=datetime.utcnow())
+    date_added = DateTimeField(default=lambda: datetime.utcnow())
     meta = {'collection': 'blacklist'}
 
     @staticmethod
@@ -17,7 +17,7 @@ class MongoBlacklist(Document):
 
 
 class MongoCrawlMeta(EmbeddedDocument):
-    date = DateTimeField(default=datetime.utcnow())
+    date = DateTimeField(default=lambda: datetime.utcnow())
     count = IntField(default=0)
 
 
@@ -65,7 +65,7 @@ class MongoSentence(Document):
     id = StringField(primary_key=True)
     text = StringField()
     url = StringField()
-    crawl_date = DateTimeField(default=datetime.utcnow())
+    crawl_date = DateTimeField(default=lambda: datetime.utcnow())
     crawl_proba = FloatField()
 
     meta = {'collection': 'sentences'}

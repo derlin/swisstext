@@ -11,12 +11,12 @@ class MongoSaver(ISaver):
 
     def save_seed(self, seed: Seed):
         for url in seed.new_links:
+            # TODO ensure it is new ?
             MongoURL.create(url, Source(SourceType.SEED, seed.query)).save()
 
         new_links_count = len(seed.new_links)
         s = MongoSeed.get(seed.query) or MongoSeed.create(seed.query)
         s.add_search_history(new_links_count)
-        s.count += new_links_count
         s.save()
 
     def link_exists(self, url: str) -> bool:
