@@ -1,6 +1,6 @@
 from mongoengine import connect
 
-from swisstext.mongo import MongoSeed, MongoURL, SourceType, Source
+from swisstext.mongo.models import MongoSeed, MongoURL, SourceType, Source
 from swisstext.searching.data import Seed
 from swisstext.searching.interfaces import ISaver
 

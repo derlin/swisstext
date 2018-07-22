@@ -1,6 +1,6 @@
 from swisstext.scraping.interfaces import IPageSaver
 from swisstext.scraping.common.data import Page, PageScore
-from swisstext.mongo import *
+from swisstext.mongo.models import *
 from mongoengine import connect
 import logging
 
@@ -48,4 +48,5 @@ class MongoSaver(IPageSaver):
         return MongoBlacklist.exists(url)
 
     def blacklist_url(self, url: str):
+        MongoURL.try_delete(url) # remove URL if exists
         MongoBlacklist.add_url(url, source=Source(SourceType.AUTO))

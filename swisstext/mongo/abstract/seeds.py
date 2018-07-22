@@ -1,10 +1,10 @@
 from datetime import datetime
 
 from mongoengine import *
-from .generic import CrawlMeta, Source, SourceType
+from .generic import CrawlMeta, Source, Deleted
 
 
-class MongoSeed(Document):
+class AbstractMongoSeed(Document):
     # base info
     id = StringField(primary_key=True)
     source = EmbeddedDocumentField(Source, default=Source())
@@ -13,20 +13,22 @@ class MongoSeed(Document):
     count = IntField(default=0)
     delta_date = DateTimeField()
     search_history = EmbeddedDocumentListField(CrawlMeta, default=[])
+    # deletion
+    deleted = EmbeddedDocumentField(Deleted)
 
-    meta = {'collection': 'seeds'}
+    meta = {'collection': 'seeds', 'abstract': True}
 
-    @staticmethod
-    def get(seed):
-        return MongoSeed.objects.with_id(seed)
+    @classmethod
+    def get(cls, seed):
+        return cls.objects.with_id(seed)
 
-    @staticmethod
-    def create(seed, source=Source()):
-        return MongoSeed(id=seed, source=source)
+    @classmethod
+    def create(cls, seed, source=Source()):
+        return cls(id=seed, source=source)
 
-    @staticmethod
-    def exists(text) -> bool:
-        return MongoSeed.objects.with_id(text) is not None
+    @classmethod
+    def exists(cls, text) -> bool:
+        return cls.objects.with_id(text) is not None
 
     def add_search_history(self, new_links_count):
         entry = CrawlMeta(count=new_links_count)
@@ -34,12 +36,12 @@ class MongoSeed(Document):
         self.delta_date = entry.date
         self.search_history.append(entry)
 
-    @staticmethod
-    def find_similar(seed):
+    @classmethod
+    def find_similar(cls, seed):
         import re
         split = re.split('\s+', seed)
         if len(split) == 1:
-            return MongoSeed.objects(id_icontains=seed)
+            return cls.objects(id__icontains=seed)
         else:
             pattern = "(%s)" % ")|(".join(split)
-            return MongoSeed.objects(id=re.compile(pattern, re.IGNORECASE))
+            return cls.objects(id=re.compile(pattern, re.IGNORECASE))

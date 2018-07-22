@@ -4,7 +4,7 @@ from datetime import datetime
 from mongoengine import *
 
 from .generic import Deleted
-from .users import MongoUser
+from .users import AbstractMongoUser
 
 
 class DialectEntry(EmbeddedDocument):
@@ -18,7 +18,7 @@ class DialectInfo(EmbeddedDocument):
     label = StringField()
     confidence = FloatField()
     labels = EmbeddedDocumentListField(DialectEntry, default=[])
-    skipped_by = ListField(MongoUser._id_type(), default=[])
+    skipped_by = ListField(AbstractMongoUser._id_type(), default=[])
 
     def add_label(self, uuid, label):
         if not label or uuid in [i.user for i in self.labels]:
@@ -45,7 +45,7 @@ class DialectInfo(EmbeddedDocument):
         self.confidence = self.count / len(self.labels)
 
 
-class MongoSentence(Document):
+class AbstractMongoSentence(Document):
     # -- base info
     id = StringField(primary_key=True)
     text = StringField()
@@ -54,41 +54,41 @@ class MongoSentence(Document):
     crawl_date = DateTimeField(default=lambda: datetime.utcnow())
     crawl_proba = FloatField()
     # -- validation info
-    validated_by = ListField(MongoUser._id_type(), default=[])
+    validated_by = ListField(AbstractMongoUser._id_type(), default=[])
     deleted = EmbeddedDocumentField(Deleted)
     # -- dialect info
     dialect = EmbeddedDocumentField(DialectInfo)
 
-    meta = {'collection': 'sentences'}
+    meta = {'collection': 'sentences', 'abstract': True}
 
-    @staticmethod
-    def add_label(obj, uuid, label):
-        if isinstance(obj, str): obj = MongoSentence.objects.with_id(obj)
-        if isinstance(obj, MongoSentence):
+    @classmethod
+    def add_label(cls, obj, uuid, label):
+        if isinstance(obj, str): obj = cls.objects.with_id(obj)
+        if isinstance(obj, cls):
             if obj.dialect is None: obj.dialect = DialectInfo()
             obj.dialect.add_label(uuid, label)
             obj.save()
 
-    @staticmethod
-    def exists(text) -> bool:
-        return MongoSentence.objects(id=MongoSentence.get_hash(text)).count() == 1
+    @classmethod
+    def exists(cls, text) -> bool:
+        return cls.objects(id=cls.get_hash(text)).count() == 1
 
-    @staticmethod
-    def create(text, url, proba):
-        return MongoSentence(id=MongoSentence.get_hash(text), text=text, url=url, crawl_proba=proba)
+    @classmethod
+    def create(cls, text, url, proba):
+        return cls(id=cls.get_hash(text), text=text, url=url, crawl_proba=proba)
 
     @staticmethod
     def get_hash(text) -> str:
         return str(CityHash64(text))
 
-    @staticmethod
-    def mark_deleted(obj, uuid, comment=None):
-        if isinstance(obj, str): obj = MongoSentence.objects.with_id(obj)
+    @classmethod
+    def mark_deleted(cls, obj, uuid, comment=None):
+        if isinstance(obj, str): obj = cls.objects.with_id(obj)
         obj.update(set__deleted=Deleted(by=uuid, comment=comment))
 
-    @staticmethod
-    def unmark_deleted(obj):
+    @classmethod
+    def unmark_deleted(cls, obj):
         # in mongo shell, use $unset:
         # sentences.find({_id: xxx}, {$unset: {deleted_by:1}})
-        if isinstance(obj, str): obj = MongoSentence.objects.with_id(obj)
+        if isinstance(obj, str): obj = cls.objects.with_id(obj)
         obj.update(unset__deleted=True)
