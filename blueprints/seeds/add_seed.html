@@ -1,0 +1,67 @@
+{% extends '_layout.html' %}
+{% set title = 'Seeds' %}
+
+{% block body %}
+
+    {% from 'bootstrap/form.html' import render_field %}
+    <form method="post">
+        <div class="card mt-5 mb-5">
+            <div class="card-header">
+                Propose a seed
+            </div>
+            <div class="card-body">
+                {{ form.csrf_token }}
+                {% if not add_mode %}
+                    {{ render_field(form.seed) }}
+                    {{ render_field(form.test, button_map={'test': 'primary'}) }}
+                {% else %}
+                    {{ render_field(form.seed, readonly=True) }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if add_mode %}
+            <div class="card mt-5 mb-5">
+                <div class="card-header">
+                    Validation
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">
+                        <span class="oi oi-warning"></span>
+                        Please, review the seed carefully before submitting it to the system.
+                    </p>
+
+                    <p class="card-title mt-4">Preview search results</p>
+                    <p class="card-text">
+                        <a href="https://www.google.ch/search?q={{ form.seed.data|quote }}"
+                           class="btn btn-light"
+                           target="_blank">View on Google Search</a>
+                    </p>
+
+                    <p class="card-title mt-4">Review similar seeds</p>
+                    {% if similar_seeds %}
+                        <ul class="list-group list-group-item-action"
+                            style="max-height: 200px; overflow: auto">
+                            {% for s in similar_seeds %}
+                                <li class="list-group-item">
+                                    {{ s.id }}
+                                    <span class="badge badge-secondary" title="new url count/nb. of use">
+                                        {{ s.count }}/{{ s.crawl_history|length }}
+                                    </span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="card-text text-right mt-2 mr-2">Total: {{ similar_seeds|length }}</p>
+                    {% else %}
+                        <p class="card-text text-muted">... No similar seed found.</p>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer bg-transparent">
+                    {{ render_field(form.cancel) }}
+                    {{ render_field(form.add, button_map={'add':'primary'}) }}
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

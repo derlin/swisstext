@@ -1,5 +1,5 @@
 # ---------------------- jinja filters
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
 
 
 def eanToColor(ean, opacity=1):
@@ -15,6 +15,7 @@ def eanToColor(ean, opacity=1):
 def register(app):
     app.jinja_env.filters['toColor'] = eanToColor
     app.jinja_env.filters['unquote'] = unquote
+    app.jinja_env.filters['quote'] = quote
 
     # make the privileges static class available
     # app.jinja_env.globals.update(privilege=Privileges)

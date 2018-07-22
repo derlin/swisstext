@@ -7,6 +7,7 @@ import utils.jinja_utils as junja
 from blueprints.api import blueprint_api
 from blueprints.errorhandlers import errorhandlers
 from blueprints.labelling.labelling import blueprint_labelling
+from blueprints.seeds.seeds import blueprint_seeds
 from blueprints.sentence_validation.sentence_validation import blueprint_sentence_validation
 from blueprints.users import blueprint_users
 from utils.utils import templated
@@ -40,6 +41,7 @@ def logout():
 app.register_blueprint(errorhandlers)
 app.register_blueprint(blueprint_api, url_prefix='/api')
 app.register_blueprint(blueprint_users)
+app.register_blueprint(blueprint_seeds, url_prefix='/seeds')
 app.register_blueprint(blueprint_sentence_validation, url_prefix='/validate')
 app.register_blueprint(blueprint_labelling, url_prefix='/label')
 
