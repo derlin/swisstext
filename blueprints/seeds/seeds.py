@@ -44,7 +44,16 @@ def add_seed():
             flash_success("Seed '%s' added !" % seed)
             return redirect(url_for('.add_seed'))
 
-        else: # cancel was pressed
+        else:  # cancel was pressed
             return redirect(url_for('.add_seed'))
 
     return dict(form=form, add_mode=add_mode, similar_seeds=similar_seeds)
+
+
+@blueprint_seeds.route('/view', methods=['GET', 'POST'])
+@login_required
+@templated('view_seeds.html')
+def view_seeds():
+    page = int(request.args.get('page', 1))
+    seeds = MongoSeed.objects.paginate(page=page, per_page=40)
+    return dict(paginated_seeds=seeds)
