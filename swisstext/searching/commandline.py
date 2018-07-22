@@ -1,5 +1,9 @@
 import click
 
+# TODO find a cleaner way
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from swisstext.searching.config import Config
 from swisstext.searching.data import Seed
 from swisstext.searching.interfaces import ISearcher
