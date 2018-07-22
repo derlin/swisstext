@@ -2,9 +2,6 @@
 {% set title = 'Dialect labelling' %}
 {% block header_include %}
     <style type="text/css">
-        .margins {
-            margin: 30px auto;
-        }
 
         table label {
             display: block;
@@ -54,8 +51,7 @@
     <form method="post">
 
         {% from 'bootstrap/form.html' import render_form, render_field %}
-        {% from 'includes/_macros.html' import render_basic_field %}
-        <div class="card margins">
+        <div class="card mt-5 mb-5">
             <div class="card-body">
                 {{ form.csrf_token }}
                 {{ render_field(form.search) }}

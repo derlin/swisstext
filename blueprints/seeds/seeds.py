@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Length, DataRequired
 
-from mongo import MongoSeed, SourceType, Source
+from persistence.models import MongoSeed, SourceType, Source
 from utils.flash import flash_success
 from utils.utils import templated
 

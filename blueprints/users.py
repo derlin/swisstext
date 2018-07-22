@@ -1,15 +1,15 @@
-from flask import Blueprint, redirect, url_for, request
-from flask_login import current_user, login_user, UserMixin
+from flask import Blueprint, redirect, request
+from flask_login import current_user, login_user
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import Length, InputRequired
 
-from db import User
-from mongo import *
 from utils.flash import flash_form_errors, flash_error
 from utils.utils import templated
+from user_mixin import User
 
 blueprint_users = Blueprint('users', __name__)
+
 
 class LoginForm(FlaskForm):
     name = StringField(

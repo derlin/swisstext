@@ -6,7 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, RadioField, HiddenField
 from wtforms import validators
 
-from mongo import MongoSentence
+from persistence.models import MongoSentence
 from utils.flash import flash_success, flash_info, flash_form_errors, flash_warning
 from utils.utils import templated, validate_no_csrf
 

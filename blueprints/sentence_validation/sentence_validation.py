@@ -3,9 +3,7 @@ from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, SubmitField, validators, StringField
 
-from mongo import MongoSentence
-from mongo.sentences import Deleted
-from mongo.urls import MongoURL, MongoBlacklist
+from persistence.models import MongoSentence, Deleted, MongoURL, MongoBlacklist
 from utils.utils import templated
 from utils import responses, flash
 
@@ -59,8 +57,12 @@ def remove_url():
 
     if request.method == 'POST' and form.validate():
         if form.submit.data:
+            # remove all sentences
             MongoSentence.mark_deleted(sentences, current_user.id)
+            # blacklist url
+            MongoURL.try_delete(url)  # remove URL if exists
             MongoBlacklist.add_url(url)
+
             flash.flash_success("URL '%s' has been blacklisted." % unquote(url))
             return redirect(url_for('.validate'))
 
