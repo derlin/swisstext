@@ -10,7 +10,7 @@ from typing import List, Tuple
 
 logger = logging.getLogger(__file__)
 
-
+# TODO use a generator instead ?
 class BasicSeedCreator(ISeedCreator):
     def __init__(self, ngram_range=(3, 3)):
         self.ngram_range = ngram_range

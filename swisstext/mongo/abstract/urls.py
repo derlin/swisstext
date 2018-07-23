@@ -31,7 +31,7 @@ class AbstractMongoURL(Document):
         return cls.objects.with_id(url)
 
     @classmethod
-    def get_never_crawled(cls) -> List:
+    def get_never_crawled(cls) -> QuerySet:
         return cls.objects(crawl_history__size=0)
 
     @classmethod

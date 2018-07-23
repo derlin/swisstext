@@ -11,7 +11,7 @@ class Pipeline:
     def __init__(self,
                  crawler: ICrawler, splitter: ISplitter, filter: ISentenceFilter,
                  detector: ISgDetector, seeder: ISeedCreator, decider: IDecider,
-                 saver: IPageSaver, min_proba=0.85):
+                 saver: ISaver, min_proba=0.85):
         self.crawler = crawler
         self.filter = filter
         self.splitter = splitter
@@ -67,7 +67,7 @@ class PipelineWorker:
                                     if p.decider.should_page_be_crawled(child_page):
                                         queue.put((child_page, page_depth + 1))
                                         added_children += 1
-                            logger.debug("%s: added %d child URLs" % (page.url, added_children))
+                            logger.info("%s: added %d child URLs" % (page.url, added_children))
 
                 except Exception as e:
 

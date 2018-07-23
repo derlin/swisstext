@@ -6,7 +6,7 @@ import importlib
 from os import path
 
 from swisstext.config.base_config import BaseConfig
-from swisstext.scraping.pipeline import Pipeline, IPageSaver
+from swisstext.scraping.pipeline import Pipeline, ISaver
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ _pipeline_entries = [
     'sg_detector',
     'seed_creator',
     'decider',
-    'page_saver']
+    'saver']
 
 
 class Config(BaseConfig):
@@ -39,7 +39,7 @@ class Config(BaseConfig):
 
     @property
     def interfaces_package(self) -> Optional[str]:
-        return IPageSaver.__module__
+        return ISaver.__module__
 
     @property
     def tool_entry_name(self) -> str:

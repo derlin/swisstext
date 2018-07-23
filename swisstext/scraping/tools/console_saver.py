@@ -1,13 +1,13 @@
 from multiprocessing import Lock
 
-from swisstext.scraping.interfaces import IPageSaver
+from swisstext.scraping.interfaces import ISaver
 from swisstext.scraping.common.data import Page, PageScore
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class ConsoleSaver(IPageSaver):
+class ConsoleSaver(ISaver):
 
     def __init__(self, sentences_file: str = None, **kwargs):
         self._blacklist = set()
@@ -32,7 +32,7 @@ class ConsoleSaver(IPageSaver):
         if page.new_sg and self.sfile is not None:
             with self.lock:
                 self.sfile.write("\n".join(page.new_sg))
-        print("SAVING %s (sg=%d/%d)" % (page, page.sg_count, page.sentence_count))
+        print("SAVING %s " % page)
 
     def get_page(self, url: str, **kwargs):
         return Page(url=url, score=PageScore(), **kwargs)
@@ -41,3 +41,6 @@ class ConsoleSaver(IPageSaver):
         if self.sfile:
             self.sfile.close()
             self.sfile = None
+
+    def save_seed(self, seed: str):
+        print("  * %s" % seed)

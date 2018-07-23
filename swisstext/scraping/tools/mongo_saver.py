@@ -1,4 +1,4 @@
-from swisstext.scraping.interfaces import IPageSaver
+from swisstext.scraping.interfaces import ISaver
 from swisstext.scraping.common.data import Page, PageScore
 from swisstext.mongo.models import *
 from mongoengine import connect
@@ -7,9 +7,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class MongoSaver(IPageSaver):
+class MongoSaver(ISaver):
 
-    def __init__(self, host='localhost', port=27017, db='st1', **kwargs):
+    def __init__(self, db='st1', host='localhost', port=27017, **kwargs):
         super().__init__()
         connect(db, host=host, port=port)
 
@@ -41,12 +41,16 @@ class MongoSaver(IPageSaver):
         mu.add_crawl_history(new_count)
         mu.save()
 
-        logger.debug("saved %s (crawled=%d times, new_count=%d)" %
-                     (page, len(mu.crawl_history), new_count))
+        logger.info("saved %s (crawled=%d times, new_count=%d)" %
+                    (page, len(mu.crawl_history), new_count))
 
     def is_url_blacklisted(self, url: str):
         return MongoBlacklist.exists(url)
 
     def blacklist_url(self, url: str):
-        MongoURL.try_delete(url) # remove URL if exists
+        MongoURL.try_delete(url)  # remove URL if exists
         MongoBlacklist.add_url(url, source=Source(SourceType.AUTO))
+
+    def save_seed(self, seed: str):
+        if not MongoSeed.exists(seed):
+            MongoSeed.create(seed, Source(SourceType.AUTO)).save()

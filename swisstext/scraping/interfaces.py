@@ -64,7 +64,7 @@ class IDecider:
         return True
 
 
-class IPageSaver(ABC):
+class ISaver(ABC):
 
     def __init__(self, **kwargs):
         pass
@@ -88,3 +88,11 @@ class IPageSaver(ABC):
     @abstractmethod
     def get_page(self, url: str, **kwargs):
         pass
+
+    @abstractmethod
+    def save_seed(self, seed: str):
+        pass
+
+    def save_seeds(self, seeds: List[str]):
+        for seed in seeds:
+            self.save_seed(seed)
