@@ -33,6 +33,17 @@ class BaseConfig(ABC):
     def tool_entry_name(self) -> str:
         pass
 
+    def get(self, prop_name, default=None):
+        if '.' in prop_name:
+            root = self.conf
+            props = prop_name.split('.')
+            for key in props:
+                if root:
+                    root = root.get(key, None)
+            return default if root is None else root
+        else:
+            return self.conf.get(prop_name, default)
+
     def instantiate_tools(self) -> List[object]:
         tools = []
         root = self.conf[self.tool_entry_name]
