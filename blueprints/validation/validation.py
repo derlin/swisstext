@@ -53,12 +53,12 @@ def remove_url():
     if not url:
         return responses.bad_param("Missing query parameter 'url'")
 
-    sentences = MongoSentence.objects(url=url, deleted__exists=False).fields(id=True, text=True, crawl_proba=True)
 
     if request.method == 'POST' and form.validate():
         if form.submit.data:
             # remove all sentences
-            MongoSentence.mark_deleted(sentences, current_user.id)
+            all_sentences = MongoSentence.objects(url=url).fields(id=True)
+            MongoSentence.mark_deleted(all_sentences, current_user.id)
             # blacklist url
             MongoURL.try_delete(url)  # remove URL if exists
             MongoBlacklist.add_url(url)
@@ -68,6 +68,10 @@ def remove_url():
 
         elif form.cancel.data:
             return redirect(url_for('.validate'))
+
+    page = int(request.args.get('page', 1))
+    sentences = MongoSentence.objects(url=url, deleted__exists=False)\
+        .fields(id=True, text=True, crawl_proba=True).paginate(page=page, per_page=20)
 
     return dict(url=url, form=form, sentences=sentences)
 

@@ -32,18 +32,22 @@
     </div>
 
     {% if sentences %}
-        <h4>Sentences found on this page</h4>
+        <h4>{{ sentences.total }} sentences found on this page</h4>
         <table class="table table-sm table-hover">
             <tr>
                 <td>proba</td>
                 <td>text</td>
             </tr>
-            {% for s in sentences %}
+            {% for s in sentences.items %}
                 <tr id="{{ s.id }}">
                     <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
                     <td>{{ s.text }}</td>
                 </tr>
             {% endfor %}
         </table>
+        {% if sentences.has_prev or sentences.has_next %}
+            {% from 'includes/_macros.html' import render_navigation %}
+            {{ render_navigation(sentences, '.remove_url', url=url) }}
+        {% endif %}
     {% endif %}
 {% endblock %}
