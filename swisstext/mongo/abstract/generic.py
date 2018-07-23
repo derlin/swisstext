@@ -4,6 +4,13 @@ from datetime import datetime
 from .users import AbstractMongoUser
 
 
+class Dialects:
+    items = dict(
+        be='Bernese Dutch',
+        ar='Argau'
+    )
+
+
 class SourceType:
     UNKNOWN = "unknown"
     USER = "user"
