@@ -13,7 +13,7 @@
         {% if current_user.is_authenticated %}
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('sentence_validation.validate') }}">Validate sentences</a>
+                    <a class="nav-link" href="{{ url_for('validation.validate') }}">Validate sentences</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('labelling.add_labels_radio') }}">Dialect-tagging</a>

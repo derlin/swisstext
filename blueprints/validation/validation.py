@@ -1,15 +1,15 @@
+from urllib.parse import unquote
+
 from flask import Blueprint, request, redirect, url_for
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, SubmitField, validators, StringField
+from wtforms import HiddenField, SubmitField
 
-from persistence.models import MongoSentence, Deleted, MongoURL, MongoBlacklist
-from utils.utils import templated
+from persistence.models import MongoSentence, MongoURL, MongoBlacklist
 from utils import responses, flash
+from utils.utils import templated
 
-from urllib.parse import unquote
-
-blueprint_sentence_validation = Blueprint('sentence_validation', __name__, template_folder='.')
+blueprint_validation = Blueprint('validation', __name__, template_folder='.')
 
 _per_page = 50
 
@@ -25,9 +25,9 @@ class RemoveSiteForm(FlaskForm):
     submit = SubmitField('remove sentences & blacklist URL')
 
 
-@blueprint_sentence_validation.route('', methods=['GET', 'POST'])
+@blueprint_validation.route('', methods=['GET', 'POST'])
 @login_required
-@templated('sentence_validation.html')
+@templated('validation.html')
 def validate():
     form = ValidationForm()
 
@@ -44,7 +44,7 @@ def validate():
     return dict(form=form, sentences=sentences)
 
 
-@blueprint_sentence_validation.route('/site', methods=['GET', 'POST'])
+@blueprint_validation.route('/site', methods=['GET', 'POST'])
 @login_required
 @templated('remove_url.html')
 def remove_url():
