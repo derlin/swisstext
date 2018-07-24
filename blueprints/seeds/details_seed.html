@@ -51,7 +51,7 @@
                         {# TODO #}
                         <td><a href="{{ u.id }}" target="_blank"><span class="oi oi-external-link"></span></a></td>
                         <td>
-                            <a href="{{ url_for('urls.details', id=u.id, **encode_referer(request.endpoint, id=s.id)) }}">
+                            <a href="{{ url_for('urls.details', id=u.id, next=encode_next_url(request.url)) }}">
                                 <span class="oi oi-eye"></span>
                             </a>
                         </td>

@@ -2,11 +2,11 @@ from flask import Blueprint, request, url_for, redirect
 from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, SelectField, IntegerField, HiddenField
-from wtforms.validators import Length, DataRequired, Optional
+from wtforms.validators import Length, Optional
 
-from persistence.models import MongoSeed, SourceType, Source, MongoURL, MongoSentence, MongoBlacklist
+from persistence.models import MongoURL, MongoSentence, MongoBlacklist
 from utils.flash import flash_success
-from utils.utils import templated, url_for_referer
+from utils.utils import templated
 
 blueprint_urls = Blueprint('urls', __name__, template_folder='.')
 
@@ -91,7 +91,7 @@ def details(id):
         MongoBlacklist.add_url(id)
 
         flash_success("URL '%s' has been blacklisted." % id)
-        return redirect(url_for_referer('.view'))
+        return redirect(request.args.get('next') or url_for('.view'))
 
     page = int(request.args.get('page', 1))
     url = MongoURL.objects(id=id).get_or_404()

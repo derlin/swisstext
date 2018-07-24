@@ -89,7 +89,7 @@
                             </a>
                             <a class="dropdown-item" href="{{ s.url }}" target="_blank">View site</a>
                             <a class="dropdown-item"
-                               href="{{ url_for('urls.details', id=s.url, **encode_referer(request.endpoint)) }}">
+                               href="{{ url_for('urls.details', id=s.url, next=encode_next_url(request.url)) }}">
                                 View URL details
                             </a>
                         </div>

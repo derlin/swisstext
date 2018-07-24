@@ -1,5 +1,5 @@
 # ---------------------- jinja filters
-from urllib.parse import unquote, quote
+from urllib.parse import unquote, quote, urlparse, urlunparse
 
 from flask import request
 
@@ -18,12 +18,9 @@ def format_datetime(d, format='%Y-%m-%d at %H:%M'):
     return d.strftime(format)
 
 
-def encode_referer(endpoint, **kwargs):
-    if len(kwargs):
-        ref_args = ";".join("{},{}".format(*e) for e in kwargs.items())
-        return dict(ref=endpoint, ref_args=ref_args)
-    else:
-        return dict(ref=endpoint)
+def encode_next_url(current_url):
+    c = urlparse(current_url)
+    return urlunparse(('', '', c.path, c.params, c.query, ''))
 
 
 def register(app):
@@ -31,7 +28,7 @@ def register(app):
     app.jinja_env.filters['unquote'] = unquote
     app.jinja_env.filters['quote'] = quote
     app.jinja_env.filters['datetime'] = format_datetime
-    app.jinja_env.globals.update(encode_referer=encode_referer)
+    app.jinja_env.globals.update(encode_next_url=encode_next_url)
 
     # make the privileges static class available
     # app.jinja_env.globals.update(privilege=Privileges)
