@@ -51,7 +51,7 @@ class AbstractMongoSentence(Document):
     text = StringField()
     url = StringField()
     # -- crawl info
-    crawl_date = DateTimeField(default=lambda: datetime.utcnow())
+    date_added = DateTimeField(default=lambda: datetime.utcnow())
     crawl_proba = FloatField()
     # -- validation info
     validated_by = ListField(AbstractMongoUser._id_type(), default=[])

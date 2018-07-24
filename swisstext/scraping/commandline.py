@@ -56,7 +56,7 @@ def gen_seeds(num_sentences, num, new):
         if new:
             sentences = [s.text for s in MongoSentence.objects \
                 .fields(text=True) \
-                .order_by('-crawl_date') \
+                .order_by('-date_added') \
                 .limit(num_sentences)]
         else:
             aggregation_pipeline = [
@@ -153,12 +153,12 @@ def crawl():
         f.write("\n".join(new_sentences))
 
     # TODO: call a
-    if gen_seeds and len(new_sentences):
-        for seed in pipeline.seeder.generate_seeds(new_sentences):
-            pipeline.saver.save_seed(seed)
-
-    else:
-        print("No new sentence found.")
+    if gen_seeds:
+        if len(new_sentences):
+            for seed in pipeline.seeder.generate_seeds(new_sentences):
+                pipeline.saver.save_seed(seed)
+        else:
+            print("No new sentence found.")
 
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))

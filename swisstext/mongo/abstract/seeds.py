@@ -8,7 +8,7 @@ class AbstractMongoSeed(Document):
     # base info
     id = StringField(primary_key=True)
     source = EmbeddedDocumentField(Source, default=Source())
-    date = DateTimeField(default=lambda: datetime.utcnow())
+    date_added = DateTimeField(default=lambda: datetime.utcnow())
     # seed usage
     count = IntField(default=0)
     delta_date = DateTimeField()

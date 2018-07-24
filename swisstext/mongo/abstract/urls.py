@@ -9,6 +9,7 @@ from .generic import Source, CrawlMeta
 class AbstractMongoURL(Document):
     id = StringField(primary_key=True)
     source = EmbeddedDocumentField(Source, default=Source())
+    date_added = DateTimeField(default=lambda: datetime.utcnow())
 
     crawl_history = EmbeddedDocumentListField(CrawlMeta, default=[])
 
