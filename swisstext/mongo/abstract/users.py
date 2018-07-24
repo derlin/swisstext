@@ -2,12 +2,18 @@ import hashlib
 from mongoengine import *
 
 
+class UserRoles:
+    ADMIN = "admin"
+    USER = "user"
+
+
 class AbstractMongoUser(Document):
     # TODO: use a uuid instead ?
     _id_type = StringField
 
     id = _id_type(primary_key=True)
     password = StringField()
+    roles = ListField(StringField(), default=[UserRoles.ADMIN])
 
     meta = {'collection': 'users', 'abstract': True}
 
