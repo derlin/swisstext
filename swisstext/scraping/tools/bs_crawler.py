@@ -28,6 +28,9 @@ class BsCrawler(ICrawler):
             resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS)  # ignore SSL certificates
             # try to avoid encoding issues
             # see https://stackoverflow.com/a/45643551/2667536
+            # Note: the encoding might be wrong if the content-type is declaring a charset with
+            # uppercase, for example 'text/html; Charset=xxx'. I posted an issue, see
+            # https://github.com/requests/requests/issues/4748
             ctype = resp.headers.get('content-type', '').lower()
             if 'html' in ctype or 'text/plain' in ctype:
                 encoding = resp.encoding if 'charset' in ctype else None

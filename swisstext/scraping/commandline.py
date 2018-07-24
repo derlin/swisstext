@@ -131,6 +131,7 @@ def crawl():
     args = (queue, pipeline, new_sentences, MAX_DEPTH)
 
     # launch multiple workers
+    # TODO: use https://docs.python.org/3/library/concurrent.futures.html#processpoolexecutor instead ?
     if NUM_WORKERS > 1:
         threads = []
         for i in range(NUM_WORKERS):
