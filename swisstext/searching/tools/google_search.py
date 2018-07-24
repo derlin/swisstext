@@ -32,7 +32,7 @@ class GoogleGenerator():
         self.key = apikey
         self.ctx = context
 
-        self.params = dict(key=self.key, cx=self.ctx, q=query, fields=_links_fields)
+        self.params = dict(key=self.key, cx=self.ctx, q='"%s"' % query, fields=_links_fields)
         self.start_offset = 1  # begin at result 1
         self.count = 10  # the API returns at most ten results
 

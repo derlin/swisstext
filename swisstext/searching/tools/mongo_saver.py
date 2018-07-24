@@ -1,9 +1,11 @@
 from mongoengine import connect
+import logging
 
 from swisstext.mongo.models import MongoSeed, MongoURL, SourceType, Source
 from swisstext.searching.data import Seed
 from swisstext.searching.interfaces import ISaver
 
+logger = logging.getLogger(__name__)
 
 class MongoSaver(ISaver):
     def __init__(self, host='localhost', port=27017, db='st1', **kwargs):
@@ -18,6 +20,7 @@ class MongoSaver(ISaver):
         s = MongoSeed.get(seed.query) or MongoSeed.create(seed.query)
         s.add_search_history(new_links_count)
         s.save()
+        logging.info('saved %s' % seed)
 
     def link_exists(self, url: str) -> bool:
         return MongoURL.exists(url)
