@@ -1,19 +1,17 @@
-from urllib.parse import unquote
-
 from flask import Blueprint, request, redirect, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, SubmitField, SelectMultipleField, widgets, IntegerField, validators, SelectField, \
+from wtforms import HiddenField, SubmitField, SelectMultipleField, widgets, validators, SelectField, \
     BooleanField, StringField
 
 from persistence.models import MongoSentence, Dialects
-from utils import responses, flash
+from user_management import role_required
+from utils import flash
 from utils.utils import templated
 
 blueprint_sentences = Blueprint('sentences', __name__, template_folder='.')
 
 _per_page = 50
-
 
 class DeleteSentenceForm(FlaskForm):
     comment = StringField('comment', render_kw=dict(placeholder="optional comment"))

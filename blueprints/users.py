@@ -6,7 +6,7 @@ from wtforms.validators import Length, InputRequired
 
 from utils.flash import flash_form_errors, flash_error
 from utils.utils import templated
-from user_mixin import User
+from user_management import User
 
 blueprint_users = Blueprint('users', __name__)
 

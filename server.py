@@ -13,7 +13,6 @@ from blueprints.urls.urls import blueprint_urls
 from blueprints.validation.validation import blueprint_validation
 from blueprints.users import blueprint_users
 from persistence._base import init_db
-from user_mixin import User
 from utils.utils import templated
 
 app = Flask(__name__)
@@ -25,11 +24,9 @@ app.config.update(dict(
 # bootstrap
 bootstrap = Bootstrap(app)
 
-# flask-login
-login_manager = LoginManager()
+from user_management import User, login_manager
 login_manager.init_app(app)
 login_manager.login_view = "users.login"
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -64,7 +61,7 @@ def index():
 
 
 def init_app():
-    init_db(app, db_name='tmp')
+    init_db(app, db_name='demo')
     junja.register(app)
 
 
