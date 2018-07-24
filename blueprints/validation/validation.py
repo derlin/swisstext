@@ -38,7 +38,7 @@ def validate():
         return redirect(url_for('.validate'))  # avoid form resubmission on refresh
 
     sentences = MongoSentence.objects(validated_by__nin=[current_user.id], deleted__exists=False) \
-        .order_by('crawl_proba') \
+        .order_by('-crawl_proba') \
         .limit(_per_page)
     form.sentences_ids.data = ",".join((s.id for s in sentences))
     return dict(form=form, sentences=sentences)

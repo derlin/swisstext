@@ -9,6 +9,7 @@ from blueprints.errorhandlers import errorhandlers
 from blueprints.labelling.labelling import blueprint_labelling
 from blueprints.seeds.seeds import blueprint_seeds
 from blueprints.sentences.sentences import blueprint_sentences
+from blueprints.urls.urls import blueprint_urls
 from blueprints.validation.validation import blueprint_validation
 from blueprints.users import blueprint_users
 from persistence._base import init_db
@@ -49,7 +50,8 @@ app.register_blueprint(blueprint_users)
 app.register_blueprint(blueprint_seeds, url_prefix='/seeds')
 app.register_blueprint(blueprint_validation, url_prefix='/validate')
 app.register_blueprint(blueprint_labelling, url_prefix='/label')
-app.register_blueprint(blueprint_sentences, url_prefix='/view')
+app.register_blueprint(blueprint_sentences, url_prefix='/sentences')
+app.register_blueprint(blueprint_urls, url_prefix='/urls')
 
 
 # -- jinja

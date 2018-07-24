@@ -19,11 +19,11 @@ dictConfig({
             'when': 'h',
             'interval': 24,
             'backupCount': 31,
-            'filename': 'logs/colistock.log'
+            'filename': 'logs/st1_frontend.log'
         }},
     'root': {
         'level': 'INFO',
-        'handlers': ['console', 'file']
+        'handlers': ['console'] # TODO, 'file']
     }
 })
 

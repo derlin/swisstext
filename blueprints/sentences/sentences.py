@@ -15,6 +15,10 @@ blueprint_sentences = Blueprint('sentences', __name__, template_folder='.')
 _per_page = 50
 
 
+class DeleteSentenceForm(FlaskForm):
+    comment = StringField('comment', render_kw=dict(placeholder="optional comment"))
+    delete = SubmitField('Go ahead!')
+
 class SentencesForm(FlaskForm):
     # limit = IntegerField(
     #     'Max results',
@@ -30,7 +34,7 @@ class SentencesForm(FlaskForm):
     dialects = SelectMultipleField(
         'Dialects',
         choices=list(Dialects.items.items()),
-        default=[], #Dialects.items.keys(),
+        default=[],  # Dialects.items.keys(),
         validators=[validators.Optional()],
         widget=widgets.ListWidget(prefix_label=False),
         option_widget=widgets.CheckboxInput()
@@ -54,7 +58,7 @@ class SentencesForm(FlaskForm):
 def view():
     form = SentencesForm()
     sentences = []
-    page = int(form.page.data) # get the parameter, then reset
+    page = int(form.page.data)  # get the parameter, then reset
     form.page.data = 1
     collapse = False
 
@@ -87,6 +91,11 @@ def view():
 
 @blueprint_sentences.route('<sid>', methods=['GET', 'POST'])
 @login_required
-@templated('details.html')
+@templated('details_sentence.html')
 def details(sid):
-    return dict(s=MongoSentence.objects.get_or_404(id=sid))
+    form = DeleteSentenceForm()
+    if request.method == 'POST' and form.validate():
+        MongoSentence.mark_deleted(sid, current_user.id, form.comment.data)
+        flash.flash_success('Sentence deleted.')
+        return redirect(request.referrer or '/')
+    return dict(form=form, s=MongoSentence.objects.get_or_404(id=sid))

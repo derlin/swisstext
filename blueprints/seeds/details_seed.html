@@ -1,0 +1,71 @@
+{% extends '_layout.html' %}
+{% set title = 'Seed detail' %}
+
+{% block body %}
+
+    {% if s.deleted %}
+        <span class="alert alert-danger">Deleted by {{ s.deleted.by }} on {{ s.deleted.date }}</span>
+    {% endif %}
+
+    <div class="card mt-2">
+        <div class="card-header">Seed <code>{{ s.id }}</code></div>
+        <div class="card-body">
+            <p class="card-text text-center mt-2 mb-3">{{ s.text }}</p>
+            <p class="card-text">Source
+                <span class="badge badge-secondary">{{ s.source.type_ }}</span>
+                {% if s.source.extra %} {{ s.source.extra }}{% endif %}
+            </p>
+            <p>
+                {# TODO #}
+                <a class="btn btn-light" href="#">delete seed</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="card mt-2">
+        <div class="card-header"
+             data-toggle="collapse" href="#history-body" role="button" aria-controls="history-body">
+            Usage
+        </div>
+        <div id="history-body" class="collapse" aria-labelledby="history-header">
+            <div class="card-body">
+                <p class="card-text">Used {{ s.search_history|length }} time(s).</p>
+                {% if s.search_history %}
+                    <p class="card-text">History</p>
+                    <ul>
+                        {% for entry in s.search_history %}
+                            <li class="list-group-item">{{ entry.date }} - {{ entry.count }} new URLs.</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if urls.items %}
+        <div class="mt-5">
+            <h5>Found {{ urls.total }} URLs</h5>
+            <table class="table table-hover table-sm">
+                {% for u in urls.items %}
+                    <tr>
+                        {# TODO #}
+                        <td><a href="{{ u.id }}" target="_blank"><span class="oi oi-external-link"></span></a></td>
+                        <td>
+                            <a href="{{ url_for('urls.details', id=u.id, **encode_referer(request.endpoint, id=s.id)) }}">
+                                <span class="oi oi-eye"></span>
+                            </a>
+                        </td>
+                        <td class="text-right" title="No. of sentences found">{{ u.count }}</td>
+                        <td><code>{{ u.id }}</code></td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            {% if urls.has_prev or urls.has_next %}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(urls, '.details') }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% endblock %}

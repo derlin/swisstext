@@ -1,0 +1,83 @@
+{% extends '_layout.html' %}
+{% set title = 'URL detail' %}
+
+{% block body %}
+
+    <p class="clearfix">
+        <a class="link link-danger float-right" data-toggle="collapse" href="#delete-collapse" role="button"
+           aria-expanded="false" aria-controls="delete-collapse">
+            Remove URL
+        </a>
+    </p>
+    <div class="collapse" id="delete-collapse">
+        <div class="card card-body">
+
+            <h5>Discard all results from this page ?</h5>
+            <p class="card-text">
+                <span class="oi oi-warning"></span> This action will blacklist the URL, so it will no longer be crawled.
+                Please, go through only if you are sure there will never be Swiss German on this page.
+            </p>
+            {% from 'bootstrap/form.html' import render_form %}
+            {{ render_form(form, extra_classes="inline", button_map={'delete': 'danger'}) }}
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">URL <a href="{{ url.id }}" target="_blank">{{ url.id }}</a></div>
+        <div class="card-body">
+            <p class="card-text">Source: {{ url.source.type_ }}
+                {% if url.source.extra %}
+                    {% if url.source.extra.startswith('http') %}
+                        <a href="{{ url_for('.details', id=url.source.extra) }}">{{ url.source.extra }}</a>
+                    {% elif url.source.type_ == 'seed' %}
+                        <a href="{{ url_for('seeds.details', id=url.source.extra) }}"><span class="oi oi-eye"></span> </a>
+                    {% endif %}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-header"
+             data-toggle="collapse" href="#history-body" role="button" aria-controls="history-body">
+            Crawled {{ url.crawl_history|length }} time(s).
+        </div>
+        <div id="history-body" class="collapse" aria-labelledby="history-header">
+            <div class="card-body">
+                {% if url.crawl_history %}
+                    <p class="card-text">History</p>
+                    <ul>
+                        {% for entry in url.crawl_history %}
+                            <li class="list-group-item">{{ entry.date|datetime }} - {{ entry.count }} new sentences.
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    Crawl history empty.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+    {% if sentences %}
+        <div class="mt-5">
+            <h4>{{ sentences.total }} sentences found on this page</h4>
+            <table class="table table-sm table-hover">
+                {% for s in sentences.items %}
+                    <tr id="{{ s.id }}">
+                        <td>
+                            <a href="{{ url_for('sentences.details', sid=s.id) }}"><span class="oi oi-eye"></span></a>
+                        </td>
+                        <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
+                        <td>{{ s.text }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% if sentences.has_prev or sentences.has_next %}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(sentences, '.details', id=url.id) }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% endblock %}

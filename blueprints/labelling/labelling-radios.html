@@ -45,6 +45,9 @@
         <div class="card margins">
             <div class="card-body">
                 {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}
+                <a class="btn float-right" href="{{ url_for('sentences.details', sid=sentence.id) }}">
+                    <span class="oi oi-eye"></span>
+                </a>
                 <div class="card-text text-center">{{ sentence.text }}</div>
             </div>
             <div class="card-footer">

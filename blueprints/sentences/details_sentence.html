@@ -1,0 +1,83 @@
+{% extends '_layout.html' %}
+{% set title = 'Sentence detail' %}
+
+
+{% block js_include %}
+    <script type="text/javascript" src="/static/js/api_ajax.js"></script>
+    <script type="text/javascript">
+        function undelete() {
+            ajax_undelete_sentence('{{ s.id }}')
+                .done(() => location.reload())
+                .always((msg) => console.log(msg))
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    {% if not s.deleted %}
+        <p class="clearfix">
+            <a class="link link-danger float-right" data-toggle="collapse" href="#delete-collapse" role="button"
+               aria-expanded="false" aria-controls="delete-collapse">
+                Remove sentence
+            </a>
+        </p>
+        <div class="collapse" id="delete-collapse">
+            <div class="card card-body">
+                <p class="card-text">
+                    <span class="oi oi-warning"></span> Are you sure ?
+                </p>
+                {% from 'bootstrap/form.html' import render_form %}
+                {{ render_form(form, form_type="inline", button_map={'delete': 'danger'}) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="card card">
+            <div class="card-header">
+                <span class="oi oi-warning text-danger"></span>
+                Deleted by {{ s.deleted.by }} - {{ s.deleted.date|datetime }}.
+                <button class="btn btn-sm btn-light text-success" onclick="undelete()">Restore</button>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card mt-2">
+        <div class="card-header">Sentence <code>{{ s.id }}</code></div>
+        <div class="card-body">
+            <p class="card-text text-center mt-2 mb-3">{{ s.text }}</p>
+            <p class="card-text">Source:
+                <code>{{ s.url }}</code>
+                <a class="card-link ml-2" href="{{ s.url }}" target="_blank"><span
+                        class="oi oi-external-link"></span></a>
+                <a class="ml-2" href="{{ url_for('urls.details', id=s.url) }}"><span class="oi oi-eye"></span></a>
+            </p>
+            <p>
+                {# <a class="btn btn-light" href="{{ url_for('validation.remove_url', url=s.url) }}">discard site</a>#}
+            </p>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-header">Crawl information</div>
+        <div class="card-body">
+            <p class="card-text">probability: {{ "%.2f" % (s.crawl_proba * 100) }}</p>
+            <p class="card-text">Crawled on {{ s.date_added | datetime }}</p>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-header">Validation</div>
+        <div class="card-body">
+            <p class="card-text">validated by {{ s.validated_by|length }} user(s).</p>
+            {% if s.dialect %}
+                <p class="card-text">Dialect: <span class="badge badge-info">s.dialect.label</span>
+                    (confidence: {{ "%.2f" % s.dialect.confidence }}%)</p>
+                <p class="card-text">History</p>
+                <ul>
+                    {% for entry in s.dialect.labels %}
+                        <li class="list-group-item">{{ entry.date }} - {{ entry.label }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
