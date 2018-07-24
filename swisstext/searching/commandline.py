@@ -40,22 +40,25 @@ def cli(log_level, config_path):
 @cli.command('from_mongo')
 @click.option('-n', '--num-seeds', type=int, default=20, help="Max seeds used.")
 @click.option('--new/--any', default=False, help="Only search new seeds")
-def crawl_mongo(num_seeds, new):
+def from_mongo(num_seeds, new):
     from swisstext.mongo.models import MongoSeed
     from mongoengine import connect
     with connect(**config.get('saver_options')):
         if new:
             seeds = (s.id for s in MongoSeed.objects(search_history__0__exists=False).fields(id=True).limit(num_seeds))
         else:
+            # origin: user vs auto... we want the user to have the priority => sort descending (origin: -1)
             aggregation_pipeline = [
                 {
                     "$project": {
-                        'last_searched': {"$ifNull": ["$delta_date", None]},
-                        'num_searches': {"$size": {"$ifNull": ["$search_history", []]}}
+                        'num_searches': {"$size": {"$ifNull": ["$search_history", []]}},
+                        'origin': "$source.type",
+                        'date_added': "$date_added",
+                        'last_searched': {"$ifNull": ["$delta_date", None]}
                     }
                 },
                 {
-                    "$sort": {"num_searches": 1, "last_searched": 1}
+                    "$sort": {"num_searches": 1, "origin": -1, "date_added": 1, "last_searched": 1}
                 },
                 {
                     "$limit": num_seeds
