@@ -78,3 +78,42 @@
         {% endfor %}
     </ul>
 {% endmacro %}
+
+
+{# Macro for creating navigation links #}
+{% macro render_post_navigation(pagination, form_id=None, page_field='page') %}
+
+    <script type="text/javascript">
+        function changePage(page) {
+            // use JS to add a query parameter to the form before submit
+
+            let form =  $("{{ '#' + form_id if form_id else 'form' }}");
+            if (form) {
+                // a form has been specified (or has an id #paramsForm) -> submit the form with the
+                // proper action
+                $('[name={{ page_field }}]').val(page);
+                form.submit();
+            }
+        }
+    </script>
+
+    <ul class=pagination>
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li class="page-item">
+                        <a class="page-link" onclick="changePage({{ page }})">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page }}</span>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" style="border-top: none; border-bottom: none">…</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}

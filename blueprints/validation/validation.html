@@ -6,6 +6,7 @@
         tr:first-child, tr:first-child td {
             border-top: none;
         }
+
         tr:last-child, tr:last-child td {
             border-bottom: none;
         }
@@ -81,9 +82,13 @@
                             <span class="oi oi-ellipses"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMore">
+                            <a class="dropdown-item" href="{{ url_for('sentences.details', sid=s.id) }}" target="_blank">
+                                View sentence details
+                            </a>
                             <a class="dropdown-item" href="{{ s.url }}" target="_blank">View site</a>
                             <a class="dropdown-item" href="{{ url_for('.remove_url', url=s.url) }}">
-                                Discard site</a>
+                                Discard site
+                            </a>
                         </div>
                     </div>
                 </td>

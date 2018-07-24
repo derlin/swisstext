@@ -109,11 +109,15 @@ def add_labels_radio():
 
     sentence = MongoSentence.objects(
         deleted__exists=False,
-        validated_by__exists=True,
+        validated_by__0__exists=True,
         dialect__skipped_by__ne=current_user.id,
         dialect__labels__user__ne=current_user.id) \
         .fields(id=1, url=1, text=1) \
         .first()
 
-    form.sentence_id.data = sentence.id
-    return dict(form=form, sentence=sentence)
+    if sentence:
+        form.sentence_id.data = sentence.id
+        return dict(form=form, sentence=sentence)
+    else:
+        flash_warning('No more validated sentences to label. Please, help us by doing some validation :) ')
+        return redirect(url_for('validation.validate'))

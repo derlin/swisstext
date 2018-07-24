@@ -45,9 +45,15 @@
                             {% for s in similar_seeds %}
                                 <li class="list-group-item">
                                     {{ s.id }}
-                                    <span class="badge badge-secondary" title="new url count/nb. of use">
-                                        {{ s.count }}/{{ s.crawl_history|length }}
+                                    {% if s.search_history|length %}
+                                        <span class="badge badge-{{ 'primary' if s.count else 'warning' }}"
+                                              title="new url count/nb. of use">
+                                        {{ s.count }}/{{ s.search_history|length }}
                                     </span>
+                                    {% else %}
+                                        <span class="badge badge-secondary"
+                                              title="never used">0/0</span>
+                                    {% endif %}
                                 </li>
                             {% endfor %}
                         </ul>

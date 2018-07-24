@@ -21,8 +21,9 @@
                         {% if seed.deleted %}
                             <div class="text-danger">Deleted by {{ seed.deleted.by }} on {{ seed.deleted.date }}</div>
                         {% endif %}
-                        <p><span
-                                class="font-weight-bold">Source</span> {{ seed.source.type_ }} {{ seed.source.extra or '' }}
+                        <p>
+                            <span class="font-weight-bold">Source</span>
+                            {{ seed.source.type_ }} {{ seed.source.extra or '' }}
                         </p>
                         <p><span class="font-weight-bold">Search History</span></p>
                         <ul>
