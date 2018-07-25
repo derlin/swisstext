@@ -22,13 +22,19 @@ class Pipeline:
         self.min_proba = min_proba
 
 
-class PipelineWorker:
-    def __init__(self):
-        pass
+class PipelineWorker():
+    def __init__(self, id=0):
+        self.id = id
+        self.kill_received = False
 
     def run(self, queue: Queue, p: Pipeline, new_sentences: List[str], max_depth=1):
         while not queue.empty():
             (page, page_depth) = queue.get()
+
+            if self.kill_received:
+                logger.info("W[%d]: Kill received, stopping." % self.id)
+                return
+
             logger.debug("Processing: %s (depth=%d)" % (page.url, page_depth))
             if page_depth > max_depth:
                 logging.info(

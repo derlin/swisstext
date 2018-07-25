@@ -134,13 +134,24 @@ def crawl():
     # TODO: use https://docs.python.org/3/library/concurrent.futures.html#processpoolexecutor instead ?
     if NUM_WORKERS > 1:
         threads = []
-        for i in range(NUM_WORKERS):
-            t = threading.Thread(target=PipelineWorker().run, args=args)
+        for i in range(min(NUM_WORKERS, queue.unfinished_tasks)):
+            worker = PipelineWorker(i)
+            t = threading.Thread(target=worker.run, args=args)
             t.start()
-            threads.append(t)
+            threads.append((worker, t))
 
         # block until all tasks are done
-        for t in threads:
+        # in case ctrl+c is received, notify the threads using a flag
+        # TODO make it cleaner !
+        import signal
+        def handler(signum, frame):
+            logger.info("Ctrl-c received! Sending kill to threads...")
+            for w, t in threads:
+                w.kill_received = True
+            # queue.queue.clear()
+        signal.signal(signal.SIGINT, handler)
+
+        for w, t in threads:
             t.join()
 
     else:
