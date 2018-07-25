@@ -2,7 +2,7 @@ import logging
 from queue import Queue
 from typing import Set
 
-from swisstext.scraping.common.data import Page
+from swisstext.scraping.data import Page
 
 logger = logging.getLogger(__name__)
 

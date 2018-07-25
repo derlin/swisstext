@@ -12,7 +12,7 @@ import os, sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from swisstext.scraping.common.page_queue import PageQueue
+from swisstext.scraping.page_queue import PageQueue
 from swisstext.scraping.config import Config
 from swisstext.scraping.interfaces import *
 from swisstext.scraping.pipeline import PipelineWorker, Pipeline

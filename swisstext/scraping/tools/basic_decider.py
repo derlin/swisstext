@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from pytimeparse.timeparse import timeparse
 
 from swisstext.scraping.interfaces import IDecider
-from swisstext.scraping.common.data import Page
+from swisstext.scraping.data import Page
 
 MIN_RECRAWL_DELTA = "7d"
 MIN_RATIO = 0

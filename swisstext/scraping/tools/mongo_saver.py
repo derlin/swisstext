@@ -1,7 +1,7 @@
 from swisstext.scraping.interfaces import ISaver
-from swisstext.scraping.common.data import Page, PageScore
+from swisstext.scraping.data import Page, PageScore
 from swisstext.mongo.models import *
-from mongoengine import connect
+
 import logging
 
 logger = logging.getLogger(__name__)

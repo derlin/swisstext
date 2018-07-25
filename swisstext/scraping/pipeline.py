@@ -2,7 +2,7 @@ import logging
 from queue import Queue
 
 from swisstext.scraping.interfaces import *
-from swisstext.scraping.common.data import Sentence
+from swisstext.scraping.data import Sentence
 
 logger = logging.getLogger(__name__)
 

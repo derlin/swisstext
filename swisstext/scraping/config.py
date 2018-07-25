@@ -1,13 +1,8 @@
+import logging
 from typing import Optional, List
-
-import yaml
-import sys
-import importlib
-from os import path
 
 from swisstext.config.base_config import BaseConfig
 from swisstext.scraping.pipeline import Pipeline, ISaver
-import logging
 
 logger = logging.getLogger(__name__)
 
