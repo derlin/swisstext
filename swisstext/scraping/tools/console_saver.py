@@ -31,7 +31,7 @@ class ConsoleSaver(ISaver):
     def save_page(self, page):
         if page.new_sg and self.sfile is not None:
             with self.lock:
-                self.sfile.write("\n".join(page.new_sg))
+                self.sfile.write("\n".join((s.text for s in page.new_sg)))
         print("SAVING %s " % page)
 
     def get_page(self, url: str, **kwargs):
