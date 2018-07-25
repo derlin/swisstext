@@ -20,29 +20,27 @@ class DialectInfo(EmbeddedDocument):
     labels = EmbeddedDocumentListField(DialectEntry, default=[])
     skipped_by = ListField(AbstractMongoUser._id_type(), default=[])
 
+    def remove_label(self, uuid):
+        if self.labels:
+            self.labels = [l for l in self.labels if l.user != uuid]
+            self._recompute_label()
+
     def add_label(self, uuid, label):
-        if not label or uuid in [i.user for i in self.labels]:
-            return
+        if label and uuid not in [i.user for i in self.labels]:
+            self.labels.append(DialectEntry(user=uuid, label=label))
+            self._recompute_label()
 
-        self.labels.append(DialectEntry(user=uuid, label=label))
-
-        if self.label is None:
-            self.label = label
-            self.count = 1
-
-        elif self.label == label:
-            self.label = label
-            self.count += 1
-
+    def _recompute_label(self):
+        if self.labels:
+            sums = {}
+            for l in self.labels:
+                sums.setdefault(l.label, 0)
+                sums[l.label] += 1
+            self.label, self.count = sorted(sums.items(), key=lambda t: -t[1])[0]
+            self.confidence = self.count / len(self.labels)
         else:
-            old_count = sum([1 for i in self.labels if i.label == self.label])
-            new_count = sum([1 for i in self.labels if i.label == label])
-
-            if new_count > old_count:
-                self.label = label
-                self.count = new_count
-
-        self.confidence = self.count / len(self.labels)
+            self.label = None
+            self.count, self.confidence = 0, .0
 
 
 class AbstractMongoSentence(Document):
@@ -67,6 +65,13 @@ class AbstractMongoSentence(Document):
         if isinstance(obj, cls):
             if obj.dialect is None: obj.dialect = DialectInfo()
             obj.dialect.add_label(uuid, label)
+            obj.save()
+
+    @classmethod
+    def remove_label(cls, obj, uuid):
+        if isinstance(obj, str): obj = cls.objects.with_id(obj)
+        if isinstance(obj, cls):
+            obj.dialect.remove_label(uuid)
             obj.save()
 
     @classmethod

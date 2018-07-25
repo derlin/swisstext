@@ -1,14 +1,35 @@
+from collections import OrderedDict
+
 from mongoengine import *
 from datetime import datetime
 
 from .users import AbstractMongoUser
 
+# Dialects = OrderedDict(
+#     ba_sn="Basel, Solothurn Nord",
+#     ss_bn="Solothurn Süd, Bern Nord",
+#     bo_fr="Berner Oberland, Freiburg",
+#     walli="Wallis",
+#     a_l_z="Aargau, Luzern, Zug Nord",
+#     zuric="Zürich",
+#     nords="Nordostschweiz (SH, TG, SG Nord, AR, AI)",
+#     zentr="Zentralschweiz (OW, NW, UR, SZ, ZG Süd)",
+#     g_sgs="Glarus und SG Süd",
+#     graub="Graubünden"
+# )
 
-class Dialects:
-    items = dict(
-        be='Bernese Dutch',
-        ar='Argau'
-    )
+Dialects = OrderedDict(
+    ba_sn="Basel, Solothurn Nord",
+    zuric="Zürich",
+    ss_bn="Solothurn Süd, Bern Nord",
+    nords="Nordostschweiz (SH, TG, SG Nord, AR, AI)",
+    bo_fr="Berner Oberland, Freiburg",
+    zentr="Zentralschweiz (OW, NW, UR, SZ, ZG Süd)",
+    walli="Wallis",
+    g_sgs="Glarus und SG Süd",
+    a_l_z="Aargau, Luzern, Zug Nord",
+    graub="Graubünden"
+)
 
 
 class SourceType:

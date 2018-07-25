@@ -13,7 +13,7 @@ class AbstractMongoUser(Document):
 
     id = _id_type(primary_key=True)
     password = StringField()
-    roles = ListField(StringField(), default=[UserRoles.ADMIN])
+    roles = ListField(StringField(), default=[])
 
     meta = {'collection': 'users', 'abstract': True}
 
