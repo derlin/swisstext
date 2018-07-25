@@ -25,6 +25,17 @@
             min-height: 10rem;
         }
 
+        form .btn.dialect {
+            width: 100%;
+            margin: .2em;
+            font-family: Roboto, Arial, sans-serif;
+        }
+
+        .dialects .row:last-of-type label {
+            margin-top: 1.3em;
+            text-align: center !important;
+        }
+
     </style>
 {% endblock %}
 
@@ -44,23 +55,31 @@
     <form method="post">
         <div class="card margins">
             <div class="card-body">
-                {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}
-                <a class="btn float-right" href="{{ url_for('sentences.details', sid=sentence.id) }}">
+                {# {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}#}
+                <a class="btn btn-sm float-right" href="{{ url_for('sentences.details', sid=sentence.id) }}">
                     <span class="oi oi-eye"></span>
                 </a>
                 <div class="card-text text-center">{{ sentence.text }}</div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer dialects">
                 {{ form.csrf_token }}
                 {{ form.sentence_id }}
-                <div>
-                    {% for subfield in form.dialect %}
-                        <div class="btn btn {{ 'btn-outline-info' if subfield.data != '?' else 'btn-outline-danger mr-3' }}">
-                            <span class="d-none">{{ subfield }}</span>
-                            <span>{{ subfield.label }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
+
+                {% for subfield_row in form.dialect | batch(2) %}
+                    <div class="row">
+                        {% for subfield in subfield_row %}
+                            <div class="col-sm">
+                                <span class="d-none">{{ subfield }}</span>
+                                <label for="{{ subfield.label.field_id }}"
+                                       class="btn dialect text-left btn-light
+                                        {{ 'text-danger' if subfield.data.startswith('?') else '' }}">
+                                    <span class="text-monospace">{{ subfield.data.upper() }}</span> -
+                                    <span class="font-weight-normal text-sm">{{ subfield.label.text }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </form>

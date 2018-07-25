@@ -31,7 +31,7 @@ class SentencesForm(FlaskForm):
 
     dialects = SelectMultipleField(
         'Dialects',
-        choices=list(Dialects.items.items()),
+        choices=list(Dialects.items()),
         default=[],  # Dialects.items.keys(),
         validators=[validators.Optional()],
         widget=widgets.ListWidget(prefix_label=False),

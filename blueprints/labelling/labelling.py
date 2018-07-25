@@ -3,10 +3,11 @@ from flask import request
 from flask_login import login_required, current_user
 
 from flask_wtf import FlaskForm
+from markupsafe import Markup
 from wtforms import StringField, SelectField, SubmitField, RadioField, HiddenField
 from wtforms import validators
 
-from persistence.models import MongoSentence
+from persistence.models import MongoSentence, Dialects
 from utils.flash import flash_success, flash_info, flash_form_errors, flash_warning
 from utils.utils import templated, validate_no_csrf
 
@@ -76,7 +77,7 @@ def add_labels():
 class RadioForm(FlaskForm):
     dialect = RadioField(
         'dialect',
-        choices=[('?', 'No idea'), ('be', 'Bernese'), ('arg', 'Argau')],  # TODO
+        choices=list(Dialects.items()) + [('?', 'No idea')],  # TODO
         default='?',
         validators=[validators.DataRequired()]
     )
@@ -93,16 +94,17 @@ def add_labels_radio():
 
     if request.method == 'POST':
         s = MongoSentence.objects.with_id(form.sentence_id.data)
+        msg = "Sentence <a href='%s'><code>%s</code></a>" % (url_for('sentences.details', sid=s.id), s.id)
         if s and form.validate():
             if form.delete_sentence.data:
                 MongoSentence.mark_deleted(s, current_user.id)
-                flash_warning('Sentence deleted.')
-            elif form.dialect.data != '?':
-                MongoSentence.add_label(s, label=form.dialect.data, uuid=current_user.id)
-                flash_success("Sentence labelled.")
+                flash_warning(Markup(msg + " deleted." ))
+            elif form.dialect.data.startswith('?'):
+                    s.update(add_to_set__dialect__skipped_by=current_user.id)
+                    flash_info(Markup(msg + " skipped." ))
             else:
-                s.update(add_to_set__dialect__skipped_by=current_user.id)
-                flash_info("Sentence skipped.")
+                MongoSentence.add_label(s, label=form.dialect.data, uuid=current_user.id)
+                flash_success(Markup(msg + " labelled." ))
         else:
             flash_form_errors(form)
         return redirect(url_for('.add_labels_radio'))

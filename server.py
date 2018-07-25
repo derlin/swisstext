@@ -11,7 +11,7 @@ from blueprints.seeds.seeds import blueprint_seeds
 from blueprints.sentences.sentences import blueprint_sentences
 from blueprints.urls.urls import blueprint_urls
 from blueprints.validation.validation import blueprint_validation
-from blueprints.users import blueprint_users
+from blueprints.users.users import blueprint_users
 from persistence._base import init_db
 from utils.utils import templated
 
@@ -61,7 +61,7 @@ def index():
 
 
 def init_app():
-    init_db(app, db_name='demo')
+    init_db(app, db_name='tmp')
     junja.register(app)
 
 
