@@ -32,7 +32,7 @@ class GoogleGenerator():
         self.key = apikey
         self.ctx = context
 
-        self.params = dict(key=self.key, cx=self.ctx, q='"%s"' % query, fields=_links_fields)
+        self.params = dict(key=self.key, cx=self.ctx, q='%s' % query, fields=_links_fields)
         self.start_offset = 1  # begin at result 1
         self.count = 10  # the API returns at most ten results
 
@@ -81,7 +81,7 @@ class GoogleGenerator():
         r = requests.get(BASE_URL, params=self.params)
         if r.status_code != 200:
             json = r.json()
-            raise Exception('%s (code: %d)' % (json['message'], json['code']))
+            raise Exception('%s (code: %d)' % (json['error']['message'], json['error']['code']))
         return r
 
     def _extract_results(self, json_response: Dict) -> List:
