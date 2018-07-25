@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 class MongoSaver(ISaver):
 
-    def __init__(self, db='st1', host='localhost', port=27017, **kwargs):
+    def __init__(self, db='st1', **kwargs):
         super().__init__()
-        connect(db, host=host, port=port)
+        get_connection(db, **kwargs)
 
     def get_page(self, url: str, **kwargs):
         mu: MongoURL = MongoURL.get(url)

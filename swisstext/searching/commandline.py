@@ -1,3 +1,6 @@
+#!/user/bin/env python3
+# -*- coding: utf-8 -*-
+
 from typing import Iterable
 
 import click
@@ -41,9 +44,8 @@ def cli(log_level, config_path):
 @click.option('-n', '--num-seeds', type=int, default=20, help="Max seeds used.")
 @click.option('--new/--any', default=False, help="Only search new seeds")
 def from_mongo(num_seeds, new):
-    from swisstext.mongo.models import MongoSeed
-    from mongoengine import connect
-    with connect(**config.get('saver_options')):
+    from swisstext.mongo.models import MongoSeed, get_connection
+    with get_connection(**config.get('saver_options')):
         if new:
             seeds = (s.id for s in MongoSeed.objects(search_history__0__exists=False).fields(id=True).limit(num_seeds))
         else:

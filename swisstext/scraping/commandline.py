@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import logging
 import threading
 from queue import Queue
@@ -50,9 +53,8 @@ def cli(log_level, config_path, seed):
 @click.option('-n', '--num', type=int, default=5, help="Number of seeds to generate.")
 @click.option('--new/--any', default=False, help="Use the newest sentences")
 def gen_seeds(num_sentences, num, new):
-    from swisstext.mongo.models import MongoSentence
-    from mongoengine import connect
-    with connect(**config.get('saver_options')):
+    from swisstext.mongo.models import MongoSentence, get_connection
+    with get_connection(**config.get('saver_options')):
         if new:
             sentences = [s.text for s in MongoSentence.objects \
                 .fields(text=True) \
@@ -77,9 +79,8 @@ def gen_seeds(num_sentences, num, new):
 @click.option('-n', '--num-urls', type=int, default=20, help="Max URLs crawled in one pass.")
 @click.option('--new/--any', default=False, help="Only crawl new URLs")
 def crawl_mongo(num_urls, new):
-    from swisstext.mongo.models import MongoURL
-    from mongoengine import connect
-    with connect(**config.get('saver_options')):
+    from swisstext.mongo.models import MongoURL, get_connection
+    with get_connection(**config.get('saver_options')):
         if new:
             for u in MongoURL.get_never_crawled().fields(id=True).limit(num_urls):
                 enqueue(u.id)
