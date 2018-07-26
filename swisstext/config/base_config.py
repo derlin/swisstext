@@ -5,16 +5,21 @@ from typing import Dict, List, Optional, Tuple
 import yaml
 import sys
 import importlib
-from os import path
 
 
 class BaseConfig(ABC):
 
-    def __init__(self, child_file, option_class: classmethod = dict, config_path=None):
-        if config_path is None:
-            config_path = path.join(path.dirname(path.realpath(child_file)), 'config.yaml')
+    def __init__(self, default_config_path: str, option_class: classmethod = dict, config_path=None):
+        default_dict, config_dict = {}, {}
 
-        self.conf = yaml.safe_load(open(config_path))
+        with open(default_config_path) as default_file:
+            default_dict = yaml.safe_load(default_file)
+
+        if config_path:
+            with open(config_path) as config_file:
+                config_dict = yaml.safe_load(config_file)
+
+        self.conf = self.merge_dicts(default_dict, config_dict)
         self.options = option_class(**self.conf['options'])
         self.logger = logging.getLogger(__name__)
 
@@ -79,3 +84,18 @@ class BaseConfig(ABC):
         Useful for JSON output
         """
         return ''.join(word.title() for word in text.split('_'))
+
+    @classmethod
+    def _get_relative_path(cls, file, config_path='config.yaml'):
+        from os import path
+        return path.join(path.dirname(path.realpath(file)), config_path)
+
+    @classmethod
+    def merge_dicts(cls, default, overrides):
+        import collections
+        for k, v in overrides.items():
+            if isinstance(v, collections.Mapping):
+                default[k] = cls.merge_dicts(default.get(k, {}), v)
+            else:
+                default[k] = v
+        return default

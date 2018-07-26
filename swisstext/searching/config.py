@@ -1,14 +1,7 @@
+import logging
 from typing import Optional, List
 
-import yaml
-import sys
-import importlib
-from os import path
-
 from swisstext.config.base_config import BaseConfig
-from swisstext.scraping.pipeline import Pipeline
-import logging
-
 from swisstext.searching.interfaces import ISaver
 from swisstext.searching.pipeline import SearchEngine
 
@@ -29,7 +22,7 @@ class Config(BaseConfig):
             self.force_x_new = force_x_new
 
     def __init__(self, config_path=None):
-        super().__init__(__file__, Config.Options, config_path)
+        super().__init__(self._get_relative_path(__file__), Config.Options, config_path)
 
     @property
     def valid_tool_entries(self) -> List[str]:

@@ -26,7 +26,7 @@ class Config(BaseConfig):
             self.crawl_depth = crawl_depth
 
     def __init__(self, config_path=None):
-        super().__init__(__file__, Config.Options, config_path)
+        super().__init__(self._get_relative_path(__file__), Config.Options, config_path)
 
     @property
     def valid_tool_entries(self) -> List[str]:
