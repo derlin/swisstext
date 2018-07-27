@@ -32,7 +32,7 @@ class SearchUrlsForm(FlaskForm):
         choices=[('url', 'A-Z'), ('delta_date', 'Last crawl date'), ('count', 'Sentences count')],
         default='delta_date'
     )
-    sort_order = BooleanField('Ascending', default=True)
+    sort_order = BooleanField('Ascending', default=False)
     apply = SubmitField('Apply')
     reset = SubmitField('Reset')
 

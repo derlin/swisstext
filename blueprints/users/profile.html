@@ -26,6 +26,9 @@
             <p class="card-text">You labelled
                 <span class="text-primary text-monospace">{{ labelled_sentences.total }}</span> sentences.
             </p>
+            <p class="card-text">You skipped
+                <span class="text-primary text-monospace">{{ skipped_count }}</span> sentences.
+            </p>
         </div>
     </div>
 
@@ -58,7 +61,7 @@
                     {% endfor %}
                 </table>
                 {% else %}
-                <p class="alert alert-danger">No sentence labelled so far.</p>
+                <p class="mt-2 alert alert-danger">No sentence labelled so far.</p>
             </div>
         </div>
     {% endif %}

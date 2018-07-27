@@ -36,7 +36,9 @@
             {% for seed in seeds.items %}
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{ url_for('.details', id=seed.id) }}"><span class="oi oi-eye mr-2"></span></a>
+                        <a href="{{ url_for('.details', id=seed.id) }}">
+                            <span class="oi oi-eye mr-2"></span>
+                        </a>
                         {{ seed.id }}
                         <span class="float-right">
                     {% if seed.deleted %}

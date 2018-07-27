@@ -20,7 +20,7 @@
             background: white;
         }
 
-        .card-text {
+        #sentence {
             padding: 2rem 1.25rem;
             min-height: 10rem;
         }
@@ -59,7 +59,19 @@
                 <a class="btn btn-sm float-right" href="{{ url_for('sentences.details', sid=sentence.id) }}">
                     <span class="oi oi-eye"></span>
                 </a>
-                <div class="card-text text-center">{{ sentence.text }}</div>
+                <div id="sentence" class="card-text text-center">{{ sentence.text }}</div>
+                <div class="card-text text-right">
+                    Source: <code>{{ sentence.url }} </code>
+                    <a href="{{ sentence.url }}" target="_blank"
+                       class="btn btn-link btn-sm text-secondary pl-0 pr-0 ml-0">
+                        <span class="oi oi-external-link"></span>
+                    </a>
+                    <a href="{{ url_for('urls.details', id=sentence.url, next=encode_next_url(request.url)) }}"
+                       class="btn btn-link btn-sm text-secondary pl-0 pr-0 ml-0">
+                        <span class="oi oi-eye"></span>
+                    </a>
+                </div>
+                <div class="card-text text-muted font-italic text-sm-right">added on {{ sentence.date_added | datetime }}</div>
             </div>
             <div class="card-footer dialects">
                 {{ form.csrf_token }}

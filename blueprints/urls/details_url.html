@@ -29,6 +29,7 @@
                 {% if url.source.extra %}
                     {% if url.source.extra.startswith('http') %}
                         <a href="{{ url_for('.details', id=url.source.extra) }}">{{ url.source.extra }}</a>
+                        <a href="{{ url_for('urls.details', id=url.source.extra) }}"><span class="oi oi-eye"></span> </a>
                     {% elif url.source.type_ == 'seed' %}
                         <a href="{{ url_for('seeds.details', id=url.source.extra) }}"><span class="oi oi-eye"></span> </a>
                     {% endif %}

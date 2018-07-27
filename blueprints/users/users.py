@@ -73,9 +73,11 @@ def profile():
             url_for('sentences.details', sid=sid), sid))
         return redirect(url_for(request.endpoint))
 
-    vcount = MongoSentence.objects(dialect__skipped_by=current_user.id).count()
+    skipped_count = MongoSentence.objects(dialect__skipped_by=current_user.id).count()
+    vcount = MongoSentence.objects(validated_by=current_user.id).count()
+
     ss = MongoSentence.objects(dialect__labels__user=current_user.id) \
         .fields(**{'dialect.labels.$': True, 'text': True}) \
         .order_by('-dialect.labels.date') \
         .paginate(page, 5)
-    return dict(form=form, valid_count=vcount, labelled_sentences=ss)
+    return dict(form=form, valid_count=vcount, skipped_count=skipped_count, labelled_sentences=ss)

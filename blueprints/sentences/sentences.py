@@ -27,7 +27,8 @@ class SentencesForm(FlaskForm):
         'Search',
         validators=[validators.Optional(), validators.Length(min=2)]
     )
-    validated_only = BooleanField('Validated sentence only', default=False)
+    validated_only = BooleanField('Validated sentences only', default=False)
+    labelled_only = BooleanField('Labelled sentences only', default=False)
 
     dialects = SelectMultipleField(
         'Dialects',
@@ -40,10 +41,10 @@ class SentencesForm(FlaskForm):
 
     sort = SelectField(
         'Order by',
-        choices=[('text', 'A-Z'), ('crawl_proba', 'SG proba'), ('url', 'url'), ('delta_date', 'Last crawl date')],
-        default='delta_date'
+        choices=[('text', 'A-Z'), ('crawl_proba', 'SG proba'), ('url', 'url'), ('date_added', 'Date added')],
+        default='date_added'
     )
-    sort_order = BooleanField('Ascending', default=True)
+    sort_order = BooleanField('Ascending', default=False)
     apply = SubmitField('Apply')
     reset = SubmitField('Reset')
 
@@ -77,6 +78,8 @@ def view():
 
         if form.validated_only.data:
             query_params['validated_by__0__exists'] = True
+        if form.labelled_only.data:
+            query_params['dialect.label__exists'] = True
 
         sentences = MongoSentence.objects(**query_params) \
             .order_by("%s%s" % ('' if form.sort_order.data else '-', form.sort.data)) \

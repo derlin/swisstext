@@ -1,6 +1,13 @@
 {% extends '_layout.html' %}
 {% set title = 'Sentences' %}
 
+{% block header_include %}
+    <style type="text/css">
+    #dialects {
+        height: auto;
+    }
+    </style>
+{% endblock %}
 {% block body %}
 
     {% from 'bootstrap/form.html' import render_form %}
@@ -30,7 +37,9 @@
             <table class="table table-sm table-hover">
                 {% for sentence in sentences.items %}
                     <tr>
-                        <td><a class="oi oi-eye" href="{{ url_for('sentences.details', sid=sentence.id) }}"></a></td>
+                        <td>
+                            <a class="oi oi-eye" href="{{ url_for('sentences.details', sid=sentence.id) }}"></a>
+                        </td>
                         <td>{{ "%.2f" % (sentence.crawl_proba * 100) }}</td>
                         <td>{{ sentence.dialect.label }}</td>
                         <td>{{ sentence.text }}</td>
