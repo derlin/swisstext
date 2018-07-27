@@ -56,7 +56,8 @@ class BsCrawler(ICrawler):
         # break multi-headlines into a line each
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
         # drop blank lines and remove zero-width space
-        return "\n".join((chunk.replace(u'\u200B', '') for chunk in chunks if chunk))
+        # TODO use " " as joining instead of newlines ? Or do the replacement in the punkt serializer ?
+        return " ".join((chunk.replace(u'\u200B', '').strip() for chunk in chunks if chunk))
 
     def _extract_links(self, url, soup):
         links = (a.get('href') for a in soup.find_all('a', href=True))

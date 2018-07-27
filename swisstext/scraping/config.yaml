@@ -4,11 +4,11 @@ pipeline:
 
   crawler: .bs_crawler.BsCrawler
   splitter: .punkt_splitter.PunktSplitter
-  #sentence_filter: .pattern_sentence_filter.PatternSentenceFilter
+  sentence_filter: .pattern_sentence_filter.PatternSentenceFilter
   sg_detector: .swigspot_langid.SwigspotLangid
   decider: .basic_decider.BasicDecider
-  page_saver:  .console_saver.ConsoleSaver # .mongo_saver.MongoSaver
-  seed_creator: .basic_seed_creator.BasicSeedCreator
+  saver: .mongo_saver.MongoSaver
+  seed_creator: .basic_seed_creator.IdfSeedCreator
 
 options:
   min_proba: 0.85
@@ -18,4 +18,7 @@ options:
 saver_options:
   host: localhost
   port: 27017
-  db: tmp
+  db: swisstext
+
+decider_options:
+  min_ratio: 0.2

@@ -7,11 +7,6 @@ from queue import Queue
 
 import click
 
-# TODO find a cleaner way
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-
 from swisstext.scraping.page_queue import PageQueue
 from swisstext.scraping.config import Config
 from swisstext.scraping.interfaces import *
@@ -47,6 +42,10 @@ def cli(log_level, config_path, seed):
     queue = PageQueue()
     gen_seeds = seed
 
+@cli.command('dump_config')
+def dump_config():
+    import pyaml
+    print(pyaml.dump(config.conf))
 
 @cli.command('gen_seeds')
 @click.option('-s', '--num-sentences', type=int, default=100, help="Number of sentences to use.")
@@ -146,10 +145,10 @@ def crawl():
         # TODO make it cleaner !
         import signal
         def handler(signum, frame):
-            logger.info("Ctrl-c received! Sending kill to threads...")
+            print("Ctrl-c received! Sending kill to threads... Press again to force stop.")
             for w, t in threads:
                 w.kill_received = True
-            # queue.queue.clear()
+            signal.signal(signal.SIGINT, signal.default_int_handler)
         signal.signal(signal.SIGINT, handler)
 
         for w, t in threads:
@@ -162,6 +161,7 @@ def crawl():
 
     logger.info("Found %d new sentences." % len(new_sentences))
 
+    # TODO remove
     with open('/tmp/new_sentences.txt', 'w') as f:
         f.write("\n".join(new_sentences))
 

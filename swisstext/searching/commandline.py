@@ -6,11 +6,6 @@ from typing import Iterable
 import click
 import logging
 
-# TODO find a cleaner way
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-
 from swisstext.searching.pipeline import SearchEngine
 from swisstext.searching.config import Config
 from swisstext.searching.data import Seed

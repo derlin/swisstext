@@ -6,12 +6,9 @@ search_engine:
   _base_package: swisstext.searching.tools
 
   searcher: .start_page.StartPageGeneratorFactory
-  saver: .console_saver.ConsoleSaver #.mongo_saver.MongoSaver
-
-searcher_options:
-  apikey: AIzaSyDMk87ekl3J8frp_ykFeGVDxP_i_grMTYo
+  saver: .mongo_saver.MongoSaver
 
 saver_options:
   host: localhost
   port: 27017
-  db: tmp
+  db: swisstext

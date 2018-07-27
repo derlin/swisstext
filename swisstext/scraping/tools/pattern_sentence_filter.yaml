@@ -1,3 +1,10 @@
+- start:
+  descr: start character
+  find:
+    pattern: '^[\W|\d]'
+    count:
+      max: 0
+
 - min_letters:
   descr: not enough letters
   find:
@@ -10,12 +17,19 @@
   length:
     max: 1000
 
-- ascii_letters:
-  descr: not enough ascii letter
+#- ascii_letters:
+#  descr: not enough ascii letter
+#  find:
+#    pattern: '[a-zA-Z]'
+#    ratio:
+#      min: 1.5
+
+- non_sg_letters:
+  descr: too much non SG letters
   find:
-    pattern: '[a-zA-Z]'
-    ratio:
-      min: 1.5
+    pattern: '[^\W\däÄöÖüÜa-zA-Z]'
+    count:
+      max: 2
 
 - min_words:
   descr: not enough words
@@ -31,13 +45,6 @@
     ratio:
       max: 1.4
 
-- start:
-  descr: start character
-  find:
-    pattern: '^[\W|\d]'
-    count:
-      max: 0
-
 - has_tabs:
   descr: tabular data
   find:
@@ -48,7 +55,7 @@
 - bad_chars:
   descr: strange symbols
   find:
-    pattern: '[|\[\]]|(>>)|(<<)|…|(---)|©|°|§|·|( > )|{|}'
+    pattern: '[|\[\]]|(>>)|(<<)|…|(---)|©|®|°|§|·|( > )|{|}'
     count:
       max: 0
 
@@ -80,5 +87,12 @@
       max: 30
   find:
     pattern: '(\.\s?){3}$'
+    count:
+      max: 0
+
+- http:
+  descr: links and HTML garbage
+  find:
+    pattern: '@|(https?:)|(nbsp;)|(a href)'
     count:
       max: 0
