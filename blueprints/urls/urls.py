@@ -6,12 +6,13 @@ from wtforms.validators import Length, Optional
 
 from persistence.models import MongoURL, MongoSentence, MongoBlacklist
 from utils.flash import flash_success
+from utils.search_form import SearchForm
 from utils.utils import templated
 
 blueprint_urls = Blueprint('urls', __name__, template_folder='.')
 
 
-class SearchUrlsForm(FlaskForm):
+class SearchUrlsForm(SearchForm):
     search = StringField(
         render_kw=dict(placeholder='url part'),
         validators=[Length(min=2), Optional()]
@@ -47,16 +48,16 @@ class DeleteUrlForm(FlaskForm):
 @login_required
 @templated('urls.html')
 def view():
-    form = SearchUrlsForm()
+    if request.method == 'POST':
+        return SearchUrlsForm.redirect_as_get()
+
+    form = SearchUrlsForm.from_get()
     urls = []
     page = int(form.page.data)  # get the parameter, then reset
     form.page.data = 1
     collapse = False
 
-    if request.method == 'POST' and form.validate():
-        if form.reset.data:
-            return redirect(url_for('.view'))
-
+    if not form.is_blank():
         query_params = dict()
 
         if form.search.data:

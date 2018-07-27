@@ -30,6 +30,7 @@
             <p>{{ sentences.total }} sentences found.</p>
 
             {% if sentences.has_prev or sentences.has_next %}
+{#                {% from 'includes/_macros.html' import render_post_navigation %}#}
                 {% from 'includes/_macros.html' import render_post_navigation %}
                 {{ render_post_navigation(sentences) }}
             {% endif %}

@@ -5,6 +5,7 @@ from wtforms import StringField, SubmitField, BooleanField, validators, SelectFi
 
 from persistence.models import MongoSeed, SourceType, Source, MongoURL
 from utils.flash import flash_success
+from utils.search_form import SearchForm
 from utils.utils import templated
 
 blueprint_seeds = Blueprint('seeds', __name__, template_folder='.')
@@ -20,7 +21,7 @@ class AddSeedForm(FlaskForm):
     add = SubmitField('I am sure, add it!')
 
 
-class SearchSeedsForm(FlaskForm):
+class SearchSeedsForm(SearchForm):
     search = StringField(
         'Search',
         validators=[validators.Optional(), validators.Length(min=2)]
@@ -82,17 +83,18 @@ def add():
 @login_required
 @templated('view_seeds.html')
 def view():
-    form: SearchSeedsForm = SearchSeedsForm()
-    seeds = []
+    if request.method == 'POST':
+        return SearchSeedsForm.redirect_as_get()
+
+    form: SearchSeedsForm = SearchSeedsForm.from_get()
     page = int(form.page.data)  # get the parameter, then reset
     form.page.data = 1
-
     query_params = dict()
 
-    if request.method == 'POST' and form.validate():
+    if not form.is_blank():
+
         if form.reset.data:
             return redirect(url_for('.view'))
-
 
         if form.search.data:
             query_params['id__icontains'] = form.search.data.strip()
@@ -102,7 +104,6 @@ def view():
 
         if form.search_history.data:
             query_params['search_history__0__exists'] = form.search_history.data == 'True'
-
 
     seeds = MongoSeed.objects(**query_params) \
         .order_by("%s%s" % ('' if form.sort_order.data else '-', form.sort.data)) \

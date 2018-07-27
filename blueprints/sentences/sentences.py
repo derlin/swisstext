@@ -5,24 +5,21 @@ from wtforms import HiddenField, SubmitField, SelectMultipleField, widgets, vali
     BooleanField, StringField
 
 from persistence.models import MongoSentence, Dialects
-from user_management import role_required
 from utils import flash
+from utils.search_form import SearchForm
 from utils.utils import templated
 
 blueprint_sentences = Blueprint('sentences', __name__, template_folder='.')
 
 _per_page = 50
 
+
 class DeleteSentenceForm(FlaskForm):
     comment = StringField('comment', render_kw=dict(placeholder="optional comment"))
     delete = SubmitField('Go ahead!')
 
-class SentencesForm(FlaskForm):
-    # limit = IntegerField(
-    #     'Max results',
-    #     validators=[validators.Optional(), validators.Length(min=1)]
-    # )
 
+class SentencesForm(SearchForm):
     search = StringField(
         'Search',
         validators=[validators.Optional(), validators.Length(min=2)]
@@ -55,37 +52,39 @@ class SentencesForm(FlaskForm):
 @login_required
 @templated('sentences.html')
 def view():
-    form = SentencesForm()
-    sentences = []
+    if request.method == 'POST':
+        return SentencesForm.redirect_as_get()
+
+    form = SentencesForm.from_get()
+    if SentencesForm.is_blank():
+        # don't show any results the first time
+        # TODO really necessary ?
+        return dict(form=form, sentences=[], collapse=False)
+
     page = int(form.page.data)  # get the parameter, then reset
     form.page.data = 1
-    collapse = False
 
-    if request.method == 'POST' and form.validate():
-        if form.reset.data:
-            return redirect(url_for('.view'))
+    query_params = dict(deleted__exists=False)
 
-        query_params = dict(deleted__exists=False)
+    if len(form.dialects.data):
+        if len(form.dialects.data) < len(form.dialects.choices):
+            query_params['dialect__label__in'] = form.dialects.data
+        else:
+            query_params['dialect__label__exists'] = True
 
-        if len(form.dialects.data):
-            if len(form.dialects.data) < len(form.dialects.choices):
-                query_params['dialect__label__in'] = form.dialects.data
-            else:
-                query_params['dialect__label__exists'] = True
+    if form.search.data:
+        query_params['text__icontains'] = form.search.data.strip()
 
-        if form.search.data:
-            query_params['text__icontains'] = form.search.data.strip()
+    if form.validated_only.data:
+        query_params['validated_by__0__exists'] = True
+    if form.labelled_only.data:
+        query_params['dialect__label__exists'] = True
 
-        if form.validated_only.data:
-            query_params['validated_by__0__exists'] = True
-        if form.labelled_only.data:
-            query_params['dialect.label__exists'] = True
+    sentences = MongoSentence.objects(**query_params) \
+        .order_by("%s%s" % ('' if form.sort_order.data else '-', form.sort.data)) \
+        .paginate(page, per_page=20)
 
-        sentences = MongoSentence.objects(**query_params) \
-            .order_by("%s%s" % ('' if form.sort_order.data else '-', form.sort.data)) \
-            .paginate(page, per_page=20)
-
-        collapse = sentences.total > 0
+    collapse = sentences.total > 0
 
     return dict(form=form, sentences=sentences, collapse=collapse)
 
