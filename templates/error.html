@@ -29,20 +29,30 @@
         <h1>Erreur {{ status_code }}</h1>
         <p>Oups, une erreur est survenue.</p>
 
-        <table class="table">
-            <tr>
-                <td>code</td>
-                <td><code>{{ status_code }}</code></td>
-            </tr>
-            <tr>
-                <td>message</td>
-                <td><code>{{ message }}</code></td>
-            </tr>
-            <tr>
-                <td>cause</td>
-                <td><code>{{ cause }}</code></td>
-            </tr>
-        </table>
+
+        <button class="btn btn-link" id="headingOne" type="button" data-toggle="collapse" data-target="#collapse"
+                aria-expanded="true" aria-controls="collapse">
+            Details
+        </button>
+
+        <div class="card mt-4 collapse" id="collapse" aria-labelledby="headingOne">
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td>code</td>
+                        <td><code>{{ status_code }}</code></td>
+                    </tr>
+                    <tr>
+                        <td>message</td>
+                        <td><code>{{ message }}</code></td>
+                    </tr>
+                    <tr>
+                        <td>cause</td>
+                        <td><code>{{ cause }}</code></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
