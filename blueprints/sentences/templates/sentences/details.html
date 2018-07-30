@@ -17,8 +17,8 @@
 
     {% if not s.deleted %}
         <p class="clearfix">
-            <a class="link link-danger float-right" data-toggle="collapse" href="#delete-collapse" role="button"
-               aria-expanded="false" aria-controls="delete-collapse">
+            <a class="link link-danger float-right collapsed" data-toggle="collapse" href="#delete-collapse"
+               role="button" aria-expanded="false" aria-controls="delete-collapse">
                 Remove sentence
             </a>
         </p>
@@ -46,20 +46,15 @@
         <div class="card-body">
             <p class="card-text text-center mt-2 mb-3">{{ s.text }}</p>
             <p class="card-text">Source:
-                <code>{{ s.url }}</code>
-                <a class="card-link ml-2" href="{{ s.url }}" target="_blank"><span
-                        class="oi oi-external-link"></span></a>
-                <a class="ml-2" href="{{ url_for('urls.details', id=s.url) }}"><span class="oi oi-eye"></span></a>
-            </p>
-            <p>
-                {# <a class="btn btn-light" href="{{ url_for('validation.remove_url', url=s.url) }}">discard site</a>#}
+                {% from 'includes/_macros.html' import render_url %}
+                {{ render_url(s.url) }}
             </p>
         </div>
     </div>
     <div class="card mt-2">
         <div class="card-header">Crawl information</div>
         <div class="card-body">
-            <p class="card-text">probability: {{ "%.2f" % (s.crawl_proba * 100) }}</p>
+            <p class="card-text">probability: <span class="text-monospace">{{ s.crawl_proba|percent }}</span></p>
             <p class="card-text">Crawled on {{ s.date_added | datetime }}</p>
         </div>
     </div>

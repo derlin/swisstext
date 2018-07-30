@@ -4,8 +4,8 @@
 {% block body %}
 
     <p class="clearfix">
-        <a class="link link-danger float-right" data-toggle="collapse" href="#delete-collapse" role="button"
-           aria-expanded="false" aria-controls="delete-collapse">
+        <a class="link link-danger float-right collapsed" data-toggle="collapse" href="#delete-collapse"
+           role="button" aria-expanded="false" aria-controls="delete-collapse">
             Remove URL
         </a>
     </p>
@@ -23,22 +23,32 @@
     </div>
 
     <div class="card mt-3">
-        <div class="card-header">URL <a href="{{ url.id }}" target="_blank">{{ url.id }}</a></div>
+        <div class="card-header">URL info</div>
         <div class="card-body">
-            <p class="card-text">Source: {{ url.source.type_ }}
+            <p class="card-text">Page link:<br />
+                <a class="card-link ml-2" href="{{ url.id }}" target="_blank">
+                    <code>{{ url.id }}</code>
+                    <span class="oi oi-external-link"></span>
+                </a>
+            </p>
+            <p class="card-text">Source:
+                <span class="badge badge-pill badge-info">{{ url.source.type_ }}</span><br />
                 {% if url.source.extra %}
                     {% if url.source.extra.startswith('http') %}
-                        <a href="{{ url_for('.details', id=url.source.extra) }}">{{ url.source.extra }}</a>
-                        <a href="{{ url_for('urls.details', id=url.source.extra) }}"><span class="oi oi-eye"></span> </a>
+                        {% from 'includes/_macros.html' import render_url %}
+                        {{ render_url(url.id) }}
                     {% elif url.source.type_ == 'seed' %}
-                        <a href="{{ url_for('seeds.details', id=url.source.extra) }}"><span class="oi oi-eye"></span> </a>
+                        <code>{{ url.source.extra }}</code>
+                        <a class="btn btn-light btn-sm" href="{{ url_for('seeds.details', id=url.source.extra) }}">
+                            <span class="oi oi-eye"></span>
+                        </a>
                     {% endif %}
                 {% endif %}
             </p>
         </div>
     </div>
     <div class="card mt-2">
-        <div class="card-header"
+        <div class="card-header collapsed"
              data-toggle="collapse" href="#history-body" role="button" aria-controls="history-body">
             Crawled {{ url.crawl_history|length }} time(s).
         </div>
@@ -48,7 +58,9 @@
                     <p class="card-text">History</p>
                     <ul>
                         {% for entry in url.crawl_history %}
-                            <li class="list-group-item">{{ entry.date|datetime }} - {{ entry.count }} new sentences.
+                            <li class="list-group-item">
+                                <span class="text-monospace">{{ entry.date|datetime }}</span>
+                                - {{ entry.count }} new sentences.
                             </li>
                         {% endfor %}
                     </ul>

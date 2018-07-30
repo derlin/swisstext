@@ -8,8 +8,8 @@ from blueprints.api import blueprint_api
 from blueprints.errorhandlers import errorhandlers
 from blueprints.labelling.labelling import blueprint_labelling
 from blueprints.seeds.seeds import blueprint_seeds
-from blueprints.sentences.sentences import blueprint_sentences
-from blueprints.urls.urls import blueprint_urls
+from blueprints.sentences import blueprint_sentences
+from blueprints.urls import blueprint_urls
 from blueprints.validation.validation import blueprint_validation
 from blueprints.users.users import blueprint_users
 from persistence._base import init_db

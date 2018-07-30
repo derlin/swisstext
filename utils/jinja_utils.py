@@ -13,8 +13,10 @@ def eanToColor(ean, opacity=1):
     color = color[:6] + "%02x" % int(opacity * 255)
     return "#" + color
 
+def format_percent(val):
+    return "%.2f" % (100 * val)
 
-def format_datetime(d, format='%Y-%m-%d at %H:%M'):
+def format_datetime(d, format='%Y-%m-%d %H:%M'):
     return d.strftime(format)
 
 
@@ -28,6 +30,7 @@ def register(app):
     app.jinja_env.filters['unquote'] = unquote
     app.jinja_env.filters['quote'] = quote
     app.jinja_env.filters['datetime'] = format_datetime
+    app.jinja_env.filters['percent'] = format_percent
     app.jinja_env.globals.update(encode_next_url=encode_next_url)
 
     # make the privileges static class available

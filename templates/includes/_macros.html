@@ -87,7 +87,7 @@
         function changePage(page) {
             // use JS to add a query parameter to the form before submit
 
-            let form =  $("{{ '#' + form_id if form_id else 'form' }}");
+            let form = $("{{ '#' + form_id if form_id else 'form' }}");
             if (form) {
                 // a form has been specified (or has an id #paramsForm) -> submit the form with the
                 // proper action
@@ -116,4 +116,32 @@
             {% endif %}
         {% endfor %}
     </ul>
+{% endmacro %}
+
+
+{% macro render_search_form(form, collapse=False) %}
+    {% from 'bootstrap/form.html' import render_form %}
+    <div class="card mb-4">
+        <div class="card-header {{ 'collapsed' if collapse else '' }}"
+             id="headingOne" type="button" data-toggle="collapse" data-target="#collapse"
+             aria-expanded="true" aria-controls="collapse">
+            Filters
+        </div>
+
+        <div id="collapse" class="collapse {{ '' if collapse else 'show' }}" aria-labelledby="headingOne">
+            <div class="card-body">
+                {{ render_form(form, button_map={'apply': 'primary'}) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_url(url) %}
+    <a class="card-link ml-2" href="{{ url }}" target="_blank">
+        <code>{{ url }}</code>
+        <span class="ml-1 oi oi-external-link"></span>
+    </a>
+    <a class="ml-2 btn btn-light btn-sm" href="{{ url_for('urls.details', id=url) }}">
+        <span class="oi oi-eye"></span>
+    </a>
 {% endmacro %}

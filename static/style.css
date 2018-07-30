@@ -5,3 +5,44 @@ html, body {
 .container {
     padding: 3rem 1.5rem;
 }
+
+/*[data-toggle="collapse"] .oi {*/
+/*transition: transform .2s ease-in-out;*/
+/*!*content: '\e02d';*!*/
+/*}*/
+
+/*[data-toggle="collapse"].collapsed .oi {*/
+/*transform: rotate(-90deg);*/
+/*}*/
+
+[data-toggle="collapse"]:before {
+    transition: transform .25s ease-in-out;
+    content: '\e02d';
+    font-family: Icons;
+    font-size: .8em;
+    color: #afafaf;
+    display: inline-block;
+    top: 1px;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}
+
+[data-toggle="collapse"].collapsed:before {
+    transform: rotate(-90deg);
+}
+
+.btn {
+    vertical-align: initial;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.badge {
+    font-weight: normal;
+}
+.oi-external-link {
+    font-size: .8em;
+}
