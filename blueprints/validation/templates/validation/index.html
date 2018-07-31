@@ -95,7 +95,7 @@
                         </div>
                     </div>
                 </td>
-                <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
+                <td class="text-monospace text-right small">{{ s.crawl_proba|percent }}</td>
                 <td>{{ s.text }}</td>
             </tr>
         {% endfor %}

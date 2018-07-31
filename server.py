@@ -10,7 +10,7 @@ from blueprints.labelling.labelling import blueprint_labelling
 from blueprints.seeds import blueprint_seeds
 from blueprints.sentences import blueprint_sentences
 from blueprints.urls import blueprint_urls
-from blueprints.validation.validation import blueprint_validation
+from blueprints.validation import blueprint_validation
 from blueprints.users import blueprint_users
 from persistence._base import init_db
 from utils.utils import templated
