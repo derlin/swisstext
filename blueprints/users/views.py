@@ -1,38 +1,19 @@
 from flask import Blueprint, redirect, request, url_for
 from flask_login import current_user, login_user, login_required
-from flask_wtf import FlaskForm
 from markupsafe import Markup
-from wtforms import PasswordField, StringField, SubmitField, HiddenField
-from wtforms.validators import Length, InputRequired
 
 from persistence.models import MongoSentence
+from user_management import User
 from utils.flash import flash_form_errors, flash_error, flash_success
 from utils.utils import templated
-from user_management import User
 
-blueprint_users = Blueprint('users', __name__, template_folder='.')
+from .forms import LoginForm, ProfileForm
 
-
-class LoginForm(FlaskForm):
-    name = StringField(
-        'name',
-        validators=[InputRequired(), Length(max=30)])
-
-    password = PasswordField(
-        'password',
-        validators=[InputRequired(), Length(min=8, max=20)])
-
-    submit = SubmitField('submit')
-
-
-class RegisterForm(LoginForm):
-    password_bis = PasswordField(
-        'repeat password',
-        validators=[InputRequired(), Length(min=8, max=20)])
+blueprint_users = Blueprint('users', __name__, template_folder='templates')
 
 
 @blueprint_users.route('/login', methods=['GET', 'POST'])
-@templated('login.html')
+@templated('users/login.html')
 def login():
     if current_user.is_authenticated == True:
         return redirect('/')
@@ -53,12 +34,8 @@ def login():
     return dict(form=form)
 
 
-class ProfileForm(FlaskForm):
-    sid = HiddenField()
-
-
 @blueprint_users.route('/profile', methods=['GET', 'POST'])
-@templated('profile.html')
+@templated('users/profile.html')
 @login_required
 def profile():
     page = int(request.args.get('page', 1))
@@ -70,7 +47,7 @@ def profile():
         flash_success(
             Markup(
                 'Label removed from sentence <a href="%s"><code>%s</code></a>.') % (
-            url_for('sentences.details', sid=sid), sid))
+                url_for('sentences.details', sid=sid), sid))
         return redirect(url_for(request.endpoint))
 
     skipped_count = MongoSentence.objects(dialect__skipped_by=current_user.id).count()
