@@ -38,7 +38,7 @@
     </div>
 
     <div class="card mt-2">
-        <div class="card-header"
+        <div class="card-header collapsed"
              data-toggle="collapse" href="#history-body" role="button" aria-controls="history-body">
             Usage
         </div>
@@ -47,9 +47,9 @@
                 <p class="card-text">Used {{ s.search_history|length }} time(s).</p>
                 {% if s.search_history %}
                     <p class="card-text">History</p>
-                    <ul>
+                    <ul class="list-group">
                         {% for entry in s.search_history %}
-                            <li class="list-group-item">{{ entry.date }} - {{ entry.count }} new URLs.</li>
+                            <li class="list-group-item">{{ entry.date|datetime }} - {{ entry.count }} new URLs.</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
