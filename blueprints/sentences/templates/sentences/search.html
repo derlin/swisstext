@@ -35,18 +35,7 @@
                 {{ render_post_navigation(sentences) }}
             {% endif %}
 
-            <table class="table table-sm table-hover">
-                {% for sentence in sentences.items %}
-                    <tr>
-                        <td>
-                            <a class="oi oi-eye" href="{{ url_for('sentences.details', sid=sentence.id) }}"></a>
-                        </td>
-                        <td>{{ "%.2f" % (sentence.crawl_proba * 100) }}</td>
-                        <td>{{ sentence.dialect.label }}</td>
-                        <td>{{ sentence.text }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+            {% include 'sentences/_table.html' %}
         {% else %}
             <p class="alert alert-danger">No sentence match this search.</p>
         {% endif %}

@@ -1,0 +1,22 @@
+<table class="table table-sm table-hover mt-2">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Proba</th>
+        <th>Dialect</th>
+        <th>Text</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sentence in sentences.items %}
+        <tr>
+            <td>
+                <a class="oi oi-eye" href="{{ url_for('sentences.details', sid=sentence.id) }}"></a>
+            </td>
+            <td class="text-right text-monospace small">{{ sentence.crawl_proba|percent }}</td>
+            <td class="text-center">{{ sentence.dialect.label or '?' }}</td>
+            <td>{{ sentence.text }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

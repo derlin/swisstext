@@ -60,22 +60,7 @@
     {% if urls.items %}
         <div class="mt-5">
             <h5>Found {{ urls.total }} URLs</h5>
-            <table class="table table-hover table-sm">
-                {% for u in urls.items %}
-                    <tr>
-                        {# TODO #}
-                        <td><a href="{{ u.id }}" target="_blank"><span class="oi oi-external-link"></span></a></td>
-                        <td>
-                            <a href="{{ url_for('urls.details', id=u.id, next=encode_next_url(request.url)) }}">
-                                <span class="oi oi-eye"></span>
-                            </a>
-                        </td>
-                        <td class="text-right" title="No. of sentences found">{{ u.count }}</td>
-                        <td><code>{{ u.id }}</code></td>
-                    </tr>
-                {% endfor %}
-            </table>
-
+            {% include 'urls/_table.html' %}
             {% if urls.has_prev or urls.has_next %}
                 {% from 'includes/_macros.html' import render_navigation %}
                 {{ render_navigation(urls, '.details') }}

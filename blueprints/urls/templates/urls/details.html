@@ -75,17 +75,7 @@
     {% if sentences %}
         <div class="mt-5">
             <h4>{{ sentences.total }} sentences found on this page</h4>
-            <table class="table table-sm table-hover">
-                {% for s in sentences.items %}
-                    <tr id="{{ s.id }}">
-                        <td>
-                            <a href="{{ url_for('sentences.details', sid=s.id) }}"><span class="oi oi-eye"></span></a>
-                        </td>
-                        <td>{{ "%.2f" % (s.crawl_proba * 100) }}</td>
-                        <td>{{ s.text }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+            {% include 'sentences/_table.html' %}
             {% if sentences.has_prev or sentences.has_next %}
                 {% from 'includes/_macros.html' import render_navigation %}
                 {{ render_navigation(sentences, '.details', id=url.id) }}
