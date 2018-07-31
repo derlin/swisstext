@@ -2,6 +2,8 @@ import flask
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, SubmitField
 
+from .utils import validate_no_csrf
+
 
 class SearchForm(FlaskForm):
     page = HiddenField(default=1)
@@ -51,3 +53,7 @@ class SearchForm(FlaskForm):
             # default to current endpoint
             endpoint = flask.request.endpoint
         return flask.redirect(flask.url_for(endpoint, **kwargs))
+
+    def validate(self):
+        return validate_no_csrf(self)
+

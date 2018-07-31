@@ -56,7 +56,9 @@
                 {{ form.csrf_token }}
                 {{ render_field(form.search) }}
                 {{ render_field(form.dialect) }}
-                {{ render_field(form.submit, button_map={'submit':'primary'}) }}
+                {{ render_field(form.per_page) }}
+                {{ render_field(form.reset) }}
+                {{ render_field(form.apply, button_map={'apply':'primary'}) }}
             </div>
         </div>
 
