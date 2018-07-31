@@ -1,8 +1,8 @@
 from flask import Blueprint
 from flask_login import current_user
 
-from persistence.models import MongoSentence
-import utils.responses as responses
+from swisstext.frontend.persistence.models import MongoSentence
+import swisstext.frontend.utils.responses as responses
 
 blueprint_api = Blueprint('api', __name__)
 

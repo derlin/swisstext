@@ -1,10 +1,10 @@
 from flask import Blueprint, request, url_for, redirect
 from flask_login import login_required, current_user
 
-from persistence.aggregation_utils import paginated_aggregation
-from persistence.models import MongoSeed, SourceType, Source, MongoURL
-from utils.flash import flash_success
-from utils.utils import templated
+from swisstext.frontend.persistence.aggregation_utils import paginated_aggregation
+from swisstext.frontend.persistence.models import MongoSeed, SourceType, Source, MongoURL
+from swisstext.frontend.utils.flash import flash_success
+from swisstext.frontend.utils.utils import templated
 
 from .forms import AddSeedForm, SearchSeedsForm, DeleteSeedForm
 

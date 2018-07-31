@@ -1,8 +1,8 @@
 from flask_login import UserMixin, LoginManager
 
-from persistence.models import MongoUser, UserRoles
+from .persistence.models import MongoUser, UserRoles
 
-from utils.flash import flash_error
+from .utils.flash import flash_error
 
 login_manager = LoginManager()
 

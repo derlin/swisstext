@@ -1,9 +1,9 @@
 from flask import request, redirect
 from flask_login import current_user, login_required
 
-from persistence.models import MongoSentence
-from utils import flash
-from utils.utils import templated
+from swisstext.frontend.persistence.models import MongoSentence
+from swisstext.frontend.utils import flash
+from swisstext.frontend.utils.utils import templated
 
 from .forms import DeleteSentenceForm, SentencesForm
 from flask import Blueprint

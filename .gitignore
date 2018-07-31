@@ -1,5 +1,10 @@
-*.pyc
 __pycache__
+*.pyc
+build
+dist
+*.egg-info
+*-test.py
+*.log
 
 .idea
 *.iml

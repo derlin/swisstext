@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from utils.utils import templated
+from swisstext.frontend.utils.utils import templated
 
 blueprint_index = Blueprint('index', __name__)
 

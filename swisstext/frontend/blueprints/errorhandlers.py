@@ -3,9 +3,9 @@ import traceback
 import mongoengine
 from flask.blueprints import Blueprint
 
-from utils import responses
-from utils.errors import AppError
-from utils.log import getLogger
+from swisstext.frontend.utils import responses
+from swisstext.frontend.utils.errors import AppError
+from swisstext.frontend.utils.log import getLogger
 
 logger = getLogger(__name__)
 errorhandlers = Blueprint('error_handlers', __name__)

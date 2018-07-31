@@ -1,7 +1,7 @@
 # see https://github.com/MongoEngine/flask-mongoengine/issues/309
 
-from mongo.abstract import *
-from persistence._base import db
+from swisstext.mongo.abstract import *
+from ._base import db
 
 
 class MongoUser(db.Document, AbstractMongoUser):

@@ -4,8 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectMultipleField, widgets, validators, SelectField, \
     BooleanField, StringField
 
-from persistence.models import Dialects
-from utils.search_form import SearchForm
+from swisstext.frontend.persistence.models import Dialects
+from swisstext.frontend.utils.search_form import SearchForm
 
 
 class DeleteSentenceForm(FlaskForm):

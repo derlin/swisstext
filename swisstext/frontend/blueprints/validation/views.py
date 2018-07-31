@@ -3,9 +3,9 @@ from flask_login import login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import HiddenField, SubmitField
 
-from persistence.models import MongoSentence
-from utils import flash
-from utils.utils import templated
+from swisstext.frontend.persistence.models import MongoSentence
+from swisstext.frontend.utils import flash
+from swisstext.frontend.utils.utils import templated
 
 blueprint_validation = Blueprint('validation', __name__, template_folder='templates')
 

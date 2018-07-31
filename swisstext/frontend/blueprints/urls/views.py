@@ -1,9 +1,9 @@
 from flask import request, url_for, redirect
 from flask_login import login_required, current_user
 
-from persistence.models import MongoURL, MongoSentence, MongoBlacklist
-from utils.flash import flash_success
-from utils.utils import templated
+from swisstext.frontend.persistence.models import MongoURL, MongoSentence, MongoBlacklist
+from swisstext.frontend.utils.flash import flash_success
+from swisstext.frontend.utils.utils import templated
 
 from .forms import DeleteUrlForm, SearchUrlsForm
 

@@ -3,17 +3,17 @@ from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, logout_user, UserMixin
 
-import utils.jinja_utils as junja
-from blueprints.api import blueprint_api
-from blueprints.errorhandlers import errorhandlers
-from blueprints.labelling.labelling import blueprint_labelling
-from blueprints.seeds import blueprint_seeds
-from blueprints.sentences import blueprint_sentences
-from blueprints.urls import blueprint_urls
-from blueprints.validation import blueprint_validation
-from blueprints.users import blueprint_users
-from persistence._base import init_db
-from utils.utils import templated
+from .utils import jinja_utils as junja
+from .blueprints.api import blueprint_api
+from .blueprints.errorhandlers import errorhandlers
+from .blueprints.labelling.labelling import blueprint_labelling
+from .blueprints.seeds import blueprint_seeds
+from .blueprints.sentences import blueprint_sentences
+from .blueprints.urls import blueprint_urls
+from .blueprints.validation import blueprint_validation
+from .blueprints.users import blueprint_users
+from .persistence._base import init_db
+from .utils.utils import templated
 
 app = Flask(__name__)
 app.config.update(dict(
@@ -24,7 +24,7 @@ app.config.update(dict(
 # bootstrap
 bootstrap = Bootstrap(app)
 
-from user_management import User, login_manager
+from .user_management import User, login_manager
 login_manager.init_app(app)
 login_manager.login_view = "users.login"
 
@@ -78,7 +78,3 @@ def init_app(debug=False, mongo_host='localhost', db='st1'):
 def run(debug, host, port, mongo_host, db):
     init_app(debug, mongo_host, db)
     app.run(host=host, port=port, debug=debug, threaded=True)
-
-
-if __name__ == "__main__":
-    run()

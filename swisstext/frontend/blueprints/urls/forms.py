@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, SelectField, IntegerField, HiddenField
 from wtforms.validators import Length, Optional
 
-from utils.search_form import SearchForm
+from swisstext.frontend.utils.search_form import SearchForm
 
 
 class DeleteUrlForm(FlaskForm):

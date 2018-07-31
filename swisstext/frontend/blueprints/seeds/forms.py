@@ -2,9 +2,9 @@ from typing import Dict
 
 from flask import Blueprint
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, validators, SelectField, HiddenField, IntegerField
+from wtforms import StringField, SubmitField, BooleanField, validators, SelectField, IntegerField
 
-from utils.search_form import SearchForm
+from swisstext.frontend.utils.search_form import SearchForm
 
 blueprint_seeds = Blueprint('seeds', __name__, template_folder='.')
 

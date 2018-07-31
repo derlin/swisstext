@@ -2,10 +2,10 @@ from flask import Blueprint, redirect, request, url_for
 from flask_login import current_user, login_user, login_required
 from markupsafe import Markup
 
-from persistence.models import MongoSentence
-from user_management import User
-from utils.flash import flash_form_errors, flash_error, flash_success
-from utils.utils import templated
+from swisstext.frontend.persistence.models import MongoSentence
+from swisstext.frontend.user_management import User
+from swisstext.frontend.utils.flash import flash_form_errors, flash_error, flash_success
+from swisstext.frontend.utils.utils import templated
 
 from .forms import LoginForm, ProfileForm
 

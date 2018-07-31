@@ -7,9 +7,9 @@ from markupsafe import Markup
 from wtforms import StringField, SelectField, SubmitField, RadioField, HiddenField
 from wtforms import validators
 
-from persistence.models import MongoSentence, Dialects
-from utils.flash import flash_success, flash_info, flash_form_errors, flash_warning
-from utils.utils import templated, validate_no_csrf
+from swisstext.frontend.persistence.models import MongoSentence, Dialects
+from swisstext.frontend.utils.flash import flash_success, flash_info, flash_form_errors, flash_warning
+from swisstext.frontend.utils.utils import templated, validate_no_csrf
 
 blueprint_labelling = Blueprint('labelling', __name__, template_folder='.')
 
@@ -98,13 +98,13 @@ def add_labels_radio():
         if s and form.validate():
             if form.delete_sentence.data:
                 MongoSentence.mark_deleted(s, current_user.id)
-                flash_warning(Markup(msg + " deleted." ))
+                flash_warning(Markup(msg + " deleted."))
             elif form.dialect.data.startswith('?'):
-                    s.update(add_to_set__dialect__skipped_by=current_user.id)
-                    flash_info(Markup(msg + " skipped." ))
+                s.update(add_to_set__dialect__skipped_by=current_user.id)
+                flash_info(Markup(msg + " skipped."))
             else:
                 MongoSentence.add_label(s, label=form.dialect.data, uuid=current_user.id)
-                flash_success(Markup(msg + " labelled." ))
+                flash_success(Markup(msg + " labelled."))
         else:
             flash_form_errors(form)
         return redirect(url_for('.add_labels_radio'))
