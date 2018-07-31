@@ -4,7 +4,26 @@
 {% block body %}
 
     {% if s.deleted %}
-        <span class="alert alert-danger">Deleted by {{ s.deleted.by }} on {{ s.deleted.date }}</span>
+        <div class="mb-3 text-danger text-right">
+            <span class="oi oi-warning"></span>
+            <b>Deleted</b> by {{ s.deleted.by }} ({{ s.deleted.date|datetime }})
+        </div>
+    {% else %}
+        <p class="clearfix">
+            <a class="link link-danger float-right collapsed" data-toggle="collapse" href="#delete-collapse"
+               role="button" aria-expanded="false" aria-controls="delete-collapse">
+                Remove seed
+            </a>
+        </p>
+        <div class="collapse" id="delete-collapse">
+            <div class="card card-body">
+                <p class="card-text">
+                    <span class="oi oi-warning"></span> Are you sure ?
+                </p>
+                {% from 'bootstrap/form.html' import render_form %}
+                {{ render_form(form, form_type="inline", button_map={'delete': 'danger'}) }}
+            </div>
+        </div>
     {% endif %}
 
     <div class="card mt-2">
@@ -14,10 +33,6 @@
             <p class="card-text">Source
                 <span class="badge badge-secondary">{{ s.source.type_ }}</span>
                 {% if s.source.extra %} {{ s.source.extra }}{% endif %}
-            </p>
-            <p>
-                {# TODO #}
-                <a class="btn btn-light" href="#">delete seed</a>
             </p>
         </div>
     </div>
