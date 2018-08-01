@@ -9,7 +9,7 @@
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-collapse collapse justify-content-between">
+    <div class="navbar-collapse collapse justify-content-between" id="navbarNav">
         {% if current_user.is_authenticated %}
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -19,19 +19,33 @@
                     <a class="nav-link" href="{{ url_for('labelling.add_labels_radio') }}">Dialect-tagging</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('sentences.view') }}">Sentences</a>
+                    <a class="nav-link" href="{{ url_for('seeds.add') }}">Propose a seed</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('seeds.view') }}">Seeds</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('urls.view') }}">URLs</a>
-                </li>
+                {% if current_user.is_admin %}
+                    <li class="nav-item pl-lg-4">
+                        <a class="nav-link" href="{{ url_for('sentences.view') }}">Sentences</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('seeds.view') }}">Seeds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('urls.view') }}">URLs</a>
+                    </li>
+                {% endif %}
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('users.profile') }}">{{ current_user.id }}</a></li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">{{ icon('account-logout') }}</a>
+                    <span class="navbar-text">
+                        <span class="oi oi-person"></span> {{ current_user.id }}
+                    </span>
+                </li>
+                <li class="nav-item pl-3">
+                    <a class="nav-link" href="{{ url_for('users.profile') }}">
+                        Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" title="logout" href="/logout">{{ icon('account-logout') }}</a>
                 </li>
             </ul>
 

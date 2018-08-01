@@ -2,6 +2,7 @@ from flask import request, redirect
 from flask_login import current_user, login_required
 
 from swisstext.frontend.persistence.models import MongoSentence
+from swisstext.frontend.user_management import role_required
 from swisstext.frontend.utils import flash
 from swisstext.frontend.utils.utils import templated
 
@@ -13,7 +14,7 @@ _per_page = 50
 
 
 @blueprint_sentences.route('', methods=['GET', 'POST'])
-@login_required
+@role_required()
 @templated('sentences/search.html')
 def view():
     if request.method == 'GET':

@@ -2,6 +2,7 @@ from flask import request, url_for, redirect
 from flask_login import login_required, current_user
 
 from swisstext.frontend.persistence.models import MongoURL, MongoSentence, MongoBlacklist
+from swisstext.frontend.user_management import role_required
 from swisstext.frontend.utils.flash import flash_success
 from swisstext.frontend.utils.utils import templated
 
@@ -13,7 +14,7 @@ blueprint_urls = Blueprint('urls', __name__, template_folder='templates')
 
 
 @blueprint_urls.route('search', methods=['GET', 'POST'])
-@login_required
+@role_required()
 @templated('urls/search.html')
 def view():
     if request.method == 'GET':

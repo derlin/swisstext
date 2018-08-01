@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 
 from swisstext.frontend.persistence.aggregation_utils import paginated_aggregation
 from swisstext.frontend.persistence.models import MongoSeed, SourceType, Source, MongoURL
+from swisstext.frontend.user_management import role_required
 from swisstext.frontend.utils.flash import flash_success
 from swisstext.frontend.utils.utils import templated
 
@@ -41,7 +42,7 @@ def add():
 
 
 @blueprint_seeds.route('/view', methods=['GET', 'POST'])
-@login_required
+@role_required()
 @templated('seeds/search.html')
 def view():
     if request.method == 'GET':

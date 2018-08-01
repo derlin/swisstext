@@ -16,11 +16,11 @@ def role_required(role=UserRoles.ADMIN):
             if not current_user.is_authenticated:
                 return login_manager.unauthorized()
             elif not role in current_user.roles:
-                flash_error("You don't have permission to access this page.")
                 import flask
-                if flask.request.referrer and flask.request.referrer.startswith(flask.request.url_root):
-                    return flask.redirect(flask.request.referrer)
-                return login_manager.unauthorized()
+                # flash_error("You don't have permission to access this page.")
+                # if flask.request.referrer and flask.request.referrer.startswith(flask.request.url_root):
+                #     return flask.redirect(flask.request.referrer)
+                return flask.redirect('/')
             else:
                 return fn(*args, **kwargs)
 
@@ -33,6 +33,10 @@ class User(UserMixin):
     def __init__(self, id, roles):
         self.id = id
         self.roles = roles
+
+    @property
+    def is_admin(self):
+        return UserRoles.ADMIN in self.roles
 
     @staticmethod
     def get(*args):
