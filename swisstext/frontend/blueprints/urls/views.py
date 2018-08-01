@@ -42,11 +42,11 @@ def details(id):
     form = DeleteUrlForm()
     if request.method == 'POST' and form.validate():
         # remove all sentences
-        all_sentences = MongoSentence.objects(url=id).fields(id=True)
-        MongoSentence.mark_deleted(all_sentences, current_user.id)
-        # blacklist url
-        MongoURL.try_delete(id)  # remove URL if exists
-        MongoBlacklist.add_url(id)
+        # all_sentences = MongoSentence.objects(url=id).fields(id=True)
+        # MongoSentence.mark_deleted(all_sentences, current_user.id)
+        # # blacklist url
+        # MongoURL.try_delete(id)  # remove URL if exists
+        # MongoBlacklist.add_url(id)
 
         flash_success("URL '%s' has been blacklisted." % id)
         return redirect(request.args.get('next') or url_for('.view'))

@@ -2,9 +2,6 @@
 {% set title = 'Dialect labelling' %}
 {% block header_include %}
     <style type="text/css">
-        .margins {
-            margin: 30px auto;
-        }
 
         label {
             margin: 0;
@@ -56,8 +53,16 @@
 {% block body %}
 
     {% from 'bootstrap/form.html' import render_form, render_field %}
+
+    {% if form.current_label.data %}
+        <div class="alert alert-info m-2">
+            You already labelled or skipped this sentence: <span class="font-weight-bold">{{ form.current_label.data }}</span>.
+        </div>
+    {% endif %}
+
     <form method="post">
-        <div class="card margins">
+        <div class="card mt-3 mb-3">
+
             <div class="card-body">
                 {# TODO: confirm deletion #}
                 {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}
@@ -72,9 +77,11 @@
                 <div class="card-text text-muted font-italic text-sm-right">added
                     on {{ sentence.date_added | datetime }}</div>
             </div>
+
             <div class="card-footer dialects">
                 {{ form.csrf_token }}
                 {{ form.sentence_id }}
+                {{ form.current_label }}
 
                 {% set counter = namespace(val=0) %}
                 {% for subfield_row in form.dialect | batch(2) %}
@@ -89,6 +96,7 @@
                                 <label for="{{ subfield.label.field_id }}"
                                        accesskey='{{ accesskey }}'
                                        class="btn dialect text-left btn-light
+                                        {{ 'active' if subfield.data == form.current_label.data else '' }}
                                         {{ 'text-danger' if is_noidea else '' }}">
                                     <span class="badge badge-info">{{ accesskey }}</span> -
                                     <span class="text-monospace">{{ subfield.data.upper() }}</span> -
@@ -99,6 +107,7 @@
                     </div>
                 {% endfor %}
             </div>
+
             <div class="card-body mt-2">
                 <div class="card-text">
                     To use shortcuts, try one of
@@ -107,6 +116,7 @@
                     <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>[key]</kbd>.
                 </div>
             </div>
+
         </div>
     </form>
 

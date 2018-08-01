@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, redirect, url_for, render_template
 from flask import request
 from flask_login import login_required, current_user
 from markupsafe import Markup
@@ -28,7 +28,9 @@ def add_labels():
             saved_count = 0
             for k, v in request.form.items():
                 if k.startswith('sentence-'):
-                    MongoSentence.add_label(k[9:], uuid=current_user.id, label=v)
+                    MongoSentence.objects.with_id(k[9:]) \
+                        .dialect \
+                        .add_label(uuid=current_user.id, label=v)
                     saved_count += 1
             flash_success("Labelled %d sentences." % saved_count)
             # don't use redirect_as_get since we have "hidden" sentence ids in the form...
@@ -39,14 +41,8 @@ def add_labels():
     else:
         form = KeywordsForm.from_get()
         if not form.is_blank() and form.validate():
-            extra_query = dict(text__icontains=form.search.data) if form.search.data else dict()
-            sentences = MongoSentence.objects(
-                deleted__exists=False,
-                validated_by__exists=True,
-                dialect__labels__user__ne=current_user.id,
-                **extra_query) \
+            sentences = MongoSentence.objects(**form.get_mongo_params()) \
                 .limit(form.per_page.data)
-
             has_results = True
 
         return dict(form=form, sentences=sentences, has_results=has_results)
@@ -58,7 +54,7 @@ def add_labels():
 @blueprint_labelling.route('', methods=['GET', 'POST'])
 @login_required
 @templated('labelling/one.html')
-def add_labels_radio():
+def label_one():
     form = OneForm()
 
     if request.method == 'POST':
@@ -69,25 +65,48 @@ def add_labels_radio():
             if form.delete_sentence.data:
                 MongoSentence.mark_deleted(s, current_user.id)
                 flash_warning(Markup(msg + " deleted."))
-            elif form.dialect.data.startswith('?'):
-                s.update(add_to_set__dialect__skipped_by=current_user.id)
-                flash_info(Markup(msg + " skipped."))
             else:
-                MongoSentence.add_label(s, label=form.dialect.data, uuid=current_user.id)
-                flash_success(Markup(msg + " labelled <i>%s</i>." % form.dialect.data))
+                if form.dialect.data.startswith('?'):
+                    s.dialect.skip(uuid=current_user.id)
+                    flash_info(Markup(msg + " skipped."))
+                else:
+                    s.dialect.add_label(uuid=current_user.id, label=form.dialect.data)
+                    flash_success(Markup(msg + " labelled <i>%s</i>." % form.dialect.data))
         else:
             flash_form_errors(form)
 
         return redirect(url_for(request.endpoint))
 
     else:
-        sentence = MongoSentence.objects(**base_mongo_params()) \
-            .fields(id=1, url=1, text=1) \
-            .first()
+        id = request.args.get('id', None)
+        current_label = None
+        if id:
+            # we got a specific sentence from the request parameters
+            sentence = MongoSentence.objects.with_id(id)
+            if not sentence:
+                flash_warning("sentence with id '%s' does not exist." % id)
+                return render_template('404.html')
 
-        if sentence:
-            form.sentence_id.data = sentence.id
-            return dict(form=form, sentence=sentence)
+            elif len(sentence.validated_by) == 0:
+                flash_warning("The sentence should be validated first.")
+                return redirect(url_for('sentences.details', sid=sentence.id))
+            else:
+                if sentence.dialect:
+                    if sentence.dialect.skipped_by and current_user.id in sentence.dialect.skipped_by:
+                        current_label = '?'
+                    elif sentence.dialect.labels:
+                        for d in sentence.dialect.labels:
+                            if d.user == current_user.id:
+                                current_label = d.label
         else:
-            flash_warning('No more validated sentences to label. Please, help us by doing some validation :) ')
-            return redirect(url_for('validation.validate'))
+            # just pick one validated sentence at random
+            sentence = MongoSentence.objects(**base_mongo_params()) \
+                .fields(id=1, url=1, text=1) \
+                .first()
+            if not sentence:
+                flash_warning('No more validated sentences to label. Please, help us by doing some validation :) ')
+                return redirect(url_for('validation.validate'))
+
+        form.sentence_id.data = sentence.id
+        form.current_label.data = current_label
+        return dict(form=form, sentence=sentence)

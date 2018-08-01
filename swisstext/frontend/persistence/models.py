@@ -21,4 +21,6 @@ class MongoSeed(db.Document, AbstractMongoSeed):
 
 
 class MongoSentence(db.Document, AbstractMongoSentence):
-    pass
+    # here, set a default value so we can accesse s.dialect without fearing a
+    # None type error
+    dialect = db.EmbeddedDocumentField(DialectInfo, default=lambda: DialectInfo())

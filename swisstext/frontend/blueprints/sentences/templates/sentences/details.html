@@ -10,6 +10,12 @@
                 .done(() => location.reload())
                 .always((msg) => console.log(msg))
         }
+
+        function validate() {
+            ajax_validate_sentence('{{ s.id }}')
+                .done(() => location.reload())
+                .always((msg) => console.log(msg))
+        }
     </script>
 {% endblock %}
 
@@ -64,7 +70,7 @@
             <p class="card-text">Validated by {{ s.validated_by|length }} user(s).</p>
             {% if s.dialect %}
                 {% if s.dialect.skipped_by %}
-                    <p class="card-text">Skipped by {{ s.validated_by|length }} user(s).</p>
+                    <p class="card-text">Skipped by {{ s.dialect.skipped_by|length }} user(s).</p>
                 {% endif %}
                 {% if s.dialect.labels %}
                     <p class="card-text">Dialect: <span class="badge badge-info">{{ s.dialect.label }}</span>
@@ -76,6 +82,17 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
+            {% endif %}
+
+            {% if current_user.id not in s.validated_by %}
+                <a class="card-link" onclick="validate()" href="javascript: return false">
+                    Validate this sentence
+                </a>
+            {% endif %}
+            {% if s.validated_by|length %}
+                <a class="card-link" href="{{ url_for('labelling.label_one', id=s.id) }}">
+                    Label this sentence
+                </a>
             {% endif %}
         </div>
     </div>

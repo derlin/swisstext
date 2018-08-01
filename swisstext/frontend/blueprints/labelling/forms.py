@@ -14,7 +14,7 @@ _per_page = 50
 def base_mongo_params():
     return dict(
         deleted__exists=False,
-        validated_by__exists=True,
+        validated_by__0__exists=True,
         dialect__labels__user__ne=current_user.id,
         dialect__skipped_by__ne=current_user.id)
 
@@ -67,4 +67,6 @@ class OneForm(FlaskForm):
     )
 
     sentence_id = HiddenField()
+    current_label = HiddenField()
+
     delete_sentence = SubmitField('x', render_kw=dict(title="Delete sentence completely."))

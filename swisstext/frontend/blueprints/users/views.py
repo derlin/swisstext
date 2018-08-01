@@ -42,12 +42,14 @@ def profile():
     form = ProfileForm()
 
     if request.method == 'POST' and form.validate():
-        sid = form.sid.data
-        MongoSentence.remove_label(sid, current_user.id)
+        # here, if you don't hold a reference to s, you will randomly get a
+        # ReferenceError: weakly-reference no longer exists...
+        s = MongoSentence.objects.with_id(form.sid.data)
+        s.dialect.remove_label(current_user.id)
         flash_success(
             Markup(
                 'Label removed from sentence <a href="%s"><code>%s</code></a>.') % (
-                url_for('sentences.details', sid=sid), sid))
+                url_for('sentences.details', sid=s.id), s.id))
         return redirect(url_for(request.endpoint))
 
     skipped_count = MongoSentence.objects(dialect__skipped_by=current_user.id).count()
@@ -56,5 +58,5 @@ def profile():
     ss = MongoSentence.objects(dialect__labels__user=current_user.id) \
         .fields(**{'dialect.labels.$': True, 'text': True}) \
         .order_by('-dialect.labels.date') \
-        .paginate(page, 5)
+        .paginate(page, per_page=10)
     return dict(form=form, valid_count=vcount, skipped_count=skipped_count, labelled_sentences=ss)

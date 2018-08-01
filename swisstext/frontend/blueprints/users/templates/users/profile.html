@@ -48,12 +48,16 @@
                     {% for sentence in labelled_sentences.items %}
                         <tr>
                             <td>
-                                <a class="btn btn-link text-info p-1 oi oi-eye"
+                                <a class="btn btn-sm btn-light p-1 oi oi-eye" title="view details"
                                    href="{{ url_for('sentences.details', sid=sentence.id) }}"></a>
                             </td>
                             <td>
-                                <button id="{{ sentence.id }}"
+                                <button id="{{ sentence.id }}" title="remove label"
                                         class="btn btn-link text-danger p-1 oi oi-delete delete"></button>
+                            </td>
+                            <td>
+                                <a class="btn btn-link text-info p-1 oi oi-action-redo" title="change label"
+                                   href="{{ url_for('labelling.label_one', id=sentence.id) }}"></a>
                             </td>
                             <td>{{ sentence.dialect.labels[0].label }}</td>
                             <td>{{ sentence.text }}</td>
