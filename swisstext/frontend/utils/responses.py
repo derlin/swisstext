@@ -15,7 +15,10 @@ def no_result_error(message: str): return error(500, 'NoResultError', message)
 
 def error(status_code: int, cause: str, message: str):
     if request.content_type != 'application/json':
-        return render_template('error.html', status_code=status_code, cause=cause, message=message)
+        if status_code == 404:
+            return render_template('404.html'), 404
+        else:
+            return render_template('error.html', status_code=status_code, cause=cause, message=message)
     else:
         return jsonify({
             'status': status_code,

@@ -2,6 +2,7 @@ import traceback
 
 import mongoengine
 from flask.blueprints import Blueprint
+from werkzeug.exceptions import NotFound
 
 from swisstext.frontend.utils import responses
 from swisstext.frontend.utils.errors import AppError
@@ -21,26 +22,24 @@ def handle_app_errors(error):
         cause=error.cause,
         message=error.message)
 
-@errorhandlers.app_errorhandler(IOError)
-def handle_db_errors(error):
-    _on_error()
-    msg = str(error)
-    if hasattr(error, 'orig') and hasattr(error.orig, 'msg'):
-        msg = error.orig.msg
-    return responses.error(
-        status_code=500,
-        cause=type(error).__name__,  # 'DBError',
-        message=msg)
-
 
 @errorhandlers.app_errorhandler(Exception)
 def handle_unknown_errors(error):
     _on_error()
-    typ= type(error)
+
+    typ = type(error)
+    msg = str(error)
+    code = 500
+
+    if hasattr(error, 'orig') and hasattr(error.orig, 'msg'):
+        msg = error.orig.msg
+    if hasattr(error, 'code'):
+        code = error.code
+
     return responses.error(
-        status_code=500,
+        status_code=code,
         cause="%s: %s" % (typ.__module__, typ.__name__),
-        message=str(error))
+        message=msg)
 
 
 def _on_error():
