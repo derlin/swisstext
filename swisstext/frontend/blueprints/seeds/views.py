@@ -52,7 +52,7 @@ def view():
             form = SearchSeedsForm()
         #     return dict(form=form, seeds=[], collapse=False)
         # else:
-        pipeline = form.get_aggregation_pipeline()
+        pipeline = form.get_search_pipeline()
         seeds = paginated_aggregation(MongoSeed, pipeline, page=page, per_page=20)
         return dict(form=form, seeds=seeds, collapse=seeds.total > 0)
     else:
@@ -70,6 +70,11 @@ def details(id):
         return redirect(url_for(request.endpoint, id=id))
 
     seed = MongoSeed.objects(id=id).get_or_404()
+    # TODO : show pertinence information here as well ?
+    # from .forms import get_default_seeds_pipeline
+    # pipeline = get_default_seeds_pipeline()
+    # pipeline.append({'$match': {'_id': id}})
+    # seed_2 = MongoSeed.objects.aggregate(*pipeline).next()
     page = int(request.args.get('page', 1))
     urls = MongoURL.objects(source__extra=id).order_by('-date_added').paginate(page=page, per_page=10)
     return dict(form=form, s=seed, urls=urls)
