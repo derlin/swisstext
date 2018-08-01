@@ -56,7 +56,8 @@
 
     {% if form.current_label.data %}
         <div class="alert alert-info m-2">
-            You already labelled or skipped this sentence: <span class="font-weight-bold">{{ form.current_label.data }}</span>.
+            You already labelled or skipped this sentence: <span
+                class="font-weight-bold">{{ form.current_label.data }}</span>.
         </div>
     {% endif %}
 
@@ -98,8 +99,11 @@
                                        class="btn dialect text-left btn-light
                                         {{ 'active' if subfield.data == form.current_label.data else '' }}
                                         {{ 'text-danger' if is_noidea else '' }}">
-                                    <span class="badge badge-info">{{ accesskey }}</span> -
-                                    <span class="text-monospace">{{ subfield.data.upper() }}</span> -
+                                    <span class="badge badge-light">{{ accesskey }}</span> -
+                                    <span class="text-monospace badge font-weight-bold p-2"
+                                          style="background: {{ Dialects.color(subfield.data) }}">
+                                        {{ subfield.data.upper() }}
+                                    </span> -
                                     <span class="font-weight-normal text-sm">{{ subfield.label.text }}</span>
                                 </label>
                             </div>

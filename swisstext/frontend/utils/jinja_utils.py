@@ -1,8 +1,6 @@
 # ---------------------- jinja filters
 from urllib.parse import unquote, quote, urlparse, urlunparse
-
-from flask import request
-
+from swisstext.frontend.persistence.models import DialectsWrapper
 
 def percentToColor(percent, opacity=1):
     hue = percent * 120
@@ -34,6 +32,7 @@ def register(app):
     app.jinja_env.filters['datetime'] = format_datetime
     app.jinja_env.filters['percent'] = format_percent
     app.jinja_env.globals.update(encode_next_url=encode_next_url)
+    app.jinja_env.globals.update(Dialects=DialectsWrapper)
 
     # make the privileges static class available
     # app.jinja_env.globals.update(privilege=Privileges)

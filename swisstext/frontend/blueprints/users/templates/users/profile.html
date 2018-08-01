@@ -59,7 +59,10 @@
                                 <a class="btn btn-link text-info p-1 oi oi-action-redo" title="change label"
                                    href="{{ url_for('labelling.label_one', id=sentence.id) }}"></a>
                             </td>
-                            <td>{{ sentence.dialect.labels[0].label }}</td>
+                            <td>
+                                {% from 'labelling/_macros.html' import render_label %}
+                                {{ render_label(sentence.dialect.labels[0].label) }}
+                            </td>
                             <td>{{ sentence.text }}</td>
                         </tr>
                     {% endfor %}

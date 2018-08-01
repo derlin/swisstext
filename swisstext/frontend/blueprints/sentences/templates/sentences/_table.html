@@ -14,7 +14,14 @@
                 <a class="oi oi-eye" href="{{ url_for('sentences.details', sid=sentence.id) }}"></a>
             </td>
             <td class="text-right text-monospace small">{{ sentence.crawl_proba|percent }}</td>
-            <td class="text-center">{{ sentence.dialect.label or '?' }}</td>
+            <td class="text-center">
+                {% if sentence.dialect.label %}
+                    {% from 'labelling/_macros.html' import render_label %}
+                    {{ render_label(sentence.dialect.label) }}
+                {% else %}
+                    ?
+                {% endif %}
+            </td>
             <td>{{ sentence.text }}</td>
         </tr>
     {% endfor %}

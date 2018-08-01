@@ -73,8 +73,11 @@
                     <p class="card-text">Skipped by {{ s.dialect.skipped_by|length }} user(s).</p>
                 {% endif %}
                 {% if s.dialect.labels %}
-                    <p class="card-text">Dialect: <span class="badge badge-info">{{ s.dialect.label }}</span>
-                        (confidence: {{ "%.2f" % s.dialect.confidence }}%)</p>
+                    <p class="card-text">Dialect:
+                        {% from 'labelling/_macros.html' import render_label %}
+                        {{ render_label(s.dialect.label) }}
+                        (confidence: {{ s.dialect.confidence|percent }}%)
+                    </p>
                     <p class="card-text">History</p>
                     <ul>
                         {% for entry in s.dialect.labels %}

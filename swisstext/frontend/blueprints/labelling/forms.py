@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, RadioField, HiddenField, IntegerField
 from wtforms import validators
 
-from swisstext.frontend.persistence.models import Dialects
+from swisstext.frontend.persistence.models import DialectsWrapper
 from swisstext.frontend.utils.search_form import SearchForm
 
 _per_page = 50
@@ -27,7 +27,7 @@ class KeywordsForm(SearchForm):
 
     dialect = SelectField(
         'dialect',
-        choices=[('be', 'Bernese'), ('arg', 'Argau'), ('', '-- ?? --')],  # TODO
+        choices=DialectsWrapper.choices(),
         validators=[validators.DataRequired()]
     )
 
@@ -61,7 +61,7 @@ class KeywordsForm(SearchForm):
 class OneForm(FlaskForm):
     dialect = RadioField(
         'dialect',
-        choices=list(Dialects.items()) + [('?', 'No idea')],  # TODO
+        choices=DialectsWrapper.choices(),
         default='?',
         validators=[validators.DataRequired()]
     )

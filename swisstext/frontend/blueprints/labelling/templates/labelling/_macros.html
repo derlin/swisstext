@@ -1,0 +1,6 @@
+{% macro render_label(label) %}
+    <span data-toggle="tooltip" data-placement="top"
+          class="badge text-monospace"
+          style="background: {{ Dialects.color(label) }}"
+          title="{{ Dialects.description(label) }}">{{ label }}</span>
+{% endmacro %}

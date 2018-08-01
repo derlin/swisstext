@@ -4,6 +4,29 @@ from swisstext.mongo.abstract import *
 from ._base import db
 
 
+class DialectsWrapper:
+    _colors = dict(zip(
+        Dialects.keys(),
+        ['#DFBBB1', '#94D1D3', '#BCE7FD', '#FFEB3B', '#FFD275', '#9CFFFA', '#ACF39D', '#C1DBB3', '#D5C9DF', '#F2A792']
+    ))
+
+    @classmethod
+    def choices(cls):
+        return cls.items() + [('?', 'No idea')]
+
+    @classmethod
+    def items(cls):
+        return list(Dialects.items())
+
+    @classmethod
+    def description(cls, label):
+        return Dialects.get(label, '??')
+
+    @classmethod
+    def color(cls, label):
+        return cls._colors.get(label, '#FFF')
+
+
 class MongoUser(db.Document, AbstractMongoUser):
     pass
 

@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectMultipleField, widgets, validators, SelectField, \
     BooleanField, StringField
 
-from swisstext.frontend.persistence.models import Dialects
+from swisstext.frontend.persistence.models import DialectsWrapper
 from swisstext.frontend.utils.search_form import SearchForm
 
 
@@ -23,7 +23,7 @@ class SentencesForm(SearchForm):
 
     dialects = SelectMultipleField(
         'Dialects',
-        choices=list(Dialects.items()),
+        choices=DialectsWrapper.items(),
         default=[],  # Dialects.items.keys(),
         validators=[validators.Optional()],
         widget=widgets.ListWidget(prefix_label=False),
