@@ -46,7 +46,7 @@
         <div class="card-body">
             <p class="card-text text-center mt-2 mb-3">{{ s.text }}</p>
             <p class="card-text">Source:
-                {% from 'includes/_macros.html' import render_url %}
+                {% from 'urls/_macros.html' import render_url %}
                 {{ render_url(s.url) }}
             </p>
         </div>

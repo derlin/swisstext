@@ -36,6 +36,10 @@
             text-align: center !important;
         }
 
+        kbd {
+            background: #efefef;
+            color: black;
+        }
     </style>
 {% endblock %}
 
@@ -55,36 +59,38 @@
     <form method="post">
         <div class="card margins">
             <div class="card-body">
-                {# {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}#}
+                {# TODO: confirm deletion #}
+                {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}
                 <a class="btn btn-sm float-right" href="{{ url_for('sentences.details', sid=sentence.id) }}">
                     <span class="oi oi-eye"></span>
                 </a>
                 <div id="sentence" class="card-text text-center">{{ sentence.text }}</div>
                 <div class="card-text text-right">
-                    Source: <code>{{ sentence.url }} </code>
-                    <a href="{{ sentence.url }}" target="_blank"
-                       class="btn btn-link btn-sm text-secondary pl-0 pr-0 ml-0">
-                        <span class="oi oi-external-link"></span>
-                    </a>
-                    <a href="{{ url_for('urls.details', id=sentence.url, next=encode_next_url(request.url)) }}"
-                       class="btn btn-link btn-sm text-secondary pl-0 pr-0 ml-0">
-                        <span class="oi oi-eye"></span>
-                    </a>
+                    {% from 'urls/_macros.html' import render_url %}
+                    Source: {{ render_url(sentence.url, next=request.endpoint) }}
                 </div>
-                <div class="card-text text-muted font-italic text-sm-right">added on {{ sentence.date_added | datetime }}</div>
+                <div class="card-text text-muted font-italic text-sm-right">added
+                    on {{ sentence.date_added | datetime }}</div>
             </div>
             <div class="card-footer dialects">
                 {{ form.csrf_token }}
                 {{ form.sentence_id }}
 
+                {% set counter = namespace(val=0) %}
                 {% for subfield_row in form.dialect | batch(2) %}
                     <div class="row">
                         {% for subfield in subfield_row %}
+                            {# TODO: better shortcuts #}
+                            {% set is_noidea = subfield.data.startswith('?') %}
+                            {% set accesskey = 'n' if is_noidea else counter.val %}
+                            {% set counter.val = counter.val + 1 %}
                             <div class="col-sm">
                                 <span class="d-none">{{ subfield }}</span>
                                 <label for="{{ subfield.label.field_id }}"
+                                       accesskey='{{ accesskey }}'
                                        class="btn dialect text-left btn-light
-                                        {{ 'text-danger' if subfield.data.startswith('?') else '' }}">
+                                        {{ 'text-danger' if is_noidea else '' }}">
+                                    <span class="badge badge-info">{{ accesskey }}</span> -
                                     <span class="text-monospace">{{ subfield.data.upper() }}</span> -
                                     <span class="font-weight-normal text-sm">{{ subfield.label.text }}</span>
                                 </label>
@@ -92,6 +98,14 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
+            </div>
+            <div class="card-body mt-2">
+                <div class="card-text">
+                    To use shortcuts, try one of
+                    <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>[key]</kbd> ,
+                    <kbd>alt</kbd> + <kbd>[key]</kbd> ,
+                    <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>[key]</kbd>.
+                </div>
             </div>
         </div>
     </form>

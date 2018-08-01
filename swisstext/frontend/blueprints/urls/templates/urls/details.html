@@ -35,7 +35,7 @@
                 <span class="badge badge-pill badge-info">{{ url.source.type_ }}</span><br/>
                 {% if url.source.extra %}
                     {% if url.source.extra.startswith('http') %}
-                        {% from 'includes/_macros.html' import render_url %}
+                        {% from 'urls/_macros.html' import render_url %}
                         {{ render_url(url.source.extra) }}
                     {% elif url.source.type_ == 'seed' %}
                         <code>{{ url.source.extra }}</code>

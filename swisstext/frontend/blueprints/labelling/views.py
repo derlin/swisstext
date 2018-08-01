@@ -74,7 +74,7 @@ def add_labels_radio():
                 flash_info(Markup(msg + " skipped."))
             else:
                 MongoSentence.add_label(s, label=form.dialect.data, uuid=current_user.id)
-                flash_success(Markup(msg + " labelled."))
+                flash_success(Markup(msg + " labelled <i>%s</i>." % form.dialect.data))
         else:
             flash_form_errors(form)
 
