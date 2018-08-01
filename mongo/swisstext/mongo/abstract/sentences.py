@@ -20,15 +20,42 @@ class DialectInfo(EmbeddedDocument):
     labels = EmbeddedDocumentListField(DialectEntry, default=[])
     skipped_by = ListField(AbstractMongoUser._id_type(), default=[])
 
-    def remove_label(self, uuid):
-        if self.labels:
-            self.labels = [l for l in self.labels if l.user != uuid]
-            self._recompute_label()
+    def get_label_by(self, uuid) -> str:
+        entry = [l for l in self.labels if l.user == uuid]
+        return None if len(entry) == 0 else entry[0].label
 
     def add_label(self, uuid, label):
-        if label and uuid not in [i.user for i in self.labels]:
+        if label:  # ensure the label exists
+            self.remove_label(uuid)  # ensure not duplicates
             self.labels.append(DialectEntry(user=uuid, label=label))
             self._recompute_label()
+            self.save()
+        return self
+
+    def remove_label(self, uuid):
+        label = self._get_label_entry(uuid)
+        if label:
+            self.labels.remove(label)
+            self._recompute_label()
+            self.save()
+        return self
+
+    def skip(self, uuid):
+        if uuid not in self.skipped_by:
+            self.remove_label(uuid)
+            self.skipped_by.append(uuid)
+            self.save()
+        return self
+
+    def unskip(self, uuid):
+        if uuid in self.skipped_by:
+            self.skipped_by.remove(uuid)
+            self.save()
+        return self
+
+    def _get_label_entry(self, uuid) -> str:
+        entry = [l for l in self.labels if l.user == uuid]
+        return None if len(entry) == 0 else entry[0]
 
     def _recompute_label(self):
         if self.labels:
@@ -60,19 +87,17 @@ class AbstractMongoSentence(Document):
     meta = {'collection': 'sentences', 'abstract': True}
 
     @classmethod
-    def add_label(cls, obj, uuid, label):
+    def add_label(cls, obj, uuid, label, **kwargs):
         if isinstance(obj, str): obj = cls.objects.with_id(obj)
         if isinstance(obj, cls):
             if obj.dialect is None: obj.dialect = DialectInfo()
-            obj.dialect.add_label(uuid, label)
-            obj.save()
+            obj.dialect.add_label(uuid, label, **kwargs)
 
     @classmethod
     def remove_label(cls, obj, uuid):
         if isinstance(obj, str): obj = cls.objects.with_id(obj)
         if isinstance(obj, cls):
             obj.dialect.remove_label(uuid)
-            obj.save()
 
     @classmethod
     def exists(cls, text) -> bool:

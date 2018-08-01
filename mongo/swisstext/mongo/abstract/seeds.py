@@ -45,3 +45,15 @@ class AbstractMongoSeed(Document):
         else:
             pattern = "(%s)" % ")|(".join(split)
             return cls.objects(id=re.compile(pattern, re.IGNORECASE))
+
+    @classmethod
+    def mark_deleted(cls, obj, uuid, comment=None):
+        if isinstance(obj, str): obj = cls.objects.with_id(obj)
+        obj.update(set__deleted=Deleted(by=uuid, comment=comment))
+
+    @classmethod
+    def unmark_deleted(cls, obj):
+        # in mongo shell, use $unset:
+        # sentences.find({_id: xxx}, {$unset: {deleted_by:1}})
+        if isinstance(obj, str): obj = cls.objects.with_id(obj)
+        obj.update(unset__deleted=True)
