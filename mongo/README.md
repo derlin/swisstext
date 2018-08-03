@@ -50,3 +50,19 @@ class MongoURL(db.Document, AbstractMongoURL):
     pass
 ```
 
+## Documentation
+
+The documentation is created with Sphinx.
+
+To consult the documentation locally:
+
+```bash
+# install sphinx
+pip install Sphinx  # I used version 1.7.6
+# generate the doc
+cd docs
+make html
+# launch a webserver
+cd _build/html
+python3 -m http.server
+```
