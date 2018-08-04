@@ -1,5 +1,6 @@
 import logging
-from typing import Optional, List
+from io import IOBase
+from typing import Optional, List, Union
 
 from ..base_config import BaseConfig
 from .interfaces import ISaver
@@ -21,8 +22,8 @@ class Config(BaseConfig):
             self.max_results = max_results
             self.force_x_new = force_x_new
 
-    def __init__(self, config_path=None):
-        super().__init__(self._get_relative_path(__file__), Config.Options, config_path)
+    def __init__(self, config: Union[str, dict, IOBase] = None):
+        super().__init__(self._get_relative_path(__file__), Config.Options, config)
 
     @property
     def valid_tool_entries(self) -> List[str]:

@@ -1,11 +1,9 @@
-import logging
-from typing import Optional, List
+from io import IOBase
+from typing import Optional, List, Union
 
-from ..base_config import BaseConfig
-from .pipeline import Pipeline
 from .interfaces import ISaver
-
-logger = logging.getLogger(__name__)
+from .pipeline import Pipeline
+from ..base_config import BaseConfig
 
 # should be the same as the interface name (but camelcase => underscore)
 # and in the order expected by the Pipeline's __init__ method.
@@ -26,8 +24,8 @@ class Config(BaseConfig):
             self.min_proba = min_proba
             self.crawl_depth = crawl_depth
 
-    def __init__(self, config_path=None):
-        super().__init__(self._get_relative_path(__file__), Config.Options, config_path)
+    def __init__(self, config: Union[str, dict, IOBase] = None):
+        super().__init__(self._get_relative_path(__file__), Config.Options, config)
 
     @property
     def valid_tool_entries(self) -> List[str]:

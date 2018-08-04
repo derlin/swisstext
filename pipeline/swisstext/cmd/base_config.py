@@ -1,27 +1,44 @@
+import importlib
 import logging
+from io import IOBase
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Union, Dict
 
 import yaml
-import sys
-import importlib
 
 
 class BaseConfig(ABC):
 
-    def __init__(self, default_config_path: str, option_class: classmethod = dict, config_path=None):
-        default_dict, config_dict = {}, {}
+    def __init__(self, default_config_path: str, option_class: classmethod = dict,
+                 config: Union[str, dict, IOBase] = None):
 
         with open(default_config_path) as default_file:
             default_dict = yaml.safe_load(default_file)
-
-        if config_path:
-            with open(config_path) as config_file:
-                config_dict = yaml.safe_load(config_file)
-
-        self.conf = self.merge_dicts(default_dict, config_dict)
+        # load the user config, if given
+        if config:
+            config_dict = self._load_config_dict(config)
+        # merge the two config, giving priority to the user config
+        self.conf: Dict = self.merge_dicts(default_dict, config_dict)
+        # instantiate the general options holder
         self.options = option_class(**self.conf['options'])
+        # instantiate a logger
         self.logger = logging.getLogger(__name__)
+
+    def _load_config_dict(self, config: Union[str, dict, IOBase]) -> Dict:
+        """
+        If config is a path or a file object, use yaml to read its content into a dict.
+        If config is already a dict, just return it. Throw an error for any other case.
+        """
+        if isinstance(config, dict):
+            return config
+        elif type(config) is str:
+            # a string is considered a path to a file
+            with open(config) as config_file:
+                return yaml.safe_load(config_file)
+        elif isinstance(config, IOBase):
+            return yaml.safe_load(config)
+        else:
+            raise ValueError(f"Trying to load a config from something else than a path, a file or a dict")
 
     @property
     @abstractmethod
@@ -71,9 +88,9 @@ class BaseConfig(ABC):
                 ToolClass = getattr(importlib.import_module(module_name), class_name)
                 tools.append(ToolClass(**arguments))
             except Exception as err:
-                self.logger.exception("Error instantiating %s (%s.%s(%s))" %
-                                      (e, module_name, class_name, arguments))
-                sys.exit(1)
+                raise RuntimeError(
+                    "Error instantiating %s (%s.%s(%s))" %
+                    (e, module_name, class_name, arguments)) from err
 
         return tools
 
