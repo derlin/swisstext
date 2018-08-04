@@ -1,6 +1,23 @@
+"""
+This module provides utilities to deal with links found in a page.
+
+By simply extracting all the ``href`` attributes in a HTML page, we might end up with a rather large list of
+children, not all of them interesting to crawl. Indded, this list would probably contain:
+
+* duplicates (or different links pointing to the same page but another anchor),
+* anchors,
+* javascript (``javascript:``),
+* pointers to images, PDFs or other non-text resources,
+* etc.
+
+As every implementation of :py:class:`swisstext.cmd.scraping.interfaces.ICrawler` has to do the job of filtering
+this list, we might as well provide a general way to do so.
+"""
 
 from typing import Iterable, Generator
 from urllib.parse import urljoin, urlparse, ParseResult
+
+#: Quick lookup dictionary to exclude URLs with an extensions typical of non text resources
 EXCLUDED_EXTENSIONS = dict((s, True) for s in [
     "3dv", "3g2", "3gp", "pi1", "pi2", "pi3", "ai", "amf", "amv", "art", "art", "ase", "asf", "avi", "awg", "blp",
     "bmp", "bw", "bw", "cd5", "cdr", "cgm", "cit", "cmx", "cpt", "cr2", "cur", "cut", "dds", "dib", "djvu", "doc",
@@ -14,8 +31,9 @@ EXCLUDED_EXTENSIONS = dict((s, True) for s in [
     "sun", "svg", "svi", "sxd", "tga", "tga", "tif", "tiff", "v2d", "vnd", "vob", "vrml", "vtf", "wdp", "webm", "webp",
     "wmf", "wmv", "x3d", "xar", "xbm", "xcf", "xls", "xlsx", "xpm", "yuv"
 ])
-# TODO: also exclude wikipedia pages ?
 
+#: Quick lookup dictionary to exclude URLs from any country code TLDs except a rare list of pertinent ones (.ch, .eu, .de ...).
+#: See `this gist <https://gist.github.com/derlin/421d2bb55018a1538271227ff6b1299d>`_ for the source of the list.
 EXCLUDED_TLDS = dict((s[1:], True) for s in [
     ".af", ".ax", ".al", ".dz", ".as", ".ad", ".ao", ".ai", ".aq", ".ag", ".ar", ".am", ".aw", ".ac", ".au", ".at",
     ".az", ".bs", ".bh", ".bd", ".bb", ".eus", ".by", ".be", ".bz", ".bj", ".bm", ".bt", ".bo", ".bq", ".an", ".nl",
@@ -44,7 +62,53 @@ INCLUDED_WIKI_DOMAINS = dict((s, True) for s in [
 
 
 def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, None]:
+    """
+    Resolve, clean and filter links found in a page. By links we mean here any value of `href` attribute found
+    in a page. This is especially useful for the
+    :py:class:`swisstext.cmd.scraping.interface.ICrawler` to constitute and populate the crawl results's
+    :py:attr:`~swisstext.cmd.scraping.interface.ICrawler.CrawlResults.links` attribute.
 
+    In addition to transforming relative to absolute URLs, this method will also exclude:
+
+    * the base URL
+    * non HTTP links (`mailto:`, `javascript:`, anchors, ...)
+    * Duplicates
+    * URLs pointing to non text resources (see :py:const:`EXCLUDED_EXTENSIONS`)
+    * URLs with a Country Code TLD unlikely to contain Swiss German (see :py:const:`EXCLUDED_EXTENSIONS`)
+
+    For two links to be considered duplicates, they need to match exactly. Exceptions are anchors (stripped
+    automatically from the URL) and trailing slashes (in this case, the first encountered link will be returned).
+
+    .. code-block:: python
+
+        from swisstext.cmd.scraping.link_utils import filter_links
+        base_url = 'http://example.ch/page/1'
+        hrefs = [
+            '#',
+            "whatsapp://send?text=Dumoulin verlangt naar",
+            '../other/',
+            '../other#anchor',
+            '?page=2&q=isch',
+            '?page=2',
+            'https://imgur.org/some-image.png',
+            'https://ru.wikipedia.org/wiki',
+            'https://als.wikipedia.org',
+            'http://other.resource.test',
+            'javascript:return false'
+        ]
+        links = list(filter_links(base_url, hrefs))
+
+        # links contain:
+        #  http://example.ch/other/
+        #  http://example.ch/page/1?page=2&q=isch
+        #  http://example.ch/page/1?page=2
+        #  https://als.wikipedia.org
+        #  http://other.resource.test
+
+    :param base_url: the URL of the current page (not returned and used to resolve relative links).
+    :param links: a list of links found, relative or absolute
+    :return: a generator of unique absolute URLs, all beginning with `http`
+    """
     seen = {base_url, base_url + '/'}  # keep a set of seen urls
 
     for link in links:
