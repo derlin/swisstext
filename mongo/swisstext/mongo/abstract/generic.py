@@ -9,7 +9,6 @@ from datetime import datetime
 
 from .users import AbstractMongoUser
 
-
 Dialects = OrderedDict(
     ba_sn="Basel, Solothurn Nord",
     zuric="Zürich",
@@ -29,18 +28,15 @@ The dialect tags come from the Master Thesis of Sandra Kellerhals,
 p. 62 (see category *Alle SDS- und SADS- Daten 10 Dialektregionen*)
 """
 
+
 class SourceType:
     """
     Possible sources for a URL or a Seed.
     """
-    UNKNOWN = "unknown"
-    """This is used when the seeds/urls are read from a file"""
-    USER = "user"
-    """When user is set, the source.extra should contain the user id """
-    AUTO = "auto"
-    """Auto means it has been generated automatically by the system during regular execution"""
-    SEED = "seed"
-    """This is only used for URLs, it means the URL was found by searching the seed whose ID figures in source.extra"""
+    UNKNOWN = "unknown"  #: This is used when the seeds/urls are read from a file
+    USER = "user"  #: When user is set, the source.extra should contain the user id
+    AUTO = "auto"  #: Auto means it has been generated automatically by the system during regular execution
+    SEED = "seed"  #: The URL was found by searching the seed whose ID figures in source.extra
 
 
 class Source(EmbeddedDocument):

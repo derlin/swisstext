@@ -22,7 +22,14 @@ from .generic import Source, CrawlMeta
 
 
 class AbstractMongoURL(Document):
-    """An abstract :py:class:`mongoengine.Document` for *interesting* URLs, stored in the ``urls`` collection."""
+    """
+    An abstract :py:class:`mongoengine.Document` for *interesting* URLs, stored in the ``urls`` collection.
+
+    .. todo:
+        Also keep track of how many sentences and Swiss German sentences were found during a crawl ?
+        For that, one suggestion is to change the :py:attr:`crawl_history` entries from date and count to
+        date, new_count, sg_count, sentence_count.
+    """
 
     id = StringField(primary_key=True)
     """The URL, also used as a primary key."""
