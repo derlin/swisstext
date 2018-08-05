@@ -9,7 +9,7 @@ swisstext.cmd.searching.tools package
 Submodules
 ----------
 
-swisstext.cmd.searching.tools.console\_saver module
+.console\_saver
 ---------------------------------------------------
 
 .. automodule:: swisstext.cmd.searching.tools.console_saver
@@ -17,7 +17,7 @@ swisstext.cmd.searching.tools.console\_saver module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.tools.google\_search module
+.google\_search
 ---------------------------------------------------
 
 .. automodule:: swisstext.cmd.searching.tools.google_search
@@ -25,7 +25,7 @@ swisstext.cmd.searching.tools.google\_search module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.tools.mongo\_saver module
+.mongo\_saver
 -------------------------------------------------
 
 .. automodule:: swisstext.cmd.searching.tools.mongo_saver
@@ -33,7 +33,7 @@ swisstext.cmd.searching.tools.mongo\_saver module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.tools.start\_page module
+.start\_page
 ------------------------------------------------
 
 .. automodule:: swisstext.cmd.searching.tools.start_page

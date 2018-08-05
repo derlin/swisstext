@@ -51,7 +51,7 @@ class Pipeline:
     """
     Holds instances of all needed interfaces and variables.
 
-    Not that pipelines are meant to be instantiated by a :py:class:`~swisstext.cmd.scraping.config.Config` object,
+    Note that pipelines are meant to be instantiated by a :py:class:`~swisstext.cmd.scraping.config.Config` object,
     not manually.
     """
     def __init__(self,

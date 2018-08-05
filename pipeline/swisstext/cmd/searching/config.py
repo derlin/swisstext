@@ -17,10 +17,14 @@ _search_engine_entries = [
 
 
 class Config(BaseConfig):
+    """
+    The default configuration file for the searching pipeline (search engine) is defined in ``config.yaml``.
+    This is the best way to understand what options are available.
+    """
     class Options:
-        def __init__(self, max_results=10, force_x_new=0):
+        def __init__(self, max_results=10):
             self.max_results = max_results
-            self.force_x_new = force_x_new
+            """Max number of URLs to retrieve for one search"""
 
     def __init__(self, config: Union[str, dict, IOBase] = None):
         super().__init__(self._get_relative_path(__file__), Config.Options, config)
@@ -38,4 +42,7 @@ class Config(BaseConfig):
         return 'search_engine'
 
     def create_search_engine(self) -> SearchEngine:
+        """
+        Instantiate a search engine from the YAML configuration.
+        """
         return SearchEngine(*self.instantiate_tools())

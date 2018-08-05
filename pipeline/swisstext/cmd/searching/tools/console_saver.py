@@ -3,6 +3,11 @@ from ..interfaces import ISaver
 
 
 class ConsoleSaver(ISaver):
+    """
+    Implementation of an :py:class:`~swisstext.cmd.searching.interfaces.ISaver` useful for testing and debugging.
+    It does not persist any results, but prints everything to the console instead.
+    """
+
     def __init__(self, **kwargs):
         pass
 

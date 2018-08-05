@@ -1,6 +1,5 @@
 options:
   max_results: 10
-  force_x_new: 0
 
 search_engine:
   _base_package: swisstext.cmd.searching.tools

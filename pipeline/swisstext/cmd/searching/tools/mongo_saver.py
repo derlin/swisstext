@@ -7,7 +7,17 @@ from ..interfaces import ISaver
 
 logger = logging.getLogger(__name__)
 
+
 class MongoSaver(ISaver):
+    """
+    This :py:class:`~swisstext.cmd.searching.interfaces.ISaver` implementation persists everything to
+    a MongoDB database.
+
+    .. seealso::
+        :py:mod:`swisstext.mongo`
+            Package defining the Mongo collections.
+    """
+
     def __init__(self, host='localhost', port=27017, db='st1', **kwargs):
         connect(db, host=host, port=port)
 

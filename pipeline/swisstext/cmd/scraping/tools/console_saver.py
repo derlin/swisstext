@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class ConsoleSaver(ISaver):
     """
     Implementation of an :py:class:`~swisstext.cmd.scraping.interfaces.ISaver` useful for testing and debugging.
-    It does not persist any results, but print everything to the console instead.
+    It does not persist any results, but prints everything to the console instead.
 
     Blacklisted URLs and sentences are kept in sets in memory.
     """

@@ -28,7 +28,7 @@ class BsCrawler(ICrawler):
     into one string using a space separator (no newlines).
 
 
-    .. danger::
+    .. warning::
 
         This crawler implementation will return the page's textual content in one bulk, with no newlines characters.
         Consequently, results won't be exploitable without a clever

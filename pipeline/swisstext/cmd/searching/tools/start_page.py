@@ -1,6 +1,12 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""
+This module implements an :py:mod:`~swisstext.cmd.searching.interfaces.ISearcher` using
+`<http://startpage.com/>`_.
 
+.. warning::
+    This module highjacks startpage.com !! There are no API available, so this is really a dirty
+    hack. But we couldn't find free APIs to run tests... So use this module sparsely and
+    **ONLY IN DEVELOPMENT**. We decline all responsibility in case startpage detects the robot...
+"""
 import logging
 import re
 from typing import List, Dict, Iterable
@@ -28,7 +34,10 @@ logger = logging.getLogger(__name__)
 
 
 class StartPageGeneratorFactory(ISearcher):
-
+    """
+    Implementation of a searcher using startpage. Its usage is similar to the factory described in the
+    :py:mod:`~swisstext.cmd.searching.tools.google_search` module.
+    """
     def __init__(self, **kwargs):
         pass
 
@@ -37,7 +46,10 @@ class StartPageGeneratorFactory(ISearcher):
 
 
 class StartPageGenerator:
-
+    """
+    A new generator is created for each query. Its usage is similar to the generator described in the
+    :py:mod:`~swisstext.cmd.searching.tools.google_search` module.
+    """
     def __init__(self, query):
         self._headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'

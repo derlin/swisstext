@@ -67,7 +67,7 @@ class AbstractMongoURL(Document):
         return cls.objects.with_id(url) is not None
 
     @classmethod
-    def create(cls, url, source=Source()) -> object:
+    def create(cls, url, source=Source()) -> Document:
         """
         Create a URL. *Warning*: this **won't save** the document automatically.
         You need to call the ``.save`` method to persist it into the database.

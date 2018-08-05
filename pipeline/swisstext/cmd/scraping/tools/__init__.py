@@ -7,5 +7,5 @@ This package contains various implementations of the different pipeline tools.
         The tools interfaces definitions
 
     :py:mod:`~swisstext.cmd.scraping.config`
-        The default configuration loads tools from this package
+        The default configuration instantiates tools from this package
 """

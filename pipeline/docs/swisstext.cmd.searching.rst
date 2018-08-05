@@ -16,7 +16,7 @@ Subpackages
 Submodules
 ----------
 
-swisstext.cmd.searching.commandline module
+.commandline
 ------------------------------------------
 
 .. automodule:: swisstext.cmd.searching.commandline
@@ -24,7 +24,7 @@ swisstext.cmd.searching.commandline module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.config module
+.config
 -------------------------------------
 
 .. automodule:: swisstext.cmd.searching.config
@@ -32,7 +32,7 @@ swisstext.cmd.searching.config module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.data module
+.data
 -----------------------------------
 
 .. automodule:: swisstext.cmd.searching.data
@@ -40,7 +40,7 @@ swisstext.cmd.searching.data module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.interfaces module
+.interfaces
 -----------------------------------------
 
 .. automodule:: swisstext.cmd.searching.interfaces
@@ -48,7 +48,7 @@ swisstext.cmd.searching.interfaces module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.searching.pipeline module
+.pipeline
 ---------------------------------------
 
 .. automodule:: swisstext.cmd.searching.pipeline
