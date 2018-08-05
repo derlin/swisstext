@@ -78,3 +78,49 @@ class BsCrawler(ICrawler):
     def _extract_links(self, url, soup):
         links = (a.get('href') for a in soup.find_all('a', href=True))
         return [l for l in filter_links(url, links)]
+
+
+class CleverBsCrawler(BsCrawler):
+    """
+    Another implementation of the :py:class:`BsCrawler` that tries to be more clever during the text extraction
+    step.
+
+    Processing steps:
+
+    1. remove all scripts and CSS content (same as the BsCrawler)
+    2. try to detect the page's main content using common naming schemes (``id=main``, ``role=main``, etc).
+       If found, stop the processing and return only the text under it.
+    3. try to detect and remove the header, footer and navigation before returning the text
+
+    Following those heuristics requires more processing power and might miss some sentences (full sentences
+    in the side bar, main content in a poorly-coded website, etc).
+
+    .. todo::
+
+        Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
+        the default.
+
+    """
+    _main_selectors = ['[role=main]'] + \
+                      [s
+                       for name in ['main', 'main-content', 'mainContent', 'MainContent']
+                       for s in [f".{name}", f"#{name}"]]
+
+    _exclude_selectors = ','.join(['header', '#header', 'footer', '#footer', '[role=footer]', '[role=navigation]'])
+
+    def _extract_text(self, soup) -> str:
+
+        for script in soup(['script', 'style']):
+            script.decompose()  # rip it out
+
+        # try to extract main content
+        for selector in self._main_selectors:
+            main = soup.select(selector)
+            if main:
+                return self._joiner.join(main[0].stripped_strings)
+
+        # no main content found... try to remove header and footer
+        for part in soup.select(self._exclude_selectors):
+            part.decompose()
+
+        return ' '.join(soup.stripped_strings)
