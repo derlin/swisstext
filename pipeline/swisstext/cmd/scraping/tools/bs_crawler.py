@@ -1,16 +1,19 @@
-from urllib.parse import urljoin
+"""
+This module contains the implementation of a :py:class:`~swisstext.cmd.scraping.interfaces.ICrawler`
+that uses BeautifulSoup to extract text and links.
+"""
+import logging
 
 import requests
 from bs4 import BeautifulSoup
 
 from ..interfaces import ICrawler
 from ..link_utils import filter_links
-import logging
 
 # suppress warning for invalid SSL certificates
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-# define a user-agent other than "python"
+#: Headers passed with each request
 DEFAULT_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36'}
 
@@ -18,9 +21,27 @@ logger = logging.getLogger(__name__)
 
 
 class BsCrawler(ICrawler):
+    """
+    A basic crawler implemented using `BeautifulSoup <https://www.crummy.com/software/BeautifulSoup/bs4/doc/>`_.
+
+    Text is extracted by concatenating all pieces of text (except CSS and script)
+    into one string using a space separator (no newlines).
+
+
+    .. danger::
+
+        This crawler implementation will return the page's textual content in one bulk, with no newlines characters.
+        Consequently, results won't be exploitable without a clever
+        :py:class:`~swisstext.cmd.scraping.interfaces.ISplitter` (recall that the default implementation split text
+        based on newlines...) such as the :py:class:`~swisstext.cmd.scraping.punkt_splitter.PunktSplitter`.
+
+    """
+
+    _joiner = ' '  # used to join text chunks
 
     def crawl(self, url: str) -> ICrawler.CrawlResults:
-        soup = self._download(url)
+        """Extract links and text from a URL."""
+        soup: BeautifulSoup = self._download(url)
         return ICrawler.CrawlResults(text=self._extract_text(soup), links=self._extract_links(url, soup))
 
     def _download(self, url):
@@ -45,19 +66,14 @@ class BsCrawler(ICrawler):
         except Exception as e:
             raise ICrawler.CrawlError("'%s' raised an error (%s)" % (url, e)) from e
 
-    def _extract_text(self, soup):
+    def _extract_text(self, soup) -> str:
         # see https://stackoverflow.com/a/22800287/2667536
         # kill all script and style elements
-        for script in soup(["script", "style"]):
+        for script in soup(['script', 'style', 'form']):
             script.decompose()  # rip it out
-        text = soup.get_text()
-        # break into lines and remove leading and trailing space on each
-        lines = (line.strip() for line in text.splitlines())
-        # break multi-headlines into a line each
-        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-        # drop blank lines and remove zero-width space
-        # TODO use " " as joining instead of newlines ? Or do the replacement in the punkt serializer ?
-        return " ".join((chunk.replace(u'\u200B', '').strip() for chunk in chunks if chunk))
+
+        # TODO: join with newlines ?
+        return self._joiner.join(soup.stripped_strings)
 
     def _extract_links(self, url, soup):
         links = (a.get('href') for a in soup.find_all('a', href=True))

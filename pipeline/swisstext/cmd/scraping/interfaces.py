@@ -28,9 +28,9 @@ class ICrawler(ABC):
         """Holds the results of a page crawl."""
 
         def __init__(self, text: str, links: List[str]):
-            self.text = text
+            self.text: str = text
             """the clean text found in the page, free of any structural marker such as HTML tags, etc."""
-            self.links = links
+            self.links: List[str] = links
             """A list of interesting links found in the page. By interesting, we mean:
             * no duplicates
             * different from the current page URL (no anchors !)
@@ -53,7 +53,7 @@ class ISplitter:
 
     def split(self, text: str) -> List[str]:
         """This should be overriden. The default implementation just splits on newlines."""
-        return text.split("\n")
+        return text.splitlines()
 
     def split_all(self, texts: List[str]) -> List[str]:
         """Takes a list of texts and returns a list of sentences (see :py:meth:`split`)."""
@@ -100,13 +100,15 @@ class ISeedCreator(ABC):
 
     @abstractmethod
     def generate_seeds(self, sentences: List[str], max=10, stopwords: List[str] = list()) -> List[str]:
-        """[ABSTRACT] Should generate interesting seeds.
+        """
+        [ABSTRACT] Should generate interesting seeds.
 
         :param sentences: the sentences
         :param max: maximum number of seeds to return
         :param stopwords: an optional list of words to exclude from generated seeds
         :return: a list of seeds
         """
+        # TODO use a generator instead of a list as return type ?
         pass
 
 

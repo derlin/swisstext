@@ -8,8 +8,19 @@ logger = logging.getLogger(__name__)
 
 
 class ConsoleSaver(ISaver):
+    """
+    Implementation of an :py:class:`~swisstext.cmd.scraping.interfaces.ISaver` useful for testing and debugging.
+    It does not persist any results, but print everything to the console instead.
+
+    Blacklisted URLs and sentences are kept in sets in memory.
+    """
 
     def __init__(self, sentences_file: str = None, **kwargs):
+        """
+        :param sentences_file: optional path to a file were new sentences are written.
+            Note that the file is overriden on each run.
+        """
+        super().__init__()
         self._blacklist = set()
         self._sentences = set()
         self.sfile = None

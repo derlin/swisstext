@@ -8,6 +8,14 @@ logger = logging.getLogger(__name__)
 
 
 class MongoSaver(ISaver):
+    """
+    This :py:class:`~swisstext.cmd.scraping.interfaces.ISaver` implementation persists everything to
+    a MongoDB database.
+
+    .. seealso::
+        :py:mod:`swisstext.mongo`
+            Package defining the Mongo collections.
+    """
 
     def __init__(self, db='st1', **kwargs):
         super().__init__()

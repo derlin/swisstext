@@ -6,10 +6,8 @@ swisstext.cmd.scraping.tools package
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
 
-swisstext.cmd.scraping.tools.basic\_decider module
+.basic\_decider
 --------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.basic_decider
@@ -17,7 +15,7 @@ swisstext.cmd.scraping.tools.basic\_decider module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.basic\_seed\_creator module
+.basic\_seed\_creator
 --------------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.basic_seed_creator
@@ -25,7 +23,7 @@ swisstext.cmd.scraping.tools.basic\_seed\_creator module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.bs\_crawler module
+.bs\_crawler
 -----------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.bs_crawler
@@ -33,7 +31,7 @@ swisstext.cmd.scraping.tools.bs\_crawler module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.console\_saver module
+.console\_saver
 --------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.console_saver
@@ -41,7 +39,7 @@ swisstext.cmd.scraping.tools.console\_saver module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.mongo\_saver module
+.mongo\_saver
 ------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.mongo_saver
@@ -49,15 +47,15 @@ swisstext.cmd.scraping.tools.mongo\_saver module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.pattern\_sentence\_filter module
+.pattern\_sentence\_filter
 -------------------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.pattern_sentence_filter
-    :members:
+    :members: PatternSentenceFilter
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.punkt\_splitter module
+.punkt\_splitter
 ---------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.punkt_splitter
@@ -65,7 +63,7 @@ swisstext.cmd.scraping.tools.punkt\_splitter module
     :undoc-members:
     :show-inheritance:
 
-swisstext.cmd.scraping.tools.swigspot\_langid module
+.swigspot\_langid
 ----------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.swigspot_langid
