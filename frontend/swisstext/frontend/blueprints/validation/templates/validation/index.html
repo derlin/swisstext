@@ -11,6 +11,13 @@
             border-bottom: none;
         }
 
+        tr.stripped-True {
+            background-color: #efefef;
+        }
+        tr.delim-True, tr.delim-True td {
+            border-top-color: #777;
+        }
+
         /* delete action button */
         .action-button span:before {
             content: '\e050'; /* delete icon */
@@ -68,8 +75,18 @@
 
 {% block body %}
     <table class="table table-sm table-hover mt-4 mb-4">
+        {% set state = namespace(url=None, stripped=True, delim=False) %}
         {% for s in sentences %}
-            <tr id="{{ s.id }}">
+
+            {% if s.url != state.url %}
+                {% set state.url = s.url %}
+                {% set state.stripped = not state.stripped %}
+                {% set state.delim = True %}
+            {% else %}
+                {% set state.delim = False %}
+            {% endif %}
+
+            <tr id="{{ s.id }}" class="stripped-{{ state.stripped }} delim-{{ state.delim }}">
                 <td>
                     <button type="button" class="btn btn-outline-success btn-sm action-button"
                             onclick="delete_sentence('{{ s.id }}')">
