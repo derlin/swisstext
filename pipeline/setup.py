@@ -10,6 +10,7 @@ setuptools.setup(
     author="Lucy Linder",
     author_email="lucy.derlin@gmail.com",
     description="SwissText: Swiss German Corpus Generator",
+    license='Apache License 2.0',
     long_description="TODO",
     url="https://gitlab.com/LucyLinder/swisstext-st1",
 
@@ -27,7 +28,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ),
     install_requires=[
-        "swisstext_mongo", # TODO
+        "swisstext_mongo",  # TODO
         "beautifulsoup4==4.6.0",
         "bs4==0.0.1",
         "certifi==2018.4.16",
