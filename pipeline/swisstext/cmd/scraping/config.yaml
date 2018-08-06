@@ -6,7 +6,7 @@ pipeline:
   _base_package: swisstext.cmd.scraping.tools
 
   # default tools to use
-  crawler: .bs_crawler.BsCrawler
+  crawler: .bs_crawler.CleverBsCrawler
   splitter: .punkt_splitter.PunktSplitter
   sentence_filter: .pattern_sentence_filter.PatternSentenceFilter
   sg_detector: .swigspot_langid.SwigspotLangid
