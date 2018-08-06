@@ -5,6 +5,7 @@ from wtforms import StringField, SubmitField, BooleanField, validators, SelectFi
 
 from swisstext.frontend.utils.search_form import SearchForm
 
+
 def get_default_seeds_pipeline() -> List:
     return [
         {'$lookup':
@@ -22,7 +23,7 @@ def get_default_seeds_pipeline() -> List:
                 'deleted': '$deleted',
                 'delta_date': '$delta_date',
                 'date_added': '$date_added',
-                'usages': {'$size': '$search_history'},
+                'usages': {"$size": {"$ifNull": ["$search_history", []]}},
                 'urls': {'$size': '$use'}
             }}
     ]
