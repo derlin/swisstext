@@ -26,12 +26,7 @@ def label_from_url():
         if not form.validate():
             flash_form_errors(form)
         elif form.save.data:
-            saved_count = 0
-            for k, v in request.form.items():
-                if k.startswith('sentence-'):
-                    s = MongoSentence.objects.with_id(k[9:])
-                    s.dialect.add_label(uuid=current_user.id, label=v)
-                    saved_count += 1
+            saved_count = _label_all_from_form(request.form)
             flash_success("Labelled %d sentences." % saved_count)
         return redirect(url_for(request.endpoint, dialect=form.dialect.data, url=get_params['url']))
     else:
@@ -59,12 +54,7 @@ def add_labels():
             return dict(form=form)
 
         if form.save.data:
-            saved_count = 0
-            for k, v in request.form.items():
-                if k.startswith('sentence-'):
-                    s = MongoSentence.objects.with_id(k[9:])
-                    s.dialect.add_label(uuid=current_user.id, label=v)
-                    saved_count += 1
+            saved_count = _label_all_from_form(request.form)
             flash_success("Labelled %d sentences." % saved_count)
             # don't use redirect_as_get since we have "hidden" sentence ids in the form...
             return form.redirect_after_save()
@@ -150,3 +140,13 @@ def label_one():
         form.current_label.data = current_label
 
         return dict(form=form, sentence=sentence, sentences_count=sentences_count)
+
+
+def _label_all_from_form(form):
+    saved_count = 0
+    for k, v in form.items():
+        if k.startswith('sentence-'):
+            s = MongoSentence.objects.with_id(k[9:])
+            s.dialect.add_label(uuid=current_user.id, label=v)
+            saved_count += 1
+    return saved_count

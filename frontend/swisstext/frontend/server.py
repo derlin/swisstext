@@ -60,11 +60,11 @@ def index():
     return dict()
 
 
-def init_app(debug=False, mongo_host='localhost', db='st1'):
+def init_app(debug=False, mongo_host='localhost', mongo_port=27017, db='swisstext'):
     if debug:
         app.debug = debug
         app.config['TEMPLATES_AUTO_RELOAD'] = True
-    init_db(app, db_host=mongo_host, db_name=db)
+    init_db(app, db_host=mongo_host, db_port=mongo_port, db_name=db)
     junja.register(app)
     app.url_map.strict_slashes = False
     return app
@@ -73,8 +73,9 @@ def init_app(debug=False, mongo_host='localhost', db='st1'):
 @click.option('--debug/--prod', default=False, is_flag=True, help="If set, launch Flask in DEBUG mode.")
 @click.option('--host', '-h', default="localhost", help="Listen address.")
 @click.option('--port', '-p', default=8080, type=int, help="Listen port.")
-@click.option('--mongo-host', '-m', default="localhost", help="Mongo host.")
-@click.option('--db', default="st1", help="Mongo db.")
-def run(debug, host, port, mongo_host, db):
-    init_app(debug, mongo_host, db)
+@click.option('--mongo-host', default="localhost", help="Mongo host.")
+@click.option('--mongo-port',  default=27017, type=int, help="Mongo port.")
+@click.option('--db', default="swisstext", help="Mongo db.")
+def run(debug, host, port, mongo_host, mongo_port, db):
+    init_app(debug, mongo_host, mongo_port, db)
     app.run(host=host, port=port, debug=debug, threaded=True)
