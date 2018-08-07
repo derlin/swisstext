@@ -3,12 +3,13 @@
 
 {% block header_include %}
     <style type="text/css">
-    #dialects {
-        height: auto;
-    }
-    #dialects li {
-        list-style-type: none;
-    }
+        #dialects {
+            height: auto;
+        }
+
+        #dialects li {
+            list-style-type: none;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -31,7 +32,8 @@
     {% if sentences %}
         {% if sentences.total %}
             <p>{{ sentences.total }} sentences found.</p>
-
+                <a class="btn btn-sm btn-outline-secondary float-right" target="_blank"
+                   href="{{ url_for('.export_csv', **request.args) }}">Export results as CSV</a>
             {% if sentences.has_prev or sentences.has_next %}
 {#                {% from 'includes/_macros.html' import render_post_navigation %}#}
                 {% from 'includes/_macros.html' import render_post_navigation %}

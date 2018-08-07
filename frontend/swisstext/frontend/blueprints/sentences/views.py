@@ -1,4 +1,4 @@
-from flask import request, redirect
+from flask import Blueprint, request, redirect, Response
 from flask_login import current_user, login_required
 
 from swisstext.frontend.persistence.models import MongoSentence
@@ -7,7 +7,7 @@ from swisstext.frontend.utils import flash
 from swisstext.frontend.utils.utils import templated
 
 from .forms import DeleteSentenceForm, SentencesForm
-from flask import Blueprint
+from .export import stream_csv
 
 blueprint_sentences = Blueprint('sentences', __name__, template_folder='templates')
 _per_page = 50
@@ -35,6 +35,11 @@ def view():
     else:
         return SentencesForm.redirect_as_get()
 
+@blueprint_sentences.route('/export')
+def export_csv():
+    form = SentencesForm.from_get()
+    sentences = MongoSentence.objects(**form.get_mongo_params(deleted__exists=False))
+    return Response(stream_csv(sentences), mimetype='text/csv')
 
 @blueprint_sentences.route('<sid>', methods=['GET', 'POST'])
 @login_required
