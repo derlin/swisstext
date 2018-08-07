@@ -34,6 +34,12 @@
                 <span class="badge badge-secondary">{{ s.source.type_ }}</span>
                 {% if s.source.extra %} {{ s.source.extra }}{% endif %}
             </p>
+
+            <p class="card-text">
+                <a href="https://www.google.ch/search?q={{ s.id|quote }}" class="btn btn-light"
+                   target="_blank">View on Google Search</a>
+            </p>
+
         </div>
     </div>
 

@@ -10,7 +10,7 @@
     {% for url in urls.items %}
         <tr>
             <td>
-                <a class="btn btn-link btn-sm" href="{{ url_for('.details', id=url.id) }}">
+                <a class="btn btn-link btn-sm" href="{{ url_for('urls.details', id=url.id) }}">
                     <span class="oi oi-eye"></span>
                 </a>
             </td>

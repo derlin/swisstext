@@ -66,7 +66,12 @@ def details(id):
     form = DeleteSeedForm()
 
     if request.method == 'POST' and form.validate():
-        MongoSeed.mark_deleted(id, current_user.id, form.comment.data)
+        seed = MongoSeed.objects.with_id(id)
+        if seed.search_history:
+            seed.mark_deleted(seed, current_user.id, form.comment.data)
+        else:
+            seed.delete()
+            return redirect(url_for('.view'))
         return redirect(url_for(request.endpoint, id=id))
 
     seed = MongoSeed.objects(id=id).get_or_404()

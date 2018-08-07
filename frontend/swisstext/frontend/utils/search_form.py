@@ -5,7 +5,12 @@ from wtforms import HiddenField, SubmitField
 from .utils import validate_no_csrf
 
 
-class SearchForm(FlaskForm):
+class NoCsrfForm(FlaskForm):
+    def validate(self):
+        return validate_no_csrf(self)
+
+
+class SearchForm(NoCsrfForm):
     page = HiddenField(default=1)
 
     apply = SubmitField('Apply')
@@ -16,7 +21,6 @@ class SearchForm(FlaskForm):
         for i in ['apply', 'reset']:
             # ensure the submit buttons are rendered at the bottom of the form
             self._fields[i] = self._fields.pop(i)
-        print(self._unbound_fields)
 
     def get_page_and_reset(self):
         try:
@@ -53,7 +57,3 @@ class SearchForm(FlaskForm):
             # default to current endpoint
             endpoint = flask.request.endpoint
         return flask.redirect(flask.url_for(endpoint, **kwargs))
-
-    def validate(self):
-        return validate_no_csrf(self)
-
