@@ -1,0 +1,34 @@
+
+# pipeline configuration: note that if an entry is missing, the corresponding interface
+# will be instantiated instead (if possible).
+pipeline:
+  # modules beginning with "." are relative to this base package
+  _base_package: swisstext.cmd.scraping.tools
+
+  # default tools to use
+  crawler: .bs_crawler.CleverBsCrawler
+  splitter: .punkt_splitter.PunktSplitter
+  sentence_filter: .pattern_sentence_filter.PatternSentenceFilter
+  sg_detector: .swigspot_langid.SwigspotLangid
+  decider: .basic_decider.BasicDecider
+  saver: .mongo_saver.MongoSaver
+  seed_creator: .basic_seed_creator.IdfSeedCreator
+
+# global options
+options:
+  min_proba: 0.85   # minimum Swiss German probability (inclusive) to keep a sentence
+  crawl_depth: 2    # maximal recursion during scraping (inclusive)
+  num_workers: 1    # maximum number of threads to use during scraping
+
+# options for the saver. Currently, this is mandatory for the whole command line tool to work...
+# in case you use something else than the mongo saver, for example the ConsoleSaver, just add the
+# options BUT DON'T REMOVE the host, port, db.
+# Also, if you code a new saver, ensure its constructors defines a **kwargs argument...
+saver_options:
+  host: localhost
+  port: 27017
+  db: swisstext
+
+# Options for the decider: don't crawl child URLs if less than 20% of sentences are Swiss German.
+decider_options:
+  min_ratio: 0.2

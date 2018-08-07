@@ -1,0 +1,16 @@
+.vscode
+.idea
+*.iml
+
+__pycache__
+*.pyc
+build
+_build
+dist
+*.egg-info
+*-test.py
+*.log
+
+venv
+virtualenv
+mongodir
