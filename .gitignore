@@ -1,6 +1,7 @@
 .vscode
 .idea
 *.iml
+pycharm
 
 __pycache__
 *.pyc
