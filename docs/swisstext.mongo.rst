@@ -6,16 +6,18 @@ swisstext.mongo package
     :undoc-members:
     :show-inheritance:
 
-Abstract package
+Abstract Classes
 -----------------
+
+All defined in the :py:mod:`swisstext.mongo.abstract` package:
 
 .. toctree::
 
     swisstext.mongo.abstract
 
 
-Models module
------------------------------
+The .models module
+--------------------------
 
 .. automodule:: swisstext.mongo.models
     :members:

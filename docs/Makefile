@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = SwissText-Commandline
+SPHINXPROJ    = SwissText
 SOURCEDIR     = .
 BUILDDIR      = _build
 
