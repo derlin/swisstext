@@ -42,9 +42,11 @@ def cli(log_level, db, config_path):
     import sys
     logging.basicConfig(
         stream=sys.stderr,
-        level=logging.getLevelName(log_level.upper()),
-        format="[%(name)-15s %(levelname)-5s] %(message)s")
+        format="'%(asctime)s [%(name)-15s %(levelname)-5s] %(message)s",
+        datefmt='%Y-%m-%dT%H:%M:%S')
 
+    # only set the logging level on our classes
+    logging.getLogger('swisstext').setLevel(logging.getLevelName(log_level.upper()))
     # instantiate configuration and global variables
     global config, search_engine
     config = Config() if config_path is None else Config(config_path)

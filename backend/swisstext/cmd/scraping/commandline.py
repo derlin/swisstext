@@ -45,10 +45,11 @@ def cli(log_level, config_path, db, seed):
     # configure all loggers (log to stderr)
     logging.basicConfig(
         stream=sys.stderr,
-        level=logging.getLevelName(log_level.upper()),
         format="'%(asctime)s [%(name)-15s %(levelname)-5s] %(message)s",
         datefmt='%Y-%m-%dT%H:%M:%S')
 
+    # only set the logging level on our classes
+    logging.getLogger('swisstext').setLevel(logging.getLevelName(log_level.upper()))
     # silence this very verbose tool...
     logging.getLogger('swisstext.cmd.scraping.tools.pattern_sentence_filter').setLevel(level=logging.WARNING)
 

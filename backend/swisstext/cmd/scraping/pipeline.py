@@ -130,12 +130,12 @@ class PipelineWorker():
             (page, page_depth) = queue.get() # blocking !!
 
             if self.kill_received:
-                logger.info("W[%d]: Kill received, stopping." % self.id)
+                logger.info(f"W[{self.id}]: Kill received, stopping.")
                 return
 
-            logger.debug("Processing: %s (depth=%d)" % (page.url, page_depth))
+            logger.debug(f"W[{self.id}]: processing {page.url} (depth={page_depth})")
             if page_depth > max_depth:
-                logging.info(f"reached max depth for recursive scraping (still ${queue.qsize()} links in queue). Exiting.")
+                logging.info(f"W[{self.id}]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).")
                 break
 
             if p.decider.should_page_be_crawled(page):
@@ -183,4 +183,5 @@ class PipelineWorker():
             else:
                 logger.debug("Skipped '%s'" % page.url)
 
+            logger.info(f"W[{self.id}]: job done.")
             queue.task_done()
