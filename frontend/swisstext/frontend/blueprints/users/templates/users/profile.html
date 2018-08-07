@@ -41,7 +41,7 @@
 
                 {% if labelled_sentences.has_prev or labelled_sentences.has_next %}
                     {% from 'includes/_macros.html' import render_navigation %}
-                    {{ render_navigation(labelled_sentences, request.endpoint) }}
+                    {{ render_navigation(labelled_sentences) }}
                 {% endif %}
 
                 <table class="table table-sm table-hover">

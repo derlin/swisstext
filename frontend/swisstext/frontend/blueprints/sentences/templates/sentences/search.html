@@ -35,9 +35,9 @@
                 <a class="btn btn-sm btn-outline-secondary float-right" target="_blank"
                    href="{{ url_for('.export_csv', **request.args) }}">Export results as CSV</a>
             {% if sentences.has_prev or sentences.has_next %}
+                  {% from 'includes/_macros.html' import render_navigation %}
 {#                {% from 'includes/_macros.html' import render_post_navigation %}#}
-                {% from 'includes/_macros.html' import render_post_navigation %}
-                {{ render_post_navigation(sentences) }}
+                {{ render_navigation(sentences, **request.args) }}
             {% endif %}
 
             {% include 'sentences/_table.html' %}

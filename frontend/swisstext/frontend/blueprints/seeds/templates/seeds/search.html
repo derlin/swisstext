@@ -29,8 +29,8 @@
             <p>{{ seeds.total }} seeds found.</p>
 
             {% if seeds.has_prev or seeds.has_next %}
-                {% from 'includes/_macros.html' import render_post_navigation %}
-                {{ render_post_navigation(seeds) }}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(seeds, **request.args) }}
             {% endif %}
 
             <table class="table table-sm table-hover">
