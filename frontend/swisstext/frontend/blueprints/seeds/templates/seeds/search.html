@@ -37,11 +37,16 @@
                 <tr>
                     <th></th>
                     <th></th>
-                    <th>Usage</th>
-                    <th colspan="2" class="text-center"
+                    <th>Nb.&nbsp;of&nbsp;uses</th>
+                    <th colspan="2" class="text-center" style="min-width:86px"
                         data-toggle="tooltip" data-placement="top"
                         title="relevant URLs (after crawl) / URLs found using the seed">
                         Quality <span class="oi oi-info text-info"></span>
+                    </th>
+                    <th class="text-right"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Sentences found from the URLs (depth=1)">
+                        #s
                     </th>
                 </tr>
                 {% for seed in seeds.items %}
@@ -63,22 +68,29 @@
                         <td class="text-center">
                             {{ seed['usages'] }}
                         </td>
-                        <td class="text-right">
-                            {% if seed['count'] > 0 %}
-                                {% set ratio =  seed['urls'] / seed['count'] %}
-                                <span>
-                                    {{ seed['urls'] }}/{{ seed['count'] }}
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td class="text-right">
-                            {% if seed['count'] > 0 %}
+                        {% if seed['usages'] > 0 %}
+                            {% set ratio =  seed['urls'] / seed['count'] if seed['count'] else 0 %}
+                            {% set s_ratio =  seed['sentences'] / (1+(10 * seed['count'])) %}
+                            <td class="text-right">
+                                <span>{{ seed['urls'] }}/{{ seed['count'] }}</span>
+                            </td>
+                            <td class="text-right">
                                 <span class="badge {% if ratio < 0.2 %}text-light{% endif %}"
                                       style="background: {{ ratio|toColor }}; font-size: 1em">
                                     {{ "%.2f" % ratio }}
                                 </span>
-                            {% endif %}
-                        </td>
+                            </td>
+                            <td class="text-right">
+                                <span class="badge {% if s_ratio < 0.2 %}text-light{% endif %}"
+                                      style="background: {{ s_ratio|toColor }}; font-size: 1em">
+                                    {{ seed['sentences'] }}
+                                </span>
+                            </td>
+                        {% else %}
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </table>

@@ -21,10 +21,11 @@ def get_default_seeds_pipeline() -> List:
                 'source': '$source',
                 'count': '$count',
                 'deleted': '$deleted',
-                'delta_date': '$delta_date',
+                'delta_date': {"$ifNull": ["delta_date", None]},
                 'date_added': '$date_added',
                 'usages': {"$size": {"$ifNull": ["$search_history", []]}},
-                'urls': {'$size': '$use'}
+                'urls': {'$size': '$use'},
+                'sentences': {'$sum': '$use.count'}
             }}
     ]
 

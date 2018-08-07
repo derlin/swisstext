@@ -3,6 +3,7 @@ from urllib.parse import unquote, quote, urlparse, urlunparse
 from swisstext.frontend.persistence.models import DialectsWrapper
 
 def percentToColor(percent, opacity=1):
+    percent = max(0, min(percent, 1))
     hue = percent * 120
     return 'hsl(%d,100%%,50%%)' % hue
     # percent *= 100
