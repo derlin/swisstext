@@ -61,6 +61,12 @@
         </div>
     {% endif %}
 
+    <div class="text-right">
+        <span class="text-muted font-italic">This page contains {{ sentences_count }} unlabelled sentences.</span>
+        <a href="{{ url_for('.label_from_url', url=sentence.url, sid=sentence.id) }}"
+           class="btn btn-sm btn-light">Label all sentences</a>
+    </div>
+
     <form method="post">
         <div class="card mt-3 mb-3">
 

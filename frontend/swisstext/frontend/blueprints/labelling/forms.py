@@ -19,6 +19,11 @@ def base_mongo_params():
         dialect__skipped_by__ne=current_user.id)
 
 
+class FromUrlPostForm(FlaskForm):
+    dialect = SelectField('Default dialect', choices=DialectsWrapper.choices(), validators=[validators.Optional()])
+    save = SubmitField('Save')
+
+
 class KeywordsForm(SearchForm):
     search = StringField(
         'search (optional)',
