@@ -10,7 +10,7 @@ class PaginatedAggregationResults(Pagination):
         self.per_page = per_page
         results = list(command_cursor)[0]
         self.items = results['items']
-        self.total = results['total'][0]['count']
+        self.total = 0 if not results['total'] else results['total'][0]['count']
 
 
 def paginated_aggregation(collection, pipeline, page=1, per_page=20):

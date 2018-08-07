@@ -10,6 +10,15 @@ Simply run:
 
     python setup.py install
 
+.. warning::
+
+    The library ``cityhash`` is compiled during install and you need to have GCC and G++ installed,
+    as well as the python header files. On Ubuntu, run:
+
+    .. code-block:: bash
+
+        apt install gcc g++ libdpkg-perl python3-dev
+
 Collections
 ------------
 

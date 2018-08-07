@@ -1,2 +1,3 @@
-recursive-include frontend/templates *
-recursive-include frontend/static *
+recursive-include swisstext/frontend/templates *
+recursive-include swisstext/frontend/blueprints *
+recursive-include swisstext/frontend/static *
