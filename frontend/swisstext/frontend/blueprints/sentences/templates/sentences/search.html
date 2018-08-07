@@ -1,0 +1,49 @@
+{% extends '_layout.html' %}
+{% set title = 'Sentences' %}
+
+{% block header_include %}
+    <style type="text/css">
+        #dialects {
+            height: auto;
+        }
+
+        #dialects li {
+            list-style-type: none;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+
+    {% from 'bootstrap/form.html' import render_form %}
+
+    <div class="card mb-4">
+        <div class="card-header" id="headingOne" type="button" data-toggle="collapse" data-target="#collapse"
+             aria-expanded="true" aria-controls="collapse">
+            Filters
+        </div>
+
+        <div id="collapse" class="collapse {{ '' if collapse else 'show' }}" aria-labelledby="headingOne">
+            <div class="card-body">
+                {{ render_form(form, button_map={'apply': 'primary'}) }}
+            </div>
+        </div>
+    </div>
+
+    {% if sentences %}
+        {% if sentences.total %}
+            <p>{{ sentences.total }} sentences found.</p>
+                <a class="btn btn-sm btn-outline-secondary float-right" target="_blank"
+                   href="{{ url_for('.export_csv', **request.args) }}">Export results as CSV</a>
+            {% if sentences.has_prev or sentences.has_next %}
+                  {% from 'includes/_macros.html' import render_navigation %}
+{#                {% from 'includes/_macros.html' import render_post_navigation %}#}
+                {{ render_navigation(sentences, **request.args) }}
+            {% endif %}
+
+            {% include 'sentences/_table.html' %}
+        {% else %}
+            <p class="alert alert-danger">No sentence match this search.</p>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

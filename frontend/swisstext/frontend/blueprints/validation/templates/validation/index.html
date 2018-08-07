@@ -1,0 +1,122 @@
+{% extends '_layout.html' %}
+{% set title = 'Validate sentences' %}
+{% block header_include %}
+    <style type="text/css">
+        /* remove border on top and bottom of the table*/
+        tr:first-child, tr:first-child td {
+            border-top: none;
+        }
+
+        tr:last-child, tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr.stripped-True {
+            background-color: #efefef;
+        }
+        tr.delim-True, tr.delim-True td {
+            border-top-color: #777;
+        }
+
+        /* delete action button */
+        .action-button span:before {
+            content: '\e050'; /* delete icon */
+        }
+
+        /* deleted row style */
+        .deleted {
+            background: #efefef;
+            font-style: italic;
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        /* undo button */
+        .deleted .action-button span:before {
+            content: '\e003'; /* action-undo icon */
+        }
+
+        /* dropdown menu */
+        .oi-ellipses {
+            transform: rotate(90deg);
+        }
+
+        a.dropdown-toggle {
+            padding: 4px;
+        }
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript" src="/static/js/api_ajax.js"></script>
+    <script type="text/javascript">
+        function delete_sentence(id) {
+            let $tr = $('#' + id);
+            if ($tr.hasClass('deleted')) {
+                ajax_undelete_sentence(id)
+                    .done(() => $tr
+                        .removeClass("deleted")
+                        .find('button')
+                        .removeClass('btn-outline-danger').addClass('btn-outline-success')
+                    )
+                    .always((msg) => console.log(msg))
+            } else {
+                ajax_delete_sentence(id)
+                    .done(() => $tr
+                        .addClass("deleted")
+                        .find('button')
+                        .removeClass('btn-outline-success').addClass('btn-outline-danger')
+                    )
+                    .always((msg) => console.log(msg))
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <table class="table table-sm table-hover mt-4 mb-4">
+        {% set state = namespace(url=None, stripped=True, delim=False) %}
+        {% for s in sentences %}
+
+            {% if s.url != state.url %}
+                {% set state.url = s.url %}
+                {% set state.stripped = not state.stripped %}
+                {% set state.delim = True %}
+            {% else %}
+                {% set state.delim = False %}
+            {% endif %}
+
+            <tr id="{{ s.id }}" class="stripped-{{ state.stripped }} delim-{{ state.delim }}">
+                <td>
+                    <button type="button" class="btn btn-outline-success btn-sm action-button"
+                            onclick="delete_sentence('{{ s.id }}')">
+                        <span class="oi oi-delete" title="icon delete" aria-hidden="true"></span>
+                    </button>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <a class="btn bg-light dropdown-toggle" href="#" role="button" id="dropdownMore"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="oi oi-ellipses"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMore">
+                            <a class="dropdown-item" href="{{ url_for('sentences.details', sid=s.id) }}">
+                                View sentence details
+                            </a>
+                            <a class="dropdown-item" href="{{ s.url }}" target="_blank">View site</a>
+                            <a class="dropdown-item"
+                               href="{{ url_for('urls.details', id=s.url, next=encode_next_url(request.url)) }}">
+                                View URL details
+                            </a>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-monospace text-right small">{{ s.crawl_proba|percent }}</td>
+                <td>{{ s.text }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% from 'bootstrap/form.html' import render_form %}
+    {{ render_form(form, button_map={'submit': 'primary'}) }}
+{% endblock %}

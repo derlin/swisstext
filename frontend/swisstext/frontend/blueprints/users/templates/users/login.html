@@ -1,0 +1,6 @@
+{% extends '_layout.html' %}
+{% set title= 'login' %}
+{% block body %}
+    {% from 'bootstrap/form.html' import render_form %}
+    {{ render_form(form, button_map={'submit': 'primary'}) }}
+{% endblock %}

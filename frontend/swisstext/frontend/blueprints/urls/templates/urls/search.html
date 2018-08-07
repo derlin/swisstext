@@ -1,0 +1,23 @@
+{% extends '_layout.html' %}
+{% set title = 'URLs' %}
+
+{% block body %}
+    {% from 'includes/_macros.html' import render_search_form %}
+
+    {{ render_search_form(form, collapse) }}
+
+    {% if urls %}
+        {% if urls.total %}
+            <p>{{ urls.total }} URLs found.</p>
+
+            {% if urls.has_prev or urls.has_next %}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(urls, **request.args) }}
+            {% endif %}
+            {% include 'urls/_table.html' %}
+        {% else %}
+            <p class="alert alert-danger">No URL match this search.</p>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

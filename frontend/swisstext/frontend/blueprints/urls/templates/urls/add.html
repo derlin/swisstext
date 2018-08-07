@@ -1,0 +1,58 @@
+{% extends '_layout.html' %}
+{% set title = 'Propose a URL' %}
+
+{% block body %}
+
+    {% from 'bootstrap/form.html' import render_field %}
+    {% from 'urls/_macros.html' import render_url %}
+
+    <form method="post">
+
+        <div class="card mt-5 mb-5">
+            <div class="card-header">
+                Propose a url
+            </div>
+            <div class="card-body">
+                {{ form.csrf_token }}
+                {% if similar_urls %}
+                    {{ render_field(form.url, readonly=True) }}
+                {% else %}
+                    {{ render_field(form.url) }}
+                    {{ render_field(form.add1, button_map={'add1': 'primary'}) }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if similar_urls %}
+            <div class="card mt-5 mb-5">
+                <div class="card-header">
+                    Validation
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted">
+                        <span class="oi oi-warning"></span>
+                        We found some similar URLs in the system.
+                    </p>
+                    <ul class="list-group list-group-item-action" style="max-height: 200px; overflow: auto">
+                        {% for u in similar_urls.items %}
+                            <li class="list-group-item">
+                                {{ render_url(u.id) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="card-text text-right mt-2 mr-2">{{ similar_urls.items|length }}/{{ similar_urls.total }}</p>
+                </div>
+
+                <div class="card-footer bg-transparent">
+                    <a href="{{ url_for(request.endpoint) }}" class="btn btn-secondary">Cancel</a>
+                    {{ render_field(form.add2, button_map={'add2':'primary'}) }}
+                </div>
+            </div>
+        {% elif url_exists %}
+            <div class="alert alert-warning">
+                This URL already exists.<br>
+                {{ render_url(form.url.data) }}
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

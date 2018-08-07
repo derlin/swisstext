@@ -1,0 +1,133 @@
+{% extends '_layout.html' %}
+{% set title = 'Dialect labelling' %}
+{% block header_include %}
+    <style type="text/css">
+
+        label {
+            margin: 0;
+            padding: .1rem .6rem;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        form .btn {
+            margin: 0 3px;
+            background: white;
+        }
+
+        #sentence {
+            padding: 2rem 1.25rem;
+            min-height: 10rem;
+        }
+
+        form .btn.dialect {
+            width: 100%;
+            margin: .2em;
+            font-family: Roboto, Arial, sans-serif;
+        }
+
+        .dialects .row:last-of-type label {
+            margin-top: 1.3em;
+            text-align: center !important;
+        }
+
+        kbd {
+            background: #efefef;
+            color: black;
+        }
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        $(function () {
+            $('[type=radio]').click(function () {
+                $('form').submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    {% from 'bootstrap/form.html' import render_form, render_field %}
+
+    {% if form.current_label.data %}
+        <div class="alert alert-info m-2">
+            You already labelled or skipped this sentence: <span
+                class="font-weight-bold">{{ form.current_label.data }}</span>.
+        </div>
+    {% endif %}
+
+    <div class="text-right">
+        <span class="text-muted font-italic">This page contains {{ sentences_count }} unlabelled sentences.</span>
+        <a href="{{ url_for('.label_from_url', url=sentence.url, sid=sentence.id) }}"
+           class="btn btn-sm btn-light">Label all sentences</a>
+    </div>
+
+    <form method="post">
+        <div class="card mt-3 mb-3">
+
+            <div class="card-body">
+                {# TODO: confirm deletion #}
+                {{ form.delete_sentence(class_="btn btn-sm btn-light float-right") }}
+                <a class="btn btn-sm float-right" href="{{ url_for('sentences.details', sid=sentence.id) }}">
+                    <span class="oi oi-eye"></span>
+                </a>
+                <div id="sentence" class="card-text text-center">{{ sentence.text }}</div>
+                <div class="card-text text-right">
+                    {% from 'urls/_macros.html' import render_url %}
+                    Source: {{ render_url(sentence.url, next=request.endpoint) }}
+                </div>
+                <div class="card-text text-muted font-italic text-sm-right">added
+                    on {{ sentence.date_added | datetime }}</div>
+            </div>
+
+            <div class="card-footer dialects">
+                {{ form.csrf_token }}
+                {{ form.sentence_id }}
+                {{ form.current_label }}
+
+                {% set counter = namespace(val=0) %}
+                {% for subfield_row in form.dialect | batch(2) %}
+                    <div class="row">
+                        {% for subfield in subfield_row %}
+                            {# TODO: better shortcuts #}
+                            {% set is_noidea = subfield.data.startswith('?') %}
+                            {% set accesskey = 'n' if is_noidea else counter.val %}
+                            {% set counter.val = counter.val + 1 %}
+                            <div class="col-sm">
+                                <span class="d-none">{{ subfield }}</span>
+                                <label for="{{ subfield.label.field_id }}"
+                                       accesskey='{{ accesskey }}'
+                                       class="btn dialect text-left btn-light
+                                        {{ 'active' if subfield.data == form.current_label.data else '' }}
+                                        {{ 'text-danger' if is_noidea else '' }}">
+                                    <span class="badge badge-light">{{ accesskey }}</span> -
+                                    <span class="text-monospace badge font-weight-bold p-2"
+                                          style="background: {{ Dialects.color(subfield.data) }}">
+                                        {{ subfield.data.upper() }}
+                                    </span> -
+                                    <span class="font-weight-normal text-sm">{{ subfield.label.text }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="card-body mt-2">
+                <div class="card-text">
+                    To use shortcuts, try one of
+                    <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>[key]</kbd> ,
+                    <kbd>alt</kbd> + <kbd>[key]</kbd> ,
+                    <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>[key]</kbd>.
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+{% endblock %}

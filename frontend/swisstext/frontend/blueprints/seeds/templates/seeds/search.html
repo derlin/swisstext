@@ -1,0 +1,103 @@
+{% extends '_layout.html' %}
+{% set title = 'Seeds' %}
+
+{% block body %}
+
+
+    <p class="clearfix">
+        <a class="link link-primary float-right" href="{{ url_for('.add') }}">Add Seed</a>
+    </p>
+
+
+    <div class="card mb-4">
+        <div class="card-header collapsed" id="headingOne" type="button" data-toggle="collapse" data-target="#collapse"
+             aria-expanded="true" aria-controls="collapse">
+            Filters
+        </div>
+
+        <div id="collapse" class="collapse" aria-labelledby="headingOne">
+            <div class="card-body">
+                {% from 'bootstrap/form.html' import render_form %}
+                {{ render_form(form, button_map={'apply': 'primary'}) }}
+            </div>
+        </div>
+    </div>
+
+
+    {% if seeds %}
+        {% if seeds.total %}
+            <p>{{ seeds.total }} seeds found.</p>
+
+            {% if seeds.has_prev or seeds.has_next %}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(seeds, **request.args) }}
+            {% endif %}
+
+            <table class="table table-sm table-hover">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Nb.&nbsp;of&nbsp;uses</th>
+                    <th colspan="2" class="text-center" style="min-width:86px"
+                        data-toggle="tooltip" data-placement="top"
+                        title="relevant URLs (after crawl) / URLs found using the seed">
+                        Quality <span class="oi oi-info text-info"></span>
+                    </th>
+                    <th class="text-right"
+                        data-toggle="tooltip" data-placement="top"
+                        title="Sentences found from the URLs (depth=1)">
+                        #s
+                    </th>
+                </tr>
+                {% for seed in seeds.items %}
+                    <tr>
+                        <td>
+                            <a class="btn btn-link" href="{{ url_for('.details', id=seed['id']) }}">
+                                <span class="oi oi-eye"></span>
+                            </a>
+                        </td>
+                        <td style="width: 100%">
+                            {{ seed['id'] }}
+                            <span class="badge text-muted">
+                            {{ seed['source']['type'] }}
+                            </span>
+                            {% if seed.deleted %}
+                                <span class="badge badge-danger">Deleted</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ seed['usages'] }}
+                        </td>
+                        {% if seed['usages'] > 0 %}
+                            {% set ratio =  seed['urls'] / seed['count'] if seed['count'] else 0 %}
+                            {% set s_ratio =  seed['sentences'] / (1+(10 * seed['count'])) %}
+                            <td class="text-right">
+                                <span>{{ seed['urls'] }}/{{ seed['count'] }}</span>
+                            </td>
+                            <td class="text-right">
+                                <span class="badge {% if ratio < 0.2 %}text-light{% endif %}"
+                                      style="background: {{ ratio|toColor }}; font-size: 1em">
+                                    {{ "%.2f" % ratio }}
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <span class="badge {% if s_ratio < 0.2 %}text-light{% endif %}"
+                                      style="background: {{ s_ratio|toColor }}; font-size: 1em">
+                                    {{ seed['sentences'] }}
+                                </span>
+                            </td>
+                        {% else %}
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+        {% else %}
+            <span class="alert alert-warning">No seed matches those filters.</span>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

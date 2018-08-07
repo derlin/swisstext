@@ -1,0 +1,9 @@
+{% macro render_url(url) %}
+    <a class="card-link ml-2" href="{{ url }}" target="_blank">
+        <code>{{ url }}</code>
+        <span class="ml-1 oi oi-external-link"></span>
+    </a>
+    <a class="ml-2 btn btn-light btn-sm" href="{{ url_for('urls.details', id=url, **kwargs) }}">
+        <span class="oi oi-eye"></span>
+    </a>
+{% endmacro %}

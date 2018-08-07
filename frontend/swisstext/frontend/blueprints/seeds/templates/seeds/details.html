@@ -1,0 +1,77 @@
+{% extends '_layout.html' %}
+{% set title = 'Seed detail' %}
+
+{% block body %}
+
+    {% if s.deleted %}
+        <div class="mb-3 text-danger text-right">
+            <span class="oi oi-warning"></span>
+            <b>Deleted</b> by {{ s.deleted.by }} ({{ s.deleted.date|datetime }})
+        </div>
+    {% else %}
+        <p class="clearfix">
+            <a class="link link-danger float-right collapsed" data-toggle="collapse" href="#delete-collapse"
+               role="button" aria-expanded="false" aria-controls="delete-collapse">
+                Remove seed
+            </a>
+        </p>
+        <div class="collapse" id="delete-collapse">
+            <div class="card card-body">
+                <p class="card-text">
+                    <span class="oi oi-warning"></span> Are you sure ?
+                </p>
+                {% from 'bootstrap/form.html' import render_form %}
+                {{ render_form(form, form_type="inline", button_map={'delete': 'danger'}) }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card mt-2">
+        <div class="card-header">Seed <code>{{ s.id }}</code></div>
+        <div class="card-body">
+            <p class="card-text text-center mt-2 mb-3">{{ s.text }}</p>
+            <p class="card-text">Source
+                <span class="badge badge-secondary">{{ s.source.type_ }}</span>
+                {% if s.source.extra %} {{ s.source.extra }}{% endif %}
+            </p>
+
+            <p class="card-text">
+                <a href="https://www.google.ch/search?q={{ s.id|quote }}" class="btn btn-light"
+                   target="_blank">View on Google Search</a>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="card mt-2">
+        <div class="card-header collapsed"
+             data-toggle="collapse" href="#history-body" role="button" aria-controls="history-body">
+            Usage
+        </div>
+        <div id="history-body" class="collapse" aria-labelledby="history-header">
+            <div class="card-body">
+                <p class="card-text">Used {{ s.search_history|length }} time(s).</p>
+                {% if s.search_history %}
+                    <p class="card-text">History</p>
+                    <ul class="list-group">
+                        {% for entry in s.search_history %}
+                            <li class="list-group-item">{{ entry.date|datetime }} - {{ entry.count }} new URLs.</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if urls.items %}
+        <div class="mt-5">
+            <h5>Found {{ urls.total }} URLs</h5>
+            {% include 'urls/_table.html' %}
+            {% if urls.has_prev or urls.has_next %}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(urls, '.details') }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% endblock %}

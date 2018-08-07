@@ -1,0 +1,28 @@
+<table class="table table-sm table-hover">
+    <tr>
+        <th colspan="2">actions</th>
+        <th class="text-right ml-1 mr-1" title="Number of sentences found">
+                        <span data-toggle="tooltip" data-placement="bottom"
+                              title="Number of sentences found on this page.">#s</span>
+        </th>
+        <th>url</th>
+    </tr>
+    {% for url in urls.items %}
+        <tr>
+            <td>
+                <a class="btn btn-link btn-sm" href="{{ url_for('urls.details', id=url.id) }}">
+                    <span class="oi oi-eye"></span>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-light btn-sm" href="{{ url.id }}" target="_blank">
+                    <span class="oi oi-external-link"></span>
+                </a>
+            </td>
+            <td class="text-right ml-1 mr-1">{{ url.count }}</td>
+            <td>
+                <code>{{ url.id }}</code>
+            </td>
+        </tr>
+    {% endfor %}
+</table>

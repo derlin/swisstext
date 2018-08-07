@@ -1,0 +1,103 @@
+{% extends '_layout.html' %}
+{% set title = 'Sentence detail' %}
+
+
+{% block js_include %}
+    <script type="text/javascript" src="/static/js/api_ajax.js"></script>
+    <script type="text/javascript">
+        function undelete() {
+            ajax_undelete_sentence('{{ s.id }}')
+                .done(() => location.reload())
+                .always((msg) => console.log(msg))
+        }
+
+        function validate() {
+            ajax_validate_sentence('{{ s.id }}')
+                .done(() => location.reload())
+                .always((msg) => console.log(msg))
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    {% if not s.deleted %}
+        <p class="clearfix">
+            <a class="link link-danger float-right collapsed" data-toggle="collapse" href="#delete-collapse"
+               role="button" aria-expanded="false" aria-controls="delete-collapse">
+                Remove sentence
+            </a>
+        </p>
+        <div class="collapse" id="delete-collapse">
+            <div class="card card-body">
+                <p class="card-text">
+                    <span class="oi oi-warning"></span> Are you sure ?
+                </p>
+                {% from 'bootstrap/form.html' import render_form %}
+                {{ render_form(form, form_type="inline", button_map={'delete': 'danger'}) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="card card">
+            <div class="card-header">
+                <span class="oi oi-warning text-danger"></span>
+                Deleted by {{ s.deleted.by }} - {{ s.deleted.date|datetime }}.
+                <button class="btn btn-sm btn-light text-success" onclick="undelete()">Restore</button>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card mt-2">
+        <div class="card-header">Sentence <code>{{ s.id }}</code></div>
+        <div class="card-body">
+            <p class="card-text text-center mt-2 mb-3">{{ s.text }}</p>
+            <p class="card-text">Source:
+                {% from 'urls/_macros.html' import render_url %}
+                {{ render_url(s.url) }}
+            </p>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-header">Crawl information</div>
+        <div class="card-body">
+            <p class="card-text">probability: <span class="text-monospace">{{ s.crawl_proba|percent }}</span></p>
+            <p class="card-text">Crawl date: {{ s.date_added | datetime }}</p>
+        </div>
+    </div>
+    <div class="card mt-2">
+        <div class="card-header">Validation and labelling</div>
+        <div class="card-body">
+            <p class="card-text">Validated by {{ s.validated_by|length }} user(s).</p>
+            {% if s.dialect %}
+                {% if s.dialect.skipped_by %}
+                    <p class="card-text">Skipped by {{ s.dialect.skipped_by|length }} user(s).</p>
+                {% endif %}
+                {% if s.dialect.labels %}
+                    <p class="card-text">Dialect:
+                        {% from 'labelling/_macros.html' import render_label %}
+                        {{ render_label(s.dialect.label) }}
+                        (confidence: {{ s.dialect.confidence|percent }}%)
+                    </p>
+                    <p class="card-text">History</p>
+                    <ul>
+                        {% for entry in s.dialect.labels %}
+                            <li class="list-group-item">{{ entry.date }} - {{ entry.label }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+
+            {% if current_user.id not in s.validated_by %}
+                <a class="card-link" onclick="validate()" href="javascript: return false">
+                    Validate this sentence
+                </a>
+            {% endif %}
+            {% if s.validated_by|length %}
+                <a class="card-link" href="{{ url_for('labelling.label_one', id=s.id) }}">
+                    Label this sentence
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends '_layout.html' %}
+{% set title = 'Dialect labelling' %}
+{% block header_include %}
+    <style type="text/css">
+
+        table label {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 0.3rem;
+            margin: 0;
+        }
+
+        table td.sentence-td {
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        tr:not([data-selected]) {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        .hl {
+            background: yellow;
+        }
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        $(function () {
+            let dialect_default = '{{ form.dialect.data }}';
+
+            $('table [type=checkbox]').on('change', (e) => {
+                $select = $(e.target || e.sourceElement).next();
+                $select.val($select.val() === dialect_default ? '{{ form.dialect.default }}' : dialect_default);
+                $select.trigger('change');
+            });
+
+            $('table select').on('change', (e) => {
+                $elt = $(e.target || e.sourceElement);
+                $elt.closest('tr').attr('data-selected', $elt.val() === dialect_default ? 'default' : $elt.val());
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <form method="post">
+
+        {% from 'bootstrap/form.html' import render_form, render_field %}
+        <div class="card mt-5 mb-5">
+            <div class="card-body">
+                {{ form.csrf_token }}
+                {{ render_field(form.search) }}
+                {{ render_field(form.dialect) }}
+                {{ render_field(form.per_page) }}
+                {{ render_field(form.apply, button_map={'apply':'primary'}) }}
+                {{ render_field(form.reset) }}
+            </div>
+        </div>
+
+
+        {% if has_results %}
+
+            {% if sentences %}
+                <h2 class="margins">Results</h2>
+
+                <table class="table table-sm table-hover">
+                    {% for s in sentences %}
+                        <tr data-selected="default">
+                            <td>
+                                <input style="display:none" id="checkbox-{{ s.id }}" type="checkbox" checked="checked">
+                                <select name="sentence-{{ s.id }}"> <!-- TODO class="form-control-sm" ? -->
+                                    {% for (v,d) in form.dialect.choices %}
+                                        <option value="{{ v }}"
+                                                {{ 'selected' if v == form.dialect.data else '' }}>{{ d }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="sentence-td">
+                                <label for="checkbox-{{ s.id }}">
+                                    {{ s.text| replace(form.search.data,
+                                        (('<span class="hl">%s</span>' % form.search.data)|safe)) }}
+                                </label>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                {{ render_field(form.save, button_map={'save':'primary'}) }}
+
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    No sentences found matching your search.
+                </div>
+            {% endif %}
+            {#        {% from 'bootstrap/form.html' import render_form %}#}
+            {#        {{ render_form(sform, button_map={'submit': 'primary'}) }}#}
+        {% endif %}
+    </form>
+{% endblock %}

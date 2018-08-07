@@ -6,11 +6,15 @@ __pycache__
 *.pyc
 build
 _build
+
+
 dist
 *.egg-info
 *-test.py
 *.log
+logs
 
 venv
 virtualenv
 mongodir
+

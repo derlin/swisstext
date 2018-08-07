@@ -1,0 +1,77 @@
+{% extends '_layout.html' %}
+{% set title = 'Profile' %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        $(function () {
+            $('button.delete').click(function () {
+                let $form = $('form');
+                $form.find('#{{ form.sid.id }}').val($(this).attr('id'));
+                $form.submit();
+            });
+        });
+    </script>
+{% endblock %}
+{% block body %}
+
+    {% from 'bootstrap/form.html' import render_form %}
+    {{ render_form(form) }}
+
+    <div class="card mt-2">
+        <div class="card-header">Statistics</div>
+        <div class="card-body">
+            <p class="card-text">You validated
+                <span class="text-primary text-monospace">{{ valid_count }}</span> sentences.
+            </p>
+            <p class="card-text">You labelled
+                <span class="text-primary text-monospace">{{ labelled_sentences.total }}</span> sentences.
+            </p>
+            <p class="card-text">You skipped
+                <span class="text-primary text-monospace">{{ skipped_count }}</span> sentences.
+            </p>
+        </div>
+    </div>
+
+
+
+    {% if labelled_sentences.total %}
+        <div class="card mt-2">
+            <div class="card-header">Labelling history</div>
+            <div class="card-body">
+
+                {% if labelled_sentences.has_prev or labelled_sentences.has_next %}
+                    {% from 'includes/_macros.html' import render_navigation %}
+                    {{ render_navigation(labelled_sentences) }}
+                {% endif %}
+
+                <table class="table table-sm table-hover">
+                    {% for sentence in labelled_sentences.items %}
+                        <tr>
+                            <td>
+                                <a class="btn btn-sm btn-light p-1 oi oi-eye" title="view details"
+                                   href="{{ url_for('sentences.details', sid=sentence.id) }}"></a>
+                            </td>
+                            <td>
+                                <button id="{{ sentence.id }}" title="remove label"
+                                        class="btn btn-link text-danger p-1 oi oi-delete delete"></button>
+                            </td>
+                            <td>
+                                <a class="btn btn-link text-info p-1 oi oi-action-redo" title="change label"
+                                   href="{{ url_for('labelling.label_one', id=sentence.id) }}"></a>
+                            </td>
+                            <td>
+                                {% from 'labelling/_macros.html' import render_label %}
+                                {{ render_label(sentence.dialect.labels[0].label) }}
+                            </td>
+                            <td>{{ sentence.text }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% else %}
+                <p class="mt-2 alert alert-danger">No sentence labelled so far.</p>
+            </div>
+        </div>
+    {% endif %}
+
+
+{% endblock %}

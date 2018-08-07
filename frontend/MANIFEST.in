@@ -1,0 +1,2 @@
+recursive-include frontend/templates *
+recursive-include frontend/static *

@@ -1,0 +1,117 @@
+{% extends '_layout.html' %}
+{% set title = 'Dialect labelling: from page' %}
+{% block header_include %}
+    <style type="text/css">
+
+        table label {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 0.3rem;
+            margin: 0;
+        }
+
+        table td.sentence-td {
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        tr:not([data-selected]) {
+            text-decoration: line-through;
+            color: #777;
+        }
+
+        table td:first-child {
+            max-width: 120px;
+        }
+
+        .table select {
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        $(function () {
+            let dialect_default = '{{ form.dialect.data }}';
+
+            $('#dialect').on('change', (e) => {
+                $elt = $(e.target || e.sourceElement);
+                dialect_default = $elt.val();
+                $('[data-selected=default] select').val(dialect_default).trigger('change');
+            });
+
+            $('table [type=checkbox]').on('change', (e) => {
+                $select = $(e.target || e.sourceElement).next();
+                $select.val($select.val() === dialect_default ? '{{ form.dialect.default }}' : dialect_default);
+                $select.trigger('change');
+            });
+
+            $('table select').on('change', (e) => {
+                $elt = $(e.target || e.sourceElement);
+                $elt.closest('tr').attr('data-selected', $elt.val() === dialect_default ? 'default' : $elt.val());
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <form method="post">
+        {{ form.csrf_token }}
+        {% if get_params.sid %}
+            <div class="text-right">
+                <a class="btn btn-light btn-sm float-right" href="{{ url_for('.label_one', id=get_params.sid) }}">
+                    Cancel & back
+                </a>
+            </div>
+        {% endif %}
+
+        {% if sentences %}
+            {% from 'urls/_macros.html' import render_url %}
+            <p>Displaying validated sentences from <br>{{ render_url(get_params.url) }}
+                {% if sentences.has_next %}
+                    <br>
+                    <span class="font-italic">
+                    (Those are the first {{ sentences.per_page }} sentences out of {{ sentences.total }})
+                </span>
+                {% endif %}
+            </p>
+
+            {% from 'bootstrap/form.html' import render_field %}
+            {{ render_field(form.dialect) }}
+
+            <table class="table table-sm table-hover">
+                {% for s in sentences.items %}
+                    <tr data-selected="default">
+                        <td>
+                            <input style="display:none" id="checkbox-{{ s.id }}" type="checkbox" checked="checked">
+                            <select name="sentence-{{ s.id }}"> <!-- TODO class="form-control-sm" ? -->
+                                {% for (v,d) in form.dialect.choices %}
+                                    <option value="{{ v }}" {{ 'selected' if v == form.dialect.data else '' }}>
+                                        {# {{ "[%s] %s" % (v,d) }}#}
+                                        {{ d }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="sentence-td">
+                            <label for="checkbox-{{ s.id }}">
+                                {{ s.text }}
+                            </label>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            {{ render_field(form.save, button_map={'save':'primary'}) }}
+
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                No more sentences to label.
+            </div>
+        {% endif %}
+
+    </form>
+{% endblock %}

@@ -1,0 +1,116 @@
+{# Macro for displaying an icon from https://useiconic.com/ #}
+{% macro icon(icon_name, tag='span') -%}
+    <{{ tag }} class="oi oi-{{ icon_name }}"></{{ tag }}>
+{%- endmacro %}
+
+
+{# Macro for creating navigation links #}
+{# Note: the page parameter is only here to 'pop' it from kwargs in case you are using a SearchForm
+   and are passing **request.args as kwargs... #}
+{% macro render_navigation(pagination, endpoint=request.endpoint, page=None) %}
+    <ul class=pagination>
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page }}</span>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" style="border-top: none; border-bottom: none">…</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{# Render a field using Bootstrap 4 #}
+{% macro render_field(field, class_="form-control" ) %}
+    <div class="form-group">
+        <label for="{{ field.name }}">{{ field.label }} </label>
+        {{ field(class="form-control", **kwargs) }}
+        {% if field.errors %}
+            <small class="invalid-feedback">
+                {% for error in field.errors %}
+                    <span class="help-inline">{{ error }}</span>
+                {% endfor %}
+            </small>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# Render a basic field, copied from the official wtforms doc #}
+{% macro render_basic_field(field) %}
+    <dt>{{ field.label }}
+    <dd>{{ field(**kwargs)|safe }}
+        {% if field.errors %}
+            <ul class=errors>
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </dd>
+{% endmacro %}
+
+
+{# Macro for creating navigation links #}
+{% macro render_post_navigation(pagination, form_id=None, page_field='page') %}
+
+    <script type="text/javascript">
+        function changePage(page) {
+            // use JS to add a query parameter to the form before submit
+
+            let form = $("{{ '#' + form_id if form_id else 'form' }}");
+            if (form) {
+                // a form has been specified (or has an id #paramsForm) -> submit the form with the
+                // proper action
+                $('[name={{ page_field }}]').val(page);
+                form.submit();
+            }
+        }
+    </script>
+
+    <ul class=pagination>
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li class="page-item">
+                        <a class="page-link" onclick="changePage({{ page }})">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page }}</span>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" style="border-top: none; border-bottom: none">…</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+
+{% macro render_search_form(form, collapse=False) %}
+    {% from 'bootstrap/form.html' import render_form %}
+    <div class="card mb-4">
+        <div class="card-header {{ 'collapsed' if collapse else '' }}"
+             id="headingOne" type="button" data-toggle="collapse" data-target="#collapse"
+             aria-expanded="true" aria-controls="collapse">
+            Filters
+        </div>
+
+        <div id="collapse" class="collapse {{ '' if collapse else 'show' }}" aria-labelledby="headingOne">
+            <div class="card-body">
+                {{ render_form(form, button_map={'apply': 'primary'}) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
