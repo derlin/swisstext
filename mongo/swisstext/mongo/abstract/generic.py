@@ -33,7 +33,7 @@ class SourceType:
     """
     Possible sources for a URL or a Seed.
     """
-    UNKNOWN = "unknown"  #: This is used when the seeds/urls are read from a file
+    UNKNOWN = "file"  #: This is used when the seeds/urls are read from a file
     USER = "user"  #: When user is set, the source.extra should contain the user id
     AUTO = "auto"  #: Auto means it has been generated automatically by the system during regular execution
     SEED = "seed"  #: The URL was found by searching the seed whose ID figures in source.extra

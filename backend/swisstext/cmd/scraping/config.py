@@ -26,7 +26,7 @@ class Config(BaseConfig):
     class Options:
         """Holds the general options for the scraping pipeline."""
 
-        def __init__(self, num_workers=1, min_proba=0.85, crawl_depth=2):
+        def __init__(self, num_workers=1, min_proba=0.85, crawl_depth=2, **kwargs):
             self.num_workers = num_workers  #: maximum number of threads to use
             self.min_proba = min_proba  #: minimum Swiss German probability to keep a sentence
             self.crawl_depth = crawl_depth  #: maximum depth of the crawl, inclusive.

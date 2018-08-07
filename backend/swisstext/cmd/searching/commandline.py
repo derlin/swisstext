@@ -35,8 +35,9 @@ search_engine: SearchEngine
 @click.group(invoke_without_command=True)
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
+@click.option('-d', '--db', default=None, help='If set, this will override the database set in the config')
 @click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
-def cli(log_level, config_path):
+def cli(log_level, db, config_path):
     # configure logger
     import sys
     logging.basicConfig(
@@ -47,10 +48,17 @@ def cli(log_level, config_path):
     # instantiate configuration and global variables
     global config, search_engine
     config = Config() if config_path is None else Config(config_path)
+    if db: config.set('saver_options.db', db)
     search_engine = config.create_search_engine()
 
 
 # ============== available commands
+
+@cli.command('dump_config')
+def dump_config():
+    """Prints the active configuration."""
+    import pyaml
+    print(pyaml.dump(config.conf))
 
 @cli.command('from_mongo')
 @click.option('-n', '--num-seeds', type=int, default=20, help="Max seeds used.")
@@ -70,9 +78,9 @@ def from_mongo(num_seeds, new):
     with get_connection(**config.get('saver_options')):
         if new:
             # just get the seeds that have never been used (give priority to user seeds)
-            queryset = MongoSeed.objects(search_history__0__exists=False)\
-                .order_by("-source.type")\
-                .fields(id=True)\
+            queryset = MongoSeed.objects(search_history__0__exists=False) \
+                .order_by("-source.type") \
+                .fields(id=True) \
                 .limit(num_seeds)
             seeds = (s.id for s in queryset)
         else:

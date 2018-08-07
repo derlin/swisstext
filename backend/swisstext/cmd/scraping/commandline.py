@@ -38,8 +38,9 @@ gen_seeds = True
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
 @click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
+@click.option('-d', '--db', default=None, help='If set, this will override the database set in the config')
 @click.option('--seed/--no-seed', default=gen_seeds, help="Generate seeds in the end.")
-def cli(log_level, config_path, seed):
+def cli(log_level, config_path, db, seed):
     import sys
     # configure all loggers (log to stderr)
     logging.basicConfig(
@@ -54,6 +55,7 @@ def cli(log_level, config_path, seed):
     # instantiate configuration and global variables
     global config, queue, pipeline, gen_seeds
     config = Config() if config_path is None else Config(config_path)
+    if db: config.set('saver_options.db', db)
     pipeline = config.create_pipeline()
     queue = PageQueue()
     gen_seeds = seed
@@ -72,7 +74,8 @@ def dump_config():
 @click.option('-s', '--num-sentences', type=int, default=100, help="Number of sentences to use.")
 @click.option('-n', '--num', type=int, default=5, help="Number of seeds to generate.")
 @click.option('--new/--any', default=False, help="Use the newest sentences")
-def gen_seeds(num_sentences, num, new):
+@click.option('--dry-run', is_flag=True, default=False, help="Just print the seeds (don't save them).")
+def gen_seeds(num_sentences, num, new, dry_run):
     """
     Generate seeds from a sample of mongo sentences.
 
@@ -102,7 +105,11 @@ def gen_seeds(num_sentences, num, new):
             sentences = [s['text'] for s in MongoSentence.objects.aggregate(*aggregation_pipeline)]
 
     seeds = pipeline.seeder.generate_seeds(sentences, max=num)
-    pipeline.saver.save_seeds(seeds)
+    if dry_run:
+        for seed in seeds:
+            print(seed)
+    else:
+        pipeline.saver.save_seeds(seeds)
 
 
 @cli.command('from_mongo')
@@ -206,6 +213,7 @@ def _scrape():
             t.join()
 
     else:
+        # TODO: also make the pipeline finish smoothly on ctrl+c ??
         # only one worker -> don't bother with threads
         worker = PipelineWorker()
         worker.run(*args)

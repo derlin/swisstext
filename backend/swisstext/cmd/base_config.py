@@ -133,15 +133,28 @@ class BaseConfig(ABC):
         :param default: the default value if the property is not found
         :return: the property value or `default`
         """
+        root, prop = self._get_subdict(prop_name)
+        return default if root is None else root.get(prop, default)
+
+    def set(self, prop_name, value):
+        """
+        Set a value using the property dot syntax. See :py:meth:`get` to see how it works.
+        """
+        root, prop = self._get_subdict(prop_name)
+        if root and prop in root:
+            root[prop] = value
+
+    def _get_subdict(self, prop_name):
+        root = self.conf
+        props = prop_name.split('.')
+
         if '.' in prop_name:
-            root = self.conf
-            props = prop_name.split('.')
-            for key in props:
-                if root:
-                    root = root.get(key, None)
-            return default if root is None else root
-        else:
-            return self.conf.get(prop_name, default)
+            for key in props[:-1]:
+                root = root.get(key, None)
+                if root is None:
+                    break
+
+        return root, props[-1]
 
     def instantiate_tools(self) -> List[object]:
         """

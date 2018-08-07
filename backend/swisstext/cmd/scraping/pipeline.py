@@ -118,6 +118,9 @@ class PipelineWorker():
             A better way would be to keep track of active workers and stop only when all workers are idle, or
             when all workers reached a task with a depth > max depth...
 
+            **Comportement on errors**: in case fetching the URL triggers an error, we currently just log the thing.
+            Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?
+
         :param queue: the task queue
         :param p: the pipeline to use
         :param new_sentences: all new sentences discovered will be added to this list

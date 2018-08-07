@@ -22,7 +22,7 @@ class Config(BaseConfig):
     This is the best way to understand what options are available.
     """
     class Options:
-        def __init__(self, max_results=10):
+        def __init__(self, max_results=10, **kwargs):
             self.max_results = max_results
             """Max number of URLs to retrieve for one search"""
 
