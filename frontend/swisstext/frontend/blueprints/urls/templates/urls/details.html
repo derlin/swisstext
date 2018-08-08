@@ -74,8 +74,19 @@
 
     {% if sentences %}
         <div class="mt-5">
+
             <h4>{{ sentences.total }} sentences found on this page</h4>
             {% if sentences.total %}
+                <div class="text-right">
+                    <a class="btn btn-sm btn-light" target="_blank"
+                       href="{{ url_for('validation.validate', url=url.id) }}">
+                        Validate all sentences
+                    </a>
+                    <a class="btn btn-sm btn-light" target="_blank"
+                       href="{{ url_for('labelling.label_from_url', url=url.id) }}">
+                        Label all sentences
+                    </a>
+                </div>
                 {% include 'sentences/_table.html' %}
                 {% if sentences.has_prev or sentences.has_next %}
                     {% from 'includes/_macros.html' import render_navigation %}

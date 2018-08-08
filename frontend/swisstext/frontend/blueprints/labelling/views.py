@@ -34,6 +34,7 @@ def label_from_url():
             .order_by('url', 'date_added') \
             .paginate(page=1, per_page=50)
         if sentences.total == 0:
+            flash_warning(f"No validated sentences found from the URL {get_params['url']}")
             return redirect(url_for('.label_one'))
         else:
             form.dialect.data = request.args.get('dialect', '')

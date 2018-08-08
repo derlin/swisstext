@@ -77,7 +77,7 @@ class SearchSeedsForm(SearchForm):
         default='delta_date'
     )
 
-    sort_order = BooleanField('Ascending', default=True)
+    sort_order = BooleanField('Ascending', default=False)
 
     # def get_mongo_params(self, **kwargs) -> Dict:
     #     query_params = dict(**kwargs)

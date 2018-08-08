@@ -74,6 +74,10 @@
 {% endblock %}
 
 {% block body %}
+    {% if url %}
+        {% from 'urls/_macros.html' import render_url %}
+        <div class="alert alert-info">Displaying sentences from {{ render_url(url) }}</div>
+    {% endif %}
     <table class="table table-sm table-hover mt-4 mb-4">
         {% set state = namespace(url=None, stripped=True, delim=False) %}
         {% for s in sentences %}
