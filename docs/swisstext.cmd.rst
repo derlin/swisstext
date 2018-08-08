@@ -17,7 +17,7 @@ Subpackages
 Submodules
 ----------
 
-swisstext.cmd.base\_config module
+.base\_config
 ---------------------------------
 
 .. automodule:: swisstext.cmd.base_config
@@ -29,7 +29,7 @@ swisstext.cmd.base\_config module
 .link\_utils
 -------------
 
-.. automodule:: swisstext.cmd.scraping.link_utils
+.. automodule:: swisstext.cmd.link_utils
     :members:
     :undoc-members:
     :show-inheritance:
