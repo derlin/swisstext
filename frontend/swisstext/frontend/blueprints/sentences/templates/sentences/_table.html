@@ -22,7 +22,7 @@
                     ?
                 {% endif %}
             </td>
-            <td>{{ sentence.text }}</td>
+            <td  data-toggle="tooltip" data-placement="top" title="{{ sentence.url }}">{{ sentence.text }}</td>
         </tr>
     {% endfor %}
     </tbody>
