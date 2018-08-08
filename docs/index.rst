@@ -14,7 +14,7 @@ Welcome to SwissText's documentation!
    usage
    apireference
    aboutthedoc
-
+   todos
 
 
 Indices and tables

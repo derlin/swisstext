@@ -12,7 +12,7 @@ Use the `--help` option to discover the capabilities and options of the tool.
 
 .. todo::
 
-    * Also exit cleanly when only one worker runs in the main thread
+    Also exit cleanly when only one worker runs in the main thread
 
 """
 import logging
