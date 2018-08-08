@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from ..interfaces import ICrawler
-from ..link_utils import filter_links
+from swisstext.cmd.link_utils import filter_links
 
 # suppress warning for invalid SSL certificates
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)

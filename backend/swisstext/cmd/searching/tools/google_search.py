@@ -69,7 +69,7 @@ from ..interfaces import ISearcher
 
 import requests
 import logging
-from typing import List, Set, Dict, Iterable
+from typing import List, Dict, Iterable
 
 BASE_URL = 'https://www.googleapis.com/customsearch/v1'
 """google api URL

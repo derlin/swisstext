@@ -1,5 +1,8 @@
 """
-This module provides utilities to deal with links found in a page.
+This module provides utilities to deal with links.
+
+Dealing with links in a page
+----------------------------
 
 By simply extracting all the ``href`` attributes in a HTML page, we might end up with a rather large list of
 children, not all of them interesting to crawl. Indded, this list would probably contain:
@@ -12,6 +15,12 @@ children, not all of them interesting to crawl. Indded, this list would probably
 
 As every implementation of :py:class:`swisstext.cmd.scraping.interfaces.ICrawler` has to do the job of filtering
 this list, we might as well provide a general way to do so.
+
+Dealing with search results
+---------------------------
+
+When querying Google or another search engine for results, returned URLs might point to PDFs, videos or other
+uninteresting websites. The :py:meth:`is_url_interesting` method is here to help filtering out those "bad" results.
 """
 
 from typing import Iterable, Generator
@@ -126,6 +135,16 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
                 seen.add(abs_url[:-1] if abs_url.endswith('/') else abs_url + '/')
             else:
                 pass
+
+
+def is_url_interesting(url: str) -> bool:
+    """
+    Test is an absolute URL is interesting to crawl.
+
+    The decision will be based on criteria such as the extension (exclude PDFs, images, etc.),
+    the TLD (exclude some country-specific TLDs) or the domain (exclude some wikipedia links)...
+    """
+    return _should_url_be_kept(urlparse(url))
 
 
 def _should_url_be_kept(parsed: ParseResult) -> bool:

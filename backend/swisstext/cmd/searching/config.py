@@ -24,7 +24,11 @@ class Config(BaseConfig):
     class Options:
         def __init__(self, max_results=10, **kwargs):
             self.max_results = max_results
-            """Max number of URLs to retrieve for one search"""
+            """
+            Max number of URLs retrieved in one search.
+            Note that this is only the number of URLs returned by the search engine, not the number of
+            URLs added to the db. Indeed, duplicates or uninteresting URLs won't be saved.
+            """
 
     def __init__(self, config: Union[str, dict, IOBase] = None):
         super().__init__(self._get_relative_path(__file__), Config.Options, config)

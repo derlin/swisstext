@@ -183,5 +183,6 @@ class PipelineWorker():
             else:
                 logger.debug("Skipped '%s'" % page.url)
 
-            logger.info(f"W[{self.id}]: job done.")
             queue.task_done()
+
+        logger.info(f"W[{self.id}]: my job is done.")

@@ -26,3 +26,10 @@ swisstext.cmd.base\_config module
     :show-inheritance:
 
 
+.link\_utils
+-------------
+
+.. automodule:: swisstext.cmd.scraping.link_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -4,6 +4,7 @@ This module contains the core of the searching system.
 
 from typing import List
 
+from ..link_utils import is_url_interesting
 from .data import Seed
 from .interfaces import ISearcher, ISaver
 
@@ -28,7 +29,7 @@ class SearchEngine:
         """
         for seed in seeds:
             for link in self.searcher.top_results(seed.query, max_results):
-                if link not in self.new_urls:
+                if is_url_interesting(link) and link not in self.new_urls:
                     if not self.saver.link_exists(link):
                         seed.new_links.append(link)
                     self.new_urls.add(link)
