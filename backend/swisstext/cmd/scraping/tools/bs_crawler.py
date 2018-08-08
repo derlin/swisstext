@@ -55,11 +55,17 @@ class BsCrawler(ICrawler):
             ctype = resp.headers.get('content-type', '').lower()
             if 'html' in ctype or 'text/plain' in ctype:
                 encoding = resp.encoding if 'charset' in ctype else None
-                # Nice encoding detection, but waaayy to slow
+                ## (1) Nice encoding detection, but waaayy to slow
                 # http_encoding = resp.encoding if 'charset' in ctype else None
                 # html_encoding = EncodingDetector.find_declared_encoding(resp.content, is_html=True)
                 # encoding = html_encoding or http_encoding
-                return BeautifulSoup(resp.content, 'html.parser', from_encoding=encoding)
+
+                ## (2) another possibility: use the from_encoding argument in BSoup. The problem ? it uses
+                # .decode(encoding, 'replace'), which adds strange symbols to the text...
+
+                ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
+                # TODO: ensure it works as expected
+                return BeautifulSoup(resp.content.decode(encoding, 'ignore'), 'html.parser')
             else:
                 raise ICrawler.CrawlError("'%s' not HTML (ctype=%s) " % (url, ctype))
 
