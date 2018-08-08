@@ -1,9 +1,6 @@
 API Reference
 =============
 
-Overview
---------
-
 The :mod:`swisstext` namespace contains the following:
 
 * Package :mod:`mongo <swisstext.mongo>`: abstract definitions of the MongoDB structure
@@ -23,6 +20,16 @@ All MongoDB collection definitions.
    :maxdepth: 10
 
    swisstext.mongo
+
+Commandline tools
+-----------------
+
+Base package for searching and scraping.
+
+.. toctree::
+   :maxdepth: 2
+
+   swisstext.cmd
 
 
 Scraping the web

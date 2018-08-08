@@ -16,8 +16,6 @@ Welcome to SwissText's documentation!
    aboutthedoc
 
 
-See also :mod:`swisstext.cmd` for usage examples.
-
 
 Indices and tables
 ==================
