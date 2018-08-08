@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>swisstext.cmd.scraping package &#8212; SwissText  documentation</title>
+    <title>Scraping commandline tool &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Command line scraping tools" href="swisstext.cmd.scraping.tools.html" />
+    <link rel="prev" title="MongoDB Collections definitions" href="swisstext.mongo.abstract.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -25,7 +27,14 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="swisstext.cmd.scraping.tools.html" title="Command line scraping tools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="swisstext.mongo.abstract.html" title="MongoDB Collections definitions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="apireference.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -35,35 +44,11 @@
           <div class="body" role="main">
             
   <div class="section" id="module-swisstext.cmd.scraping">
-<span id="swisstext-cmd-scraping-package"></span><h1>swisstext.cmd.scraping package<a class="headerlink" href="#module-swisstext.cmd.scraping" title="Permalink to this headline">¶</a></h1>
+<span id="scraping-commandline-tool"></span><h1>Scraping commandline tool<a class="headerlink" href="#module-swisstext.cmd.scraping" title="Permalink to this headline">¶</a></h1>
 <p>The scraping module is able to scrape the web in order to find new Swiss German sentences.</p>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.tools.html">swisstext.cmd.scraping.tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_decider">.basic_decider</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">.basic_seed_creator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.bs_crawler">.bs_crawler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.console_saver">.console_saver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.mongo_saver">.mongo_saver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">.pattern_sentence_filter</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#how-it-works">How it works</a></li>
-<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#rule-syntax">Rule syntax</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.punkt_splitter">.punkt_splitter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.swigspot_langid">.swigspot_langid</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-swisstext.cmd.scraping.commandline">
-<span id="commandline"></span><h2>.commandline<a class="headerlink" href="#module-swisstext.cmd.scraping.commandline" title="Permalink to this headline">¶</a></h2>
-<p>This module contains the commandline interface for the scraper.</p>
+<span class="target" id="module-swisstext.cmd.scraping.commandline"></span><p>This module contains the commandline interface for the scraper.</p>
 <div class="section" id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>Use the <cite>–help</cite> option to discover the capabilities and options of the tool.</p>
 <div class="admonition-todo admonition" id="index-0">
 <p class="first admonition-title">Todo</p>
@@ -77,186 +62,8 @@
 <dd></dd></dl>
 
 </div>
-</div>
-<div class="section" id="module-swisstext.cmd.scraping.config">
-<span id="config"></span><h2>.config<a class="headerlink" href="#module-swisstext.cmd.scraping.config" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.config.Config">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.config.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config: Union[str</em>, <em>dict</em>, <em>io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="swisstext.cmd.html#swisstext.cmd.base_config.BaseConfig" title="swisstext.cmd.base_config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.base_config.BaseConfig</span></code></a></p>
-<p>The default configuration file for the scraping pipeline is defined in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>. This is the best way
-to understand what options are available.</p>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.config.Config.Options">
-<em class="property">class </em><code class="descname">Options</code><span class="sig-paren">(</span><em>num_workers=1</em>, <em>min_proba=0.85</em>, <em>crawl_depth=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Holds the general options for the scraping pipeline.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.Options.crawl_depth">
-<code class="descname">crawl_depth</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.crawl_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>maximum depth of the crawl, inclusive.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.Options.min_proba">
-<code class="descname">min_proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.min_proba" title="Permalink to this definition">¶</a></dt>
-<dd><p>minimum Swiss German probability to keep a sentence</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.Options.num_workers">
-<code class="descname">num_workers</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.num_workers" title="Permalink to this definition">¶</a></dt>
-<dd><p>maximum number of threads to use</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.scraping.config.Config.create_pipeline">
-<code class="descname">create_pipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.pipeline.Pipeline<a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config.create_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.create_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiate a pipeline from the YAML configuration.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.interfaces_package">
-<code class="descname">interfaces_package</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.interfaces_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the complete package where the interfaces are defined, if any.
-In case this is defined and a tool is missing from the list, we will try to instantiate
-the interface instead.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.tool_entry_name">
-<code class="descname">tool_entry_name</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the name of the tool_entries option, i.e. the YAML path to the dictionary of
-[interface name, canonical class to instantiate].</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.valid_tool_entries">
-<code class="descname">valid_tool_entries</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.valid_tool_entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the list of valid tool entries under the <a class="reference internal" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="swisstext.cmd.scraping.config.Config.tool_entry_name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tool_entry_name</span></code></a>.
-Note that the order of tools in the list defines the order of tools instances returned by
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">instantiate_tools()</span></code>.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-swisstext.cmd.scraping.data">
-<span id="data"></span><h2>.data<a class="headerlink" href="#module-swisstext.cmd.scraping.data" title="Permalink to this headline">¶</a></h2>
-<p>This module defines the generic data structures used across the module / between the different tools.
-They have been thought to be decoupled from MongoDB for better flexibility/adaptability.</p>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.data.Page">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">Page</code><span class="sig-paren">(</span><em>url</em>, <em>score=None</em>, <em>parent_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Information about a page.
-Some attributes should be defined upon creation (see <a class="reference internal" href="#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="swisstext.cmd.scraping.interfaces.ISaver.get_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISaver.get_page()</span></code></a>),
-will other will be added/used incrementally by the different tools of the pipeline.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.blacklisted">
-<code class="descname">blacklisted</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.blacklisted" title="Permalink to this definition">¶</a></dt>
-<dd><p>is the URL blacklisted ?</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.crawl_results">
-<code class="descname">crawl_results</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.crawl_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>results of the crawl (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ICrawler</span></code>)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.scraping.data.Page.is_new">
-<code class="descname">is_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Page.is_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.is_new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if the page is new or not, based on the <code class="xref py py-attr docutils literal notranslate"><span class="pre">delta_date</span></code>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.new_sg">
-<code class="descname">new_sg</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.new_sg" title="Permalink to this definition">¶</a></dt>
-<dd><p>new sentences found</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.parent_url">
-<code class="descname">parent_url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.parent_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>the parent URL, if the crawl depth is &gt; 1</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.score">
-<code class="descname">score</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>page score</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.sentence_count">
-<code class="descname">sentence_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sentence_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>total number of sentences on the page</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.sg_count">
-<code class="descname">sg_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sg_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>number of Swiss German sentences on the page, wether they are new or not</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.url">
-<code class="descname">url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.url" title="Permalink to this definition">¶</a></dt>
-<dd><p>the URL of the page</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="swisstext.cmd.scraping.data.PageScore">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">PageScore</code><span class="sig-paren">(</span><em>count=0</em>, <em>delta_count=0</em>, <em>delta_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#PageScore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Scoring information for a page used, among other things, to decide if a URL should be crawled or not.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.PageScore.count">
-<code class="descname">count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.count" title="Permalink to this definition">¶</a></dt>
-<dd><p>total number of new sentences found on this page (for all the visits)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.PageScore.delta_count">
-<code class="descname">delta_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>number of new sentences found on this page in the last visit</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.PageScore.delta_date">
-<code class="descname">delta_date</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>date of the last visit (in UTC) or None if never visited</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="swisstext.cmd.scraping.data.Sentence">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">Sentence</code><span class="sig-paren">(</span><em>text: str</em>, <em>proba: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Sentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Information about a sentence.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Sentence.proba">
-<code class="descname">proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.proba" title="Permalink to this definition">¶</a></dt>
-<dd><p>the Swiss German probability</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Sentence.text">
-<code class="descname">text</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.text" title="Permalink to this definition">¶</a></dt>
-<dd><p>the exact text</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-swisstext.cmd.scraping.interfaces">
-<span id="interfaces"></span><h2>.interfaces<a class="headerlink" href="#module-swisstext.cmd.scraping.interfaces" title="Permalink to this headline">¶</a></h2>
+<span id="tool-interfaces"></span><h2>Tool interfaces<a class="headerlink" href="#module-swisstext.cmd.scraping.interfaces" title="Permalink to this headline">¶</a></h2>
 <p>This module defines interfaces for each tool or decision maker used in the scraping process.
 This makes it easy to test new ways or to tune one aspect of the scraper while keeping most of the code unchanged.</p>
 <p>See the <a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools" title="swisstext.cmd.scraping.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.tools</span></code></a> module for implementations.</p>
@@ -478,9 +285,204 @@ The default implementation just splits on the newline character.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-swisstext.cmd.scraping.page_queue">
-<span id="page-queue"></span><h2>.page_queue<a class="headerlink" href="#module-swisstext.cmd.scraping.page_queue" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tool-implementations">
+<h2>Tool implementations<a class="headerlink" href="#tool-implementations" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.tools.html">Command line scraping tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed Creators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#how-it-works">How it works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#rule-syntax">Rule syntax</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-swisstext.cmd.scraping.config">
+<span id="configuration"></span><h2>Configuration<a class="headerlink" href="#module-swisstext.cmd.scraping.config" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="swisstext.cmd.scraping.config.Config">
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.config.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config: Union[str</em>, <em>dict</em>, <em>io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="swisstext.cmd.html#swisstext.cmd.base_config.BaseConfig" title="swisstext.cmd.base_config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.base_config.BaseConfig</span></code></a></p>
+<p>The default configuration file for the scraping pipeline is defined in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>. This is the best way
+to understand what options are available.</p>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.config.Config.Options">
+<em class="property">class </em><code class="descname">Options</code><span class="sig-paren">(</span><em>num_workers=1</em>, <em>min_proba=0.85</em>, <em>crawl_depth=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Holds the general options for the scraping pipeline.</p>
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.Options.crawl_depth">
+<code class="descname">crawl_depth</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.crawl_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum depth of the crawl, inclusive.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.Options.min_proba">
+<code class="descname">min_proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.min_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimum Swiss German probability to keep a sentence</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.Options.num_workers">
+<code class="descname">num_workers</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.num_workers" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum number of threads to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.create_pipeline">
+<code class="descname">create_pipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.pipeline.Pipeline<a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config.create_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.create_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate a pipeline from the YAML configuration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.interfaces_package">
+<code class="descname">interfaces_package</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.interfaces_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return the complete package where the interfaces are defined, if any.
+In case this is defined and a tool is missing from the list, we will try to instantiate
+the interface instead.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.tool_entry_name">
+<code class="descname">tool_entry_name</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return the name of the tool_entries option, i.e. the YAML path to the dictionary of
+[interface name, canonical class to instantiate].</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.valid_tool_entries">
+<code class="descname">valid_tool_entries</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.valid_tool_entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return the list of valid tool entries under the <a class="reference internal" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="swisstext.cmd.scraping.config.Config.tool_entry_name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tool_entry_name</span></code></a>.
+Note that the order of tools in the list defines the order of tools instances returned by
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">instantiate_tools()</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-swisstext.cmd.scraping.data">
+<span id="pipeline-implementation"></span><h2>Pipeline implementation<a class="headerlink" href="#module-swisstext.cmd.scraping.data" title="Permalink to this headline">¶</a></h2>
+<p>This module defines the generic data structures used across the module / between the different tools.
+They have been thought to be decoupled from MongoDB for better flexibility/adaptability.</p>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.data.Page">
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">Page</code><span class="sig-paren">(</span><em>url</em>, <em>score=None</em>, <em>parent_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Information about a page.
+Some attributes should be defined upon creation (see <a class="reference internal" href="#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="swisstext.cmd.scraping.interfaces.ISaver.get_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISaver.get_page()</span></code></a>),
+will other will be added/used incrementally by the different tools of the pipeline.</p>
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.blacklisted">
+<code class="descname">blacklisted</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.blacklisted" title="Permalink to this definition">¶</a></dt>
+<dd><p>is the URL blacklisted ?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.crawl_results">
+<code class="descname">crawl_results</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.crawl_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>results of the crawl (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ICrawler</span></code>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.data.Page.is_new">
+<code class="descname">is_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Page.is_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.is_new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the page is new or not, based on the <code class="xref py py-attr docutils literal notranslate"><span class="pre">delta_date</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.new_sg">
+<code class="descname">new_sg</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.new_sg" title="Permalink to this definition">¶</a></dt>
+<dd><p>new sentences found</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.parent_url">
+<code class="descname">parent_url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.parent_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>the parent URL, if the crawl depth is &gt; 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.score">
+<code class="descname">score</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>page score</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.sentence_count">
+<code class="descname">sentence_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sentence_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>total number of sentences on the page</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.sg_count">
+<code class="descname">sg_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sg_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of Swiss German sentences on the page, wether they are new or not</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.url">
+<code class="descname">url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>the URL of the page</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.scraping.data.PageScore">
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">PageScore</code><span class="sig-paren">(</span><em>count=0</em>, <em>delta_count=0</em>, <em>delta_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#PageScore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Scoring information for a page used, among other things, to decide if a URL should be crawled or not.</p>
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.PageScore.count">
+<code class="descname">count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>total number of new sentences found on this page (for all the visits)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.PageScore.delta_count">
+<code class="descname">delta_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of new sentences found on this page in the last visit</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.PageScore.delta_date">
+<code class="descname">delta_date</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>date of the last visit (in UTC) or None if never visited</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.scraping.data.Sentence">
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">Sentence</code><span class="sig-paren">(</span><em>text: str</em>, <em>proba: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Sentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Information about a sentence.</p>
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Sentence.proba">
+<code class="descname">proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>the Swiss German probability</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Sentence.text">
+<code class="descname">text</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>the exact text</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-swisstext.cmd.scraping.page_queue"></span><dl class="class">
 <dt id="swisstext.cmd.scraping.page_queue.PageQueue">
 <em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.page_queue.</code><code class="descname">PageQueue</code><span class="sig-paren">(</span><em>maxsize=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/page_queue.html#PageQueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.page_queue.PageQueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">queue.Queue</span></code></a></p>
@@ -490,10 +492,7 @@ The default implementation just splits on the newline character.</p>
 crawl depth (as int)</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-swisstext.cmd.scraping.pipeline">
-<span id="pipeline"></span><h2>.pipeline<a class="headerlink" href="#module-swisstext.cmd.scraping.pipeline" title="Permalink to this headline">¶</a></h2>
-<p>This module contains the core of the scraping system.</p>
+<span class="target" id="module-swisstext.cmd.scraping.pipeline"></span><p>This module contains the core of the scraping system.</p>
 <p>In order to be fully customizable, it uses the concept of interfaces heavily: most of the decisions and steps
 are delegated to instances of classes defined in <a class="reference internal" href="#module-swisstext.cmd.scraping.interfaces" title="swisstext.cmd.scraping.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a>.</p>
 <p>Here is an example usage.</p>
@@ -614,21 +613,22 @@ Should we also remove/blacklist the URL ? Should we allow the URL to fail X time
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">swisstext.cmd.scraping package</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.commandline">.commandline</a><ul>
+<li><a class="reference internal" href="#">Scraping commandline tool</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.config">.config</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.data">.data</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.interfaces">.interfaces</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.page_queue">.page_queue</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.pipeline">.pipeline</a></li>
+<li><a class="reference internal" href="#module-swisstext.cmd.scraping.interfaces">Tool interfaces</a></li>
+<li><a class="reference internal" href="#tool-implementations">Tool implementations</a></li>
+<li><a class="reference internal" href="#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li><a class="reference internal" href="#module-swisstext.cmd.scraping.data">Pipeline implementation</a></li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="swisstext.mongo.abstract.html"
+                        title="previous chapter">MongoDB Collections definitions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="swisstext.cmd.scraping.tools.html"
+                        title="next chapter">Command line scraping tools</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -661,7 +661,14 @@ Should we also remove/blacklist the URL ? Should we allow the URL to fail X time
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="swisstext.cmd.scraping.tools.html" title="Command line scraping tools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="swisstext.mongo.abstract.html" title="MongoDB Collections definitions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="apireference.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

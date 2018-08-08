@@ -1,13 +1,13 @@
-swisstext.mongo package
-=======================
+MongoEngine - MongoDB package
+==============================
 
 .. automodule:: swisstext.mongo
     :members:
     :undoc-members:
     :show-inheritance:
 
-Abstract Classes
------------------
+Abstract Definitions
+---------------------
 
 All defined in the :py:mod:`swisstext.mongo.abstract` package:
 
@@ -16,7 +16,7 @@ All defined in the :py:mod:`swisstext.mongo.abstract` package:
     swisstext.mongo.abstract
 
 
-The .models module
+MongoEngine-ready classes
 --------------------------
 
 .. automodule:: swisstext.mongo.models

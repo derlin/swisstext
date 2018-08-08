@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>swisstext.cmd package &#8212; SwissText  documentation</title>
+    <title>Commandline tools &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -35,7 +35,7 @@
           <div class="body" role="main">
             
   <div class="section" id="module-swisstext.cmd">
-<span id="swisstext-cmd-package"></span><h1>swisstext.cmd package<a class="headerlink" href="#module-swisstext.cmd" title="Permalink to this headline">¶</a></h1>
+<span id="commandline-tools"></span><h1>Commandline tools<a class="headerlink" href="#module-swisstext.cmd" title="Permalink to this headline">¶</a></h1>
 <p>This package contains everything for running the SwissText Scraping logic.</p>
 <p>It is implemented using two command-line programs, each in its own package:</p>
 <ul class="simple">
@@ -82,74 +82,58 @@
 <p class="first admonition-title">Todo</p>
 <p class="last">add pipeline schema</p>
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="available-commands">
+<h2>Available commands<a class="headerlink" href="#available-commands" title="Permalink to this headline">¶</a></h2>
+<p>Two commands are available, each in it own subpackage.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.html">swisstext.cmd.scraping package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html">swisstext.cmd.scraping.tools package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_decider">.basic_decider</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">.basic_seed_creator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.bs_crawler">.bs_crawler</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.console_saver">.console_saver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.mongo_saver">.mongo_saver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">.pattern_sentence_filter</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.html">Scraping commandline tool</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.interfaces">Tool interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#tool-implementations">Tool implementations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html">Command line scraping tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed Creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#how-it-works">How it works</a></li>
 <li class="toctree-l5"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#rule-syntax">Rule syntax</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.punkt_splitter">.punkt_splitter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.swigspot_langid">.swigspot_langid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.tools.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.commandline">.commandline</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.data">Pipeline implementation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.config">.config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.data">.data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.interfaces">.interfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.page_queue">.page_queue</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.pipeline">.pipeline</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.html">swisstext.cmd.searching package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.tools.html">swisstext.cmd.searching.tools package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#module-swisstext.cmd.searching.tools.console_saver">.console_saver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#module-swisstext.cmd.searching.tools.google_search">.google_search</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.html">Searching commandline tool</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.interfaces">Tool interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#tool-implementations">Tool implementations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.tools.html">Command line searching tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="swisstext.cmd.searching.tools.html#example-usages">Example usages</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#module-swisstext.cmd.searching.tools.mongo_saver">.mongo_saver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.searching.tools.html#module-swisstext.cmd.searching.tools.start_page">.start_page</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.commandline">.commandline</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#usage">Usage</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.config">.config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.data">.data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.interfaces">.interfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.pipeline">.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.data">Pipeline implementation</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-swisstext.cmd.base_config">
-<span id="base-config"></span><h2>.base_config<a class="headerlink" href="#module-swisstext.cmd.base_config" title="Permalink to this headline">¶</a></h2>
+<span id="configuration-files"></span><h2>Configuration files<a class="headerlink" href="#module-swisstext.cmd.base_config" title="Permalink to this headline">¶</a></h2>
 <p>This module encapsulates all the configuration needed to run a multi-steps toolchain.
 It is used by both commandline tools.</p>
 <p>Config objects can easily be populated from a YAML configuration file. This file should have the following structure:</p>
@@ -264,7 +248,7 @@ Note that the order of tools in the list defines the order of tools instances re
 
 </div>
 <div class="section" id="module-swisstext.cmd.link_utils">
-<span id="link-utils"></span><h2>.link_utils<a class="headerlink" href="#module-swisstext.cmd.link_utils" title="Permalink to this headline">¶</a></h2>
+<span id="link-utilities"></span><h2>Link utilities<a class="headerlink" href="#module-swisstext.cmd.link_utils" title="Permalink to this headline">¶</a></h2>
 <p>This module provides utilities to deal with links.</p>
 <div class="section" id="dealing-with-links-in-a-page">
 <h3>Dealing with links in a page<a class="headerlink" href="#dealing-with-links-in-a-page" title="Permalink to this headline">¶</a></h3>
@@ -383,11 +367,10 @@ the TLD (exclude some country-specific TLDs) or the domain (exclude some wikiped
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">swisstext.cmd package</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.base_config">.base_config</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.link_utils">.link_utils</a><ul>
+<li><a class="reference internal" href="#">Commandline tools</a><ul>
+<li><a class="reference internal" href="#available-commands">Available commands</a></li>
+<li><a class="reference internal" href="#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li><a class="reference internal" href="#module-swisstext.cmd.link_utils">Link utilities</a><ul>
 <li><a class="reference internal" href="#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
 <li><a class="reference internal" href="#dealing-with-search-results">Dealing with search results</a></li>
 </ul>

@@ -1,4 +1,4 @@
-swisstext.cmd.scraping package
+Scraping commandline tool
 ==============================
 
 .. automodule:: swisstext.cmd.scraping
@@ -6,40 +6,14 @@ swisstext.cmd.scraping package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
-
-.. toctree::
-
-    swisstext.cmd.scraping.tools
-
-
-.commandline
------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.commandline
     :members:
     :undoc-members:
     :show-inheritance:
 
-.config
---------
-
-.. automodule:: swisstext.cmd.scraping.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.data
--------------
-
-.. automodule:: swisstext.cmd.scraping.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.interfaces
------------
+Tool interfaces
+-----------------
 
 .. automodule:: swisstext.cmd.scraping.interfaces
     :members:
@@ -47,16 +21,37 @@ Subpackages
     :show-inheritance:
 
 
-.page\_queue
--------------
+Tool implementations
+--------------------
+
+.. toctree::
+
+    swisstext.cmd.scraping.tools
+
+
+Configuration
+--------------
+
+.. automodule:: swisstext.cmd.scraping.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Pipeline implementation
+------------------------
+
+.. automodule:: swisstext.cmd.scraping.data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 .. automodule:: swisstext.cmd.scraping.page_queue
     :members:
     :undoc-members:
     :show-inheritance:
 
-.pipeline
-----------
 
 .. automodule:: swisstext.cmd.scraping.pipeline
     :members:

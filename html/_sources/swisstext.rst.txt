@@ -11,5 +11,6 @@ Subpackages
 
 .. toctree::
 
+    swisstext.mongo
     swisstext.cmd
 

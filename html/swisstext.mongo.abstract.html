@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>swisstext.mongo.abstract package &#8212; SwissText  documentation</title>
+    <title>MongoDB Collections definitions &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Scraping commandline tool" href="swisstext.cmd.scraping.html" />
+    <link rel="prev" title="MongoEngine - MongoDB package" href="swisstext.mongo.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -25,7 +27,15 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="swisstext.cmd.scraping.html" title="Scraping commandline tool"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="swisstext.mongo.html" title="MongoEngine - MongoDB package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="apireference.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="swisstext.mongo.html" accesskey="U">MongoEngine - MongoDB package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -35,7 +45,7 @@
           <div class="body" role="main">
             
   <div class="section" id="module-swisstext.mongo.abstract">
-<span id="swisstext-mongo-abstract-package"></span><h1>swisstext.mongo.abstract package<a class="headerlink" href="#module-swisstext.mongo.abstract" title="Permalink to this headline">¶</a></h1>
+<span id="mongodb-collections-definitions"></span><h1>MongoDB Collections definitions<a class="headerlink" href="#module-swisstext.mongo.abstract" title="Permalink to this headline">¶</a></h1>
 <p>This module contains abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> definitions for all the objects in the SwissText system
 database.</p>
 <p>When using mongoengine directly, you can use the concrete classes defined in <a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo.models" title="swisstext.mongo.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo.models</span></code></a>.</p>
@@ -51,7 +61,7 @@ and make them inherit from <code class="docutils literal notranslate"><span clas
 </pre></div>
 </div>
 <div class="section" id="module-swisstext.mongo.abstract.generic">
-<span id="generic"></span><h2>.generic<a class="headerlink" href="#module-swisstext.mongo.abstract.generic" title="Permalink to this headline">¶</a></h2>
+<span id="common-structures-and-embedded-documents"></span><h2>Common structures and embedded documents<a class="headerlink" href="#module-swisstext.mongo.abstract.generic" title="Permalink to this headline">¶</a></h2>
 <p>Define generic/reused embedded documents as well as constants.</p>
 <dl class="class">
 <dt id="swisstext.mongo.abstract.generic.CrawlMeta">
@@ -177,7 +187,7 @@ p. 62 (see category <em>Alle SDS- und SADS- Daten 10 Dialektregionen</em>)</p>
 
 </div>
 <div class="section" id="module-swisstext.mongo.abstract.seeds">
-<span id="seeds"></span><h2>.seeds<a class="headerlink" href="#module-swisstext.mongo.abstract.seeds" title="Permalink to this headline">¶</a></h2>
+<span id="seed-collection"></span><h2>Seed collection<a class="headerlink" href="#module-swisstext.mongo.abstract.seeds" title="Permalink to this headline">¶</a></h2>
 <p>Class representing a <code class="docutils literal notranslate"><span class="pre">seed</span></code> entry in the MongoDatabase.</p>
 <p>A seed is a string used as a search engine query in order to find new Swiss German URLs. In the SwissText system,
 seeds can be added by users or generated automatically. Each seed will potentially be used multiple times.</p>
@@ -360,7 +370,7 @@ search history <code class="docutils literal notranslate"><span class="pre">coun
 
 </div>
 <div class="section" id="module-swisstext.mongo.abstract.sentences">
-<span id="sentences"></span><h2>.sentences<a class="headerlink" href="#module-swisstext.mongo.abstract.sentences" title="Permalink to this headline">¶</a></h2>
+<span id="sentences-collection"></span><h2>Sentences collection<a class="headerlink" href="#module-swisstext.mongo.abstract.sentences" title="Permalink to this headline">¶</a></h2>
 <p>Classes for interacting with a Swiss German <code class="docutils literal notranslate"><span class="pre">sentence</span></code> in the MongoDatabase.</p>
 <p>Sentences are unique and found automatically using the swisstext crawler (see <a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping" title="swisstext.cmd.scraping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.scraping</span></code></a>).
 Once a sentence is added to the collection, it is never deleted, except if the URL it comes from is blacklisted.</p>
@@ -702,7 +712,7 @@ from <a class="reference internal" href="#swisstext.mongo.abstract.sentences.Dia
 
 </div>
 <div class="section" id="module-swisstext.mongo.abstract.urls">
-<span id="urls"></span><h2>.urls<a class="headerlink" href="#module-swisstext.mongo.abstract.urls" title="Permalink to this headline">¶</a></h2>
+<span id="urls-and-blacklist-collections"></span><h2>URLs and Blacklist collections<a class="headerlink" href="#module-swisstext.mongo.abstract.urls" title="Permalink to this headline">¶</a></h2>
 <p>Classes for interacting with URLs in the MongoDatabase.</p>
 <p>All visited URLs must be recorded in some way in the database, at least to avoid recawling over and over the same
 links. Thus, URLs are splitted into two collections:</p>
@@ -854,7 +864,7 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
 
 </div>
 <div class="section" id="module-swisstext.mongo.abstract.users">
-<span id="users"></span><h2>.users<a class="headerlink" href="#module-swisstext.mongo.abstract.users" title="Permalink to this headline">¶</a></h2>
+<span id="users-collection"></span><h2>Users collection<a class="headerlink" href="#module-swisstext.mongo.abstract.users" title="Permalink to this headline">¶</a></h2>
 <p>Classes for interacting with Users in the MongoDatabase.</p>
 <p>A user has a username and a password, as well as a list of possible roles to fine-grain the access to the frontend.</p>
 <dl class="class">
@@ -945,16 +955,22 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">swisstext.mongo.abstract package</a><ul>
-<li><a class="reference internal" href="#module-swisstext.mongo.abstract.generic">.generic</a></li>
-<li><a class="reference internal" href="#module-swisstext.mongo.abstract.seeds">.seeds</a></li>
-<li><a class="reference internal" href="#module-swisstext.mongo.abstract.sentences">.sentences</a></li>
-<li><a class="reference internal" href="#module-swisstext.mongo.abstract.urls">.urls</a></li>
-<li><a class="reference internal" href="#module-swisstext.mongo.abstract.users">.users</a></li>
+<li><a class="reference internal" href="#">MongoDB Collections definitions</a><ul>
+<li><a class="reference internal" href="#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li><a class="reference internal" href="#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li><a class="reference internal" href="#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li><a class="reference internal" href="#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li><a class="reference internal" href="#module-swisstext.mongo.abstract.users">Users collection</a></li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="swisstext.mongo.html"
+                        title="previous chapter">MongoEngine - MongoDB package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="swisstext.cmd.scraping.html"
+                        title="next chapter">Scraping commandline tool</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -987,7 +1003,15 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="swisstext.cmd.scraping.html" title="Scraping commandline tool"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="swisstext.mongo.html" title="MongoEngine - MongoDB package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="apireference.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="swisstext.mongo.html" >MongoEngine - MongoDB package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
