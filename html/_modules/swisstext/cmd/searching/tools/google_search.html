@@ -1,0 +1,255 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.cmd.searching.tools.google_search &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.cmd.searching.tools.google_search</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module let&#39;s you use the</span>
+<span class="sd">`Google Custom Search API &lt;https://developers.google.com/custom-search/json-api/v1/overview&gt;`_</span>
+<span class="sd">to retrieve URLs.</span>
+
+
+<span class="sd">Example usages</span>
+<span class="sd">---------------</span>
+
+<span class="sd">Create a factory:</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    factory = GoogleGeneratorFactory(apikey=&quot;your apikey&quot;)</span>
+
+<span class="sd">To **retrieve a list of results**, you can use the interface&#39;s ``top_results`` method:</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    # retrieve at most 13 results from a search using the interface</span>
+<span class="sd">    results = factory.top_results(query=&quot;es isch sone seich&quot;, max_results=13)</span>
+
+<span class="sd">If you want to use the iterator, it is advised to use ``itertools``, since it deals with</span>
+<span class="sd">:py:class:`StopIteration` exceptions silently:</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    # retrieve at most 13 results from a search using the builtin python iterator</span>
+<span class="sd">    results_iterator = factory.search(query=&quot;es isch sone seich&quot;)</span>
+<span class="sd">    import itertools</span>
+<span class="sd">    results = itertools.islice(results_iterator, 13) # won&#39;t throw StopIteration</span>
+
+<span class="sd">Iterators are useful when you need to **process URLs in a loop**, or have a more complex stop criteria than</span>
+<span class="sd">just the number of results. For that, you can use the builtin iterator interface:</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    # process results one by one using the builtin python iterator</span>
+<span class="sd">    from sys import stderr</span>
+<span class="sd">    results_iterator = factory.search(query=&quot;es isch sone seich&quot;)</span>
+<span class="sd">    for i in range(13): # usually, here we have a while some_dynamic_condition</span>
+<span class="sd">        try:</span>
+<span class="sd">            url = next(results_iterator)</span>
+<span class="sd">            print(f&quot;Processing url: {url}&quot;)</span>
+<span class="sd">            # ... do something more with the result ...</span>
+<span class="sd">        except StopIteration:</span>
+<span class="sd">            # even though Google is pretty good at retrieving billions of results,</span>
+<span class="sd">            # you might hit the limit...</span>
+<span class="sd">            print(&quot;Oops, no result left!&quot;, file=sys.stderr)</span>
+<span class="sd">            break</span>
+
+<span class="sd">You can also use the :py:meth:`GoogleGenerator.next` and :py:meth:`GoogleGenerator.has_next` methods</span>
+<span class="sd">in place of the try-except, like so:</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    # process results one by one using the Google Iterator methods</span>
+<span class="sd">    from sys import stderr</span>
+<span class="sd">    results_iterator = factory.search(query=&quot;es isch sone seich&quot;)</span>
+<span class="sd">    for i in range(13):</span>
+<span class="sd">        if not results_iterator.has_next():</span>
+<span class="sd">            print(&quot;Oops, no result left!&quot;, file=sys.stderr)</span>
+<span class="sd">            break</span>
+<span class="sd">        url = results_iterator.next()</span>
+<span class="sd">        print(f&quot;Processing url: {url}&quot;)</span>
+<span class="sd">        # ... do something more with the result ...</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISearcher</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span>
+
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://www.googleapis.com/customsearch/v1&#39;</span>
+<span class="sd">&quot;&quot;&quot;google api URL</span>
+<span class="sd">see https://developers.google.com/custom-search/json-api/v1/reference/cse/list#request for the json API reference&quot;&quot;&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">_links_fields</span> <span class="o">=</span> <span class="s2">&quot;items(link),queries(nextPage)&quot;</span> <span class="c1"># we only need the links and the current page info in the results</span>
+
+
+<div class="viewcode-block" id="GoogleGeneratorFactory"><a class="viewcode-back" href="../../../../../swisstext.cmd.searching.tools.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory">[docs]</a><span class="k">class</span> <span class="nc">GoogleGeneratorFactory</span><span class="p">(</span><span class="n">ISearcher</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This factory creates a new :py:class:`GoogleGenerator` for each query.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;015058622601103575455:cpfpm27mio8&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="sd">&quot;&quot;&quot;The Google Custom Search API key&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The context to use (see the official API reference for more info).</span>
+<span class="sd">        The default context is usually fine: it is parameterized to search all the web.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GoogleGeneratorFactory.search"><a class="viewcode-back" href="../../../../../swisstext.cmd.searching.tools.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Search for a query using the Google Custom Search API.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GoogleGenerator</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GoogleGenerator"><a class="viewcode-back" href="../../../../../swisstext.cmd.searching.tools.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator">[docs]</a><span class="k">class</span> <span class="nc">GoogleGenerator</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A new Google Generator should be created for each query. It allows for lazy loading of</span>
+<span class="sd">    results, thus sparing API quotas.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        This generator might raise an :py:class:`Exception`, for example if you reached your daily quota limit.</span>
+<span class="sd">        In this case, the exception message should contain the error code and error message as delivered</span>
+<span class="sd">        by the Google API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">apikey</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;015058622601103575455:cpfpm27mio8&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">apikey</span> <span class="c1">#: the Google API key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span> <span class="c1">#: the context to use</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">cx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">query</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">_links_fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_offset</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># offset for the next query (begins at result 1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># the API returns at most ten results, so always pull the max results possible per query</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># cache of the results returned by the last query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># flag to detect if we reached the last page or not</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Searching </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">query</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_next</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GoogleGenerator.next"><a class="viewcode-back" href="../../../../../swisstext.cmd.searching.tools.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. note::</span>
+<span class="sd">            If you use this method directly (instead of the classic python iterator interface), you</span>
+<span class="sd">            need to check that results are available by yourself using the :py:meth:`has_next` method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GoogleGenerator.has_next"><a class="viewcode-back" href="../../../../../swisstext.cmd.searching.tools.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next">[docs]</a>    <span class="k">def</span> <span class="nf">has_next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_next</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+    <span class="k">def</span> <span class="nf">_fetch_next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># prepare query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_offset</span>  <span class="c1"># set the offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span>  <span class="c1"># always set the number of results to return</span>
+
+        <span class="c1"># get the results</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_query</span><span class="p">()</span>
+        <span class="n">json_response</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;items&#39;</span> <span class="ow">in</span> <span class="n">json_response</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># get the results</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_results</span><span class="p">(</span><span class="n">json_response</span><span class="p">))</span>
+            <span class="c1"># update the counters for the next query</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_start_offset</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="s1">&#39;queries&#39;</span> <span class="ow">in</span> <span class="n">json_response</span> <span class="ow">and</span> <span class="s1">&#39;nextPage&#39;</span> <span class="ow">in</span> <span class="n">json_response</span><span class="p">[</span><span class="s1">&#39;queries&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_send_query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_URL</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> (code: </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">],</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">][</span><span class="s1">&#39;code&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    <span class="k">def</span> <span class="nf">_extract_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="s1">&#39;link&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">json_response</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">]]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

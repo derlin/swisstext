@@ -1,0 +1,243 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.cmd.link_utils &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.cmd.link_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides utilities to deal with links.</span>
+
+<span class="sd">Dealing with links in a page</span>
+<span class="sd">----------------------------</span>
+
+<span class="sd">By simply extracting all the ``href`` attributes in a HTML page, we might end up with a rather large list of</span>
+<span class="sd">children, not all of them interesting to crawl. Indded, this list would probably contain:</span>
+
+<span class="sd">* duplicates (or different links pointing to the same page but another anchor),</span>
+<span class="sd">* anchors,</span>
+<span class="sd">* javascript (``javascript:``),</span>
+<span class="sd">* pointers to images, PDFs or other non-text resources,</span>
+<span class="sd">* etc.</span>
+
+<span class="sd">As every implementation of :py:class:`swisstext.cmd.scraping.interfaces.ICrawler` has to do the job of filtering</span>
+<span class="sd">this list, we might as well provide a general way to do so.</span>
+
+<span class="sd">Dealing with search results</span>
+<span class="sd">---------------------------</span>
+
+<span class="sd">When querying Google or another search engine for results, returned URLs might point to PDFs, videos or other</span>
+<span class="sd">uninteresting websites. The :py:meth:`is_url_interesting` method is here to help filtering out those &quot;bad&quot; results.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Generator</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urljoin</span><span class="p">,</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">ParseResult</span>
+
+<span class="c1">#: Quick lookup dictionary to exclude URLs with an extensions typical of non text resources</span>
+<span class="n">EXCLUDED_EXTENSIONS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="s2">&quot;3dv&quot;</span><span class="p">,</span> <span class="s2">&quot;3g2&quot;</span><span class="p">,</span> <span class="s2">&quot;3gp&quot;</span><span class="p">,</span> <span class="s2">&quot;pi1&quot;</span><span class="p">,</span> <span class="s2">&quot;pi2&quot;</span><span class="p">,</span> <span class="s2">&quot;pi3&quot;</span><span class="p">,</span> <span class="s2">&quot;ai&quot;</span><span class="p">,</span> <span class="s2">&quot;amf&quot;</span><span class="p">,</span> <span class="s2">&quot;amv&quot;</span><span class="p">,</span> <span class="s2">&quot;art&quot;</span><span class="p">,</span> <span class="s2">&quot;art&quot;</span><span class="p">,</span> <span class="s2">&quot;ase&quot;</span><span class="p">,</span> <span class="s2">&quot;asf&quot;</span><span class="p">,</span> <span class="s2">&quot;avi&quot;</span><span class="p">,</span> <span class="s2">&quot;awg&quot;</span><span class="p">,</span> <span class="s2">&quot;blp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bmp&quot;</span><span class="p">,</span> <span class="s2">&quot;bw&quot;</span><span class="p">,</span> <span class="s2">&quot;bw&quot;</span><span class="p">,</span> <span class="s2">&quot;cd5&quot;</span><span class="p">,</span> <span class="s2">&quot;cdr&quot;</span><span class="p">,</span> <span class="s2">&quot;cgm&quot;</span><span class="p">,</span> <span class="s2">&quot;cit&quot;</span><span class="p">,</span> <span class="s2">&quot;cmx&quot;</span><span class="p">,</span> <span class="s2">&quot;cpt&quot;</span><span class="p">,</span> <span class="s2">&quot;cr2&quot;</span><span class="p">,</span> <span class="s2">&quot;cur&quot;</span><span class="p">,</span> <span class="s2">&quot;cut&quot;</span><span class="p">,</span> <span class="s2">&quot;dds&quot;</span><span class="p">,</span> <span class="s2">&quot;dib&quot;</span><span class="p">,</span> <span class="s2">&quot;djvu&quot;</span><span class="p">,</span> <span class="s2">&quot;doc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;docx&quot;</span><span class="p">,</span> <span class="s2">&quot;drc&quot;</span><span class="p">,</span> <span class="s2">&quot;dxf&quot;</span><span class="p">,</span> <span class="s2">&quot;e2d&quot;</span><span class="p">,</span> <span class="s2">&quot;ecw&quot;</span><span class="p">,</span> <span class="s2">&quot;egt&quot;</span><span class="p">,</span> <span class="s2">&quot;egt&quot;</span><span class="p">,</span> <span class="s2">&quot;emf&quot;</span><span class="p">,</span> <span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="s2">&quot;exif&quot;</span><span class="p">,</span> <span class="s2">&quot;f4a&quot;</span><span class="p">,</span> <span class="s2">&quot;f4b&quot;</span><span class="p">,</span> <span class="s2">&quot;f4p&quot;</span><span class="p">,</span> <span class="s2">&quot;f4v&quot;</span><span class="p">,</span> <span class="s2">&quot;flv&quot;</span><span class="p">,</span> <span class="s2">&quot;flv&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;flv&quot;</span><span class="p">,</span> <span class="s2">&quot;fs&quot;</span><span class="p">,</span> <span class="s2">&quot;gbr&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="s2">&quot;gifv&quot;</span><span class="p">,</span> <span class="s2">&quot;gpl&quot;</span><span class="p">,</span> <span class="s2">&quot;grf&quot;</span><span class="p">,</span> <span class="s2">&quot;hdp&quot;</span><span class="p">,</span> <span class="s2">&quot;icns&quot;</span><span class="p">,</span> <span class="s2">&quot;ico&quot;</span><span class="p">,</span> <span class="s2">&quot;iff&quot;</span><span class="p">,</span> <span class="s2">&quot;iff&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;inta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;jfif&quot;</span><span class="p">,</span> <span class="s2">&quot;jng&quot;</span><span class="p">,</span> <span class="s2">&quot;jp2&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;jps&quot;</span><span class="p">,</span> <span class="s2">&quot;jxr&quot;</span><span class="p">,</span> <span class="s2">&quot;lbm&quot;</span><span class="p">,</span> <span class="s2">&quot;lbm&quot;</span><span class="p">,</span> <span class="s2">&quot;liff&quot;</span><span class="p">,</span> <span class="s2">&quot;m2v&quot;</span><span class="p">,</span> <span class="s2">&quot;m4p&quot;</span><span class="p">,</span> <span class="s2">&quot;m4v&quot;</span><span class="p">,</span> <span class="s2">&quot;m4v&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;miff&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mkv&quot;</span><span class="p">,</span> <span class="s2">&quot;mng&quot;</span><span class="p">,</span> <span class="s2">&quot;mng&quot;</span><span class="p">,</span> <span class="s2">&quot;mov&quot;</span><span class="p">,</span> <span class="s2">&quot;mp2&quot;</span><span class="p">,</span> <span class="s2">&quot;mp4&quot;</span><span class="p">,</span> <span class="s2">&quot;mpe&quot;</span><span class="p">,</span> <span class="s2">&quot;mpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;mpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;mpv&quot;</span><span class="p">,</span> <span class="s2">&quot;msp&quot;</span><span class="p">,</span> <span class="s2">&quot;mxf&quot;</span><span class="p">,</span> <span class="s2">&quot;nitf&quot;</span><span class="p">,</span> <span class="s2">&quot;nrrd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nsv&quot;</span><span class="p">,</span> <span class="s2">&quot;odg&quot;</span><span class="p">,</span> <span class="s2">&quot;ogg&quot;</span><span class="p">,</span> <span class="s2">&quot;ogv&quot;</span><span class="p">,</span> <span class="s2">&quot;ota&quot;</span><span class="p">,</span> <span class="s2">&quot;pam&quot;</span><span class="p">,</span> <span class="s2">&quot;pbm&quot;</span><span class="p">,</span> <span class="s2">&quot;pc1&quot;</span><span class="p">,</span> <span class="s2">&quot;pc2&quot;</span><span class="p">,</span> <span class="s2">&quot;pc3&quot;</span><span class="p">,</span> <span class="s2">&quot;pcf&quot;</span><span class="p">,</span> <span class="s2">&quot;pct&quot;</span><span class="p">,</span> <span class="s2">&quot;pcx&quot;</span><span class="p">,</span> <span class="s2">&quot;pcx&quot;</span><span class="p">,</span> <span class="s2">&quot;pdd&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pdn&quot;</span><span class="p">,</span> <span class="s2">&quot;pgf&quot;</span><span class="p">,</span> <span class="s2">&quot;pgm&quot;</span><span class="p">,</span> <span class="s2">&quot;pict&quot;</span><span class="p">,</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;pnm&quot;</span><span class="p">,</span> <span class="s2">&quot;pns&quot;</span><span class="p">,</span> <span class="s2">&quot;ppm&quot;</span><span class="p">,</span> <span class="s2">&quot;ppt&quot;</span><span class="p">,</span> <span class="s2">&quot;pptx&quot;</span><span class="p">,</span> <span class="s2">&quot;psb&quot;</span><span class="p">,</span> <span class="s2">&quot;psd&quot;</span><span class="p">,</span> <span class="s2">&quot;psp&quot;</span><span class="p">,</span> <span class="s2">&quot;px&quot;</span><span class="p">,</span> <span class="s2">&quot;pxm&quot;</span><span class="p">,</span> <span class="s2">&quot;pxr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;qfx&quot;</span><span class="p">,</span> <span class="s2">&quot;qt&quot;</span><span class="p">,</span> <span class="s2">&quot;ras&quot;</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="s2">&quot;rgb&quot;</span><span class="p">,</span> <span class="s2">&quot;rgb&quot;</span><span class="p">,</span> <span class="s2">&quot;rgba&quot;</span><span class="p">,</span> <span class="s2">&quot;rle&quot;</span><span class="p">,</span> <span class="s2">&quot;rm&quot;</span><span class="p">,</span> <span class="s2">&quot;rmvb&quot;</span><span class="p">,</span> <span class="s2">&quot;roq&quot;</span><span class="p">,</span> <span class="s2">&quot;sct&quot;</span><span class="p">,</span> <span class="s2">&quot;sgi&quot;</span><span class="p">,</span> <span class="s2">&quot;sgi&quot;</span><span class="p">,</span> <span class="s2">&quot;sid&quot;</span><span class="p">,</span> <span class="s2">&quot;stl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sun&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="s2">&quot;svi&quot;</span><span class="p">,</span> <span class="s2">&quot;sxd&quot;</span><span class="p">,</span> <span class="s2">&quot;tga&quot;</span><span class="p">,</span> <span class="s2">&quot;tga&quot;</span><span class="p">,</span> <span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="s2">&quot;tiff&quot;</span><span class="p">,</span> <span class="s2">&quot;v2d&quot;</span><span class="p">,</span> <span class="s2">&quot;vnd&quot;</span><span class="p">,</span> <span class="s2">&quot;vob&quot;</span><span class="p">,</span> <span class="s2">&quot;vrml&quot;</span><span class="p">,</span> <span class="s2">&quot;vtf&quot;</span><span class="p">,</span> <span class="s2">&quot;wdp&quot;</span><span class="p">,</span> <span class="s2">&quot;webm&quot;</span><span class="p">,</span> <span class="s2">&quot;webp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wmf&quot;</span><span class="p">,</span> <span class="s2">&quot;wmv&quot;</span><span class="p">,</span> <span class="s2">&quot;x3d&quot;</span><span class="p">,</span> <span class="s2">&quot;xar&quot;</span><span class="p">,</span> <span class="s2">&quot;xbm&quot;</span><span class="p">,</span> <span class="s2">&quot;xcf&quot;</span><span class="p">,</span> <span class="s2">&quot;xls&quot;</span><span class="p">,</span> <span class="s2">&quot;xlsx&quot;</span><span class="p">,</span> <span class="s2">&quot;xpm&quot;</span><span class="p">,</span> <span class="s2">&quot;yuv&quot;</span>
+<span class="p">])</span>
+
+<span class="c1">#: Quick lookup dictionary to exclude URLs from any country code TLDs except a rare list of pertinent ones (.ch, .eu, .de ...).</span>
+<span class="c1">#: See `this gist &lt;https://gist.github.com/derlin/421d2bb55018a1538271227ff6b1299d&gt;`_ for the source of the list.</span>
+<span class="n">EXCLUDED_TLDS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="s2">&quot;.af&quot;</span><span class="p">,</span> <span class="s2">&quot;.ax&quot;</span><span class="p">,</span> <span class="s2">&quot;.al&quot;</span><span class="p">,</span> <span class="s2">&quot;.dz&quot;</span><span class="p">,</span> <span class="s2">&quot;.as&quot;</span><span class="p">,</span> <span class="s2">&quot;.ad&quot;</span><span class="p">,</span> <span class="s2">&quot;.ao&quot;</span><span class="p">,</span> <span class="s2">&quot;.ai&quot;</span><span class="p">,</span> <span class="s2">&quot;.aq&quot;</span><span class="p">,</span> <span class="s2">&quot;.ag&quot;</span><span class="p">,</span> <span class="s2">&quot;.ar&quot;</span><span class="p">,</span> <span class="s2">&quot;.am&quot;</span><span class="p">,</span> <span class="s2">&quot;.aw&quot;</span><span class="p">,</span> <span class="s2">&quot;.ac&quot;</span><span class="p">,</span> <span class="s2">&quot;.au&quot;</span><span class="p">,</span> <span class="s2">&quot;.at&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.az&quot;</span><span class="p">,</span> <span class="s2">&quot;.bs&quot;</span><span class="p">,</span> <span class="s2">&quot;.bh&quot;</span><span class="p">,</span> <span class="s2">&quot;.bd&quot;</span><span class="p">,</span> <span class="s2">&quot;.bb&quot;</span><span class="p">,</span> <span class="s2">&quot;.eus&quot;</span><span class="p">,</span> <span class="s2">&quot;.by&quot;</span><span class="p">,</span> <span class="s2">&quot;.be&quot;</span><span class="p">,</span> <span class="s2">&quot;.bz&quot;</span><span class="p">,</span> <span class="s2">&quot;.bj&quot;</span><span class="p">,</span> <span class="s2">&quot;.bm&quot;</span><span class="p">,</span> <span class="s2">&quot;.bt&quot;</span><span class="p">,</span> <span class="s2">&quot;.bo&quot;</span><span class="p">,</span> <span class="s2">&quot;.bq&quot;</span><span class="p">,</span> <span class="s2">&quot;.an&quot;</span><span class="p">,</span> <span class="s2">&quot;.nl&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.ba&quot;</span><span class="p">,</span> <span class="s2">&quot;.bw&quot;</span><span class="p">,</span> <span class="s2">&quot;.bv&quot;</span><span class="p">,</span> <span class="s2">&quot;.br&quot;</span><span class="p">,</span> <span class="s2">&quot;.io&quot;</span><span class="p">,</span> <span class="s2">&quot;.vg&quot;</span><span class="p">,</span> <span class="s2">&quot;.bn&quot;</span><span class="p">,</span> <span class="s2">&quot;.bg&quot;</span><span class="p">,</span> <span class="s2">&quot;.bf&quot;</span><span class="p">,</span> <span class="s2">&quot;.mm&quot;</span><span class="p">,</span> <span class="s2">&quot;.bi&quot;</span><span class="p">,</span> <span class="s2">&quot;.kh&quot;</span><span class="p">,</span> <span class="s2">&quot;.cm&quot;</span><span class="p">,</span> <span class="s2">&quot;.ca&quot;</span><span class="p">,</span> <span class="s2">&quot;.cv&quot;</span><span class="p">,</span> <span class="s2">&quot;.cat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.ky&quot;</span><span class="p">,</span> <span class="s2">&quot;.cf&quot;</span><span class="p">,</span> <span class="s2">&quot;.td&quot;</span><span class="p">,</span> <span class="s2">&quot;.cl&quot;</span><span class="p">,</span> <span class="s2">&quot;.cn&quot;</span><span class="p">,</span> <span class="s2">&quot;.cx&quot;</span><span class="p">,</span> <span class="s2">&quot;.cc&quot;</span><span class="p">,</span> <span class="s2">&quot;.co&quot;</span><span class="p">,</span> <span class="s2">&quot;.km&quot;</span><span class="p">,</span> <span class="s2">&quot;.cd&quot;</span><span class="p">,</span> <span class="s2">&quot;.cg&quot;</span><span class="p">,</span> <span class="s2">&quot;.ck&quot;</span><span class="p">,</span> <span class="s2">&quot;.cr&quot;</span><span class="p">,</span> <span class="s2">&quot;.ci&quot;</span><span class="p">,</span> <span class="s2">&quot;.hr&quot;</span><span class="p">,</span> <span class="s2">&quot;.cu&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.cw&quot;</span><span class="p">,</span> <span class="s2">&quot;.cy&quot;</span><span class="p">,</span> <span class="s2">&quot;.cz&quot;</span><span class="p">,</span> <span class="s2">&quot;.dk&quot;</span><span class="p">,</span> <span class="s2">&quot;.dj&quot;</span><span class="p">,</span> <span class="s2">&quot;.dm&quot;</span><span class="p">,</span> <span class="s2">&quot;.do&quot;</span><span class="p">,</span> <span class="s2">&quot;.tl&quot;</span><span class="p">,</span> <span class="s2">&quot;.tp&quot;</span><span class="p">,</span> <span class="s2">&quot;.ec&quot;</span><span class="p">,</span> <span class="s2">&quot;.eg&quot;</span><span class="p">,</span> <span class="s2">&quot;.sv&quot;</span><span class="p">,</span> <span class="s2">&quot;.gq&quot;</span><span class="p">,</span> <span class="s2">&quot;.er&quot;</span><span class="p">,</span> <span class="s2">&quot;.ee&quot;</span><span class="p">,</span> <span class="s2">&quot;.et&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.eu&quot;</span><span class="p">,</span> <span class="s2">&quot;.fk&quot;</span><span class="p">,</span> <span class="s2">&quot;.fo&quot;</span><span class="p">,</span> <span class="s2">&quot;.fm&quot;</span><span class="p">,</span> <span class="s2">&quot;.fj&quot;</span><span class="p">,</span> <span class="s2">&quot;.fi&quot;</span><span class="p">,</span> <span class="s2">&quot;.fr&quot;</span><span class="p">,</span> <span class="s2">&quot;.gf&quot;</span><span class="p">,</span> <span class="s2">&quot;.pf&quot;</span><span class="p">,</span> <span class="s2">&quot;.tf&quot;</span><span class="p">,</span> <span class="s2">&quot;.ga&quot;</span><span class="p">,</span> <span class="s2">&quot;.gal&quot;</span><span class="p">,</span> <span class="s2">&quot;.gm&quot;</span><span class="p">,</span> <span class="s2">&quot;.ps&quot;</span><span class="p">,</span> <span class="s2">&quot;.ge&quot;</span><span class="p">,</span> <span class="s2">&quot;.de&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.gh&quot;</span><span class="p">,</span> <span class="s2">&quot;.gi&quot;</span><span class="p">,</span> <span class="s2">&quot;.gr&quot;</span><span class="p">,</span> <span class="s2">&quot;.gl&quot;</span><span class="p">,</span> <span class="s2">&quot;.gd&quot;</span><span class="p">,</span> <span class="s2">&quot;.gp&quot;</span><span class="p">,</span> <span class="s2">&quot;.gu&quot;</span><span class="p">,</span> <span class="s2">&quot;.gt&quot;</span><span class="p">,</span> <span class="s2">&quot;.gg&quot;</span><span class="p">,</span> <span class="s2">&quot;.gn&quot;</span><span class="p">,</span> <span class="s2">&quot;.gw&quot;</span><span class="p">,</span> <span class="s2">&quot;.gy&quot;</span><span class="p">,</span> <span class="s2">&quot;.ht&quot;</span><span class="p">,</span> <span class="s2">&quot;.hm&quot;</span><span class="p">,</span> <span class="s2">&quot;.hn&quot;</span><span class="p">,</span> <span class="s2">&quot;.hk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.hu&quot;</span><span class="p">,</span> <span class="s2">&quot;.is&quot;</span><span class="p">,</span> <span class="s2">&quot;.in&quot;</span><span class="p">,</span> <span class="s2">&quot;.id&quot;</span><span class="p">,</span> <span class="s2">&quot;.ir&quot;</span><span class="p">,</span> <span class="s2">&quot;.iq&quot;</span><span class="p">,</span> <span class="s2">&quot;.ie&quot;</span><span class="p">,</span> <span class="s2">&quot;.im&quot;</span><span class="p">,</span> <span class="s2">&quot;.il&quot;</span><span class="p">,</span> <span class="s2">&quot;.it&quot;</span><span class="p">,</span> <span class="s2">&quot;.jm&quot;</span><span class="p">,</span> <span class="s2">&quot;.jp&quot;</span><span class="p">,</span> <span class="s2">&quot;.je&quot;</span><span class="p">,</span> <span class="s2">&quot;.jo&quot;</span><span class="p">,</span> <span class="s2">&quot;.kz&quot;</span><span class="p">,</span> <span class="s2">&quot;.ke&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.ki&quot;</span><span class="p">,</span> <span class="s2">&quot;.kw&quot;</span><span class="p">,</span> <span class="s2">&quot;.kg&quot;</span><span class="p">,</span> <span class="s2">&quot;.la&quot;</span><span class="p">,</span> <span class="s2">&quot;.lv&quot;</span><span class="p">,</span> <span class="s2">&quot;.lb&quot;</span><span class="p">,</span> <span class="s2">&quot;.ls&quot;</span><span class="p">,</span> <span class="s2">&quot;.lr&quot;</span><span class="p">,</span> <span class="s2">&quot;.ly&quot;</span><span class="p">,</span> <span class="s2">&quot;.li&quot;</span><span class="p">,</span> <span class="s2">&quot;.lt&quot;</span><span class="p">,</span> <span class="s2">&quot;.lu&quot;</span><span class="p">,</span> <span class="s2">&quot;.mo&quot;</span><span class="p">,</span> <span class="s2">&quot;.mk&quot;</span><span class="p">,</span> <span class="s2">&quot;.mg&quot;</span><span class="p">,</span> <span class="s2">&quot;.mw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.my&quot;</span><span class="p">,</span> <span class="s2">&quot;.mv&quot;</span><span class="p">,</span> <span class="s2">&quot;.ml&quot;</span><span class="p">,</span> <span class="s2">&quot;.mt&quot;</span><span class="p">,</span> <span class="s2">&quot;.mh&quot;</span><span class="p">,</span> <span class="s2">&quot;.mq&quot;</span><span class="p">,</span> <span class="s2">&quot;.mr&quot;</span><span class="p">,</span> <span class="s2">&quot;.mu&quot;</span><span class="p">,</span> <span class="s2">&quot;.yt&quot;</span><span class="p">,</span> <span class="s2">&quot;.mx&quot;</span><span class="p">,</span> <span class="s2">&quot;.md&quot;</span><span class="p">,</span> <span class="s2">&quot;.mc&quot;</span><span class="p">,</span> <span class="s2">&quot;.mn&quot;</span><span class="p">,</span> <span class="s2">&quot;.me&quot;</span><span class="p">,</span> <span class="s2">&quot;.ms&quot;</span><span class="p">,</span> <span class="s2">&quot;.ma&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.mz&quot;</span><span class="p">,</span> <span class="s2">&quot;.mm&quot;</span><span class="p">,</span> <span class="s2">&quot;.na&quot;</span><span class="p">,</span> <span class="s2">&quot;.nr&quot;</span><span class="p">,</span> <span class="s2">&quot;.np&quot;</span><span class="p">,</span> <span class="s2">&quot;.nl&quot;</span><span class="p">,</span> <span class="s2">&quot;.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;.nz&quot;</span><span class="p">,</span> <span class="s2">&quot;.ni&quot;</span><span class="p">,</span> <span class="s2">&quot;.ne&quot;</span><span class="p">,</span> <span class="s2">&quot;.ng&quot;</span><span class="p">,</span> <span class="s2">&quot;.nu&quot;</span><span class="p">,</span> <span class="s2">&quot;.nf&quot;</span><span class="p">,</span> <span class="s2">&quot;.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;.tr&quot;</span><span class="p">,</span> <span class="s2">&quot;.kp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.mp&quot;</span><span class="p">,</span> <span class="s2">&quot;.no&quot;</span><span class="p">,</span> <span class="s2">&quot;.om&quot;</span><span class="p">,</span> <span class="s2">&quot;.pk&quot;</span><span class="p">,</span> <span class="s2">&quot;.pw&quot;</span><span class="p">,</span> <span class="s2">&quot;.ps&quot;</span><span class="p">,</span> <span class="s2">&quot;.pa&quot;</span><span class="p">,</span> <span class="s2">&quot;.pg&quot;</span><span class="p">,</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;.pe&quot;</span><span class="p">,</span> <span class="s2">&quot;.ph&quot;</span><span class="p">,</span> <span class="s2">&quot;.pn&quot;</span><span class="p">,</span> <span class="s2">&quot;.pl&quot;</span><span class="p">,</span> <span class="s2">&quot;.pt&quot;</span><span class="p">,</span> <span class="s2">&quot;.pr&quot;</span><span class="p">,</span> <span class="s2">&quot;.qa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.ro&quot;</span><span class="p">,</span> <span class="s2">&quot;.ru&quot;</span><span class="p">,</span> <span class="s2">&quot;.rw&quot;</span><span class="p">,</span> <span class="s2">&quot;.re&quot;</span><span class="p">,</span> <span class="s2">&quot;.bq&quot;</span><span class="p">,</span> <span class="s2">&quot;.an&quot;</span><span class="p">,</span> <span class="s2">&quot;.bl&quot;</span><span class="p">,</span> <span class="s2">&quot;.gp&quot;</span><span class="p">,</span> <span class="s2">&quot;.fr&quot;</span><span class="p">,</span> <span class="s2">&quot;.sh&quot;</span><span class="p">,</span> <span class="s2">&quot;.kn&quot;</span><span class="p">,</span> <span class="s2">&quot;.lc&quot;</span><span class="p">,</span> <span class="s2">&quot;.mf&quot;</span><span class="p">,</span> <span class="s2">&quot;.gp&quot;</span><span class="p">,</span> <span class="s2">&quot;.fr&quot;</span><span class="p">,</span> <span class="s2">&quot;.pm&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.vc&quot;</span><span class="p">,</span> <span class="s2">&quot;.ws&quot;</span><span class="p">,</span> <span class="s2">&quot;.sm&quot;</span><span class="p">,</span> <span class="s2">&quot;.st&quot;</span><span class="p">,</span> <span class="s2">&quot;.sa&quot;</span><span class="p">,</span> <span class="s2">&quot;.sn&quot;</span><span class="p">,</span> <span class="s2">&quot;.rs&quot;</span><span class="p">,</span> <span class="s2">&quot;.sc&quot;</span><span class="p">,</span> <span class="s2">&quot;.sl&quot;</span><span class="p">,</span> <span class="s2">&quot;.sg&quot;</span><span class="p">,</span> <span class="s2">&quot;.bq&quot;</span><span class="p">,</span> <span class="s2">&quot;.an&quot;</span><span class="p">,</span> <span class="s2">&quot;.nl&quot;</span><span class="p">,</span> <span class="s2">&quot;.sx&quot;</span><span class="p">,</span> <span class="s2">&quot;.an&quot;</span><span class="p">,</span> <span class="s2">&quot;.sk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.si&quot;</span><span class="p">,</span> <span class="s2">&quot;.sb&quot;</span><span class="p">,</span> <span class="s2">&quot;.so&quot;</span><span class="p">,</span> <span class="s2">&quot;.so&quot;</span><span class="p">,</span> <span class="s2">&quot;.za&quot;</span><span class="p">,</span> <span class="s2">&quot;.gs&quot;</span><span class="p">,</span> <span class="s2">&quot;.kr&quot;</span><span class="p">,</span> <span class="s2">&quot;.ss&quot;</span><span class="p">,</span> <span class="s2">&quot;.es&quot;</span><span class="p">,</span> <span class="s2">&quot;.lk&quot;</span><span class="p">,</span> <span class="s2">&quot;.sd&quot;</span><span class="p">,</span> <span class="s2">&quot;.sr&quot;</span><span class="p">,</span> <span class="s2">&quot;.sj&quot;</span><span class="p">,</span> <span class="s2">&quot;.sz&quot;</span><span class="p">,</span> <span class="s2">&quot;.se&quot;</span><span class="p">,</span> <span class="s2">&quot;.ch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.sy&quot;</span><span class="p">,</span> <span class="s2">&quot;.tw&quot;</span><span class="p">,</span> <span class="s2">&quot;.tj&quot;</span><span class="p">,</span> <span class="s2">&quot;.tz&quot;</span><span class="p">,</span> <span class="s2">&quot;.th&quot;</span><span class="p">,</span> <span class="s2">&quot;.tg&quot;</span><span class="p">,</span> <span class="s2">&quot;.tk&quot;</span><span class="p">,</span> <span class="s2">&quot;.to&quot;</span><span class="p">,</span> <span class="s2">&quot;.tt&quot;</span><span class="p">,</span> <span class="s2">&quot;.tn&quot;</span><span class="p">,</span> <span class="s2">&quot;.tr&quot;</span><span class="p">,</span> <span class="s2">&quot;.tm&quot;</span><span class="p">,</span> <span class="s2">&quot;.tc&quot;</span><span class="p">,</span> <span class="s2">&quot;.tv&quot;</span><span class="p">,</span> <span class="s2">&quot;.ug&quot;</span><span class="p">,</span> <span class="s2">&quot;.ua&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;.ae&quot;</span><span class="p">,</span> <span class="s2">&quot;.uk&quot;</span><span class="p">,</span> <span class="s2">&quot;.us&quot;</span><span class="p">,</span> <span class="s2">&quot;.vi&quot;</span><span class="p">,</span> <span class="s2">&quot;.uy&quot;</span><span class="p">,</span> <span class="s2">&quot;.uz&quot;</span><span class="p">,</span> <span class="s2">&quot;.vu&quot;</span><span class="p">,</span> <span class="s2">&quot;.va&quot;</span><span class="p">,</span> <span class="s2">&quot;.ve&quot;</span><span class="p">,</span> <span class="s2">&quot;.vn&quot;</span><span class="p">,</span> <span class="s2">&quot;.wf&quot;</span><span class="p">,</span> <span class="s2">&quot;.eh&quot;</span><span class="p">,</span> <span class="s2">&quot;.ma&quot;</span><span class="p">,</span> <span class="s2">&quot;.ye&quot;</span><span class="p">,</span> <span class="s2">&quot;.zm&quot;</span><span class="p">,</span> <span class="s2">&quot;.zw&quot;</span>
+<span class="p">]</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.ch&#39;</span><span class="p">,</span> <span class="s1">&#39;.de&#39;</span><span class="p">,</span> <span class="s1">&#39;.it&#39;</span><span class="p">,</span> <span class="s1">&#39;.fr&#39;</span><span class="p">,</span> <span class="s1">&#39;.eu&#39;</span><span class="p">,</span> <span class="s1">&#39;.uk&#39;</span><span class="p">,</span> <span class="s1">&#39;.us&#39;</span><span class="p">])</span>  <span class="c1"># TODO: tune a bit the whitelist ?</span>
+
+<span class="c1">#: Quick lookup dictionary to exclude any URL from wikipedia, except the ones from the given subdomains.</span>
+<span class="c1">#: See `&lt;https://en.wikipedia.org/wiki/List_of_Wikipedias&gt;`_ for a full list of wikipedia subdomains.</span>
+<span class="n">INCLUDED_WIKI_DOMAINS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="s2">&quot;als&quot;</span>
+<span class="p">])</span>
+
+
+<div class="viewcode-block" id="filter_links"><a class="viewcode-back" href="../../../swisstext.cmd.html#swisstext.cmd.link_utils.filter_links">[docs]</a><span class="k">def</span> <span class="nf">filter_links</span><span class="p">(</span><span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolve, clean and filter links found in a page. By links we mean here any value of `href` attribute found</span>
+<span class="sd">    in a page. This is especially useful for the</span>
+<span class="sd">    :py:class:`swisstext.cmd.scraping.interface.ICrawler` to constitute and populate the crawl results&#39;s</span>
+<span class="sd">    :py:attr:`~swisstext.cmd.scraping.interface.ICrawler.CrawlResults.links` attribute.</span>
+
+<span class="sd">    In addition to transforming relative to absolute URLs, this method will also exclude:</span>
+
+<span class="sd">    * the base URL</span>
+<span class="sd">    * non HTTP links (`mailto:`, `javascript:`, anchors, ...)</span>
+<span class="sd">    * Duplicates</span>
+<span class="sd">    * URLs pointing to non text resources (see :py:const:`EXCLUDED_EXTENSIONS`)</span>
+<span class="sd">    * URLs with a Country Code TLD unlikely to contain Swiss German (see :py:const:`EXCLUDED_EXTENSIONS`)</span>
+
+<span class="sd">    For two links to be considered duplicates, they need to match exactly. Exceptions are anchors (stripped</span>
+<span class="sd">    automatically from the URL) and trailing slashes (in this case, the first encountered link will be returned).</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from swisstext.cmd.scraping.link_utils import filter_links</span>
+<span class="sd">        base_url = &#39;http://example.ch/page/1&#39;</span>
+<span class="sd">        hrefs = [</span>
+<span class="sd">            &#39;#&#39;,</span>
+<span class="sd">            &quot;whatsapp://send?text=Dumoulin verlangt naar&quot;,</span>
+<span class="sd">            &#39;../other/&#39;,</span>
+<span class="sd">            &#39;../other#anchor&#39;,</span>
+<span class="sd">            &#39;?page=2&amp;q=isch&#39;,</span>
+<span class="sd">            &#39;?page=2&#39;,</span>
+<span class="sd">            &#39;https://imgur.org/some-image.png&#39;,</span>
+<span class="sd">            &#39;https://ru.wikipedia.org/wiki&#39;,</span>
+<span class="sd">            &#39;https://als.wikipedia.org&#39;,</span>
+<span class="sd">            &#39;http://other.resource.test&#39;,</span>
+<span class="sd">            &#39;javascript:return false&#39;</span>
+<span class="sd">        ]</span>
+<span class="sd">        links = list(filter_links(base_url, hrefs))</span>
+
+<span class="sd">        # links contain:</span>
+<span class="sd">        #  http://example.ch/other/</span>
+<span class="sd">        #  http://example.ch/page/1?page=2&amp;q=isch</span>
+<span class="sd">        #  http://example.ch/page/1?page=2</span>
+<span class="sd">        #  https://als.wikipedia.org</span>
+<span class="sd">        #  http://other.resource.test</span>
+
+<span class="sd">    :param base_url: the URL of the current page (not returned and used to resolve relative links).</span>
+<span class="sd">    :param links: a list of links found, relative or absolute</span>
+<span class="sd">    :return: a generator of unique absolute URLs, all beginning with `http`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="p">{</span><span class="n">base_url</span><span class="p">,</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">}</span>  <span class="c1"># keep a set of seen urls</span>
+
+    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+        <span class="n">abs_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+        <span class="n">parsed</span><span class="p">:</span> <span class="n">ParseResult</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">abs_url</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_should_url_be_kept</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">fragment</span><span class="p">:</span>
+                <span class="n">abs_url</span> <span class="o">=</span> <span class="n">abs_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;#</span><span class="si">{parsed.fragment}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">abs_url</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">abs_url</span>
+                <span class="c1"># add it as is</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">abs_url</span><span class="p">)</span>
+                <span class="c1"># avoid duplicate links with just an ending slash that differ</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">abs_url</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">abs_url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">abs_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="is_url_interesting"><a class="viewcode-back" href="../../../swisstext.cmd.html#swisstext.cmd.link_utils.is_url_interesting">[docs]</a><span class="k">def</span> <span class="nf">is_url_interesting</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test is an absolute URL is interesting to crawl.</span>
+
+<span class="sd">    The decision will be based on criteria such as the extension (exclude PDFs, images, etc.),</span>
+<span class="sd">    the TLD (exclude some country-specific TLDs) or the domain (exclude some wikipedia links)...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_should_url_be_kept</span><span class="p">(</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">_should_url_be_kept</span><span class="p">(</span><span class="n">parsed</span><span class="p">:</span> <span class="n">ParseResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">):</span>
+        <span class="c1"># not a HTTP or HTTPS URL</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span> <span class="ow">and</span> <span class="n">parsed</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">EXCLUDED_EXTENSIONS</span><span class="p">:</span>
+        <span class="c1"># contains an unwanted extension</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">EXCLUDED_TLDS</span><span class="p">:</span>
+        <span class="c1"># is from an unwanted tld</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;wikipedia.org&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">INCLUDED_WIKI_DOMAINS</span><span class="p">:</span>
+        <span class="c1"># is from wikipedia and not from a wanted wiki subdomain</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

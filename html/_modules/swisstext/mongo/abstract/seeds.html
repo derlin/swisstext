@@ -1,0 +1,225 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.mongo.abstract.seeds &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.mongo.abstract.seeds</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Class representing a ``seed`` entry in the MongoDatabase.</span>
+
+<span class="sd">A seed is a string used as a search engine query in order to find new Swiss German URLs. In the SwissText system,</span>
+<span class="sd">seeds can be added by users or generated automatically. Each seed will potentially be used multiple times.</span>
+
+<span class="sd">Seeds are generated automatically in :mod:`swisstext.cmd.crawling` and used in :mod:`swisstext.cmd.searching`. Users</span>
+<span class="sd">can also add seeds manually to the collection using the Frontend (see :mod:`swisstext.frontend`).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.generic</span> <span class="k">import</span> <span class="n">CrawlMeta</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">Deleted</span>
+
+
+<div class="viewcode-block" id="AbstractMongoSeed"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed">[docs]</a><span class="k">class</span> <span class="nc">AbstractMongoSeed</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An abstract :py:class:`mongoengine.Document` for a seed, stored in the ``seeds`` collection.&quot;&quot;&quot;</span>
+
+    <span class="c1">##-- base info</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The seed itself is used as an primary key to avoid duplicates.</span>
+<span class="sd">    </span>
+<span class="sd">    .. note:: </span>
+<span class="sd">        only true duplicates are detected, so ensure the seed is lowercase and trimed before insert. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">source</span> <span class="o">=</span> <span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">Source</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Source</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Source of the seed. Possible values are:</span>
+<span class="sd">    </span>
+<span class="sd">    * ``SourceType.AUTO`` or ``SourceType.UNKNOWN``: no extra required,</span>
+<span class="sd">    * ``SourceType.USER``: the extra is the id of the user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">date_added</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;When the seed has been added to the collection, in UTC.&quot;&quot;&quot;</span>
+
+    <span class="c1">##-- seed usage</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The number of new URLs found. This counter is incremented on each seed use for any new URL, whether the </span>
+<span class="sd">    URL is actually a &quot;good URL&quot; (i.e. really contains Swiss German) or not. This is because to determine the</span>
+<span class="sd">    quality of a URL, one need to actually crawl it. &quot;&quot;&quot;</span>
+
+    <span class="n">delta_date</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Date of the last use of this seed in a search.&quot;&quot;&quot;</span>
+
+    <span class="n">search_history</span> <span class="o">=</span> <span class="n">EmbeddedDocumentListField</span><span class="p">(</span><span class="n">CrawlMeta</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="sd">&quot;&quot;&quot;A list of usage. For each use, we record the date and the number of new URLs found. The sum of each</span>
+<span class="sd">    search history ``count`` should be equal to the ``count`` variable. &quot;&quot;&quot;</span>
+
+    <span class="c1">##-- deletion</span>
+    <span class="n">deleted</span> <span class="o">=</span> <span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">Deleted</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This field is only present in the collection if the seed has been deleted. Use the following query</span>
+<span class="sd">    to get deleted seeds:</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: javascript</span>
+<span class="sd">    </span>
+<span class="sd">        db.seeds.find({deleted: {$exists: true})</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;collection&#39;</span><span class="p">:</span> <span class="s1">&#39;seeds&#39;</span><span class="p">,</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AbstractMongoSeed.get"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.get">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a seed by ID.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSeed.create"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">Source</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a seed. *Warning*: this **won&#39;t save** the document automatically.</span>
+<span class="sd">        You need to call the ``.save`` method to persist it into the database.</span>
+
+<span class="sd">        :param seed: the seed</span>
+<span class="sd">        :param source: the source of the seed, default to ``SourceType.UNKNOWN``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSeed.exists"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.exists">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test if a seed already exists.</span>
+
+<span class="sd">        :param text: the seed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSeed.add_search_history"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.add_search_history">[docs]</a>    <span class="k">def</span> <span class="nf">add_search_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_links_count</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a search history entry. This should be call after each usage of the seed.</span>
+
+<span class="sd">        :param new_links_count: the number of new URLs found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">CrawlMeta</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">new_links_count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="n">new_links_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta_date</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSeed.find_similar"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.find_similar">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">find_similar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find similar seeds. Currently, this method is quite *dumb*: it will search for seeds containing one or</span>
+<span class="sd">        more words present in `seed` using regex.</span>
+
+<span class="sd">        .. note:: the actual regex for a seed like *hello world* will use the regex ``(hello)|(world)``, so</span>
+<span class="sd">                  a seed like *worldnews* may also be included in the results.</span>
+
+<span class="sd">        :param seed: the seed to search for</span>
+<span class="sd">        :return: a :class:`mongoengine.BaseQuery` object for other seeds containing similar words.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">re</span>
+        <span class="n">split</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">id__icontains</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="s2">&quot;)|(&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSeed.mark_deleted"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.mark_deleted">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">mark_deleted</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mark one or multiple seeds as deleted.</span>
+
+<span class="sd">        :param obj: either a seed ID (i.e. a string), a ``MongoSeed`` instance or a ``QuerySet`` of seeds.</span>
+<span class="sd">        :param uuid: the ID of the user deleting the seed.</span>
+<span class="sd">        :param comment: an optional comment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">set__deleted</span><span class="o">=</span><span class="n">Deleted</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">uuid</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSeed.unmark_deleted"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.unmark_deleted">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">unmark_deleted</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Undelete a seed. This will *unset* the ``deleted`` flag completely. In Mongo Shell, use:</span>
+
+<span class="sd">        .. code-block:: javascript</span>
+
+<span class="sd">            db.seeds.find({_id: &quot;the seed&quot;}, {$unset: {deleted_by:1}})</span>
+
+<span class="sd">        :param obj: either a seed ID (i.e. a string), a ``MongoSeed`` instance or a ``QuerySet`` of seeds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">unset__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

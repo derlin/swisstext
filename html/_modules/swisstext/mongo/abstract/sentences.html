@@ -1,0 +1,366 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.mongo.abstract.sentences &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.mongo.abstract.sentences</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classes for interacting with a Swiss German ``sentence`` in the MongoDatabase.</span>
+
+<span class="sd">Sentences are unique and found automatically using the swisstext crawler (see :mod:`swisstext.cmd.scraping`).</span>
+<span class="sd">Once a sentence is added to the collection, it is never deleted, except if the URL it comes from is blacklisted.</span>
+
+<span class="sd">Using the SwissText Frontend (see :mod:`swisstext.frontend`), users can:</span>
+
+<span class="sd">* validate the sentence: i.e. mark it as actually Swiss German,</span>
+<span class="sd">* label the sentence: assign a dialect (see :class:`DialectInfo`) to it,</span>
+<span class="sd">* delete a sentence: this will just add a deleted flag, not actually remove the sentence from the collection.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">cityhash</span> <span class="k">import</span> <span class="n">CityHash64</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">.generic</span> <span class="k">import</span> <span class="n">Deleted</span>
+<span class="kn">from</span> <span class="nn">.users</span> <span class="k">import</span> <span class="n">AbstractMongoUser</span>
+
+
+<div class="viewcode-block" id="DialectEntry"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectEntry">[docs]</a><span class="k">class</span> <span class="nc">DialectEntry</span><span class="p">(</span><span class="n">EmbeddedDocument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a *vote*, i.e. dialect label, assigned by a user. &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;The ID of the user&quot;&quot;&quot;</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;The label (see :py:const:`swisstext.mongo.abstract.generic.Dialects` for a list of available labels)&quot;&quot;&quot;</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;The date of the vote, in UTC&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="DialectInfo"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectInfo">[docs]</a><span class="k">class</span> <span class="nc">DialectInfo</span><span class="p">(</span><span class="n">EmbeddedDocument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A :py:class:`mongoengine.EmbeddedDocument` that Encapsulates all the dialect-tagging information for a sentence.</span>
+
+<span class="sd">    Usually, a sentence will be presented to a given user only once. If the user knows the dialect, an</span>
+<span class="sd">    entry in :py:attr:`labels` is added. If the user doesn&#39;t know, his ID is added to :py:attr:`skipped_by`.</span>
+<span class="sd">    Thus, a user ID should be present *at most* in one of the two lists.</span>
+
+<span class="sd">    The current dialect is stored in :py:attr:`label`. In order to judge the pertinence of the former,</span>
+<span class="sd">    two statistics can be used: :py:attr:`count` is the total number of users having voted for the label,</span>
+<span class="sd">    while :py:attr:`confidence` is the ratio between the number of votes for this label and the total number of votes.</span>
+
+
+<span class="sd">    .. warning::</span>
+<span class="sd">        Most of the methods here call :py:meth:`mongoengine.EmbeddedDocument.save` under the hood, thus persisting</span>
+<span class="sd">        the changes automatically to the DB.</span>
+
+<span class="sd">        This usually works fine, but this means you CAN NOT manipulate a</span>
+<span class="sd">        ``DialectInfo`` instance if it is not attached to a :py:class:`mongoengine.Document`.</span>
+
+<span class="sd">        Moreover, you can sometimes run into a</span>
+<span class="sd">        &#39;:py:class:`ReferenceError`: *weakly-referenced object no longer exists&#39;*</span>
+<span class="sd">        (only when using Flask-Mongoengine ?). If this is the case, ensure that you have a strong reference to the</span>
+<span class="sd">        parent document in your code. Here is an example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # let&#39;s say MongoSentence implements AbstractMongoSentence</span>
+<span class="sd">            # This can raise a ReferenceException:</span>
+<span class="sd">            MongoSentence.objects.with_id(sid).dialect.add_label(uuid, label)</span>
+<span class="sd">            # while this is fine:</span>
+<span class="sd">            s = MongoSentence.objects.with_id(sid)</span>
+<span class="sd">            s.dialect.add_label(uuid, label) # OK</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">label</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Current label, i.e. the label with the highest number of votes. </span>
+<span class="sd">    In case of a draw, one label is selected randomly. This is why the :py:attr:`confidence` information</span>
+<span class="sd">    is important.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Number of people that voted for the current label.&quot;&quot;&quot;</span>
+
+    <span class="n">confidence</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Defined by ``count / len(labels)``. Gives a rough estimate of how &quot;*good*&quot; a label is.&quot;&quot;&quot;</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">EmbeddedDocumentListField</span><span class="p">(</span><span class="n">DialectEntry</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="sd">&quot;&quot;&quot;All the votes, as a list of  :py:class:`DialectEntry`.&quot;&quot;&quot;</span>
+
+    <span class="n">skipped_by</span> <span class="o">=</span> <span class="n">ListField</span><span class="p">(</span><span class="n">AbstractMongoUser</span><span class="o">.</span><span class="n">_id_type</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="sd">&quot;&quot;&quot;A list of User ID, corresponding to users having seen the sentence, but were not able to label it.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DialectInfo.get_label_by"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectInfo.get_label_by">[docs]</a>    <span class="k">def</span> <span class="nf">get_label_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the label given by a user.</span>
+
+<span class="sd">        :param uuid: the user ID</span>
+<span class="sd">        :return: the label as a string, or None if the user hasn&#39;t labelled the sentence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">uuid</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">label</span></div>
+
+<div class="viewcode-block" id="DialectInfo.add_label"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectInfo.add_label">[docs]</a>    <span class="k">def</span> <span class="nf">add_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a label and save the document. Note the following two special cases:</span>
+<span class="sd">        1. the user has already voted: the old vote will be deleted / replaced</span>
+<span class="sd">        2. the user has previously skipped the sentence: the user ID will be removed from :py:attr:`skipped_by`</span>
+
+<span class="sd">        :param uuid: the user ID</span>
+<span class="sd">        :param label: the label</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">label</span><span class="p">:</span>  <span class="c1"># ensure the label exists</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_label</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># ensure not duplicates</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DialectEntry</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">uuid</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_recompute_label</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DialectInfo.remove_label"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectInfo.remove_label">[docs]</a>    <span class="k">def</span> <span class="nf">remove_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove the label from a user and save the change to MongoDb.</span>
+<span class="sd">        Note that it does nothing if the user didn&#39;t vote.</span>
+
+<span class="sd">        :param uuid: the user ID</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_label_entry</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_recompute_label</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DialectInfo.skip"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectInfo.skip">[docs]</a>    <span class="k">def</span> <span class="nf">skip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the user to the :py:attr:`skipped_by` list. Note that if the user already voted, his vote will be removed</span>
+<span class="sd">        from :py:attr:`labels` to ensure consistency.</span>
+
+<span class="sd">        :param uuid: the user ID</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">uuid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skipped_by</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_label</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skipped_by</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DialectInfo.unskip"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.DialectInfo.unskip">[docs]</a>    <span class="k">def</span> <span class="nf">unskip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a user from the :py:attr:`skipped_by` list.</span>
+
+<span class="sd">        :param uuid: the user ID</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skipped_by</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skipped_by</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_label_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># get the LabelInfo instance for a given user, or None if the user didn&#39;t vote.</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="n">uuid</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_recompute_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># recompute the current label and its statistics after a change.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+            <span class="n">sums</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+                <span class="n">sums</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">sums</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sums</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="o">-</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># mmh... not ideal to have None values, but it is not possible</span>
+            <span class="c1"># to remove the DialectInfo entry from here</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">.</span><span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="AbstractMongoSentence"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence">[docs]</a><span class="k">class</span> <span class="nc">AbstractMongoSentence</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An abstract :py:class:`mongoengine.Document` for a sentence, stored in the ``sentence`` collection.</span>
+
+<span class="sd">    To avoid duplicates, the primary key is a hash derived from the text. We currently use</span>
+<span class="sd">    `CityHash64 &lt;https://opensource.googleblog.com/2011/04/introducing-cityhash.html&gt;`_, a hashing function</span>
+<span class="sd">    especially made for hashtables instead of cryptography. Note that the hash is case-sensitive and that</span>
+<span class="sd">    the text should be trimed before hashing (by calling :py:meth:`string.trim` for example).</span>
+<span class="sd">    There is also no guarantee that there won&#39;t be clashes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># -- base info</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The sentence ID, computed by hashing the text using :py:meth:`get_hash`.&quot;&quot;&quot;</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;The raw text, without any transformations except trim.&quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;The source URL.&quot;&quot;&quot;</span>
+
+    <span class="c1"># -- crawl info</span>
+    <span class="n">date_added</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;The date when the sentence was added to the collection, in UTC.&quot;&quot;&quot;</span>
+
+    <span class="n">crawl_proba</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;The probability of Swiss German, as calculated by the LID model during crawl.&quot;&quot;&quot;</span>
+
+    <span class="c1"># -- validation info</span>
+    <span class="n">validated_by</span> <span class="o">=</span> <span class="n">ListField</span><span class="p">(</span><span class="n">AbstractMongoUser</span><span class="o">.</span><span class="n">_id_type</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="sd">&quot;&quot;&quot;A list of user ID that have seen the sentence and validated it as Swiss German in the Frontend.&quot;&quot;&quot;</span>
+
+    <span class="n">deleted</span> <span class="o">=</span> <span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">Deleted</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;A deleted flag (with date, user ID and optional comment) that exists only if the sentence is deleted.&quot;&quot;&quot;</span>
+
+    <span class="c1"># -- dialect info</span>
+    <span class="n">dialect</span> <span class="o">=</span> <span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">DialectInfo</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;All the informations about dialect tagging (see :py:class:`DialectInfo`). </span>
+<span class="sd">    Note that this field can be absent (never labelled by anyone) or its label empty (all labels removed).&quot;&quot;&quot;</span>
+
+    <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;collection&#39;</span><span class="p">:</span> <span class="s1">&#39;sentences&#39;</span><span class="p">,</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AbstractMongoSentence.add_label"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.add_label">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_label</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a dialect label. This method first ensures that the :py:attr:`dialect` attribute is not null, then</span>
+<span class="sd">        forwards the call to :py:meth:`DialectInfo.add_label`.</span>
+
+<span class="sd">        :param obj: either the ID of a sentence (a string) or an actual sentence.</span>
+<span class="sd">        :param uuid: the ID of the user labelling the sentence.</span>
+<span class="sd">        :param label: the label (see :py:const:`~swisstext.mongo.abstract.generic.Dialects`)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">dialect</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">dialect</span> <span class="o">=</span> <span class="n">DialectInfo</span><span class="p">()</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">dialect</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSentence.remove_label"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.remove_label">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">remove_label</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">uuid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a label added by a user. This method just forwards the call to :py:meth:`DialectInfo.add_label`.</span>
+
+<span class="sd">        :param obj: either the ID of a sentence (a string) or an actual sentence.</span>
+<span class="sd">        :param uuid: the ID of the user for which to remove the label.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">dialect</span><span class="o">.</span><span class="n">remove_label</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSentence.exists"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.exists">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test if a sentence already exists (case sensitive).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">get_hash</span><span class="p">(</span><span class="n">text</span><span class="p">))</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSentence.create"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">proba</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a seed. *Warning*: this **won&#39;t save** the document automatically.</span>
+<span class="sd">        You need to call the ``.save`` method to persist it into the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">get_hash</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">crawl_proba</span><span class="o">=</span><span class="n">proba</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSentence.get_hash"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.get_hash">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_hash</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Hash the given text using</span>
+<span class="sd">        `CityHash64 &lt;https://opensource.googleblog.com/2011/04/introducing-cityhash.html&gt;`_. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">CityHash64</span><span class="p">(</span><span class="n">text</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSentence.mark_deleted"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.mark_deleted">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">mark_deleted</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mark a sentence as deleted.</span>
+
+<span class="sd">        :param obj: either the ID of a sentence (a string) or an actual sentence.</span>
+<span class="sd">        :param uuid: the ID of the user deleting the sentence.</span>
+<span class="sd">        :param comment: an optional comment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">set__deleted</span><span class="o">=</span><span class="n">Deleted</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">uuid</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AbstractMongoSentence.unmark_deleted"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.unmark_deleted">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">unmark_deleted</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Restore a deleted sentence.</span>
+
+<span class="sd">        :param obj: either the ID of a sentence (a string) or an actual sentence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># in mongo shell, use $unset:</span>
+        <span class="c1"># sentences.find({_id: xxx}, {$unset: {deleted_by:1}})</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">unset__deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

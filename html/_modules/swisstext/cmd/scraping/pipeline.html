@@ -1,0 +1,268 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.cmd.scraping.pipeline &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.cmd.scraping.pipeline</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the core of the scraping system.</span>
+
+<span class="sd">In order to be fully customizable, it uses the concept of interfaces heavily: most of the decisions and steps</span>
+<span class="sd">are delegated to instances of classes defined in :py:mod:`~swisstext.cmd.scraping.interfaces`.</span>
+
+<span class="sd">Here is an example usage.</span>
+
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    from swisstext.cmd.scraping.pipeline import Pipeline, PipelineWorker</span>
+<span class="sd">    from swisstext.cmd.scraping.data import Page</span>
+<span class="sd">    from swisstext.cmd.scraping.page_queue import PageQueue</span>
+<span class="sd">    from swisstext.cmd.scraping.config import Config</span>
+<span class="sd">    from typing import List</span>
+
+<span class="sd">    # print some information to the console</span>
+<span class="sd">    import logging</span>
+<span class="sd">    logging.basicConfig(stream=sys.stdout)</span>
+<span class="sd">    logging.getLogger(&#39;swisstext&#39;).setLevel(level=logging.INFO)</span>
+
+<span class="sd">    queue: PageQueue = PageQueue()</span>
+<span class="sd">    new_sentences: List[str] = []</span>
+
+<span class="sd">    # load the config and create the default pipeline</span>
+<span class="sd">    # WARNING: the default config will try to connect to MongoDB on localhost:27017</span>
+<span class="sd">    # if you don&#39;t want to use Mongo, create a config file and use the ConsoleSaver instead</span>
+<span class="sd">    # or use the hack: pipeline.saver = ConsoleSaver()</span>
+<span class="sd">    config = Config(config_path=None) # set the config path if you have one</span>
+<span class="sd">    pipeline = config.create_pipeline()</span>
+
+<span class="sd">    # add one page to the queue</span>
+<span class="sd">    start_url = &#39;http://www.hunold.ch/zw/goeteborg.html&#39;</span>
+<span class="sd">    queue.put((Page(start_url), 1)) # add the tuple (url, depth) with a depth of 1</span>
+
+<span class="sd">    # launch one worker</span>
+<span class="sd">    worker = PipelineWorker()</span>
+<span class="sd">    worker.run(queue, pipeline, new_sentences, max_depth=config.options.crawl_depth)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="k">import</span> <span class="n">Queue</span>
+
+<span class="kn">from</span> <span class="nn">.interfaces</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="k">import</span> <span class="n">Sentence</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Pipeline"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.pipeline.Pipeline">[docs]</a><span class="k">class</span> <span class="nc">Pipeline</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds instances of all needed interfaces and variables.</span>
+
+<span class="sd">    Note that pipelines are meant to be instantiated by a :py:class:`~swisstext.cmd.scraping.config.Config` object,</span>
+<span class="sd">    not manually.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">crawler</span><span class="p">:</span> <span class="n">ICrawler</span><span class="p">,</span>
+                 <span class="n">splitter</span><span class="p">:</span> <span class="n">ISplitter</span><span class="p">,</span>
+                 <span class="nb">filter</span><span class="p">:</span> <span class="n">ISentenceFilter</span><span class="p">,</span>
+                 <span class="n">detector</span><span class="p">:</span> <span class="n">ISgDetector</span><span class="p">,</span>
+                 <span class="n">seeder</span><span class="p">:</span> <span class="n">ISeedCreator</span><span class="p">,</span>
+                 <span class="n">decider</span><span class="p">:</span> <span class="n">IDecider</span><span class="p">,</span>
+                 <span class="n">saver</span><span class="p">:</span> <span class="n">ISaver</span><span class="p">,</span>
+                 <span class="n">min_proba</span><span class="o">=</span><span class="mf">0.85</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crawler</span><span class="p">:</span> <span class="n">ICrawler</span> <span class="o">=</span> <span class="n">crawler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">:</span> <span class="n">ISentenceFilter</span> <span class="o">=</span> <span class="nb">filter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">splitter</span><span class="p">:</span> <span class="n">ISplitter</span> <span class="o">=</span> <span class="n">splitter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="p">:</span> <span class="n">ISgDetector</span> <span class="o">=</span> <span class="n">detector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seeder</span><span class="p">:</span> <span class="n">ISeedCreator</span> <span class="o">=</span> <span class="n">seeder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="p">:</span> <span class="n">ISaver</span> <span class="o">=</span> <span class="n">saver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decider</span><span class="p">:</span> <span class="n">IDecider</span> <span class="o">=</span> <span class="n">decider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_proba</span> <span class="o">=</span> <span class="n">min_proba</span></div>
+
+
+<div class="viewcode-block" id="PipelineWorker"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.pipeline.PipelineWorker">[docs]</a><span class="k">class</span> <span class="nc">PipelineWorker</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pipeline workers actually do the magic and can be run in parallel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="sd">&quot;&quot;&quot;an identifier used in log messages, especially useful if multiple threads are used.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kill_received</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the worker is launched in a thread, you can use this flag to make it exit prematurely.</span>
+<span class="sd">        Workers will always finish processing the current page before exiting, so that we can ensure</span>
+<span class="sd">        coherence in the persistence layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PipelineWorker.run"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.pipeline.PipelineWorker.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">new_sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Do the work ! All the magic is in here :)</span>
+
+<span class="sd">        For each page pulled from the queue, the worker will execute all the steps of the scraping pipeline:</span>
+
+<span class="sd">        * get text and links,</span>
+<span class="sd">        * split and filter sentences,</span>
+<span class="sd">        * keep sentences with Swiss German,</span>
+<span class="sd">        * persist the results (url + sentences), if any</span>
+<span class="sd">        * add new tasks to the queue (if the page contains links to interesting URLs)</span>
+
+<span class="sd">        New sentences are added to the new_sentences list, so that the caller can easily know how fruitful the</span>
+<span class="sd">        scraping was and optionaly use the new sentences to generate seeds.</span>
+
+<span class="sd">        This method will stop:</span>
+
+<span class="sd">        * when the queue is empty or</span>
+<span class="sd">        * if the :py:attr:`kill_received` is set to true. In this case, it finishes processing the current task and exit</span>
+
+<span class="sd">        .. todo::</span>
+
+<span class="sd">            This piece of code (and the commandline) has many flaws and should clearly be enhanced... For example:</span>
+
+<span class="sd">            **Multithreading**: currently, the worker stops when the queue is empty. This also means that if</span>
+<span class="sd">            you launch the system with only 3 base urls but 5 workers, 2 workers will exit immediately instead</span>
+<span class="sd">            of waiting for new tasks to be added to the queue.</span>
+
+<span class="sd">            A better way would be to keep track of active workers and stop only when all workers are idle, or</span>
+<span class="sd">            when all workers reached a task with a depth &gt; max depth...</span>
+
+<span class="sd">            **Comportement on errors**: in case fetching the URL triggers an error, we currently just log the thing.</span>
+<span class="sd">            Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?</span>
+
+<span class="sd">        :param queue: the task queue</span>
+<span class="sd">        :param p: the pipeline to use</span>
+<span class="sd">        :param new_sentences: all new sentences discovered will be added to this list</span>
+<span class="sd">        :param max_depth: when do we stop (inclusive)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">page_depth</span><span class="p">)</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="c1"># blocking !!</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kill_received</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;W[</span><span class="si">{self.id}</span><span class="s2">]: Kill received, stopping.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;W[</span><span class="si">{self.id}</span><span class="s2">]: processing </span><span class="si">{page.url}</span><span class="s2"> (depth=</span><span class="si">{page_depth}</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">page_depth</span> <span class="o">&gt;</span> <span class="n">max_depth</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;W[</span><span class="si">{self.id}</span><span class="s2">]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">decider</span><span class="o">.</span><span class="n">should_page_be_crawled</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">crawler</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                    <span class="n">splitted</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">splitted</span><span class="p">)</span>
+
+                    <span class="n">page</span><span class="o">.</span><span class="n">sentence_count</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># count all the sentences found</span>
+                    <span class="n">ns</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># register new sentences here</span>
+
+                    <span class="c1"># TODO: change the detector interface to avoid zipping ?</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">proba</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sentences</span><span class="p">)):</span>
+                        <span class="n">page</span><span class="o">.</span><span class="n">sentence_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">proba</span> <span class="o">&gt;=</span> <span class="n">p</span><span class="o">.</span><span class="n">min_proba</span><span class="p">:</span>
+                            <span class="n">page</span><span class="o">.</span><span class="n">sg_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">sentence_exists</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                                <span class="n">ns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                                <span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Sentence</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">proba</span><span class="p">))</span>
+
+                    <span class="c1"># update the new_sentences just once (extend is atomic)</span>
+                    <span class="k">if</span> <span class="n">ns</span><span class="p">:</span> <span class="n">new_sentences</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">decider</span><span class="o">.</span><span class="n">should_url_be_blacklisted</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;blacklisting </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                        <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">blacklist_url</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">page_depth</span> <span class="o">&lt;</span> <span class="n">max_depth</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">decider</span><span class="o">.</span><span class="n">should_children_be_crawled</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+                            <span class="n">added_children</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">links</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">is_url_blacklisted</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+                                    <span class="n">child_page</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">parent_url</span><span class="o">=</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                                    <span class="c1"># TODO redondant ?</span>
+                                    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">decider</span><span class="o">.</span><span class="n">should_page_be_crawled</span><span class="p">(</span><span class="n">child_page</span><span class="p">):</span>
+                                        <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">child_page</span><span class="p">,</span> <span class="n">page_depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                                        <span class="n">added_children</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: added </span><span class="si">%d</span><span class="s2"> child URLs&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">added_children</span><span class="p">))</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">):</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipped &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+            <span class="n">queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;W[</span><span class="si">{self.id}</span><span class="s2">]: my job is done.&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

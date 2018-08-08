@@ -1,0 +1,158 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.mongo.abstract.generic &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.mongo.abstract.generic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Define generic/reused embedded documents as well as constants.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">.users</span> <span class="k">import</span> <span class="n">AbstractMongoUser</span>
+
+<span class="n">Dialects</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+    <span class="n">ba_sn</span><span class="o">=</span><span class="s2">&quot;Basel, Solothurn Nord&quot;</span><span class="p">,</span>
+    <span class="n">zuric</span><span class="o">=</span><span class="s2">&quot;Zürich&quot;</span><span class="p">,</span>
+    <span class="n">ss_bn</span><span class="o">=</span><span class="s2">&quot;Solothurn Süd, Bern Nord&quot;</span><span class="p">,</span>
+    <span class="n">nords</span><span class="o">=</span><span class="s2">&quot;Nordostschweiz (SH, TG, SG Nord, AR, AI)&quot;</span><span class="p">,</span>
+    <span class="n">bo_fr</span><span class="o">=</span><span class="s2">&quot;Berner Oberland, Freiburg&quot;</span><span class="p">,</span>
+    <span class="n">zentr</span><span class="o">=</span><span class="s2">&quot;Zentralschweiz (OW, NW, UR, SZ, ZG Süd)&quot;</span><span class="p">,</span>
+    <span class="n">walli</span><span class="o">=</span><span class="s2">&quot;Wallis&quot;</span><span class="p">,</span>
+    <span class="n">g_sgs</span><span class="o">=</span><span class="s2">&quot;Glarus und SG Süd&quot;</span><span class="p">,</span>
+    <span class="n">a_l_z</span><span class="o">=</span><span class="s2">&quot;Aargau, Luzern, Zug Nord&quot;</span><span class="p">,</span>
+    <span class="n">graub</span><span class="o">=</span><span class="s2">&quot;Graubünden&quot;</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">An ordered dictionary of available dialect tags.</span>
+<span class="sd">The dialect tags come from the Master Thesis of Sandra Kellerhals,</span>
+<span class="sd">&quot;*Dialektometrische Analyse und Visualisierung von schweizerdeutschen Dialekten auf verschiedenen linguistischen Ebenen*&quot;,</span>
+<span class="sd">p. 62 (see category *Alle SDS- und SADS- Daten 10 Dialektregionen*)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="SourceType"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.generic.SourceType">[docs]</a><span class="k">class</span> <span class="nc">SourceType</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Possible sources for a URL or a Seed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s2">&quot;file&quot;</span>  <span class="c1">#: This is used when the seeds/urls are read from a file</span>
+    <span class="n">USER</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span>  <span class="c1">#: When user is set, the source.extra should contain the user id</span>
+    <span class="n">AUTO</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>  <span class="c1">#: Auto means it has been generated automatically by the system during regular execution</span>
+    <span class="n">SEED</span> <span class="o">=</span> <span class="s2">&quot;seed&quot;</span>  <span class="c1">#: The URL was found by searching the seed whose ID figures in source.extra</span></div>
+
+
+<div class="viewcode-block" id="Source"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.generic.Source">[docs]</a><span class="k">class</span> <span class="nc">Source</span><span class="p">(</span><span class="n">EmbeddedDocument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A source field. It contains two informations:</span>
+<span class="sd">    :py:attr:`type_` (mapped to `type` in mongo), one of the :class:`SourceType` above and</span>
+<span class="sd">    :py:attr:`extra` for an optional extra information.</span>
+
+<span class="sd">    If the source is attached to a URL, possible values are:</span>
+<span class="sd">        * ``(SourceType.UNKNOWN, None)``</span>
+<span class="sd">        * ``(SourceType.USER, &quot;user ID&quot;)``</span>
+<span class="sd">        * ``(SourceType.SEED, &quot;seed ID&quot;)``</span>
+<span class="sd">        * ``(SourceType.AUTO, &quot;parent url&quot;)``</span>
+
+<span class="sd">    If the source is attached to a Seed, possible values are:</span>
+<span class="sd">        * ``(SourceType.UNKNOWN, None)``</span>
+<span class="sd">        * ``(SourceType.USER, &quot;user ID&quot;)``</span>
+<span class="sd">        * ``(SourceType.AUTO, None)``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">type_</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="n">db_field</span><span class="o">=</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">SourceType</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CrawlMeta"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.generic.CrawlMeta">[docs]</a><span class="k">class</span> <span class="nc">CrawlMeta</span><span class="p">(</span><span class="n">EmbeddedDocument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Holds a date and a count of items &quot;&quot;&quot;</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;The creation/added date, in UTC.&quot;&quot;&quot;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Items count, for example the number of new URLs found.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Deleted"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.generic.Deleted">[docs]</a><span class="k">class</span> <span class="nc">Deleted</span><span class="p">(</span><span class="n">EmbeddedDocument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A deleted flag. &quot;&quot;&quot;</span>
+    <span class="n">by</span> <span class="o">=</span> <span class="n">AbstractMongoUser</span><span class="o">.</span><span class="n">_id_type</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;The ID of the user triggering deletion, required !&quot;&quot;&quot;</span>
+    <span class="n">comment</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Optional, not recorded to the DB if not specified&quot;&quot;&quot;</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;The datetime, generated automatically on creation in UTC&quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

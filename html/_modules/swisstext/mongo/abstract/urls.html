@@ -1,0 +1,221 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>swisstext.mongo.abstract.urls &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.mongo.abstract.urls</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classes for interacting with URLs in the MongoDatabase.</span>
+
+<span class="sd">All visited URLs must be recorded in some way in the database, at least to avoid recawling over and over the same</span>
+<span class="sd">links. Thus, URLs are splitted into two collections:</span>
+
+<span class="sd">* `urls`: stores *interesting* URLs that could/should be crawled again,</span>
+<span class="sd">* `blacklist`: stores URLs that should never by visited again.</span>
+
+<span class="sd">At the time of writing, :py:mod:`swisstext.cmd.scraping` defines interesting URLs as URLs with at least one</span>
+<span class="sd">Swiss German sentence.</span>
+
+<span class="sd">Also note that URLs that have never been visited can also be stored in the `urls` collection. They will be</span>
+<span class="sd">updated or moved to the `blacklist` after the first visit.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">.generic</span> <span class="k">import</span> <span class="n">Source</span><span class="p">,</span> <span class="n">CrawlMeta</span>
+
+
+<div class="viewcode-block" id="AbstractMongoURL"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL">[docs]</a><span class="k">class</span> <span class="nc">AbstractMongoURL</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An abstract :py:class:`mongoengine.Document` for *interesting* URLs, stored in the ``urls`` collection.</span>
+
+<span class="sd">    .. todo:</span>
+<span class="sd">        Also keep track of how many sentences and Swiss German sentences were found during a crawl ?</span>
+<span class="sd">        For that, one suggestion is to change the :py:attr:`crawl_history` entries from date and count to</span>
+<span class="sd">        date, new_count, sg_count, sentence_count.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The URL, also used as a primary key.&quot;&quot;&quot;</span>
+
+    <span class="n">source</span> <span class="o">=</span> <span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">Source</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Source</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;The source of the URL (see :py:class:`~swisstext.mongo.abstract.generic.Source`). </span>
+<span class="sd">    Possible sources are defined in :py:class:`~swisstext.mongo.abstract.generic.SourceType`.&quot;&quot;&quot;</span>
+
+    <span class="n">date_added</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;When the URL was added to the collection, in UTC.&quot;&quot;&quot;</span>
+
+    <span class="n">crawl_history</span> <span class="o">=</span> <span class="n">EmbeddedDocumentListField</span><span class="p">(</span><span class="n">CrawlMeta</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="sd">&quot;&quot;&quot;One entry for each visit of this URL by the scraper, ordered by the visit date ascending.&quot;&quot;&quot;</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Total number of new sentences found on this page in all visit.</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: python </span>
+<span class="sd">    </span>
+<span class="sd">        AbstractMongoURL.count == sum((ch.count for ch in AbstractMongoURL.crawl_history))</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The number of new sentences found on the last visit (same as ``crawl_history[-1].count``).&quot;&quot;&quot;</span>
+
+    <span class="n">delta_date</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The date of the last visit (same as ``crawl_history[-1].date``). Inexistant if the URL was never crawled.&quot;&quot;&quot;</span>
+
+    <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;collection&#39;</span><span class="p">:</span> <span class="s1">&#39;urls&#39;</span><span class="p">,</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AbstractMongoURL.exists"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL.exists">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test if a URL exists.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractMongoURL.create"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL.create">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">Source</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">Document</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a URL. *Warning*: this **won&#39;t save** the document automatically.</span>
+<span class="sd">        You need to call the ``.save`` method to persist it into the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoURL.get"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL.get">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get a URL Document instance by ID.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoURL.get_never_crawled"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_never_crawled</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuerySet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get a :py:class:`~mongoengine.queryset.QuerySet` of URLs that have never been visited.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">crawl_history__size</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMongoURL.try_delete"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL.try_delete">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">try_delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete a URL if it exists. Otherwise, do nothing silently.&quot;&quot;&quot;</span>
+        <span class="c1"># remove from url if it exists</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AbstractMongoURL.add_crawl_history"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history">[docs]</a>    <span class="k">def</span> <span class="nf">add_crawl_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sg_count</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a crawl history entry. Note that this will update the document instance,</span>
+<span class="sd">        but won&#39;t persist the change to mongo. You need to call :py:meth:`mongoengine.Document.save` yourself.</span>
+
+<span class="sd">        :param new_sg_count: the number of new sentences found on this crawl.</span>
+<span class="sd">        :return: self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">CrawlMeta</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">new_sg_count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crawl_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="n">new_sg_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta_date</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">date</span>
+        <span class="c1"># don&#39;t call self.save, as this method is often called alongside other updates to the document</span>
+        <span class="k">return</span> <span class="bp">self</span>  <span class="c1"># for chaining</span></div></div>
+
+
+<div class="viewcode-block" id="AbstractMongoBlacklist"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoBlacklist">[docs]</a><span class="k">class</span> <span class="nc">AbstractMongoBlacklist</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An abstract :py:class:`mongoengine.Document` for *uninteresting* URLs, stored in the ``blacklist`` collection.&quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;The blacklisted URL, acting as a primary key.&quot;&quot;&quot;</span>
+
+    <span class="n">date_added</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;When the URL was added to the blacklist&quot;&quot;&quot;</span>
+
+    <span class="n">source</span> <span class="o">=</span> <span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">Source</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Source</span><span class="p">())</span>
+    <span class="sd">&quot;&quot;&quot;What/who triggered the blacklisting, see :py:class:`swisstext.mongo.abstract.generic.Source`.&quot;&quot;&quot;</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;collection&#39;</span><span class="p">:</span> <span class="s1">&#39;blacklist&#39;</span><span class="p">,</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<div class="viewcode-block" id="AbstractMongoBlacklist.exists"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoBlacklist.exists">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test if a url is blacklisted.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractMongoBlacklist.add_url"><a class="viewcode-back" href="../../../../swisstext.mongo.abstract.html#swisstext.mongo.abstract.urls.AbstractMongoBlacklist.add_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Source</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Blacklist a URL. This will create and save the entry to mongo automatically.</span>
+
+<span class="sd">        .. note:</span>
+<span class="sd">            It is important to ensure a URL is not present in both the `urls` and the `blacklist` collection.</span>
+<span class="sd">            To avoid this discrepancy, call :py:meth:`AbstractMongoSentence.try_delete` first.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># add it to the blacklist</span>
+        <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">source</span> <span class="ow">or</span> <span class="n">Source</span><span class="p">()</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>
