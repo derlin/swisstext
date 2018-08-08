@@ -8,7 +8,7 @@
 {# Note: the page parameter is only here to 'pop' it from kwargs in case you are using a SearchForm
    and are passing **request.args as kwargs... #}
 {% macro render_navigation(pagination, endpoint=request.endpoint, page=None) %}
-    <ul class=pagination>
+    <ul class="pagination" style="max-width: 100%; overflow-y: auto">
         {% for page in pagination.iter_pages() %}
             {% if page %}
                 {% if page != pagination.page %}
@@ -76,7 +76,7 @@
         }
     </script>
 
-    <ul class=pagination>
+    <ul class="pagination" style="max-width: 100%; overflow-y: auto">
         {% for page in pagination.iter_pages() %}
             {% if page %}
                 {% if page != pagination.page %}
