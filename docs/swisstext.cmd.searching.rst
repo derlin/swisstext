@@ -1,4 +1,4 @@
-swisstext.cmd.searching package
+Searching commandline tool
 ===============================
 
 .. automodule:: swisstext.cmd.searching
@@ -6,50 +6,45 @@ swisstext.cmd.searching package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
-
-.. toctree::
-
-    swisstext.cmd.searching.tools
-
-Submodules
-----------
-
-.commandline
-------------------------------------------
-
 .. automodule:: swisstext.cmd.searching.commandline
     :members:
     :undoc-members:
     :show-inheritance:
 
-.config
--------------------------------------
+Tool interfaces
+---------------
 
-.. automodule:: swisstext.cmd.searching.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.data
------------------------------------
-
-.. automodule:: swisstext.cmd.searching.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.interfaces
------------------------------------------
 
 .. automodule:: swisstext.cmd.searching.interfaces
     :members:
     :undoc-members:
     :show-inheritance:
 
-.pipeline
----------------------------------------
+Tool implementations
+--------------------
+
+.. toctree::
+
+    swisstext.cmd.searching.tools
+
+
+Configuration
+--------------
+
+.. automodule:: swisstext.cmd.searching.config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Pipeline implementation
+------------------------
+
+.. automodule:: swisstext.cmd.searching.data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 .. automodule:: swisstext.cmd.searching.pipeline
     :members:

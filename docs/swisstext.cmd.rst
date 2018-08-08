@@ -1,4 +1,4 @@
-swisstext.cmd package
+Commandline tools
 =====================
 
 .. automodule:: swisstext.cmd
@@ -6,19 +6,19 @@ swisstext.cmd package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
+Available commands
+-------------------
+
+Two commands are available, each in it own subpackage.
 
 .. toctree::
 
     swisstext.cmd.scraping
     swisstext.cmd.searching
 
-Submodules
-----------
 
-.base\_config
----------------------------------
+Configuration files
+-----------------------
 
 .. automodule:: swisstext.cmd.base_config
     :members:
@@ -26,8 +26,8 @@ Submodules
     :show-inheritance:
 
 
-.link\_utils
--------------
+Link utilities
+----------------
 
 .. automodule:: swisstext.cmd.link_utils
     :members:

@@ -1,5 +1,6 @@
-swisstext.cmd.scraping.tools package
-====================================
+Command line scraping tools
+============================
+
 
 .. automodule:: swisstext.cmd.scraping.tools
     :members:
@@ -7,7 +8,7 @@ swisstext.cmd.scraping.tools package
     :show-inheritance:
 
 
-.basic\_decider
+Deciders
 --------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.basic_decider
@@ -15,7 +16,7 @@ swisstext.cmd.scraping.tools package
     :undoc-members:
     :show-inheritance:
 
-.basic\_seed\_creator
+Seed Creators
 --------------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.basic_seed_creator
@@ -23,7 +24,7 @@ swisstext.cmd.scraping.tools package
     :undoc-members:
     :show-inheritance:
 
-.bs\_crawler
+Crawlers
 -----------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.bs_crawler
@@ -31,7 +32,7 @@ swisstext.cmd.scraping.tools package
     :undoc-members:
     :show-inheritance:
 
-.console\_saver
+Savers
 --------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.console_saver
@@ -39,23 +40,21 @@ swisstext.cmd.scraping.tools package
     :undoc-members:
     :show-inheritance:
 
-.mongo\_saver
-------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.mongo_saver
     :members:
     :undoc-members:
     :show-inheritance:
 
-.pattern\_sentence\_filter
--------------------------------------------------------------
+Sentence Filters
+-------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.pattern_sentence_filter
     :members: PatternSentenceFilter
     :undoc-members:
     :show-inheritance:
 
-.punkt\_splitter
+Splitters
 ---------------------------------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.punkt_splitter
@@ -63,8 +62,8 @@ swisstext.cmd.scraping.tools package
     :undoc-members:
     :show-inheritance:
 
-.swigspot\_langid
-----------------------------------------------------
+Language Detectors
+---------------------------
 
 .. automodule:: swisstext.cmd.scraping.tools.swigspot_langid
     :members:

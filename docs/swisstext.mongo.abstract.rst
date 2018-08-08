@@ -1,4 +1,4 @@
-swisstext.mongo.abstract package
+MongoDB Collections definitions
 ================================
 
 .. automodule:: swisstext.mongo.abstract
@@ -7,40 +7,40 @@ swisstext.mongo.abstract package
     :show-inheritance:
 
 
-.generic
----------------------------------------
+Common structures and embedded documents
+-----------------------------------------
 
 .. automodule:: swisstext.mongo.abstract.generic
     :members:
     :undoc-members:
     :show-inheritance:
 
-.seeds
--------------------------------------
+Seed collection
+-----------------
 
 .. automodule:: swisstext.mongo.abstract.seeds
     :members:
     :undoc-members:
     :show-inheritance:
 
-.sentences
------------------------------------------
+Sentences collection
+----------------------
 
 .. automodule:: swisstext.mongo.abstract.sentences
     :members:
     :undoc-members:
     :show-inheritance:
 
-.urls
-------------------------------------
+URLs and Blacklist collections
+-------------------------------
 
 .. automodule:: swisstext.mongo.abstract.urls
     :members:
     :undoc-members:
     :show-inheritance:
 
-.users
--------------------------------------
+Users collection
+-----------------
 
 .. automodule:: swisstext.mongo.abstract.users
     :members:
