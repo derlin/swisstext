@@ -49,3 +49,9 @@ To run the **backend**, just call the ``st_scrape`` and ``st_search`` scripts.
 If you want to customize how the system works, you can do it via a YAML configuration file. Note that
 you can use one single file for both scrape and search as options don't clash with one another and no error
 is thrown if unknown options are set.
+
+
+.. seealso::
+
+    :mod:`swisstext.cmd`
+        For usage examples
