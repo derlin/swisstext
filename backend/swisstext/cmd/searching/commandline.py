@@ -32,7 +32,7 @@ search_engine: SearchEngine
 
 # ============== main entrypoint
 
-@click.group(invoke_without_command=True)
+@click.group()
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
 @click.option('-d', '--db', default=None, help='If set, this will override the database set in the config')

@@ -34,7 +34,7 @@ gen_seeds = True
 
 # ============== main entrypoint
 
-@click.group(invoke_without_command=True)
+@click.group()
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
 @click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
@@ -75,8 +75,8 @@ def dump_config():
 @click.option('-s', '--num-sentences', type=int, default=100, help="Number of sentences to use.")
 @click.option('-n', '--num', type=int, default=5, help="Number of seeds to generate.")
 @click.option('--new/--any', default=False, help="Use the newest sentences")
-@click.option('--dry-run', is_flag=True, default=False, help="Just print the seeds (don't save them).")
-def gen_seeds(num_sentences, num, new, dry_run):
+@click.option('-c', '--confirm', is_flag=True, default=False, help="Ask for confirmation before saving.")
+def gen_seeds(num_sentences, num, new, confirm):
     """
     Generate seeds from a sample of mongo sentences.
 
@@ -106,9 +106,10 @@ def gen_seeds(num_sentences, num, new, dry_run):
             sentences = [s['text'] for s in MongoSentence.objects.aggregate(*aggregation_pipeline)]
 
     seeds = pipeline.seeder.generate_seeds(sentences, max=num)
-    if dry_run:
+    if confirm:
         for seed in seeds:
-            print(seed)
+            if click.confirm(seed):
+                pipeline.saver.save_seed(seed)
     else:
         pipeline.saver.save_seeds(seeds)
 
