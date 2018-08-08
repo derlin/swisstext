@@ -8,11 +8,18 @@ Welcome to SwissText's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting started:
+
+   installation
+   usage
 
 
-Overview
-=====================
+See also :mod:`swisstext.cmd` for usage examples.
+
+
+API documentation overview
+===========================
+
 
 The :mod:`swisstext` namespace contains the following:
 

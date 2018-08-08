@@ -8,6 +8,12 @@ Usage
 -----
 
 Use the `--help` option to discover the capabilities and options of the tool.
+
+
+.. todo::
+
+    * Also exit cleanly when only one worker runs in the main thread
+
 """
 import logging
 import threading
@@ -29,7 +35,6 @@ logger_default_level = "info"
 config: Config = None
 pipeline: Pipeline
 queue: Queue
-gen_seeds = True
 
 
 # ============== main entrypoint
@@ -39,8 +44,7 @@ gen_seeds = True
               default=logger_default_level)
 @click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
 @click.option('-d', '--db', default=None, help='If set, this will override the database set in the config')
-@click.option('--seed/--no-seed', default=gen_seeds, help="Generate seeds in the end.")
-def cli(log_level, config_path, db, seed):
+def cli(log_level, config_path, db):
     import sys
     # configure all loggers (log to stderr)
     logging.basicConfig(
@@ -59,7 +63,6 @@ def cli(log_level, config_path, db, seed):
     if db: config.set('saver_options.db', db)
     pipeline = config.create_pipeline()
     queue = PageQueue()
-    gen_seeds = seed
 
 
 # ============== available commands
@@ -225,15 +228,6 @@ def _scrape():
     # TODO remove
     with open('/tmp/new_sentences.txt', 'w') as f:
         f.write("\n".join(new_sentences))
-
-    # TODO: is this option really interesting / necessary ?
-    if gen_seeds:
-        # generate seeds using the newly discovered sentences
-        if len(new_sentences):
-            for seed in pipeline.seeder.generate_seeds(new_sentences):
-                pipeline.saver.save_seed(seed)
-        else:
-            print("No new sentence found.")
 
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))
