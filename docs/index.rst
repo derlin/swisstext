@@ -14,6 +14,7 @@ Welcome to SwissText's documentation!
    usage
    apireference
    aboutthedoc
+   ideas
    todos
 
 

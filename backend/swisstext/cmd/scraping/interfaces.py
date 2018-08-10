@@ -35,7 +35,7 @@ class ICrawler(ABC):
             * no duplicates
             * different from the current page URL (no anchors !)
             * if possible, no link pointing to unparseable resources (zip files, images, etc.)
-            The method :py:meth:`swisstext.cmd.scraping.link_utils.filter_links` is available to do the filtering. 
+            The method :py:meth:`swisstext.cmd.link_utils.filter_links` is available to do the filtering. 
             """
 
     @abstractmethod

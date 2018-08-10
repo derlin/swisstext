@@ -23,7 +23,7 @@ class PageQueue(Queue):
 
         Should we also check here that the URL is interesting or do we trust
         :py:class:`~swisstext.cmd.scraping.interfaces.ICrawler` implementations
-        to correctly filter child URLs (using for example :py:mod:`~swisstext.cmd.scraping.link_utils`)?
+        to correctly filter child URLs (using for example :py:mod:`~swisstext.cmd.link_utils`)?
     """
 
     def _init(self, maxsize):
