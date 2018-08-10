@@ -1,5 +1,117 @@
 {% extends '_layout.html' %}
-{% set title = 'Welcome' %}
 {% block body %}
-    Lorem ipsum dolor sit amet ;)
+
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to the SwissText Frontend!</h1>
+        <p class="lead">This is the user interface to the SwissText - Swiss German Corpus Generator system. From here,
+            you can monitor the system, validate and label sentences, export a dataset and more.</p>
+        <hr class="my-4">
+        <p>With SwissText, we pursue a semi-automatic <b>human-in-the-loop approach</b> for obtaining
+            Swiss German sentences using <b>guided web crawling</b> and for performing <b>dialect annotation</b>.
+        </p>
+        <p>You speak Swiss German and want to help use out ?</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('validation.validate') }}" role="button">Start validating</a>
+        OR
+        <a class="btn btn-primary btn-lg" href="{{ url_for('labelling.label_one') }}" role="button">Start labelling</a>
+    </div>
+
+    <div id="main-title" class="pb-1 mt-2 mb-4 border-bottom">
+        <h1>Information</h1>
+    </div>
+
+    <h2 class="m-3 mt-5">Available Dialect tags</h2>
+
+    <p>The label set we use comes from the following publication:</p>
+    <blockquote class="blockquote m-3">
+        <p class="mb-0">
+            <a href="http://www.geo.uzh.ch/dam/jcr:e6734ce0-3b14-4f67-92ae-e9295b5f128d/2014-4-30_Kellerhals_Dialektometrische_Analyse_und_Visualisierung_von_schweizerdeutschen_Dialekten_auf_verschiedenen_linguistischen_Ebenen.pdf">Dialektometrische
+                "Analyse und Visualisierung von schweizerdeutschen Dialekten auf verschiedenen linguistischen Ebenen"
+            </a>
+        </p>
+        <footer class="blockquote-footer">by Sandra Kellerhals (Master thesis), p.&nbsp;62</footer>
+    </blockquote>
+
+    <div class="row">
+        <div class="col-lg m-2">
+            <table class="table table-sm table-hover">
+                <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for l,d in Dialects.items() %}
+                    <tr>
+                        <td>{{ l }}</td>
+                        <td>{{ d }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg m-2">
+            <img src="/static/dialects.png" style="width: 100%">
+        </div>
+    </div>
+
+
+    <h2 class="m-3 mt-5"><span class="oi oi-external-link"></span> Other resources</h2>
+    <p>Here is a list of useful links</p>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <a href="https://github.com/derlin/swisstext" target="_blank">
+                Source code &lt;https://github.com/derlin/swisstext&gt;
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="https://derlin.github.io/swisstext" target="_blank">
+                SwissText backend documentation &lt;https://derlin.github.io/swisstext&gt;
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{# TODO #}" target="_blank">
+                SwissText final presentation &lt;TODO&gt;
+            </a>
+        </li>
+    </ul>
+
+    <h2 class="m-3 mt-5">© Copyright</h2>
+
+    <p>This software is licensed under
+        <a class="font-weight-bold text-black-50" target="_blank" href="https://derlin.github.io/swisstext/LICENSE">
+            Apache&nbsp;2.0
+        </a>.
+    </p>
+    <p>It was developed by <a href="mailto:lucy.derlin@gmail.com">Lucy Linder</a>:</p>
+    <ul class="list-group" style="list-style-type: none">
+        <li>
+            <span class="icon icon-github"></span>
+            <a href="https://github.com/derlin" target="_blank">Derlin on Github</a>
+        </li>
+        <li>
+            <span class="icon icon-stack"></span>
+            <a href="https://stackoverflow.com/users/2667536/derlin" target="_blank">Derlin on StackOverflow</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block header_include %}
+    <style type="text/css">
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            color: black;
+            margin-right: 4px;
+            background-size: contain;
+        }
+
+        .icon-github {
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDUxMiA1MTIiIGhlaWdodD0iNTEycHgiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnPjxwYXRoIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI5Ni4xMzMsMzU0LjE3NGM0OS44ODUtNS44OTEsMTAyLjk0Mi0yNC4wMjksMTAyLjk0Mi0xMTAuMTkyICAgYzAtMjQuNDktOC42MjQtNDQuNDQ4LTIyLjY3LTU5Ljg2OWMyLjI2Ni01Ljg5LDkuNTE1LTI4LjExNC0yLjczNC01OC45NDdjMCwwLTE4LjEzOS01Ljg5OC02MC43NTksMjIuNjY5ICAgYy0xOC4xMzktNC45ODMtMzguMDktOC4xNjMtNTYuNjgyLTguMTYzYy0xOS4wNTMsMC0zOS4wMTEsMy4xOC01Ni42OTcsOC4xNjNjLTQzLjA4Mi0yOC41NjctNjEuMjItMjIuNjY5LTYxLjIyLTIyLjY2OSAgIGMtMTIuMjQxLDMwLjgzMy00Ljk4Myw1My4wNTctMi43MTgsNTguOTQ3Yy0xNC4wNjEsMTUuNDItMjIuNjc3LDM1LjM3OS0yMi42NzcsNTkuODY5YzAsODYuMTYzLDUzLjA1NywxMDQuMzAxLDEwMi45NDIsMTEwLjE5MiAgIGMtNi4zNDQsNS40NTItMTIuMjQxLDE1Ljg3My0xNC41MDcsMzAuMzg3Yy0xMi43MDIsNS40MzgtNDUuODA4LDE1Ljg3My02NS43NTgtMTguNTkyYzAsMC0xMS43OTUtMjEuMzEtMzQuMDEyLTIyLjY2OSAgIGMwLDAtMjIuMjI0LTAuNDUzLTEuODEzLDEzLjU5MmMwLDAsMTQuOTYsNi44MTIsMjQuOTQzLDMyLjY1M2MwLDAsMTMuNiw0My4wODksNzYuMTc5LDI5LjQ4djM4LjU0MyAgIGMwLDUuOTA2LTQuNTMsMTIuNzAyLTE1Ljg2NSwxMC44OUM5Ni4xMzksNDM4Ljk3NywzMi4yLDM1NC42MjYsMzIuMiwyNTUuNzdjMC0xMjMuODA3LDEwMC4yMTYtMjI0LjAyMiwyMjQuMDMtMjI0LjAyMiAgIGMxMjMuMzQ3LDAsMjI0LjAyMywxMDAuMjE2LDIyMy41NywyMjQuMDIyYzAsOTguODU2LTYzLjk0NiwxODIuNzU0LTE1Mi44MjgsMjEyLjY4OGMtMTEuMzQyLDIuMjY2LTE1Ljg3My00LjUzLTE1Ljg3My0xMC44OSAgIFYzOTUuNDVDMzExLjEsMzc0LjU3NywzMDQuMjg4LDM2MC45ODUsMjk2LjEzMywzNTQuMTc0TDI5Ni4xMzMsMzU0LjE3NHogTTUxMiwyNTYuMjNDNTEyLDExNC43MywzOTcuMjYzLDAsMjU2LjIzLDAgICBDMTE0LjczLDAsMCwxMTQuNzMsMCwyNTYuMjNDMCwzOTcuMjYzLDExNC43Myw1MTIsMjU2LjIzLDUxMkMzOTcuMjYzLDUxMiw1MTIsMzk3LjI2Myw1MTIsMjU2LjIzTDUxMiwyNTYuMjN6IiBmaWxsPSIjMEQyNjM2IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L2c+PC9zdmc+');
+        }
+
+        .icon-stack {
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAtMTE2MyAxNjU3LjY5NyA1Ni42OTMgNTYuNjkzIiBoZWlnaHQ9IjU2LjY5M3B4IiBpZD0iTGF5ZXJfMSIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSItMTE2MyAxNjU3LjY5NyA1Ni42OTMgNTYuNjkzIiB3aWR0aD0iNTYuNjkzcHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxyZWN0IGhlaWdodD0iNC4xMTA0IiB0cmFuc2Zvcm09Im1hdHJpeCgtMC44NjEzIC0wLjUwOCAwLjUwOCAtMC44NjEzIC0yOTY0LjE4MzEgMjU1Ni42MzU3KSIgd2lkdGg9IjE5LjI0NjUiIHg9Ii0xMTQyLjgxNjciIHk9IjE2ODAuNzc3OCIvPjxyZWN0IGhlaWdodD0iNC4xMTA1IiB0cmFuc2Zvcm09Im1hdHJpeCgtMC45NjU3IC0wLjI1OTYgMC4yNTk2IC0wLjk2NTcgLTI2NzIuMDQ5OCAzMDI3LjM4NikiIHdpZHRoPSIxOS4yNDYyIiB4PSItMTE0NS43MzYzIiB5PSIxNjg4LjA4NSIvPjxyZWN0IGhlaWdodD0iNC4xMDk4IiB0cmFuc2Zvcm09Im1hdHJpeCgtMC45OTU4IC0wLjA5MTggMC4wOTE4IC0wLjk5NTggLTI0MjUuNTY0NyAzMjgyLjg1MzUpIiB3aWR0aD0iMTkuMjQ2IiB4PSItMTE0Ni45NDUxIiB5PSIxNjk1LjEyNjMiLz48cmVjdCBoZWlnaHQ9IjQuMTExIiB3aWR0aD0iMTkuMjQ3MyIgeD0iLTExNDcuMjYyNSIgeT0iMTcwMS4yOTMiLz48cGF0aCBkPSJNLTExMjEuNDU3OSwxNzEwLjk0NzRjMCwwLDAsMC45NjAxLTAuMDMyMywwLjk2MDF2MC4wMTU2aC0zMC43OTUzYzAsMC0wLjk1OTgsMC0wLjk1OTgtMC4wMTU2aC0wLjAzMjZ2LTIwLjAzaDMuMjg3NyAgdjE2LjgwNDloMjUuMjQ0NnYtMTYuODA0OWgzLjI4NzdWMTcxMC45NDc0eiIvPjxyZWN0IGhlaWdodD0iNC4xMTEiIHRyYW5zZm9ybT0ibWF0cml4KDAuNTYzNCAwLjgyNjIgLTAuODI2MiAwLjU2MzQgODkyLjkwMzMgMTY2Mi43OTE1KSIgd2lkdGg9IjE5LjI0NyIgeD0iLTExMzYuNTM4OSIgeT0iMTY3NC4yMjM1Ii8+PHJlY3QgaGVpZ2h0PSI0LjExMDgiIHRyYW5zZm9ybT0ibWF0cml4KDAuMTcxIDAuOTg1MyAtMC45ODUzIDAuMTcxIDcyMC45OTg3IDI0ODkuMDMxKSIgd2lkdGg9IjE5LjI0NjEiIHg9Ii0xMTI4LjMwMzIiIHk9IjE2NzAuOTM0NyIvPjwvc3ZnPg==');
+        }
+    </style>
 {% endblock %}

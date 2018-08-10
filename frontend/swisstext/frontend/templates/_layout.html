@@ -3,23 +3,19 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <title>SwissText{% if title %}: {{ title }}{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>
-        SwissText{% if title %}: {{ title }}{% endif %}
-    </title>
     <!-- icon: swiss flag in base64 -->
-    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX/AAD///9BHTQRAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EICgISKADExWUAAAAaSURBVAjXY2DAD9gfECKY//8/gJsgwgC8AAAREx0p1QnHwwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNy0wOC0xMFQwMjoxODo0MCswMDowMKfok8wAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTctMDgtMTBUMDI6MTg6NDArMDA6MDDWtStwAAAAAElFTkSuQmCC">
+    <link rel="icon"
+          href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEX/AAD///9BHTQRAAAAAWJLR0QB/wIt3gAAAAd0SU1FB+EICgISKADExWUAAAAaSURBVAjXY2DAD9gfECKY//8/gJsgwgC8AAAREx0p1QnHwwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNy0wOC0xMFQwMjoxODo0MCswMDowMKfok8wAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTctMDgtMTBUMDI6MTg6NDArMDA6MDDWtStwAAAAAElFTkSuQmCC">
     <!-- Bootstrap CSS -->
-{#     {{ bootstrap.load_css() }}#}
-{#    <link rel="stylesheet" href="https://bootswatch.com/4/lumen/bootstrap.min.css">#}
-    <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
-{#    <link rel="stylesheet" href="/static/bootstrap.min.css">#}
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/vendor/bootstrap-journal.min.css">
+    <link rel="stylesheet" href="/static/vendor/open-iconic-bootstrap.min.css">
+    <!-- custom style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- custom css block -->
     {% block header_include %}
     {% endblock %}
-    <title>SG detector</title>
 </head>
 <body>
 
@@ -37,21 +33,16 @@
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script type="text/javascript" src="/static/vendor/jquery.min.js"></script>
+<script type="text/javascript" src="/static/vendor/popper.min.js"></script>
+<script type="text/javascript" src="/static/vendor/bootstrap.min.js"></script>
 
-{{ bootstrap.load_js() }}
-{#<script#}
-{#        src="https://code.jquery.com/jquery-3.3.1.min.js"#}
-{#        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="#}
-{#        crossorigin="anonymous"></script>#}
-{#<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"#}
-{#        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"#}
-{#        crossorigin="anonymous"></script>#}
-{#<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"#}
-{#        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"#}
-{#        crossorigin="anonymous"></script>#}
+<!-- init bootstrap tooltips on all pages by default -->
+<script type="text/javascript">$(function () { $('[data-toggle="tooltip"]').tooltip(); })</script>
 
-<script type="text/javascript">$(function () { $('[data-toggle="tooltip"]').tooltip()})</script>
+<!-- custom JS block -->
 {% block js_include %}
 {% endblock %}
+
 </body>
 </html>
