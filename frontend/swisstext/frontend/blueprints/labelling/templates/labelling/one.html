@@ -96,7 +96,7 @@
                         {% for subfield in subfield_row %}
                             {# TODO: better shortcuts #}
                             {% set is_noidea = subfield.data.startswith('?') %}
-                            {% set accesskey = 'n' if is_noidea else counter.val %}
+                            {% set accesskey = 'k' if is_noidea else counter.val %}
                             {% set counter.val = counter.val + 1 %}
                             <div class="col-sm">
                                 <span class="d-none">{{ subfield }}</span>

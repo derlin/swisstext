@@ -34,7 +34,7 @@
                 <span class="badge badge-secondary">{{ s.source.type_ }}</span>
                 {% if s.source.extra %} {{ s.source.extra }}{% endif %}
             </p>
-
+            <p class="card-text">Added on {{ s.date_added|datetime }}</p>
             <p class="card-text">
                 <a href="https://www.google.ch/search?q={{ s.id|quote }}" class="btn btn-light"
                    target="_blank">View on Google Search</a>
@@ -69,7 +69,7 @@
             {% include 'urls/_table.html' %}
             {% if urls.has_prev or urls.has_next %}
                 {% from 'includes/_macros.html' import render_navigation %}
-                {{ render_navigation(urls, '.details') }}
+                {{ render_navigation(urls, request.endpoint, id=s.id) }}
             {% endif %}
         </div>
     {% endif %}

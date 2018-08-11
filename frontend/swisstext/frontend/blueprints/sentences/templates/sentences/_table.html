@@ -1,4 +1,7 @@
-<style type="text/css">.tooltip-inner{max-width: 400px; width: inherit; }</style>
+<style type="text/css">.tooltip-inner {
+    max-width: 400px;
+    width: inherit;
+}</style>
 <table class="table table-sm table-hover mt-2">
     <thead>
     <tr>
@@ -23,7 +26,12 @@
                     ?
                 {% endif %}
             </td>
-            <td  data-toggle="tooltip" data-placement="top" title="{{ sentence.url }}">{{ sentence.text }}</td>
+            <td data-toggle="tooltip" data-placement="top" title="{{ sentence.url }}">
+                {% if sentence.deleted %}
+                    <span class="badge badge-danger">deleted</span>
+                {% endif %}
+                {{ sentence.text }}
+            </td>
         </tr>
     {% endfor %}
     </tbody>

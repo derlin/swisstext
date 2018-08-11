@@ -70,6 +70,7 @@ class SearchSeedsForm(SearchForm):
             ('id', 'A-Z'),
             ('date_added', 'Creation date'),
             ('delta_date', 'Last use'),
+            ('sentences', 'New sentences found'),
             ('count', 'New URLs found'),
             ('urls', 'Valid URLs found'),
             ('usages', 'Time used'),
