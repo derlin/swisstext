@@ -81,7 +81,9 @@
                     <p class="card-text">History</p>
                     <ul>
                         {% for entry in s.dialect.labels %}
-                            <li class="list-group-item">{{ entry.date }} - {{ entry.label }}</li>
+                            <li class="list-group-item">
+                                {{ entry.date }} - {{ render_label(entry.label) }}
+                            </li>
                         {% endfor %}
                     </ul>
                 {% endif %}

@@ -36,6 +36,12 @@ Here is an example usage.
     # launch one worker
     worker = PipelineWorker()
     worker.run(queue, pipeline, new_sentences, max_depth=config.options.crawl_depth)
+
+
+
+.. todo:
+
+    What should we do when an error occurs during download ? Should an inaccessible page be blacklisted ?
 """
 
 import logging
@@ -177,7 +183,7 @@ class PipelineWorker():
                             logger.info("%s: added %d child URLs" % (page.url, added_children))
 
                 except Exception as e:
-
+                    # TODO
                     if not isinstance(e, ICrawler.CrawlError):
                         logger.exception(e)
             else:

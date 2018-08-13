@@ -14,6 +14,7 @@
         tr.stripped-True {
             background-color: #efefef;
         }
+
         tr.delim-True, tr.delim-True td {
             border-top-color: #777;
         }
@@ -29,6 +30,11 @@
             font-style: italic;
             text-decoration: line-through;
             color: #666;
+        }
+        /* make tooltips wider */
+        .tooltip-inner {
+            max-width: 400px;
+            width: inherit;
         }
 
         /* undo button */
@@ -116,7 +122,7 @@
                     </div>
                 </td>
                 <td class="text-monospace text-right small">{{ s.crawl_proba|percent }}</td>
-                <td>{{ s.text }}</td>
+                <td data-toggle="tooltip" data-placement="top" title="{{ s.url }}">{{ s.text }}</td>
             </tr>
         {% endfor %}
     </table>

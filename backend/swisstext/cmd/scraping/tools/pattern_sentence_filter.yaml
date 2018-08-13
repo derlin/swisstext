@@ -96,3 +96,10 @@
     pattern: '@|(https?:)|(nbsp;)|(a href)'
     count:
       max: 0
+
+- isbn_wiki:
+  descr: ISBN sentences in als.wikipedia
+  find:
+    pattern: 'ISBN-Suech'
+    count:
+      max: 0
