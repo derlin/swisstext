@@ -22,7 +22,8 @@ _SEARCH_LINK = "https://www.startpage.com/do/asearch"
 # the only missing parameter is: query=<thing to search>
 # DEFAULT_PARAMS = dict(hmb=1, cat='web', cmd='process_search', engine0='v1all', abp=1, t='air', nj=0)
 _DEFAULT_PARAMS = dict(cat='web', cmd='process_search', dgf=1, hmb=1, pl="", ff="")
-
+# CSS selector used to retrieve all the results links from startpage
+_RESULT_LINK_CSS_SELECTOR = '.search-item__title a'
 # regex excluding some URLs we know are not interested
 excludes = [
     'www.youtube.com',
@@ -111,7 +112,7 @@ class StartPageGenerator:
         :return: a list of links
         """
         logger.debug("getting links...")
-        results = [l['href'] for l in soup.select('li[id^=result] h3 > a') if self._is_link_ok(l['href'])]
+        results = [l['href'] for l in soup.select(_RESULT_LINK_CSS_SELECTOR) if self._is_link_ok(l['href'])]
         logger.debug("got %d links" % len(results))
         return results
 
