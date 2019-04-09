@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Command line searching tools &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="About this documentation" href="aboutthedoc.html" />
@@ -50,12 +51,12 @@
 <span id="command-line-searching-tools"></span><h1>Command line searching tools<a class="headerlink" href="#module-swisstext.cmd.searching.tools" title="Permalink to this headline">¶</a></h1>
 <p>This package contains various implementations of the different search engine tools.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.interfaces" title="swisstext.cmd.searching.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a></dt>
-<dd>The tools interfaces definitions</dd>
-<dt><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.config" title="swisstext.cmd.searching.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code></a></dt>
-<dd>The default configuration instantiates tools from this package</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.interfaces" title="swisstext.cmd.searching.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a></dt><dd><p>The tools interfaces definitions</p>
+</dd>
+<dt><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.config" title="swisstext.cmd.searching.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code></a></dt><dd><p>The default configuration instantiates tools from this package</p>
+</dd>
 </dl>
 </div>
 <div class="section" id="module-swisstext.cmd.searching.tools.console_saver">
@@ -81,10 +82,10 @@ It does not persist any results, but prints everything to the console instead.</
 <p>This <a class="reference internal" href="swisstext.cmd.searching.html#swisstext.cmd.searching.interfaces.ISaver" title="swisstext.cmd.searching.interfaces.ISaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISaver</span></code></a> implementation persists everything to
 a MongoDB database.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo</span></code></a></dt>
-<dd>Package defining the Mongo collections.</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo</span></code></a></dt><dd><p>Package defining the Mongo collections.</p>
+</dd>
 </dl>
 </div>
 <dl class="method">
@@ -171,8 +172,8 @@ see <a class="reference external" href="https://developers.google.com/custom-sea
 <p>A new Google Generator should be created for each query. It allows for lazy loading of
 results, thus sparing API quotas.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This generator might raise an <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a>, for example if you reached your daily quota limit.
+<p class="admonition-title">Warning</p>
+<p>This generator might raise an <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a>, for example if you reached your daily quota limit.
 In this case, the exception message should contain the error code and error message as delivered
 by the Google API.</p>
 </div>
@@ -197,8 +198,8 @@ by the Google API.</p>
 <dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator.next">
 <code class="descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGenerator.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.next" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you use this method directly (instead of the classic python iterator interface), you
+<p class="admonition-title">Note</p>
+<p>If you use this method directly (instead of the classic python iterator interface), you
 need to check that results are available by yourself using the <a class="reference internal" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next" title="swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next"><code class="xref py py-meth docutils literal notranslate"><span class="pre">has_next()</span></code></a> method.</p>
 </div>
 </dd></dl>
@@ -235,8 +236,8 @@ The default context is usually fine: it is parameterized to search all the web.<
 <span class="target" id="module-swisstext.cmd.searching.tools.start_page"></span><p>This module implements an <a class="reference internal" href="swisstext.cmd.searching.html#swisstext.cmd.searching.interfaces.ISearcher" title="swisstext.cmd.searching.interfaces.ISearcher"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ISearcher</span></code></a> using
 <a class="reference external" href="http://startpage.com/">http://startpage.com/</a>.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This module highjacks startpage.com !! There are no API available, so this is really a dirty
+<p class="admonition-title">Warning</p>
+<p>This module highjacks startpage.com !! There are no API available, so this is really a dirty
 hack. But we couldn’t find free APIs to run tests… So use this module sparsely and
 <strong>ONLY IN DEVELOPMENT</strong>. We decline all responsibility in case startpage detects the robot…</p>
 </div>
@@ -282,7 +283,7 @@ The use of an iterator allows for lazy implementations, in case we are limited b
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Command line searching tools</a><ul>
 <li><a class="reference internal" href="#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
@@ -313,8 +314,6 @@ The use of an iterator allows for lazy implementations, in case we are limited b
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -346,7 +345,7 @@ The use of an iterator allows for lazy implementations, in case we are limited b
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

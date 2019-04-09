@@ -1,22 +1,23 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>TODOs &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="About this documentation" href="aboutthedoc.html" /> 
+    <link rel="prev" title="Sentence Filtering" href="ideas.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,7 +29,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="aboutthedoc.html" title="About this documentation"
+          <a href="ideas.html" title="Sentence Filtering"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li> 
       </ul>
@@ -42,38 +43,38 @@
   <div class="section" id="todos">
 <h1>TODOs<a class="headerlink" href="#todos" title="Permalink to this headline">¶</a></h1>
 <div class="admonition-todo admonition">
-<p class="first admonition-title">Todo</p>
-<p class="last">add pipeline schema</p>
+<p class="admonition-title">Todo</p>
+<p>add pipeline schema</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.html#index-0"><em>original entry</em></a> is located in /Users/Lin/git/Swisscom/SwissText/swisstext/backend/swisstext/cmd/__init__.py:docstring of swisstext.cmd, line 43.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/__init__.py:docstring of swisstext.cmd, line 43.)</p>
 <div class="admonition-todo admonition">
-<p class="first admonition-title">Todo</p>
-<p class="last">Also exit cleanly when only one worker runs in the main thread</p>
+<p class="admonition-title">Todo</p>
+<p>Also exit cleanly when only one worker runs in the main thread</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-0"><em>original entry</em></a> is located in /Users/Lin/git/Swisscom/SwissText/swisstext/backend/swisstext/cmd/scraping/commandline.py:docstring of swisstext.cmd.scraping.commandline, line 9.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/commandline.py:docstring of swisstext.cmd.scraping.commandline, line 9.)</p>
 <div class="admonition-todo admonition">
-<p class="first admonition-title">Todo</p>
+<p class="admonition-title">Todo</p>
 <p>This piece of code (and the commandline) has many flaws and should clearly be enhanced… For example:</p>
 <p><strong>Multithreading</strong>: currently, the worker stops when the queue is empty. This also means that if
 you launch the system with only 3 base urls but 5 workers, 2 workers will exit immediately instead
 of waiting for new tasks to be added to the queue.</p>
 <p>A better way would be to keep track of active workers and stop only when all workers are idle, or
 when all workers reached a task with a depth &gt; max depth…</p>
-<p class="last"><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
+<p><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
 Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-1"><em>original entry</em></a> is located in /Users/Lin/git/Swisscom/SwissText/swisstext/backend/swisstext/cmd/scraping/pipeline.py:docstring of swisstext.cmd.scraping.pipeline.PipelineWorker.run, line 19.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-1"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/pipeline.py:docstring of swisstext.cmd.scraping.pipeline.PipelineWorker.run, line 19.)</p>
 <div class="admonition-todo admonition">
-<p class="first admonition-title">Todo</p>
-<p class="last">Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
+<p class="admonition-title">Todo</p>
+<p>Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
 the default.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-0"><em>original entry</em></a> is located in /Users/Lin/git/Swisscom/SwissText/swisstext/backend/swisstext/cmd/scraping/tools/bs_crawler.py:docstring of swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler, line 14.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/bs_crawler.py:docstring of swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler, line 14.)</p>
 <div class="admonition-todo admonition">
-<p class="first admonition-title">Todo</p>
-<p class="last">Train a Punkt model for Swiss-German.</p>
+<p class="admonition-title">Todo</p>
+<p>Train a Punkt model for Swiss-German.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-1"><em>original entry</em></a> is located in /Users/Lin/git/Swisscom/SwissText/swisstext/backend/swisstext/cmd/scraping/tools/punkt_splitter.py:docstring of swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-1"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/punkt_splitter.py:docstring of swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter, line 11.)</p>
 </div>
 
 
@@ -83,8 +84,8 @@ the default.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="aboutthedoc.html"
-                        title="previous chapter">About this documentation</a></p>
+  <p class="topless"><a href="ideas.html"
+                        title="previous chapter">Sentence Filtering</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -98,8 +99,6 @@ the default.</p>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -118,14 +117,14 @@ the default.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="aboutthedoc.html" title="About this documentation"
+          <a href="ideas.html" title="Sentence Filtering"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Command line scraping tools &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Searching commandline tool" href="swisstext.cmd.searching.html" />
@@ -50,12 +51,12 @@
 <span id="command-line-scraping-tools"></span><h1>Command line scraping tools<a class="headerlink" href="#module-swisstext.cmd.scraping.tools" title="Permalink to this headline">¶</a></h1>
 <p>This package contains various implementations of the different pipeline tools.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.interfaces" title="swisstext.cmd.scraping.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a></dt>
-<dd>The tools interfaces definitions</dd>
-<dt><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.config" title="swisstext.cmd.scraping.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code></a></dt>
-<dd>The default configuration instantiates tools from this package</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.interfaces" title="swisstext.cmd.scraping.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a></dt><dd><p>The tools interfaces definitions</p>
+</dd>
+<dt><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.config" title="swisstext.cmd.scraping.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code></a></dt><dd><p>The default configuration instantiates tools from this package</p>
+</dd>
 </dl>
 </div>
 <div class="section" id="module-swisstext.cmd.scraping.tools.basic_decider">
@@ -67,20 +68,18 @@
 <dd><p>Bases: <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.IDecider" title="swisstext.cmd.scraping.interfaces.IDecider"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.IDecider</span></code></a></p>
 <p>A basic decider that:</p>
 <ul>
-<li><p class="first">crawls URLs that fulfill one of the following criteria:</p>
+<li><p>crawls URLs that fulfill one of the following criteria:</p>
 <blockquote>
 <div><ul class="simple">
-<li>the URL is new,</li>
-<li>the last visit yielded at least one new sentence on the last visit,</li>
-<li>the last visit was older than <a class="reference internal" href="#swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_recrawl_delta" title="swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_recrawl_delta"><code class="xref py py-attr docutils literal notranslate"><span class="pre">min_recrawl_delta</span></code></a></li>
+<li><p>the URL is new,</p></li>
+<li><p>the last visit yielded at least one new sentence on the last visit,</p></li>
+<li><p>the last visit was older than <a class="reference internal" href="#swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_recrawl_delta" title="swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_recrawl_delta"><code class="xref py py-attr docutils literal notranslate"><span class="pre">min_recrawl_delta</span></code></a></p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">blacklists URLs with no Swiss German sentences,</p>
-</li>
-<li><p class="first">adds child URLs from a page only if the ratio between sentences and Swiss German sentences is greater or
-equal <a class="reference internal" href="#swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_ratio" title="swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_ratio"><code class="xref py py-attr docutils literal notranslate"><span class="pre">min_ratio</span></code></a></p>
-</li>
+<li><p>blacklists URLs with no Swiss German sentences,</p></li>
+<li><p>adds child URLs from a page only if the ratio between sentences and Swiss German sentences is greater or
+equal <a class="reference internal" href="#swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_ratio" title="swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_ratio"><code class="xref py py-attr docutils literal notranslate"><span class="pre">min_ratio</span></code></a></p></li>
 </ul>
 <dl class="attribute">
 <dt id="swisstext.cmd.scraping.tools.basic_decider.BasicDecider.min_ratio">
@@ -199,8 +198,8 @@ that uses BeautifulSoup to extract text and links.</p>
 <p>Text is extracted by concatenating all pieces of text (except CSS and script)
 into one string using a space separator (no newlines).</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This crawler implementation will return the page’s textual content in one bulk, with no newlines characters.
+<p class="admonition-title">Warning</p>
+<p>This crawler implementation will return the page’s textual content in one bulk, with no newlines characters.
 Consequently, results won’t be exploitable without a clever
 <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISplitter" title="swisstext.cmd.scraping.interfaces.ISplitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISplitter</span></code></a> (recall that the default implementation split text
 based on newlines…) such as the <code class="xref py py-class docutils literal notranslate"><span class="pre">PunktSplitter</span></code>.</p>
@@ -221,16 +220,16 @@ based on newlines…) such as the <code class="xref py py-class docutils literal
 step.</p>
 <p>Processing steps:</p>
 <ol class="arabic simple">
-<li>remove all scripts and CSS content (same as the BsCrawler)</li>
-<li>try to detect the page’s main content using common naming schemes (<code class="docutils literal notranslate"><span class="pre">id=main</span></code>, <code class="docutils literal notranslate"><span class="pre">role=main</span></code>, etc).
-If found, stop the processing and return only the text under it.</li>
-<li>try to detect and remove the header, footer and navigation before returning the text</li>
+<li><p>remove all scripts and CSS content (same as the BsCrawler)</p></li>
+<li><p>try to detect the page’s main content using common naming schemes (<code class="docutils literal notranslate"><span class="pre">id=main</span></code>, <code class="docutils literal notranslate"><span class="pre">role=main</span></code>, etc).
+If found, stop the processing and return only the text under it.</p></li>
+<li><p>try to detect and remove the header, footer and navigation before returning the text</p></li>
 </ol>
 <p>Following those heuristics requires more processing power and might miss some sentences (full sentences
 in the side bar, main content in a poorly-coded website, etc).</p>
 <div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
+<p class="admonition-title">Todo</p>
+<p>Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
 the default.</p>
 </div>
 </dd></dl>
@@ -307,10 +306,10 @@ Only new sentences will be added to the page’s <a class="reference internal" h
 <p>This <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver" title="swisstext.cmd.scraping.interfaces.ISaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISaver</span></code></a> implementation persists everything to
 a MongoDB database.</p>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo</span></code></a></dt>
-<dd>Package defining the Mongo collections.</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo</span></code></a></dt><dd><p>Package defining the Mongo collections.</p>
+</dd>
 </dl>
 </div>
 <dl class="method">
@@ -366,16 +365,16 @@ simple rules to filter “well-formed” sentences.</p>
 <h3>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h3>
 <p>Each sentence is checked against a list of rules and rejected / considered invalid if any of those rules fail.
 Rules are thus <em>AND-based</em>.</p>
-<dl class="docutils">
-<dt>Rules are defined using a simple YAML syntax and can be of two types: <em>length-based</em> (character count)</dt>
-<dd>or <em>pattern-based</em> (regular expressions). They are checked in the same order they are defined.</dd>
+<dl class="simple">
+<dt>Rules are defined using a simple YAML syntax and can be of two types: <em>length-based</em> (character count)</dt><dd><p>or <em>pattern-based</em> (regular expressions). They are checked in the same order they are defined.</p>
+</dd>
 </dl>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<ul class="last simple">
-<li>Regular expressions can be quite expensive, so try to limit their complexity to the minimum required.</li>
-<li>Rules are checked in the same order as they are defined, so it is advised to put the most generic / efficient
-ones first.</li>
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Regular expressions can be quite expensive, so try to limit their complexity to the minimum required.</p></li>
+<li><p>Rules are checked in the same order as they are defined, so it is advised to put the most generic / efficient
+ones first.</p></li>
 </ul>
 </div>
 </div>
@@ -384,46 +383,46 @@ ones first.</li>
 <p><strong>Length-based rules (length)</strong> must specify <em>at least one</em> of <em>min</em> or <em>max</em> length,
 i.e. the bounds on the number of characters.
 The rule succeeds if <code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">&lt;=</span> <span class="pre">len(s)</span> <span class="pre">&lt;=</span> <span class="pre">max</span></code>. Here is an example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">max_length</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">descr</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">too long</span>
-  <span class="l l-Scalar l-Scalar-Plain">length</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">max</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1000</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">max_length</span><span class="p">:</span>
+  <span class="nt">descr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">too long</span>
+  <span class="nt">length</span><span class="p">:</span>
+    <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1000</span>
 </pre></div>
 </div>
 <p><strong>Pattern-based rules (find)</strong> a bit similarly, but instead of counting the number of characters, they count the number
 of occurrences of a <em>pattern</em> (i.e. the number of matches when calling <code class="docutils literal notranslate"><span class="pre">re.findall(pattern,</span> <span class="pre">s)</span></code>).
 The rule itself can be based on the raw count or based on a ratio:</p>
 <ul class="simple">
-<li>count: the rule succeeds if <code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">&lt;=</span> <span class="pre">nb_matches</span> <span class="pre">&lt;=</span> <span class="pre">max</span></code></li>
-<li>ratio: the rule succeeds if <code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">&lt;=</span> <span class="pre">len(s)</span> <span class="pre">/</span> <span class="pre">(len(s)</span> <span class="pre">-</span> <span class="pre">nb_matches</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">&lt;=</span> <span class="pre">max`</span></code></li>
+<li><p>count: the rule succeeds if <code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">&lt;=</span> <span class="pre">nb_matches</span> <span class="pre">&lt;=</span> <span class="pre">max</span></code></p></li>
+<li><p>ratio: the rule succeeds if <code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">&lt;=</span> <span class="pre">len(s)</span> <span class="pre">/</span> <span class="pre">(len(s)</span> <span class="pre">-</span> <span class="pre">nb_matches</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">&lt;=</span> <span class="pre">max`</span></code></p></li>
 </ul>
 <p>Here are examples:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">min_words</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">descr</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">not enough words</span>
-  <span class="l l-Scalar l-Scalar-Plain">find</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">pattern</span><span class="p p-Indicator">:</span> <span class="s">&#39;\S+&#39;</span>
-    <span class="l l-Scalar l-Scalar-Plain">count</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">min</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">min_words</span><span class="p">:</span>
+  <span class="nt">descr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not enough words</span>
+  <span class="nt">find</span><span class="p">:</span>
+    <span class="nt">pattern</span><span class="p">:</span> <span class="s">&#39;\S+&#39;</span>
+    <span class="nt">count</span><span class="p">:</span>
+      <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
 
-<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">letters_proportional</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">descr</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">not enough letters proportion</span>
-  <span class="l l-Scalar l-Scalar-Plain">find</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">pattern</span><span class="p p-Indicator">:</span> <span class="s">&#39;[\W|\d]&#39;</span>
-    <span class="l l-Scalar l-Scalar-Plain">ratio</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">max</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.4</span>
+<span class="p p-Indicator">-</span> <span class="nt">letters_proportional</span><span class="p">:</span>
+  <span class="nt">descr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not enough letters proportion</span>
+  <span class="nt">find</span><span class="p">:</span>
+    <span class="nt">pattern</span><span class="p">:</span> <span class="s">&#39;[\W|\d]&#39;</span>
+    <span class="nt">ratio</span><span class="p">:</span>
+      <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.4</span>
 </pre></div>
 </div>
 <p>Finally, <strong>an if condition</strong> can be used. If conditions are checked first, and if the check fails, the rule is
 simply ignored:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ellipsis</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">descr</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ellispsis on short sentences.</span>
-  <span class="l l-Scalar l-Scalar-Plain">if</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">length</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">max</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
-  <span class="l l-Scalar l-Scalar-Plain">find</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">pattern</span><span class="p p-Indicator">:</span> <span class="s">&#39;(\.\s?){3}$&#39;</span>
-    <span class="l l-Scalar l-Scalar-Plain">count</span><span class="p p-Indicator">:</span>
-      <span class="l l-Scalar l-Scalar-Plain">max</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">ellipsis</span><span class="p">:</span>
+  <span class="nt">descr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ellispsis on short sentences.</span>
+  <span class="nt">if</span><span class="p">:</span>
+    <span class="nt">length</span><span class="p">:</span>
+      <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
+  <span class="nt">find</span><span class="p">:</span>
+    <span class="nt">pattern</span><span class="p">:</span> <span class="s">&#39;(\.\s?){3}$&#39;</span>
+    <span class="nt">count</span><span class="p">:</span>
+      <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
 </pre></div>
 </div>
 <dl class="class">
@@ -452,15 +451,15 @@ You can override this by passing a path to the constructor (<code class="docutil
 <a class="reference external" href="https://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.punkt">PunktSentenceTokenizer</a>, the NLTK
 implementation of the “Unsupervised Multilingual Sentence Boundary Detection (Kiss and Strunk (2005)” algorithm.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The default implementation uses a model trained on English sentences.
+<p class="admonition-title">Note</p>
+<p>The default implementation uses a model trained on English sentences.
 <a class="reference external" href="https://www.kaggle.com/nltkdata/punkt/version/2#">This kaggle resource</a> offers
 pretrained Punkt Models for other languages as well, including German. In my tests though, German models
 performed poorly compared to the default…</p>
 </div>
 <div class="admonition-todo admonition" id="index-1">
-<p class="first admonition-title">Todo</p>
-<p class="last">Train a Punkt model for Swiss-German.</p>
+<p class="admonition-title">Todo</p>
+<p>Train a Punkt model for Swiss-German.</p>
 </div>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter.split">
@@ -505,7 +504,7 @@ The notebook for recreating the model is available <a class="reference external"
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Command line scraping tools</a><ul>
 <li><a class="reference internal" href="#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
@@ -542,8 +541,6 @@ The notebook for recreating the model is available <a class="reference external"
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -575,7 +572,7 @@ The notebook for recreating the model is available <a class="reference external"
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Commandline tools &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Scraping commandline tool" href="swisstext.cmd.scraping.html" />
@@ -49,10 +50,10 @@
 <p>This package contains everything for running the SwissText Scraping logic.</p>
 <p>It is implemented using two command-line programs, each in its own package:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">st_scrape</span></code> defined in <a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping" title="swisstext.cmd.scraping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.scraping</span></code></a>, is used to scrape URLs and detect/save Swiss German sentences,</li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">st_search</span></code> defined in <a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching" title="swisstext.cmd.searching"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.searching</span></code></a>, is used to do submit search queries using seeds and gather</dt>
-<dd>new URLs to scrape</dd>
+<li><p><code class="docutils literal notranslate"><span class="pre">st_scrape</span></code> defined in <a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping" title="swisstext.cmd.scraping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.scraping</span></code></a>, is used to scrape URLs and detect/save Swiss German sentences,</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">st_search</span></code> defined in <a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching" title="swisstext.cmd.searching"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.searching</span></code></a>, is used to do submit search queries using seeds and gather</dt><dd><p>new URLs to scrape</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -89,8 +90,8 @@
 </pre></div>
 </div>
 <div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">add pipeline schema</p>
+<p class="admonition-title">Todo</p>
+<p>add pipeline schema</p>
 </div>
 <div class="section" id="available-commands">
 <h2>Available commands<a class="headerlink" href="#available-commands" title="Permalink to this headline">¶</a></h2>
@@ -148,25 +149,25 @@
 It is used by both commandline tools.</p>
 <p>Config objects can easily be populated from a YAML configuration file. This file should have the following structure:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># This entry defines general options that will be stored in :py:attr:`BaseConfig.options`.</span>
-<span class="l l-Scalar l-Scalar-Plain">options</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">key1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">value1</span>
+<span class="nt">options</span><span class="p">:</span>
+  <span class="nt">key1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value1</span>
 
 <span class="c1"># This entry defines tools to instantiate</span>
 <span class="c1"># the actual name is specified in the subclass by overriding :py:attr:`BaseConfig.tool_entry_name`</span>
 <span class="c1"># valid interface names are specified in the sublcass by overriding :py:attr:`valid_tool_entries`</span>
-<span class="l l-Scalar l-Scalar-Plain">tool_entry_name</span><span class="p p-Indicator">:</span>
+<span class="nt">tool_entry_name</span><span class="p">:</span>
     <span class="c1"># optional default package for relative entries</span>
-    <span class="l l-Scalar l-Scalar-Plain">_base_package</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">some.default.module</span>
+    <span class="nt">_base_package</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some.default.module</span>
     <span class="c1"># list of tools</span>
-    <span class="l l-Scalar l-Scalar-Plain">interface_name_1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">absolute.module.ToolClassName1</span>
-    <span class="l l-Scalar l-Scalar-Plain">interface_name_2</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">.ToolClassName2</span> <span class="c1"># will be expanded to some.default.module.ToolClassName2</span>
+    <span class="nt">interface_name_1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absolute.module.ToolClassName1</span>
+    <span class="nt">interface_name_2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.ToolClassName2</span> <span class="c1"># will be expanded to some.default.module.ToolClassName2</span>
 
 <span class="c1"># any entry in the form [interface_name]_options defines options that will be passed to the</span>
 <span class="c1"># tool class upon construction. Here, for example, the actual instantiation will be:</span>
 <span class="c1">#    absolute.module.ToolClassName1(param_1=some_value, param_X=some_other_value)</span>
-<span class="l l-Scalar l-Scalar-Plain">interface_name_1_options</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">param_1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">some_value</span>
-    <span class="l l-Scalar l-Scalar-Plain">param_X</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">some_other_value</span>
+<span class="nt">interface_name_1_options</span><span class="p">:</span>
+    <span class="nt">param_1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some_value</span>
+    <span class="nt">param_X</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some_other_value</span>
 </pre></div>
 </div>
 <dl class="class">
@@ -180,24 +181,20 @@ and also to instantiate tools from a dictionary of module+class names.</p>
 <code class="descname">get</code><span class="sig-paren">(</span><em>prop_name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/base_config.html#BaseConfig.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.base_config.BaseConfig.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a value from the YAML configuration file. This method supports paths with “.”, for example:</p>
 <ul class="simple">
-<li><cite>options</cite>: returns the top-level “options”</li>
-<li><cite>tool_entry.tool_name</cite>: return the value of tool_name under tool_entry</li>
+<li><p><cite>options</cite>: returns the top-level “options”</p></li>
+<li><p><cite>tool_entry.tool_name</cite>: return the value of tool_name under tool_entry</p></li>
 </ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>prop_name</strong> – the path of the property to retrieve</li>
-<li><strong>default</strong> – the default value if the property is not found</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prop_name</strong> – the path of the property to retrieve</p></li>
+<li><p><strong>default</strong> – the default value if the property is not found</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the property value or <cite>default</cite></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the property value or <cite>default</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -206,16 +203,14 @@ and also to instantiate tools from a dictionary of module+class names.</p>
 <dd><p>For each <a class="reference internal" href="#swisstext.cmd.base_config.BaseConfig.valid_tool_entries" title="swisstext.cmd.base_config.BaseConfig.valid_tool_entries"><code class="xref py py-attr docutils literal notranslate"><span class="pre">valid_tool_entries</span></code></a> under <a class="reference internal" href="#swisstext.cmd.base_config.BaseConfig.tool_entry_name" title="swisstext.cmd.base_config.BaseConfig.tool_entry_name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tool_entry_name</span></code></a>, try to create an instance.
 In case a tool is not defined and <a class="reference internal" href="#swisstext.cmd.base_config.BaseConfig.interfaces_package" title="swisstext.cmd.base_config.BaseConfig.interfaces_package"><code class="xref py py-attr docutils literal notranslate"><span class="pre">interfaces_package</span></code></a> is not None,
 it will try to instantiate the tool name interface instead.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of tool instances, in the same order as <a class="reference internal" href="#swisstext.cmd.base_config.BaseConfig.interfaces_package" title="swisstext.cmd.base_config.BaseConfig.interfaces_package"><code class="xref py py-attr docutils literal notranslate"><span class="pre">interfaces_package</span></code></a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.7)"><strong>RuntimeError</strong></a> – if a tool could not be instantiated</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of tool instances, in the same order as <a class="reference internal" href="#swisstext.cmd.base_config.BaseConfig.interfaces_package" title="swisstext.cmd.base_config.BaseConfig.interfaces_package"><code class="xref py py-attr docutils literal notranslate"><span class="pre">interfaces_package</span></code></a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.7)"><strong>RuntimeError</strong></a> – if a tool could not be instantiated</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -265,11 +260,11 @@ Note that the order of tools in the list defines the order of tools instances re
 <p>By simply extracting all the <code class="docutils literal notranslate"><span class="pre">href</span></code> attributes in a HTML page, we might end up with a rather large list of
 children, not all of them interesting to crawl. Indded, this list would probably contain:</p>
 <ul class="simple">
-<li>duplicates (or different links pointing to the same page but another anchor),</li>
-<li>anchors,</li>
-<li>javascript (<code class="docutils literal notranslate"><span class="pre">javascript:</span></code>),</li>
-<li>pointers to images, PDFs or other non-text resources,</li>
-<li>etc.</li>
+<li><p>duplicates (or different links pointing to the same page but another anchor),</p></li>
+<li><p>anchors,</p></li>
+<li><p>javascript (<code class="docutils literal notranslate"><span class="pre">javascript:</span></code>),</p></li>
+<li><p>pointers to images, PDFs or other non-text resources,</p></li>
+<li><p>etc.</p></li>
 </ul>
 <p>As every implementation of <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ICrawler" title="swisstext.cmd.scraping.interfaces.ICrawler"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ICrawler</span></code></a> has to do the job of filtering
 this list, we might as well provide a general way to do so.</p>
@@ -300,18 +295,18 @@ See <a class="reference external" href="https://en.wikipedia.org/wiki/List_of_Wi
 
 <dl class="function">
 <dt id="swisstext.cmd.link_utils.filter_links">
-<code class="descclassname">swisstext.cmd.link_utils.</code><code class="descname">filter_links</code><span class="sig-paren">(</span><em>base_url: str, links: Iterable[str]</em><span class="sig-paren">)</span> &#x2192; Generator[[str, NoneType], NoneType]<a class="reference internal" href="_modules/swisstext/cmd/link_utils.html#filter_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.link_utils.filter_links" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">swisstext.cmd.link_utils.</code><code class="descname">filter_links</code><span class="sig-paren">(</span><em>base_url: str, links: Iterable[str]</em><span class="sig-paren">)</span> &#x2192; Generator[[str, None], None]<a class="reference internal" href="_modules/swisstext/cmd/link_utils.html#filter_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.link_utils.filter_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve, clean and filter links found in a page. By links we mean here any value of <cite>href</cite> attribute found
 in a page. This is especially useful for the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interface.ICrawler</span></code> to constitute and populate the crawl results’s
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">links</span></code> attribute.</p>
 <p>In addition to transforming relative to absolute URLs, this method will also exclude:</p>
 <ul class="simple">
-<li>the base URL</li>
-<li>non HTTP links (<cite>mailto:</cite>, <cite>javascript:</cite>, anchors, …)</li>
-<li>Duplicates</li>
-<li>URLs pointing to non text resources (see <a class="reference internal" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS"><code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code></a>)</li>
-<li>URLs with a Country Code TLD unlikely to contain Swiss German (see <a class="reference internal" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS"><code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code></a>)</li>
+<li><p>the base URL</p></li>
+<li><p>non HTTP links (<cite>mailto:</cite>, <cite>javascript:</cite>, anchors, …)</p></li>
+<li><p>Duplicates</p></li>
+<li><p>URLs pointing to non text resources (see <a class="reference internal" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS"><code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code></a>)</p></li>
+<li><p>URLs with a Country Code TLD unlikely to contain Swiss German (see <a class="reference internal" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS"><code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code></a>)</p></li>
 </ul>
 <p>For two links to be considered duplicates, they need to match exactly. Exceptions are anchors (stripped
 automatically from the URL) and trailing slashes (in this case, the first encountered link will be returned).</p>
@@ -340,21 +335,17 @@ automatically from the URL) and trailing slashes (in this case, the first encoun
 <span class="c1">#  http://other.resource.test</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>base_url</strong> – the URL of the current page (not returned and used to resolve relative links).</li>
-<li><strong>links</strong> – a list of links found, relative or absolute</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_url</strong> – the URL of the current page (not returned and used to resolve relative links).</p></li>
+<li><p><strong>links</strong> – a list of links found, relative or absolute</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a generator of unique absolute URLs, all beginning with <cite>http</cite></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a generator of unique absolute URLs, all beginning with <cite>http</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -375,7 +366,7 @@ the TLD (exclude some country-specific TLDs) or the domain (exclude some wikiped
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Commandline tools</a><ul>
 <li><a class="reference internal" href="#available-commands">Available commands</a></li>
@@ -408,8 +399,6 @@ the TLD (exclude some country-specific TLDs) or the domain (exclude some wikiped
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -439,7 +428,7 @@ the TLD (exclude some country-specific TLDs) or the domain (exclude some wikiped
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

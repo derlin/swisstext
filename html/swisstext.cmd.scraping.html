@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Scraping commandline tool &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Command line scraping tools" href="swisstext.cmd.scraping.tools.html" />
@@ -53,8 +54,8 @@
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>Use the <cite>–help</cite> option to discover the capabilities and options of the tool.</p>
 <div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">Also exit cleanly when only one worker runs in the main thread</p>
+<p class="admonition-title">Todo</p>
+<p>Also exit cleanly when only one worker runs in the main thread</p>
 </div>
 <dl class="function">
 <dt id="swisstext.cmd.scraping.commandline.enqueue">
@@ -93,7 +94,7 @@ This makes it easy to test new ways or to tune one aspect of the scraper while k
 * no duplicates
 * different from the current page URL (no anchors !)
 * if possible, no link pointing to unparseable resources (zip files, images, etc.)
-The method <code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.link_utils.filter_links()</span></code> is available to do the filtering.</p>
+The method <a class="reference internal" href="swisstext.cmd.html#swisstext.cmd.link_utils.filter_links" title="swisstext.cmd.link_utils.filter_links"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.link_utils.filter_links()</span></code></a> is available to do the filtering.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -206,22 +207,18 @@ Only new sentences will be added to the page’s <a class="reference internal" h
 <dt id="swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds">
 <code class="descname">generate_seeds</code><span class="sig-paren">(</span><em>sentences: List[str], max=10, stopwords: List[str] = []</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/swisstext/cmd/scraping/interfaces.html#ISeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
 <dd><p>[ABSTRACT] Should generate interesting seeds.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sentences</strong> – the sentences</li>
-<li><strong>max</strong> – maximum number of seeds to return</li>
-<li><strong>stopwords</strong> – an optional list of words to exclude from generated seeds</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sentences</strong> – the sentences</p></li>
+<li><p><strong>max</strong> – maximum number of seeds to return</p></li>
+<li><p><strong>stopwords</strong> – an optional list of words to exclude from generated seeds</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of seeds</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of seeds</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -560,44 +557,40 @@ coherence in the persistence layer.</p>
 <dd><p>Do the work ! All the magic is in here :)</p>
 <p>For each page pulled from the queue, the worker will execute all the steps of the scraping pipeline:</p>
 <ul class="simple">
-<li>get text and links,</li>
-<li>split and filter sentences,</li>
-<li>keep sentences with Swiss German,</li>
-<li>persist the results (url + sentences), if any</li>
-<li>add new tasks to the queue (if the page contains links to interesting URLs)</li>
+<li><p>get text and links,</p></li>
+<li><p>split and filter sentences,</p></li>
+<li><p>keep sentences with Swiss German,</p></li>
+<li><p>persist the results (url + sentences), if any</p></li>
+<li><p>add new tasks to the queue (if the page contains links to interesting URLs)</p></li>
 </ul>
 <p>New sentences are added to the new_sentences list, so that the caller can easily know how fruitful the
 scraping was and optionaly use the new sentences to generate seeds.</p>
 <p>This method will stop:</p>
 <ul class="simple">
-<li>when the queue is empty or</li>
-<li>if the <a class="reference internal" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received" title="swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received"><code class="xref py py-attr docutils literal notranslate"><span class="pre">kill_received</span></code></a> is set to true. In this case, it finishes processing the current task and exit</li>
+<li><p>when the queue is empty or</p></li>
+<li><p>if the <a class="reference internal" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received" title="swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received"><code class="xref py py-attr docutils literal notranslate"><span class="pre">kill_received</span></code></a> is set to true. In this case, it finishes processing the current task and exit</p></li>
 </ul>
 <div class="admonition-todo admonition" id="index-1">
-<p class="first admonition-title">Todo</p>
+<p class="admonition-title">Todo</p>
 <p>This piece of code (and the commandline) has many flaws and should clearly be enhanced… For example:</p>
 <p><strong>Multithreading</strong>: currently, the worker stops when the queue is empty. This also means that if
 you launch the system with only 3 base urls but 5 workers, 2 workers will exit immediately instead
 of waiting for new tasks to be added to the queue.</p>
 <p>A better way would be to keep track of active workers and stop only when all workers are idle, or
 when all workers reached a task with a depth &gt; max depth…</p>
-<p class="last"><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
+<p><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
 Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>queue</strong> – the task queue</li>
-<li><strong>p</strong> – the pipeline to use</li>
-<li><strong>new_sentences</strong> – all new sentences discovered will be added to this list</li>
-<li><strong>max_depth</strong> – when do we stop (inclusive)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> – the task queue</p></li>
+<li><p><strong>p</strong> – the pipeline to use</p></li>
+<li><p><strong>new_sentences</strong> – all new sentences discovered will be added to this list</p></li>
+<li><p><strong>max_depth</strong> – when do we stop (inclusive)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -611,7 +604,7 @@ Should we also remove/blacklist the URL ? Should we allow the URL to fail X time
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Scraping commandline tool</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a></li>
@@ -642,8 +635,6 @@ Should we also remove/blacklist the URL ? Should we allow the URL to fail X time
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -674,7 +665,7 @@ Should we also remove/blacklist the URL ? Should we allow the URL to fail X time
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

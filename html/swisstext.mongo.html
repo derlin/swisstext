@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>MongoEngine - MongoDB package &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="MongoDB Collections definitions" href="swisstext.mongo.abstract.html" />
@@ -54,10 +55,10 @@
 </pre></div>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p>The library <code class="docutils literal notranslate"><span class="pre">cityhash</span></code> is compiled during install and you need to have GCC and G++ installed,
 as well as the python header files. On Ubuntu, run:</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>apt install gcc g++ libdpkg-perl python3-dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt install gcc g++ libdpkg-perl python3-dev
 </pre></div>
 </div>
 </div>
@@ -66,11 +67,11 @@ as well as the python header files. On Ubuntu, run:</p>
 <h2>Collections<a class="headerlink" href="#collections" title="Permalink to this headline">¶</a></h2>
 <p>The available collections are:</p>
 <ul class="simple">
-<li><cite>seeds</cite>: the keywords used to search for new URLs using a search engine,</li>
-<li><cite>sentences</cite>: the Swiss-German sentences found,</li>
-<li><cite>urls</cite>: the URLs clawled so far that contained <em>at least one</em> Swiss German sentence,</li>
-<li><cite>blacklist</cite>: all other URLs crawled,</li>
-<li><cite>users</cite>: the users and their roles (for the frontend)</li>
+<li><p><cite>seeds</cite>: the keywords used to search for new URLs using a search engine,</p></li>
+<li><p><cite>sentences</cite>: the Swiss-German sentences found,</p></li>
+<li><p><cite>urls</cite>: the URLs clawled so far that contained <em>at least one</em> Swiss German sentence,</p></li>
+<li><p><cite>blacklist</cite>: all other URLs crawled,</p></li>
+<li><p><cite>users</cite>: the users and their roles (for the frontend)</p></li>
 </ul>
 </div>
 <div class="section" id="about-the-code">
@@ -145,12 +146,12 @@ Flask Mongoengine Document class:</p>
 </pre></div>
 </div>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt>Module <a class="reference internal" href="swisstext.mongo.abstract.html#module-swisstext.mongo.abstract" title="swisstext.mongo.abstract"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo.abstract</span></code></a></dt>
-<dd>Documentation of all the classes. Simply look for <code class="docutils literal notranslate"><span class="pre">Abstract&lt;Classname&gt;</span></code>.</dd>
-<dt><a class="reference external" href="http://docs.mongoengine.org/">MongoEngine documentation</a></dt>
-<dd>The MongoEngine documentation, including the API reference.</dd>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt>Module <a class="reference internal" href="swisstext.mongo.abstract.html#module-swisstext.mongo.abstract" title="swisstext.mongo.abstract"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo.abstract</span></code></a></dt><dd><p>Documentation of all the classes. Simply look for <code class="docutils literal notranslate"><span class="pre">Abstract&lt;Classname&gt;</span></code>.</p>
+</dd>
+<dt><a class="reference external" href="http://docs.mongoengine.org/">MongoEngine documentation</a></dt><dd><p>The MongoEngine documentation, including the API reference.</p>
+</dd>
 </dl>
 </div>
 <dl class="class">
@@ -252,7 +253,7 @@ Flask Mongoengine Document class:</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">MongoEngine - MongoDB package</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
@@ -283,8 +284,6 @@ Flask Mongoengine Document class:</p>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -314,7 +313,7 @@ Flask Mongoengine Document class:</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

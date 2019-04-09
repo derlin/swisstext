@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>MongoDB Collections definitions &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Commandline tools" href="swisstext.cmd.html" />
@@ -47,7 +48,7 @@
             
   <div class="section" id="module-swisstext.mongo.abstract">
 <span id="mongodb-collections-definitions"></span><h1>MongoDB Collections definitions<a class="headerlink" href="#module-swisstext.mongo.abstract" title="Permalink to this headline">¶</a></h1>
-<p>This module contains abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> definitions for all the objects in the SwissText system
+<p>This module contains abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> definitions for all the objects in the SwissText system
 database.</p>
 <p>When using mongoengine directly, you can use the concrete classes defined in <a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo.models" title="swisstext.mongo.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo.models</span></code></a>.</p>
 <p>When using Flask-MongoEngine, just subclass all abstract classes (i.e. the ones prefixed with <cite>Abstract</cite>)
@@ -124,20 +125,18 @@ p. 62 (see category <em>Alle SDS- und SADS- Daten 10 Dialektregionen</em>)</p>
 <p>A source field. It contains two informations:
 <a class="reference internal" href="#swisstext.mongo.abstract.generic.Source.type_" title="swisstext.mongo.abstract.generic.Source.type_"><code class="xref py py-attr docutils literal notranslate"><span class="pre">type_</span></code></a> (mapped to <cite>type</cite> in mongo), one of the <a class="reference internal" href="#swisstext.mongo.abstract.generic.SourceType" title="swisstext.mongo.abstract.generic.SourceType"><code class="xref py py-class docutils literal notranslate"><span class="pre">SourceType</span></code></a> above and
 <a class="reference internal" href="#swisstext.mongo.abstract.generic.Source.extra" title="swisstext.mongo.abstract.generic.Source.extra"><code class="xref py py-attr docutils literal notranslate"><span class="pre">extra</span></code></a> for an optional extra information.</p>
-<dl class="docutils">
-<dt>If the source is attached to a URL, possible values are:</dt>
-<dd><ul class="first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.UNKNOWN,</span> <span class="pre">None)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.USER,</span> <span class="pre">&quot;user</span> <span class="pre">ID&quot;)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.SEED,</span> <span class="pre">&quot;seed</span> <span class="pre">ID&quot;)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.AUTO,</span> <span class="pre">&quot;parent</span> <span class="pre">url&quot;)</span></code></li>
+<dl class="simple">
+<dt>If the source is attached to a URL, possible values are:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.UNKNOWN,</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.USER,</span> <span class="pre">&quot;user</span> <span class="pre">ID&quot;)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.SEED,</span> <span class="pre">&quot;seed</span> <span class="pre">ID&quot;)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.AUTO,</span> <span class="pre">&quot;parent</span> <span class="pre">url&quot;)</span></code></p></li>
 </ul>
 </dd>
-<dt>If the source is attached to a Seed, possible values are:</dt>
-<dd><ul class="first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.UNKNOWN,</span> <span class="pre">None)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.USER,</span> <span class="pre">&quot;user</span> <span class="pre">ID&quot;)</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">(SourceType.AUTO,</span> <span class="pre">None)</span></code></li>
+<dt>If the source is attached to a Seed, possible values are:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.UNKNOWN,</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.USER,</span> <span class="pre">&quot;user</span> <span class="pre">ID&quot;)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(SourceType.AUTO,</span> <span class="pre">None)</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -198,19 +197,16 @@ can also add seeds manually to the collection using the Frontend (see <code clas
 <dt id="swisstext.mongo.abstract.seeds.AbstractMongoSeed">
 <em class="property">class </em><code class="descclassname">swisstext.mongo.abstract.seeds.</code><code class="descname">AbstractMongoSeed</code><span class="sig-paren">(</span><em>*args</em>, <em>**values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a seed, stored in the <code class="docutils literal notranslate"><span class="pre">seeds</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a seed, stored in the <code class="docutils literal notranslate"><span class="pre">seeds</span></code> collection.</p>
 <dl class="method">
 <dt id="swisstext.mongo.abstract.seeds.AbstractMongoSeed.add_search_history">
 <code class="descname">add_search_history</code><span class="sig-paren">(</span><em>new_links_count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed.add_search_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.add_search_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a search history entry. This should be call after each usage of the seed.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_links_count</strong> – the number of new URLs found.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_links_count</strong> – the number of new URLs found.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -226,18 +222,14 @@ quality of a URL, one need to actually crawl it.</p>
 <em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><em>seed</em>, <em>source=&lt;Source: Source object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a seed. <em>Warning</em>: this <strong>won’t save</strong> the document automatically.
 You need to call the <code class="docutils literal notranslate"><span class="pre">.save</span></code> method to persist it into the database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>seed</strong> – the seed</li>
-<li><strong>source</strong> – the source of the seed, default to <code class="docutils literal notranslate"><span class="pre">SourceType.UNKNOWN</span></code></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the seed</p></li>
+<li><p><strong>source</strong> – the source of the seed, default to <code class="docutils literal notranslate"><span class="pre">SourceType.UNKNOWN</span></code></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -266,14 +258,11 @@ to get deleted seeds:</p>
 <dt id="swisstext.mongo.abstract.seeds.AbstractMongoSeed.exists">
 <em class="property">classmethod </em><code class="descname">exists</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if a seed already exists.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> – the seed</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – the seed</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="classmethod">
@@ -282,20 +271,18 @@ to get deleted seeds:</p>
 <dd><p>Find similar seeds. Currently, this method is quite <em>dumb</em>: it will search for seeds containing one or
 more words present in <cite>seed</cite> using regex.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">the actual regex for a seed like <em>hello world</em> will use the regex <code class="docutils literal notranslate"><span class="pre">(hello)|(world)</span></code>, so
+<p class="admonition-title">Note</p>
+<p>the actual regex for a seed like <em>hello world</em> will use the regex <code class="docutils literal notranslate"><span class="pre">(hello)|(world)</span></code>, so
 a seed like <em>worldnews</em> may also be included in the results.</p>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>seed</strong> – the seed to search for</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.BaseQuery</span></code> object for other seeds containing similar words.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> – the seed to search for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.BaseQuery</span></code> object for other seeds containing similar words.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="classmethod">
@@ -309,8 +296,8 @@ a seed like <em>worldnews</em> may also be included in the results.</p>
 <code class="descname">id</code><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>The seed itself is used as an primary key to avoid duplicates.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">only true duplicates are detected, so ensure the seed is lowercase and trimed before insert.</p>
+<p class="admonition-title">Note</p>
+<p>only true duplicates are detected, so ensure the seed is lowercase and trimed before insert.</p>
 </div>
 </dd></dl>
 
@@ -318,19 +305,15 @@ a seed like <em>worldnews</em> may also be included in the results.</p>
 <dt id="swisstext.mongo.abstract.seeds.AbstractMongoSeed.mark_deleted">
 <em class="property">classmethod </em><code class="descname">mark_deleted</code><span class="sig-paren">(</span><em>obj</em>, <em>uuid</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed.mark_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.mark_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark one or multiple seeds as deleted.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> – either a seed ID (i.e. a string), a <code class="docutils literal notranslate"><span class="pre">MongoSeed</span></code> instance or a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of seeds.</li>
-<li><strong>uuid</strong> – the ID of the user deleting the seed.</li>
-<li><strong>comment</strong> – an optional comment</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – either a seed ID (i.e. a string), a <code class="docutils literal notranslate"><span class="pre">MongoSeed</span></code> instance or a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of seeds.</p></li>
+<li><p><strong>uuid</strong> – the ID of the user deleting the seed.</p></li>
+<li><p><strong>comment</strong> – an optional comment</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -345,8 +328,8 @@ search history <code class="docutils literal notranslate"><span class="pre">coun
 <code class="descname">source</code><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Source of the seed. Possible values are:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">SourceType.AUTO</span></code> or <code class="docutils literal notranslate"><span class="pre">SourceType.UNKNOWN</span></code>: no extra required,</li>
-<li><code class="docutils literal notranslate"><span class="pre">SourceType.USER</span></code>: the extra is the id of the user.</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SourceType.AUTO</span></code> or <code class="docutils literal notranslate"><span class="pre">SourceType.UNKNOWN</span></code>: no extra required,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SourceType.USER</span></code>: the extra is the id of the user.</p></li>
 </ul>
 </dd></dl>
 
@@ -357,14 +340,11 @@ search history <code class="docutils literal notranslate"><span class="pre">coun
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">db</span><span class="p">.</span><span class="nx">seeds</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">_id</span><span class="o">:</span> <span class="s2">&quot;the seed&quot;</span><span class="p">},</span> <span class="p">{</span><span class="nx">$unset</span><span class="o">:</span> <span class="p">{</span><span class="nx">deleted_by</span><span class="o">:</span><span class="mi">1</span><span class="p">}})</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – either a seed ID (i.e. a string), a <code class="docutils literal notranslate"><span class="pre">MongoSeed</span></code> instance or a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of seeds.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – either a seed ID (i.e. a string), a <code class="docutils literal notranslate"><span class="pre">MongoSeed</span></code> instance or a <code class="docutils literal notranslate"><span class="pre">QuerySet</span></code> of seeds.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -377,15 +357,15 @@ search history <code class="docutils literal notranslate"><span class="pre">coun
 Once a sentence is added to the collection, it is never deleted, except if the URL it comes from is blacklisted.</p>
 <p>Using the SwissText Frontend (see <code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.frontend</span></code>), users can:</p>
 <ul class="simple">
-<li>validate the sentence: i.e. mark it as actually Swiss German,</li>
-<li>label the sentence: assign a dialect (see <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo" title="swisstext.mongo.abstract.sentences.DialectInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DialectInfo</span></code></a>) to it,</li>
-<li>delete a sentence: this will just add a deleted flag, not actually remove the sentence from the collection.</li>
+<li><p>validate the sentence: i.e. mark it as actually Swiss German,</p></li>
+<li><p>label the sentence: assign a dialect (see <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo" title="swisstext.mongo.abstract.sentences.DialectInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DialectInfo</span></code></a>) to it,</p></li>
+<li><p>delete a sentence: this will just add a deleted flag, not actually remove the sentence from the collection.</p></li>
 </ul>
 <dl class="class">
 <dt id="swisstext.mongo.abstract.sentences.AbstractMongoSentence">
 <em class="property">class </em><code class="descclassname">swisstext.mongo.abstract.sentences.</code><code class="descname">AbstractMongoSentence</code><span class="sig-paren">(</span><em>*args</em>, <em>**values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#AbstractMongoSentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a sentence, stored in the <code class="docutils literal notranslate"><span class="pre">sentence</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a sentence, stored in the <code class="docutils literal notranslate"><span class="pre">sentence</span></code> collection.</p>
 <p>To avoid duplicates, the primary key is a hash derived from the text. We currently use
 <a class="reference external" href="https://opensource.googleblog.com/2011/04/introducing-cityhash.html">CityHash64</a>, a hashing function
 especially made for hashtables instead of cryptography. Note that the hash is case-sensitive and that
@@ -396,19 +376,15 @@ There is also no guarantee that there won’t be clashes.</p>
 <em class="property">classmethod </em><code class="descname">add_label</code><span class="sig-paren">(</span><em>obj</em>, <em>uuid</em>, <em>label</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#AbstractMongoSentence.add_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence.add_label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a dialect label. This method first ensures that the <a class="reference internal" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence.dialect" title="swisstext.mongo.abstract.sentences.AbstractMongoSentence.dialect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">dialect</span></code></a> attribute is not null, then
 forwards the call to <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.add_label" title="swisstext.mongo.abstract.sentences.DialectInfo.add_label"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DialectInfo.add_label()</span></code></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</li>
-<li><strong>uuid</strong> – the ID of the user labelling the sentence.</li>
-<li><strong>label</strong> – the label (see <a class="reference internal" href="#swisstext.mongo.abstract.generic.Dialects" title="swisstext.mongo.abstract.generic.Dialects"><code class="xref py py-const docutils literal notranslate"><span class="pre">Dialects</span></code></a>)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</p></li>
+<li><p><strong>uuid</strong> – the ID of the user labelling the sentence.</p></li>
+<li><p><strong>label</strong> – the label (see <a class="reference internal" href="#swisstext.mongo.abstract.generic.Dialects" title="swisstext.mongo.abstract.generic.Dialects"><code class="xref py py-const docutils literal notranslate"><span class="pre">Dialects</span></code></a>)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -466,37 +442,29 @@ Note that this field can be absent (never labelled by anyone) or its label empty
 <dt id="swisstext.mongo.abstract.sentences.AbstractMongoSentence.mark_deleted">
 <em class="property">classmethod </em><code class="descname">mark_deleted</code><span class="sig-paren">(</span><em>obj</em>, <em>uuid</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#AbstractMongoSentence.mark_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence.mark_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark a sentence as deleted.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</li>
-<li><strong>uuid</strong> – the ID of the user deleting the sentence.</li>
-<li><strong>comment</strong> – an optional comment.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</p></li>
+<li><p><strong>uuid</strong> – the ID of the user deleting the sentence.</p></li>
+<li><p><strong>comment</strong> – an optional comment.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="swisstext.mongo.abstract.sentences.AbstractMongoSentence.remove_label">
 <em class="property">classmethod </em><code class="descname">remove_label</code><span class="sig-paren">(</span><em>obj</em>, <em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#AbstractMongoSentence.remove_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence.remove_label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a label added by a user. This method just forwards the call to <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.add_label" title="swisstext.mongo.abstract.sentences.DialectInfo.add_label"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DialectInfo.add_label()</span></code></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</li>
-<li><strong>uuid</strong> – the ID of the user for which to remove the label.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</p></li>
+<li><p><strong>uuid</strong> – the ID of the user for which to remove the label.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -509,14 +477,11 @@ Note that this field can be absent (never labelled by anyone) or its label empty
 <dt id="swisstext.mongo.abstract.sentences.AbstractMongoSentence.unmark_deleted">
 <em class="property">classmethod </em><code class="descname">unmark_deleted</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#AbstractMongoSentence.unmark_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence.unmark_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore a deleted sentence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – either the ID of a sentence (a string) or an actual sentence.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -562,7 +527,7 @@ Note that this field can be absent (never labelled by anyone) or its label empty
 <dt id="swisstext.mongo.abstract.sentences.DialectInfo">
 <em class="property">class </em><code class="descclassname">swisstext.mongo.abstract.sentences.</code><code class="descname">DialectInfo</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#DialectInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.DialectInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.EmbeddedDocument</span></code></p>
-<p>A <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.EmbeddedDocument" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.EmbeddedDocument</span></code></a> that Encapsulates all the dialect-tagging information for a sentence.</p>
+<p>A <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.EmbeddedDocument" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.EmbeddedDocument</span></code></a> that Encapsulates all the dialect-tagging information for a sentence.</p>
 <p>Usually, a sentence will be presented to a given user only once. If the user knows the dialect, an
 entry in <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.labels" title="swisstext.mongo.abstract.sentences.DialectInfo.labels"><code class="xref py py-attr docutils literal notranslate"><span class="pre">labels</span></code></a> is added. If the user doesn’t know, his ID is added to <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.skipped_by" title="swisstext.mongo.abstract.sentences.DialectInfo.skipped_by"><code class="xref py py-attr docutils literal notranslate"><span class="pre">skipped_by</span></code></a>.
 Thus, a user ID should be present <em>at most</em> in one of the two lists.</p>
@@ -570,16 +535,16 @@ Thus, a user ID should be present <em>at most</em> in one of the two lists.</p>
 two statistics can be used: <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.count" title="swisstext.mongo.abstract.sentences.DialectInfo.count"><code class="xref py py-attr docutils literal notranslate"><span class="pre">count</span></code></a> is the total number of users having voted for the label,
 while <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.confidence" title="swisstext.mongo.abstract.sentences.DialectInfo.confidence"><code class="xref py py-attr docutils literal notranslate"><span class="pre">confidence</span></code></a> is the ratio between the number of votes for this label and the total number of votes.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
 <p>Most of the methods here call <code class="xref py py-meth docutils literal notranslate"><span class="pre">mongoengine.EmbeddedDocument.save()</span></code> under the hood, thus persisting
 the changes automatically to the DB.</p>
 <p>This usually works fine, but this means you CAN NOT manipulate a
-<code class="docutils literal notranslate"><span class="pre">DialectInfo</span></code> instance if it is not attached to a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a>.</p>
+<code class="docutils literal notranslate"><span class="pre">DialectInfo</span></code> instance if it is not attached to a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a>.</p>
 <p>Moreover, you can sometimes run into a
 ‘<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ReferenceError" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferenceError</span></code></a>: <em>weakly-referenced object no longer exists’</em>
 (only when using Flask-Mongoengine ?). If this is the case, ensure that you have a strong reference to the
 parent document in your code. Here is an example:</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># let&#39;s say MongoSentence implements AbstractMongoSentence</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># let&#39;s say MongoSentence implements AbstractMongoSentence</span>
 <span class="c1"># This can raise a ReferenceException:</span>
 <span class="n">MongoSentence</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">with_id</span><span class="p">(</span><span class="n">sid</span><span class="p">)</span><span class="o">.</span><span class="n">dialect</span><span class="o">.</span><span class="n">add_label</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
 <span class="c1"># while this is fine:</span>
@@ -594,21 +559,17 @@ parent document in your code. Here is an example:</p>
 <dd><p>Add a label and save the document. Note the following two special cases:
 1. the user has already voted: the old vote will be deleted / replaced
 2. the user has previously skipped the sentence: the user ID will be removed from <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.skipped_by" title="swisstext.mongo.abstract.sentences.DialectInfo.skipped_by"><code class="xref py py-attr docutils literal notranslate"><span class="pre">skipped_by</span></code></a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>uuid</strong> – the user ID</li>
-<li><strong>label</strong> – the label</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uuid</strong> – the user ID</p></li>
+<li><p><strong>label</strong> – the label</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">self</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -627,16 +588,14 @@ parent document in your code. Here is an example:</p>
 <dt id="swisstext.mongo.abstract.sentences.DialectInfo.get_label_by">
 <code class="descname">get_label_by</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#DialectInfo.get_label_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.DialectInfo.get_label_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the label given by a user.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uuid</strong> – the user ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the label as a string, or None if the user hasn’t labelled the sentence.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uuid</strong> – the user ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the label as a string, or None if the user hasn’t labelled the sentence.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -658,16 +617,14 @@ is important.</p>
 <code class="descname">remove_label</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#DialectInfo.remove_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.DialectInfo.remove_label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the label from a user and save the change to MongoDb.
 Note that it does nothing if the user didn’t vote.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uuid</strong> – the user ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uuid</strong> – the user ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -675,16 +632,14 @@ Note that it does nothing if the user didn’t vote.</p>
 <code class="descname">skip</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#DialectInfo.skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.DialectInfo.skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the user to the <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.skipped_by" title="swisstext.mongo.abstract.sentences.DialectInfo.skipped_by"><code class="xref py py-attr docutils literal notranslate"><span class="pre">skipped_by</span></code></a> list. Note that if the user already voted, his vote will be removed
 from <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.labels" title="swisstext.mongo.abstract.sentences.DialectInfo.labels"><code class="xref py py-attr docutils literal notranslate"><span class="pre">labels</span></code></a> to ensure consistency.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uuid</strong> – the user ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uuid</strong> – the user ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -697,16 +652,14 @@ from <a class="reference internal" href="#swisstext.mongo.abstract.sentences.Dia
 <dt id="swisstext.mongo.abstract.sentences.DialectInfo.unskip">
 <code class="descname">unskip</code><span class="sig-paren">(</span><em>uuid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/sentences.html#DialectInfo.unskip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.DialectInfo.unskip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a user from the <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.skipped_by" title="swisstext.mongo.abstract.sentences.DialectInfo.skipped_by"><code class="xref py py-attr docutils literal notranslate"><span class="pre">skipped_by</span></code></a> list.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uuid</strong> – the user ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uuid</strong> – the user ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -718,8 +671,8 @@ from <a class="reference internal" href="#swisstext.mongo.abstract.sentences.Dia
 <p>All visited URLs must be recorded in some way in the database, at least to avoid recawling over and over the same
 links. Thus, URLs are splitted into two collections:</p>
 <ul class="simple">
-<li><cite>urls</cite>: stores <em>interesting</em> URLs that could/should be crawled again,</li>
-<li><cite>blacklist</cite>: stores URLs that should never by visited again.</li>
+<li><p><cite>urls</cite>: stores <em>interesting</em> URLs that could/should be crawled again,</p></li>
+<li><p><cite>blacklist</cite>: stores URLs that should never by visited again.</p></li>
 </ul>
 <p>At the time of writing, <a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping" title="swisstext.cmd.scraping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.scraping</span></code></a> defines interesting URLs as URLs with at least one
 Swiss German sentence.</p>
@@ -729,7 +682,7 @@ updated or moved to the <cite>blacklist</cite> after the first visit.</p>
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoBlacklist">
 <em class="property">class </em><code class="descclassname">swisstext.mongo.abstract.urls.</code><code class="descname">AbstractMongoBlacklist</code><span class="sig-paren">(</span><em>*args</em>, <em>**values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/urls.html#AbstractMongoBlacklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoBlacklist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>uninteresting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">blacklist</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>uninteresting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">blacklist</span></code> collection.</p>
 <dl class="classmethod">
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoBlacklist.add_url">
 <em class="property">classmethod </em><code class="descname">add_url</code><span class="sig-paren">(</span><em>url: str</em>, <em>source: swisstext.mongo.abstract.generic.Source = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/urls.html#AbstractMongoBlacklist.add_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoBlacklist.add_url" title="Permalink to this definition">¶</a></dt>
@@ -766,22 +719,20 @@ updated or moved to the <cite>blacklist</cite> after the first visit.</p>
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL">
 <em class="property">class </em><code class="descclassname">swisstext.mongo.abstract.urls.</code><code class="descname">AbstractMongoURL</code><span class="sig-paren">(</span><em>*args</em>, <em>**values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>interesting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">urls</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>interesting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">urls</span></code> collection.</p>
 <dl class="method">
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history">
 <code class="descname">add_crawl_history</code><span class="sig-paren">(</span><em>new_sg_count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL.add_crawl_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a crawl history entry. Note that this will update the document instance,
-but won’t persist the change to mongo. You need to call <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document.save" title="(in MongoEngine v0.15.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mongoengine.Document.save()</span></code></a> yourself.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_sg_count</strong> – the number of new sentences found on this crawl.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
-</tr>
-</tbody>
-</table>
+but won’t persist the change to mongo. You need to call <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document.save" title="(in MongoEngine v0.16.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mongoengine.Document.save()</span></code></a> yourself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_sg_count</strong> – the number of new sentences found on this crawl.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -839,7 +790,7 @@ You need to call the <code class="docutils literal notranslate"><span class="pre
 <dl class="classmethod">
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled">
 <em class="property">classmethod </em><code class="descname">get_never_crawled</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; mongoengine.queryset.queryset.QuerySet<a class="reference internal" href="_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL.get_never_crawled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.queryset.QuerySet" title="(in MongoEngine v0.15.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuerySet</span></code></a> of URLs that have never been visited.</p>
+<dd><p>Get a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.queryset.QuerySet" title="(in MongoEngine v0.16.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuerySet</span></code></a> of URLs that have never been visited.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -876,21 +827,17 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
 <dt id="swisstext.mongo.abstract.users.AbstractMongoUser.get">
 <em class="property">classmethod </em><code class="descname">get</code><span class="sig-paren">(</span><em>uuid: str</em>, <em>password: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/mongo/abstract/users.html#AbstractMongoUser.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.users.AbstractMongoUser.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a user. If password is specified, it is checked against the one in the database (login).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>uuid</strong> – the username / ID</li>
-<li><strong>password</strong> – the clear password</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uuid</strong> – the username / ID</p></li>
+<li><p><strong>password</strong> – the clear password</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">either a user instance or None if the uuid does not exist or the password was specified and incorrect.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>either a user instance or None if the uuid does not exist or the password was specified and incorrect.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -954,7 +901,7 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">MongoDB Collections definitions</a><ul>
 <li><a class="reference internal" href="#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
@@ -985,8 +932,6 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -1017,7 +962,7 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

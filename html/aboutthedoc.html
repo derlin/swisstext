@@ -1,22 +1,23 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>About this documentation &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="TODOs" href="todos.html" />
+    <link rel="next" title="Sentence Filtering" href="ideas.html" />
     <link rel="prev" title="Command line searching tools" href="swisstext.cmd.searching.tools.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -29,7 +30,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="todos.html" title="TODOs"
+          <a href="ideas.html" title="Sentence Filtering"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="swisstext.cmd.searching.tools.html" title="Command line searching tools"
@@ -57,14 +58,18 @@ sphinx-apidoc -f -M -o . ../mongo
 </div>
 <p>This was really just for bootstrap, don’t use it now as it will
 override all the documentation…</p>
-<p>Finally, to update the documentation, simply run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> at the root of the docs folder.</p>
+<p>To <strong>update the documentation</strong>, simply run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> at the root of the docs folder.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case the autodoc complains about not finding modules (e.g. <code class="docutils literal notranslate"><span class="pre">mongoengine</span></code>), it might be because you are not using the sphinx tool from the current virtualenv.</p>
+<p><a class="reference external" href="https://stackoverflow.com/a/11382587">Fix</a>: run <code class="docutils literal notranslate"><span class="pre">vim</span> <span class="pre">$(which</span> <span class="pre">sphinx)</span></code> and change the shebang (i.e. first line of the file) to <code class="docutils literal notranslate"><span class="pre">#!/usr/bin/env</span> <span class="pre">python</span></code>.</p>
+</div>
 <div class="section" id="deploying-on-github-pages">
 <h2>Deploying on github-pages<a class="headerlink" href="#deploying-on-github-pages" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch contains the content of the <code class="docutils literal notranslate"><span class="pre">_build</span></code> directory. For the whole things to work:</p>
 <ul>
-<li><p class="first">add a <cite>.nojekyll</cite> file at the root, so the folders beginning with an underscore will be deployed,</p>
-</li>
-<li><p class="first">add the following <code class="docutils literal notranslate"><span class="pre">index.html</span></code> at the root, to redirect to the <code class="docutils literal notranslate"><span class="pre">html</span></code> folder:</p>
+<li><p>add a <cite>.nojekyll</cite> file at the root, so the folders beginning with an underscore will be deployed,</p></li>
+<li><p>add the following <code class="docutils literal notranslate"><span class="pre">index.html</span></code> at the root, to redirect to the <code class="docutils literal notranslate"><span class="pre">html</span></code> folder:</p>
 <blockquote>
 <div><div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
     <span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -78,9 +83,9 @@ override all the documentation…</p>
 </ul>
 <p>Then, just push/deploy the above two files and the content of the html folder. that’s it.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p>Since the _build folder is ignored, it is possible to clone the <em>gh-pages</em> branch inside the _build folder:</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> docs/_build
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> docs/_build
 git clone --single-branch -b gh-pages git@github.com:derlin/swisstext.git .
 </pre></div>
 </div>
@@ -94,7 +99,7 @@ git clone --single-branch -b gh-pages git@github.com:derlin/swisstext.git .
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">About this documentation</a><ul>
 <li><a class="reference internal" href="#deploying-on-github-pages">Deploying on github-pages</a></li>
@@ -106,8 +111,8 @@ git clone --single-branch -b gh-pages git@github.com:derlin/swisstext.git .
   <p class="topless"><a href="swisstext.cmd.searching.tools.html"
                         title="previous chapter">Command line searching tools</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="todos.html"
-                        title="next chapter">TODOs</a></p>
+  <p class="topless"><a href="ideas.html"
+                        title="next chapter">Sentence Filtering</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -121,8 +126,6 @@ git clone --single-branch -b gh-pages git@github.com:derlin/swisstext.git .
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -141,7 +144,7 @@ git clone --single-branch -b gh-pages git@github.com:derlin/swisstext.git .
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="todos.html" title="TODOs"
+          <a href="ideas.html" title="Sentence Filtering"
              >next</a> |</li>
         <li class="right" >
           <a href="swisstext.cmd.searching.tools.html" title="Command line searching tools"
@@ -151,7 +154,7 @@ git clone --single-branch -b gh-pages git@github.com:derlin/swisstext.git .
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>

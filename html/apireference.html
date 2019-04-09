@@ -1,19 +1,20 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>API Reference &#8212; SwissText  documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="MongoEngine - MongoDB package" href="swisstext.mongo.html" />
@@ -47,17 +48,16 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference internal" href="swisstext.html#module-swisstext" title="swisstext"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext</span></code></a> namespace contains the following:</p>
 <ul class="simple">
-<li>Package <a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mongo</span></code></a>: abstract definitions of the MongoDB structure</li>
-<li><dl class="first docutils">
-<dt>Package <a class="reference internal" href="swisstext.cmd.html#module-swisstext.cmd" title="swisstext.cmd"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cmd</span></code></a>:  impementation of two distinct commandline tools:</dt>
-<dd><ul class="first last">
-<li><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching" title="swisstext.cmd.searching"><code class="xref py py-mod docutils literal notranslate"><span class="pre">searching</span></code></a>: discover new URLs from seeds using a Search Engine,</li>
-<li><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping" title="swisstext.cmd.scraping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scraping</span></code></a>: scrape the web and discover new Swiss German sentences.</li>
+<li><p>Package <a class="reference internal" href="swisstext.mongo.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mongo</span></code></a>: abstract definitions of the MongoDB structure</p></li>
+<li><dl class="simple">
+<dt>Package <a class="reference internal" href="swisstext.cmd.html#module-swisstext.cmd" title="swisstext.cmd"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cmd</span></code></a>:  impementation of two distinct commandline tools:</dt><dd><ul>
+<li><p><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching" title="swisstext.cmd.searching"><code class="xref py py-mod docutils literal notranslate"><span class="pre">searching</span></code></a>: discover new URLs from seeds using a Search Engine,</p></li>
+<li><p><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping" title="swisstext.cmd.scraping"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scraping</span></code></a>: scrape the web and discover new Swiss German sentences.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li>Package <code class="docutils literal notranslate"><span class="pre">frontend</span></code>: a Flask application for visualisation and labelling</li>
+<li><p>Package <code class="docutils literal notranslate"><span class="pre">frontend</span></code>: a Flask application for visualisation and labelling</p></li>
 </ul>
 <div class="section" id="mongodb-persistence">
 <h2>MongoDB persistence<a class="headerlink" href="#mongodb-persistence" title="Permalink to this headline">¶</a></h2>
@@ -167,7 +167,7 @@ new URLs to scrape.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">API Reference</a><ul>
 <li><a class="reference internal" href="#mongodb-persistence">MongoDB persistence</a></li>
@@ -197,8 +197,6 @@ new URLs to scrape.</p>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -227,7 +225,7 @@ new URLs to scrape.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>
