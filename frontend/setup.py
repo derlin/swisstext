@@ -29,12 +29,12 @@ setuptools.setup(
     ),
 
     install_requires=[
-        'Flask==1.0.2',
-        'swisstext-mongo==0.0.1',
-        'Bootstrap-Flask==1.0.4',
-        'Flask-WTF==0.14.2',
-        'Flask-Login==0.4.1',
-        'flask-mongoengine==0.9.5',
-        'cityhash==0.2.3.post9'
+        'Flask>=1.0.2',
+        'swisstext-mongo',
+        'Bootstrap-Flask>=1.0.4',
+        'Flask-WTF>=0.14.2',
+        'Flask-Login>=0.4.1',
+        'flask-mongoengine>=0.9.5',
+        'cityhash>=0.2.3.post9'
     ]
 )
