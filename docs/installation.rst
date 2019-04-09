@@ -47,3 +47,11 @@ This are the steps to install the system in Ubuntu 18.04:
     cd ..
 
 Once all that is setup, you should have the commands `st_scrape`, `st_search` and `st_frontend` available.
+
+Installation on MacOS
+----------------------
+
+The same intallation steps should work on Mac. Common troubles include:
+
+- error installing ``sklearn``: in this case, try using python 3.6
+- error installing ``CityHash``: I personnally got troubles with GCC not able to find the header ``<utility>``... I found the answer `here <https://stackoverflow.com/a/33988190>`_. Hence, the solution is to export ``MACOSX_DEPLOYMENT_TARGET=10.9`` before running ``setup.py``.
