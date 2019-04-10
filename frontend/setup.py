@@ -11,7 +11,7 @@ setuptools.setup(
     author_email="lucy.derlin@gmail.com",
     description="SwissText Frontend: Swiss German Corpus Generator",
     long_description="TODO",
-    url="https://gitlab.com/LucyLinder/swisstext-st1-frontend",
+    url="https://github.com/derlin/swisstext",
 
     packages=setuptools.find_packages(),
     include_package_data=True,

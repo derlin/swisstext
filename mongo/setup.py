@@ -13,7 +13,7 @@ setuptools.setup(
     description="SwissText common MongoEngine schemas",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitlab.com/LucyLinder/swisstext-st1",
+    url="https://github.com/derlin/swisstext",
 
     packages=setuptools.find_packages(),
 

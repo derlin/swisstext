@@ -12,7 +12,7 @@ setuptools.setup(
     description="SwissText: Swiss German Corpus Generator",
     license='Apache License 2.0',
     long_description="TODO",
-    url="https://gitlab.com/LucyLinder/swisstext-st1",
+    url="https://github.com/derlin/swisstext",
 
     packages=setuptools.find_packages(),
     package_data={'': ['*.yaml', '*.pickle']},  # include yaml and pickle from any module
