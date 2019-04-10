@@ -83,7 +83,7 @@ class PipelineWorker():
     """
     Pipeline workers actually do the magic and can be run in parallel.
     """
-    def __init__(self, id=0):
+    def __init__(self, id=-1):
         self.id = id
         """an identifier used in log messages, especially useful if multiple threads are used."""
         self.kill_received = False
@@ -92,6 +92,10 @@ class PipelineWorker():
         Workers will always finish processing the current page before exiting, so that we can ensure
         coherence in the persistence layer.
         """
+
+    def _crawl_page(self, crawler: ICrawler, page: Page):
+        """ Override in case we need page information to crawl """
+        return crawler.crawl(page.url)
 
     def run(self, queue: Queue, p: Pipeline, new_sentences: List[str], max_depth=1):
         """
@@ -112,6 +116,10 @@ class PipelineWorker():
 
         * when the queue is empty or
         * if the :py:attr:`kill_received` is set to true. In this case, it finishes processing the current task and exit
+
+        .. warning::
+
+            It is your responsibility to ensure that the URLs in the queue are not blacklisted.
 
         .. todo::
 
@@ -146,7 +154,7 @@ class PipelineWorker():
 
             if p.decider.should_page_be_crawled(page):
                 try:
-                    page.crawl_results = p.crawler.crawl(page.url)
+                    page.crawl_results = self._crawl_page(p.crawler, page)
                     splitted: List[str] = p.splitter.split(page.crawl_results.text)
                     sentences: List[str] = p.filter.filter(splitted)
 
@@ -191,4 +199,5 @@ class PipelineWorker():
 
             queue.task_done()
 
-        logger.info(f"W[{self.id}]: my job is done.")
+        if self.id >= 0:
+            logger.info(f"W[{self.id}]: my job is done.")
