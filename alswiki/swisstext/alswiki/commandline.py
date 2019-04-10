@@ -19,7 +19,7 @@ logger_default_level = "info"
 
 # ============== main entrypoint
 
-@click.group()
+@click.group(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
 def cli(log_level):

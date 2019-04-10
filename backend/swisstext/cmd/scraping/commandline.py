@@ -30,21 +30,42 @@ from .pipeline import PipelineWorker, Pipeline
 logger = logging.getLogger('swisstext.cmd.scraper')
 logger_default_level = "info"
 
-# Those variables will be populated automatically in the cli method, which is
-# called previous to any other click command
-config: Config = None
-pipeline: Pipeline
-queue: Queue
+
+class GlobalOptions:
+
+    def __init__(self, config_path: str = None, gen_seeds=False, db: str = None):
+        self.gen_seeds = gen_seeds
+
+        self._config_path = config_path
+        self._config: Config = None
+        self._db = db
+        self._pipeline: Pipeline = None
+
+        self.queue = PageQueue()
+
+    @property
+    def config(self) -> Config:
+        if self._config is None:
+            self._config = Config() if self._config_path is None else Config(self._config_path)
+            if self._db: self._config.set('saver_options.db', self._db)
+        return self._config
+
+    @property
+    def pipeline(self) -> Pipeline:
+        if self._pipeline is None:
+            self._pipeline = self.config.create_pipeline()
+        return self._pipeline
 
 
 # ============== main entrypoint
 
-@click.group()
+@click.group(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
 @click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
 @click.option('-d', '--db', default=None, help='If set, this will override the database set in the config')
-def cli(log_level, config_path, db):
+@click.pass_context
+def cli(ctx, log_level, config_path, db):
     import sys
     # configure all loggers (log to stderr)
     logging.basicConfig(
@@ -58,20 +79,17 @@ def cli(log_level, config_path, db):
     logging.getLogger('swisstext.cmd.scraping.tools.pattern_sentence_filter').setLevel(level=logging.WARNING)
 
     # instantiate configuration and global variables
-    global config, queue, pipeline, gen_seeds
-    config = Config() if config_path is None else Config(config_path)
-    if db: config.set('saver_options.db', db)
-    pipeline = config.create_pipeline()
-    queue = PageQueue()
+    ctx.obj = GlobalOptions(config_path, gen_seeds, db)
 
 
 # ============== available commands
 
 @cli.command('dump_config')
-def dump_config():
+@click.pass_obj
+def dump_config(ctx):
     """Prints the active configuration."""
     import pyaml
-    print(pyaml.dump(config.conf))
+    print(pyaml.dump(ctx.config.conf))
 
 
 @cli.command('gen_seeds')
@@ -79,7 +97,8 @@ def dump_config():
 @click.option('-n', '--num', type=int, default=5, help="Number of seeds to generate.")
 @click.option('--new/--any', default=False, help="Use the newest sentences")
 @click.option('-c', '--confirm', is_flag=True, default=False, help="Ask for confirmation before saving.")
-def gen_seeds(num_sentences, num, new, confirm):
+@click.pass_obj
+def gen_seeds(ctx, num_sentences, num, new, confirm):
     """
     Generate seeds from a sample of mongo sentences.
 
@@ -93,7 +112,7 @@ def gen_seeds(num_sentences, num, new, confirm):
     (default: localhost:27017, db=swisstext).
     """
     from swisstext.mongo.models import MongoSentence, get_connection
-    with get_connection(**config.get('saver_options')):
+    with get_connection(**ctx.config.get('saver_options')):
         if new:
             # simply order sentences by date_added, descending
             sentences = [s.text for s in MongoSentence.objects \
@@ -108,19 +127,20 @@ def gen_seeds(num_sentences, num, new, confirm):
             ]
             sentences = [s['text'] for s in MongoSentence.objects.aggregate(*aggregation_pipeline)]
 
-    seeds = pipeline.seeder.generate_seeds(sentences, max=num)
+    seeds = ctx.pipeline.seeder.generate_seeds(sentences, max=num)
     if confirm:
         for seed in seeds:
             if click.confirm(seed):
-                pipeline.saver.save_seed(seed)
+                ctx.pipeline.saver.save_seed(seed)
     else:
-        pipeline.saver.save_seeds(seeds)
+        ctx.pipeline.saver.save_seeds(seeds)
 
 
 @cli.command('from_mongo')
 @click.option('-n', '--num-urls', type=int, default=20, help="Max URLs crawled in one pass.")
 @click.option('--new/--any', default=False, help="Only crawl new URLs")
-def crawl_mongo(num_urls, new):
+@click.pass_obj
+def crawl_mongo(ctx, num_urls, new):
     """
     Scrape using mongo URLs as base.
 
@@ -136,11 +156,11 @@ def crawl_mongo(num_urls, new):
     (default: localhost:27017, db=swisstext).
     """
     from swisstext.mongo.models import MongoURL, get_connection
-    with get_connection(**config.get('saver_options')):
+    with get_connection(**ctx.config.get('saver_options')):
         if new:
             # just get the URLs never visited
             for u in MongoURL.get_never_crawled().fields(id=True).limit(num_urls):
-                enqueue(u.id)
+                enqueue(ctx, u.id)
         else:
             # order URLs by number of visits (ascending) and last visited date (ascending)
             aggregation_pipeline = [
@@ -152,15 +172,16 @@ def crawl_mongo(num_urls, new):
                 {"$limit": num_urls}
             ]
             for u in MongoURL.objects.aggregate(*aggregation_pipeline):
-                enqueue(u['_id'])
+                enqueue(ctx, u['_id'])
 
-    logger.info("Enqueued %d URLs from Mongo" % queue.unfinished_tasks)
-    _scrape()
+    logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
+    _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 
 @cli.command('from_file')
 @click.argument('urlfile', type=click.File('r'))
-def crawl_from_file(urlfile):
+@click.pass_obj
+def crawl_from_file(ctx, urlfile):
     """
     Scrape using URLs in a file as base.
 
@@ -168,18 +189,18 @@ def crawl_from_file(urlfile):
     The file should have one URL per line. Any line starting with something other that "http" will be ignored.
     """
     for u in urlfile:
-        if u.startswith("http") and not pipeline.saver.is_url_blacklisted(u):
-            enqueue(u.strip())
-    _scrape()
+        if u.startswith("http") and not ctx.pipeline.saver.is_url_blacklisted(u):
+            enqueue(ctx, u.strip())
+    _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 
 # ============== main methods
 
-def enqueue(url):
-    queue.put((pipeline.saver.get_page(url), 1))  # set depth to 1
+def enqueue(ctx, url):
+    ctx.queue.put((ctx.pipeline.saver.get_page(url), 1))  # set depth to 1
 
 
-def _scrape():
+def _scrape(config, queue, pipeline, worker_cls=PipelineWorker):
     # do the magic
 
     import time
@@ -197,7 +218,7 @@ def _scrape():
         # use multiple threads
         threads = []
         for i in range(min(NUM_WORKERS, queue.unfinished_tasks)):
-            worker = PipelineWorker(i)
+            worker = worker_cls(i)
             t = threading.Thread(target=worker.run, args=args)
             t.start()
             threads.append((worker, t))
@@ -220,7 +241,7 @@ def _scrape():
     else:
         # TODO: also make the pipeline finish smoothly on ctrl+c ??
         # only one worker -> don't bother with threads
-        worker = PipelineWorker()
+        worker = worker_cls()
         worker.run(*args)
 
     logger.info("Found %d new sentences." % len(new_sentences))

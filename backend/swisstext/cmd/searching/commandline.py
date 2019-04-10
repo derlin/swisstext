@@ -24,20 +24,38 @@ from .data import Seed
 logger = logging.getLogger('swisstext.searching')
 logger_default_level = "info"
 
-# Those variables will be populated automatically in the cli method, which is
-# called previous to any other click command
-config: Config
-search_engine: SearchEngine
+
+class GlobalOptions:
+
+    def __init__(self, config_path: str = None, db: str = None):
+        self._config_path = config_path
+        self._config: Config = None
+        self._db = db
+        self._search_engine: SearchEngine = None
+
+    @property
+    def config(self) -> Config:
+        if self._config is None:
+            self._config = Config() if self._config_path is None else Config(self._config_path)
+            if self._db: self._config.set('saver_options.db', self._db)
+        return self._config
+
+    @property
+    def search_engine(self) -> SearchEngine:
+        if self._search_engine is None:
+            self._search_engine = self.config.create_search_engine()
+        return self._search_engine
 
 
 # ============== main entrypoint
 
-@click.group()
+@click.group(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
               default=logger_default_level)
 @click.option('-d', '--db', default=None, help='If set, this will override the database set in the config')
 @click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
-def cli(log_level, db, config_path):
+@click.pass_context
+def cli(ctx, log_level, db, config_path):
     # configure logger
     import sys
     logging.basicConfig(
@@ -47,25 +65,26 @@ def cli(log_level, db, config_path):
 
     # only set the logging level on our classes
     logging.getLogger('swisstext').setLevel(logging.getLevelName(log_level.upper()))
+
     # instantiate configuration and global variables
-    global config, search_engine
-    config = Config() if config_path is None else Config(config_path)
-    if db: config.set('saver_options.db', db)
-    search_engine = config.create_search_engine()
+    ctx.obj = GlobalOptions(config_path, db)
 
 
 # ============== available commands
 
 @cli.command('dump_config')
-def dump_config():
+@click.pass_obj
+def dump_config(ctx):
     """Prints the active configuration."""
     import pyaml
-    print(pyaml.dump(config.conf))
+    print(pyaml.dump(ctx.config.conf))
+
 
 @cli.command('from_mongo')
 @click.option('-n', '--num-seeds', type=int, default=20, help="Max seeds used.")
 @click.option('--new/--any', default=False, help="Only search new seeds")
-def from_mongo(num_seeds, new):
+@click.pass_obj
+def from_mongo(ctx, num_seeds, new):
     """
     This script runs the search engine system using -n seeds pulled from Mongo. Those seeds are
     selected depending on the number of usages and the date of the last use (less used first, oldest usage first).
@@ -77,7 +96,7 @@ def from_mongo(num_seeds, new):
     (default: localhost:27017, db=swisstext).
     """
     from swisstext.mongo.models import MongoSeed, get_connection
-    with get_connection(**config.get('saver_options')):
+    with get_connection(**ctx.config.get('saver_options')):
         if new:
             # just get the seeds that have never been used (give priority to user seeds)
             queryset = MongoSeed.objects(search_history__0__exists=False) \
@@ -99,12 +118,13 @@ def from_mongo(num_seeds, new):
             ]
             seeds = (s['_id'] for s in MongoSeed.objects.aggregate(*aggregation_pipeline))
 
-    _search(seeds)
+    _search(ctx, seeds)
 
 
 @cli.command('from_file')
 @click.argument('seedsfile', type=click.File('r'))
-def from_file(seedsfile):
+@click.pass_obj
+def from_file(ctx, seedsfile):
     """
     Search using seeds from a file.
 
@@ -113,15 +133,15 @@ def from_file(seedsfile):
     Seeds and results will be persisted using the configured saver.
     """
     seeds = (l.strip() for l in seedsfile if l and not l.startswith(" "))
-    _search(seeds)
+    _search(ctx, seeds)
 
 
-def _search(seeds: Iterable[str]):
+def _search(ctx: GlobalOptions, seeds: Iterable[str]):
     # do the magic
     import time
     start = time.time()
     tasks = [Seed(s) for s in seeds]
     logger.info("About to search %d seeds" % len(tasks))
-    search_engine.process(tasks, max_results=config.options.max_results)
+    ctx.search_engine.process(tasks, max_results=ctx.config.options.max_results)
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))
