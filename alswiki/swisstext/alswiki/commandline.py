@@ -53,6 +53,10 @@ def cli(log_level):
     # silence this very verbose tool...
     logging.getLogger('swisstext.cmd.scraping.tools.pattern_sentence_filter').setLevel(level=logging.WARNING)
 
+    # ensure als.wikipedia URLs are whitelisted
+    import swisstext.cmd.link_utils as link_utils
+    link_utils.INCLUDED_WIKI_DOMAINS['als'] = True
+
 
 # ============== commands
 

@@ -65,9 +65,7 @@ EXCLUDED_TLDS = dict((s[1:], True) for s in [
 
 #: Quick lookup dictionary to exclude any URL from wikipedia, except the ones from the given subdomains.
 #: See `<https://en.wikipedia.org/wiki/List_of_Wikipedias>`_ for a full list of wikipedia subdomains.
-INCLUDED_WIKI_DOMAINS = dict((s, True) for s in [
-    "als"
-])
+INCLUDED_WIKI_DOMAINS = dict() #dict((s, True) for s in ["als"])
 
 
 def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, None]:

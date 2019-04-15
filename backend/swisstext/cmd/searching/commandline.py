@@ -142,6 +142,7 @@ def _search(ctx: GlobalOptions, seeds: Iterable[str]):
     start = time.time()
     tasks = [Seed(s) for s in seeds]
     logger.info("About to search %d seeds" % len(tasks))
-    ctx.search_engine.process(tasks, max_results=ctx.config.options.max_results)
+    new_urls_found = ctx.search_engine.process(tasks, max_results=ctx.config.options.max_results)
+    logger.info('Found %d new URLs.' % new_urls_found)
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))

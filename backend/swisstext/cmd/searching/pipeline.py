@@ -27,10 +27,13 @@ class SearchEngine:
         Note that this method has not been implemented having multithreading in minds, as most of the time
         search engine APIs are limited and pretty fast...
         """
+        added_urls = 0
         for seed in seeds:
             for link in self.searcher.top_results(seed.query, max_results):
                 if is_url_interesting(link) and link not in self.new_urls:
                     if not self.saver.link_exists(link):
                         seed.new_links.append(link)
+                        added_urls += 1
                     self.new_urls.add(link)
             self.saver.save_seed(seed)
+        return added_urls
