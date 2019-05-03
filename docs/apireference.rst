@@ -54,3 +54,14 @@ new URLs to scrape.
    :maxdepth: 10
 
    swisstext.cmd.searching
+
+
+Parsing Alswiki dumps or text files
+------------------------------------
+
+Commandline tools to extract/process sentences from an Alemmanic Wikipedia dump or for processing a text file using the scraping tools (splitter/filter/lid).
+
+.. toctree::
+   :maxdepth: 10
+
+   swisstext.alswiki

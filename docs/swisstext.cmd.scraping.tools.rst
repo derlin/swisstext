@@ -62,6 +62,11 @@ Splitters
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: swisstext.cmd.scraping.tools.moses_splitter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Language Detectors
 ---------------------------
 
