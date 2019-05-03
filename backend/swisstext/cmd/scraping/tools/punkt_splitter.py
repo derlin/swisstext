@@ -23,6 +23,7 @@ class PunktSplitter(ISplitter):
         self.tokenizer = PunktSentenceTokenizer()
 
     def split(self, text: str) -> List[str]:
+        """ Split text using Punkt. """
         paragraphs = (p for p in text.split('\n') if p)
         sentences = []
         for p in paragraphs:

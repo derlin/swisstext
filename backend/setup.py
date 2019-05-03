@@ -49,5 +49,6 @@ setuptools.setup(
         "six>=1.11.0",
         "sklearn>=0.0",
         "urllib3>=1.23",
+        "mosestokenizer"
     ]
 )
