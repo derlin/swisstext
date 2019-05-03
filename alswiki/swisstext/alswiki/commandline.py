@@ -147,3 +147,48 @@ def parse(dumpfile, min_chars):
         include_interlinks=False
     )
     print(f'Dump written in {jsonfile}')
+
+
+@cli.command('txt')
+@click.option('-c', '--config-path', type=click.Path(dir_okay=False), default=None)
+@click.option('-f', '--format', type=click.Choice(['txt', 'csv']), default='txt')
+@click.option('-p', '--min-proba', help='Override min_proba in config', default=None, type=float)
+@click.argument('textfile')
+def run_pipeline_from_txt(config_path, format, min_proba, textfile):
+    """
+    Process a text file.
+
+    This command reads a file and pass it through a simplified pipeline (split -> filter -> sg_detect).
+    The actual splitter/filter/detector used depends on the configuration given by <config-path>.
+    The config is the same as in the backend, but only options for those 3 tools are used.
+
+    Output is printed to the terminal, in one of the two formats given by the <format> argument:
+
+    \b
+     * txt: prints sentences
+     * csv: prints proba, sentence using csv format (quotes escaped)
+    """
+    import sys
+    config = Config() if config_path is None else Config(config_path)
+    if min_proba is not None:
+        config.options.min_proba = min_proba
+
+    pipeline: Pipeline = config.create_pipeline()
+
+    if format == 'csv':
+        import csv
+        csvwriter = csv.writer(sys.stdout)
+        csvwriter.writerow(['proba', 'text'])
+        write = lambda s, proba: csvwriter.writerow([proba, s])
+    else:
+        write = lambda s, proba: print(s)
+
+    with smart_open(textfile) as f:
+        content = f.read()
+        lines = pipeline.splitter.split(content)
+        sentences = pipeline.filter.filter(lines)
+
+        for (s, proba) in zip(sentences, pipeline.detector.predict(sentences)):
+            if proba >= pipeline.min_proba:
+                write(s, proba)
+
