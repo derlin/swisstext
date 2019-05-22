@@ -79,7 +79,7 @@ For example, this configuration will do nothing:
 
     pipeline:
         splitter: swisstext.cmd.scraping.interfaces.ISplitter
-        filter: swisstext.cmd.scraping.interfaces.ISentenceFilter
+        sentence_filter: swisstext.cmd.scraping.interfaces.ISentenceFilter
 
     options:
       min_proba: 0.85

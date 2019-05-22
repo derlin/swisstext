@@ -65,7 +65,8 @@ class BsCrawler(ICrawler):
 
                 ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
                 # TODO: ensure it works as expected
-                return BeautifulSoup(resp.content.decode(encoding, 'ignore'), 'html.parser')
+                content = resp.content.decode(encoding, 'ignore') if encoding is not None else resp.content
+                return BeautifulSoup(content, 'html.parser')
             else:
                 raise ICrawler.CrawlError("'%s' not HTML (ctype=%s) " % (url, ctype))
 

@@ -70,7 +70,7 @@ def cli(ctx, log_level, config_path, db):
     # configure all loggers (log to stderr)
     logging.basicConfig(
         stream=sys.stderr,
-        format="'%(asctime)s [%(name)-15s %(levelname)-5s] %(message)s",
+        format="%(asctime)s [%(name)-15s %(levelname)-5s] %(message)s",
         datefmt='%Y-%m-%dT%H:%M:%S')
 
     # only set the logging level on our classes

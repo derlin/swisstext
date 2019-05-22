@@ -17,6 +17,7 @@ class PunktSplitter(ISplitter):
 
     .. todo::
         Train a Punkt model for Swiss-German.
+        (https://stackoverflow.com/questions/21160310/training-data-format-for-nltk-punkt)
     """
 
     def __init__(self):
