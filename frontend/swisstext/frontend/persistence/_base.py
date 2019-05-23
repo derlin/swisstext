@@ -10,6 +10,7 @@ def init_db(app, db_name, db_host='localhost', db_port=27017):
     app.config['MONGODB_SETTINGS'] = {
         'host': db_host,
         'port': db_port,
-        'db': db_name
+        'db': db_name,
+        'connect': False,
     }
     db.init_app(app)
