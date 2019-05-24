@@ -4,8 +4,8 @@ options:
 search_engine:
   _base_package: swisstext.cmd.searching.tools
 
-  searcher: .start_page.StartPageGeneratorFactory
-  saver: .mongo_saver.MongoSaver
+  searcher: .StartPageGeneratorFactory
+  saver: .MongoSaver
 
 saver_options:
   host: localhost
