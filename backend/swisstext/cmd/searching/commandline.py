@@ -73,12 +73,18 @@ def cli(ctx, log_level, db, config_path):
 # ============== available commands
 
 @cli.command('dump_config')
+@click.option('-t', '--test', is_flag=True, help='Also instantiate the tools')
 @click.pass_obj
-def dump_config(ctx):
+def dump_config(ctx, test):
     """Prints the active configuration."""
-    import pyaml
-    print(pyaml.dump(ctx.config.conf))
-
+    print(ctx.config.dumps())
+    if test:
+        try:
+            print('Instantiating tools...')
+            ctx.config.instantiate_tools()
+            print('Success.')
+        except Exception as e:
+            raise Exception('Error instantiating tools.') from e
 
 @cli.command('from_mongo')
 @click.option('-n', '--num-seeds', type=int, default=20, help="Max seeds used.")
@@ -137,6 +143,7 @@ def from_file(ctx, seedsfile):
 
 
 def _search(ctx: GlobalOptions, seeds: Iterable[str]):
+    logger.info('Using config:\n' + ctx.config.dumps())
     # do the magic
     import time
     start = time.time()

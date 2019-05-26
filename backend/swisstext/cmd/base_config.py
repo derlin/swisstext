@@ -144,6 +144,9 @@ class BaseConfig(ABC):
         if root and prop in root:
             root[prop] = value
 
+    def dumps(self):
+        return yaml.dump(self.conf)
+
     def _get_subdict(self, prop_name):
         root = self.conf
         props = prop_name.split('.')
