@@ -3,6 +3,7 @@ This module contains the implementation of a :py:class:`~swisstext.cmd.scraping.
 that uses BeautifulSoup to extract text and links.
 """
 import logging
+from typing import List
 
 import requests
 from bs4 import BeautifulSoup
@@ -41,10 +42,16 @@ class BsCrawler(ICrawler):
 
     def crawl(self, url: str) -> ICrawler.CrawlResults:
         """Extract links and text from a URL."""
-        soup: BeautifulSoup = self._download(url)
-        return ICrawler.CrawlResults(text=self._extract_text(soup), links=self._extract_links(url, soup))
+        soup: BeautifulSoup = self.get_soup(url)
+        # get links first, as extract_text_blocks is destructive
+        links: List[str] = self.extract_links(url, soup)
+        text_blocks: List[str] = self.extract_text_blocks(soup)
+        return ICrawler.CrawlResults(
+            text=self._joiner.join(text_blocks),
+            links=links)
 
-    def _download(self, url):
+    @classmethod
+    def get_soup(cls, url):
         try:
             resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS)  # ignore SSL certificates
             # try to avoid encoding issues
@@ -73,16 +80,18 @@ class BsCrawler(ICrawler):
         except Exception as e:
             raise ICrawler.CrawlError("'%s' raised an error (%s)" % (url, e)) from e
 
-    def _extract_text(self, soup) -> str:
+    @classmethod
+    def extract_text_blocks(cls, soup) -> List[str]:
         # see https://stackoverflow.com/a/22800287/2667536
         # kill all script and style elements
         for script in soup(['script', 'style', 'form']):
             script.decompose()  # rip it out
 
         # TODO: join with newlines ?
-        return self._joiner.join(soup.stripped_strings)
+        return soup.stripped_strings
 
-    def _extract_links(self, url, soup):
+    @classmethod
+    def extract_links(cls, url, soup):
         links = (a.get('href') for a in soup.find_all('a', href=True))
         return [l for l in filter_links(url, links)]
 
@@ -115,7 +124,7 @@ class CleverBsCrawler(BsCrawler):
 
     _exclude_selectors = ','.join(['header', '#header', 'footer', '#footer', '[role=footer]', '[role=navigation]'])
 
-    def _extract_text(self, soup) -> str:
+    def extract_text_blocks(self, soup) -> str:
 
         for script in soup(['script', 'style']):
             script.decompose()  # rip it out
