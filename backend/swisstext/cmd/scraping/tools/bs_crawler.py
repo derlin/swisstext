@@ -3,7 +3,7 @@ This module contains the implementation of a :py:class:`~swisstext.cmd.scraping.
 that uses BeautifulSoup to extract text and links.
 """
 import logging
-from typing import List
+from typing import List, Generator
 
 import requests
 from bs4 import BeautifulSoup
@@ -38,16 +38,17 @@ class BsCrawler(ICrawler):
 
     """
 
-    _joiner = ' '  # used to join text chunks
+    def __init__(self, joiner=' '):
+        self.joiner = joiner  # used to join text chunks
 
     def crawl(self, url: str) -> ICrawler.CrawlResults:
         """Extract links and text from a URL."""
         soup: BeautifulSoup = self.get_soup(url)
         # get links first, as extract_text_blocks is destructive
-        links: List[str] = self.extract_links(url, soup)
-        text_blocks: List[str] = self.extract_text_blocks(soup)
+        links = self.extract_links(url, soup)
+        text_blocks = self.extract_text_blocks(soup)
         return ICrawler.CrawlResults(
-            text=self._joiner.join(text_blocks),
+            text=self.joiner.join(text_blocks),
             links=links)
 
     @classmethod
@@ -81,7 +82,7 @@ class BsCrawler(ICrawler):
             raise ICrawler.CrawlError("'%s' raised an error (%s)" % (url, e)) from e
 
     @classmethod
-    def extract_text_blocks(cls, soup) -> List[str]:
+    def extract_text_blocks(cls, soup) -> Generator[str, None, None]:
         # see https://stackoverflow.com/a/22800287/2667536
         # kill all script and style elements
         for script in soup(['script', 'style', 'form']):
@@ -124,7 +125,7 @@ class CleverBsCrawler(BsCrawler):
 
     _exclude_selectors = ','.join(['header', '#header', 'footer', '#footer', '[role=footer]', '[role=navigation]'])
 
-    def extract_text_blocks(self, soup) -> str:
+    def extract_text_blocks(self, soup) -> Generator[str, None, None]:
 
         for script in soup(['script', 'style']):
             script.decompose()  # rip it out
@@ -133,10 +134,10 @@ class CleverBsCrawler(BsCrawler):
         for selector in self._main_selectors:
             main = soup.select(selector)
             if main:
-                return self._joiner.join(main[0].stripped_strings)
+                return main[0].stripped_strings
 
         # no main content found... try to remove header and footer
         for part in soup.select(self._exclude_selectors):
             part.decompose()
 
-        return ' '.join(soup.stripped_strings)
+        return soup.stripped_strings

@@ -1,3 +1,4 @@
+import pickle
 from typing import List
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from ..interfaces import ISplitter
@@ -20,8 +21,12 @@ class PunktSplitter(ISplitter):
         (https://stackoverflow.com/questions/21160310/training-data-format-for-nltk-punkt)
     """
 
-    def __init__(self):
-        self.tokenizer = PunktSentenceTokenizer()
+    def __init__(self, modelfile=None):
+        if modelfile is not None:
+            with open(modelfile, 'rb') as f:
+                self.tokenizer = pickle.load(f)
+        else:
+            self.tokenizer = PunktSentenceTokenizer()
 
     def split(self, text: str) -> List[str]:
         """ Split text using Punkt. """
