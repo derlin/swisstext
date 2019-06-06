@@ -53,6 +53,7 @@ class BsCrawler(ICrawler):
 
     @classmethod
     def get_soup(cls, url):
+        """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
         try:
             resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS)  # ignore SSL certificates
             # try to avoid encoding issues
@@ -83,16 +84,31 @@ class BsCrawler(ICrawler):
 
     @classmethod
     def extract_text_blocks(cls, soup) -> Generator[str, None, None]:
+        """
+        Get text blocks from a :py:class:`~bs4.BeautifulSoup` object.
+
+        .. warning::
+
+            This method is destructive, as it will first remove script, style and forms
+            from the HTML/soup object !
+
+        .. todo::
+
+            Find a way to avoid altering the soup object.. ?
+        """
         # see https://stackoverflow.com/a/22800287/2667536
         # kill all script and style elements
         for script in soup(['script', 'style', 'form']):
             script.decompose()  # rip it out
 
-        # TODO: join with newlines ?
         return soup.stripped_strings
 
     @classmethod
     def extract_links(cls, url, soup):
+        """
+        Get all links from a soup (a href only).
+        Note that links will be resolved (relative to absolute) and filtered (non-HTML removed).
+        """
         links = (a.get('href') for a in soup.find_all('a', href=True))
         return [l for l in filter_links(url, links)]
 

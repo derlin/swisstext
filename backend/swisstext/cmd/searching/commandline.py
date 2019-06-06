@@ -26,7 +26,7 @@ logger_default_level = "info"
 
 
 class GlobalOptions:
-
+    """Hold the options used by all tools, using lazy instantiation if possible."""
     def __init__(self, config_path: str = None, db: str = None):
         self._config_path = config_path
         self._config: Config = None
@@ -35,6 +35,7 @@ class GlobalOptions:
 
     @property
     def config(self) -> Config:
+        """Configuration object (lazy loaded)."""
         if self._config is None:
             self._config = Config() if self._config_path is None else Config(self._config_path)
             if self._db: self._config.set('saver_options.db', self._db)
@@ -42,6 +43,7 @@ class GlobalOptions:
 
     @property
     def search_engine(self) -> SearchEngine:
+        """Search engine holding the tool instances (lazy loaded)."""
         if self._search_engine is None:
             self._search_engine = self.config.create_search_engine()
         return self._search_engine
@@ -76,7 +78,10 @@ def cli(ctx, log_level, db, config_path):
 @click.option('-t', '--test', is_flag=True, help='Also instantiate the tools')
 @click.pass_obj
 def dump_config(ctx, test):
-    """Prints the active configuration."""
+    """
+    Prints the active configuration. If <test> is set, the search engine is also instantiated,
+    ensuring all tool names exist and use correct options.
+    """
     print(ctx.config.dumps())
     if test:
         try:

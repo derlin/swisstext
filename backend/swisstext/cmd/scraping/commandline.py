@@ -9,11 +9,6 @@ Usage
 
 Use the `--help` option to discover the capabilities and options of the tool.
 
-
-.. todo::
-
-    Also exit cleanly when only one worker runs in the main thread
-
 """
 import logging
 import threading
@@ -32,8 +27,14 @@ logger_default_level = "info"
 
 
 class GlobalOptions:
+    """Hold the options used by all tools, using lazy instantiation if possible."""
 
     def __init__(self, config_path: str = None, gen_seeds=False, db: str = None):
+        """
+        :param config_path: path to an optional user configuration path
+        :param gen_seeds: whether or not to generate seeds
+        :param db: name of the mongo db to use
+        """
         self.gen_seeds = gen_seeds
 
         self._config_path = config_path
@@ -45,6 +46,7 @@ class GlobalOptions:
 
     @property
     def config(self) -> Config:
+        """Configuration object (lazy loaded)."""
         if self._config is None:
             self._config = Config() if self._config_path is None else Config(self._config_path)
             if self._db: self._config.set('saver_options.db', self._db)
@@ -52,6 +54,7 @@ class GlobalOptions:
 
     @property
     def pipeline(self) -> Pipeline:
+        """Pipeline holding the tool instances (lazy loaded)."""
         if self._pipeline is None:
             self._pipeline = self.config.create_pipeline()
         return self._pipeline
@@ -88,7 +91,10 @@ def cli(ctx, log_level, config_path, db):
 @click.option('-t', '--test', is_flag=True, help='Also instantiate the tools')
 @click.pass_obj
 def dump_config(ctx, test):
-    """Prints the active configuration."""
+    """
+    Prints the active configuration. If <test> is set, the pipeline is also instantiated,
+    ensuring all tool names exist and use correct options.
+    """
     print(ctx.config.dumps())
     if test:
         try:
@@ -167,7 +173,7 @@ def crawl_mongo(ctx, num_urls, new):
         if new:
             # just get the URLs never visited
             for u in MongoURL.get_never_crawled().fields(id=True).limit(num_urls):
-                enqueue(ctx, u.id)
+                _enqueue(ctx, u.id)
         else:
             # order URLs by number of visits (ascending) and last visited date (ascending)
             aggregation_pipeline = [
@@ -179,7 +185,7 @@ def crawl_mongo(ctx, num_urls, new):
                 {"$limit": num_urls}
             ]
             for u in MongoURL.objects.aggregate(*aggregation_pipeline):
-                enqueue(ctx, u['_id'])
+                _enqueue(ctx, u['_id'])
 
     logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
@@ -197,13 +203,13 @@ def crawl_from_file(ctx, urlfile):
     """
     for u in urlfile:
         if u.startswith("http") and not ctx.pipeline.saver.is_url_blacklisted(u):
-            enqueue(ctx, u.strip())
+            _enqueue(ctx, u.strip())
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 
 # ============== main methods
 
-def enqueue(ctx, url):
+def _enqueue(ctx, url):
     ctx.queue.put((ctx.pipeline.saver.get_page(url), 1))  # set depth to 1
 
 

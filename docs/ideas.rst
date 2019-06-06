@@ -1,9 +1,9 @@
 Sentence Filtering
 -------------------
 
-We would need more rules to enhence the sentences' quality. Here are some ideas:
+We would need more rules to enhance the sentences' quality. Here are some ideas:
 
-* Exclude sentences with the world *Wikipedia* (or *Alemannische Wikipedia*);
+* Exclude sentences with the world *Wikipedia* (or *Alemannische Wikipedia*) DONE;
 * Exclude short sentences with the character *:* or with parentheses;
 * Exclude long sentences with no punctuation ? This would remove poems...;
 
