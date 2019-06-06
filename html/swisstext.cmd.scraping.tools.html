@@ -192,7 +192,7 @@ see <a class="reference external" href="https://github.com/scikit-learn/scikit-l
 that uses BeautifulSoup to extract text and links.</p>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.tools.bs_crawler.BsCrawler">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.bs_crawler.</code><code class="descname">BsCrawler</code><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#BsCrawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.bs_crawler.</code><code class="descname">BsCrawler</code><span class="sig-paren">(</span><em>joiner=' '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#BsCrawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ICrawler" title="swisstext.cmd.scraping.interfaces.ICrawler"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ICrawler</span></code></a></p>
 <p>A basic crawler implemented using <a class="reference external" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>.</p>
 <p>Text is extracted by concatenating all pieces of text (except CSS and script)
@@ -210,11 +210,39 @@ based on newlines…) such as the <code class="xref py py-class docutils literal
 <dd><p>Extract links and text from a URL.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_links">
+<em class="property">classmethod </em><code class="descname">extract_links</code><span class="sig-paren">(</span><em>url</em>, <em>soup</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#BsCrawler.extract_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all links from a soup (a href only).
+Note that links will be resolved (relative to absolute) and filtered (non-HTML removed).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_text_blocks">
+<em class="property">classmethod </em><code class="descname">extract_text_blocks</code><span class="sig-paren">(</span><em>soup</em><span class="sig-paren">)</span> &#x2192; Generator[str, None, None]<a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#BsCrawler.extract_text_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_text_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get text blocks from a <code class="xref py py-class docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> object.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is destructive, as it will first remove script, style and forms
+from the HTML/soup object !</p>
+</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="admonition-title">Todo</p>
+<p>Find a way to avoid altering the soup object.. ?</p>
+</div>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.get_soup">
+<em class="property">classmethod </em><code class="descname">get_soup</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#BsCrawler.get_soup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.get_soup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a <code class="xref py py-class docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> object from a URL (HTML), dealing somewhat correctly with encoding.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.bs_crawler.</code><code class="descname">CleverBsCrawler</code><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#CleverBsCrawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.bs_crawler.</code><code class="descname">CleverBsCrawler</code><span class="sig-paren">(</span><em>joiner=' '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#CleverBsCrawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler" title="swisstext.cmd.scraping.tools.bs_crawler.BsCrawler"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.tools.bs_crawler.BsCrawler</span></code></a></p>
 <p>Another implementation of the <a class="reference internal" href="#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler" title="swisstext.cmd.scraping.tools.bs_crawler.BsCrawler"><code class="xref py py-class docutils literal notranslate"><span class="pre">BsCrawler</span></code></a> that tries to be more clever during the text extraction
 step.</p>
@@ -227,11 +255,26 @@ If found, stop the processing and return only the text under it.</p></li>
 </ol>
 <p>Following those heuristics requires more processing power and might miss some sentences (full sentences
 in the side bar, main content in a poorly-coded website, etc).</p>
-<div class="admonition-todo admonition" id="index-0">
+<div class="admonition-todo admonition" id="index-1">
 <p class="admonition-title">Todo</p>
 <p>Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
 the default.</p>
 </div>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler.extract_text_blocks">
+<code class="descname">extract_text_blocks</code><span class="sig-paren">(</span><em>soup</em><span class="sig-paren">)</span> &#x2192; Generator[str, None, None]<a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/bs_crawler.html#CleverBsCrawler.extract_text_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler.extract_text_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get text blocks from a <code class="xref py py-class docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> object.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is destructive, as it will first remove script, style and forms
+from the HTML/soup object !</p>
+</div>
+<div class="admonition-todo admonition" id="index-2">
+<p class="admonition-title">Todo</p>
+<p>Find a way to avoid altering the soup object.. ?</p>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="data">
@@ -445,7 +488,7 @@ You can override this by passing a path to the constructor (<code class="docutil
 <span id="splitters"></span><h2>Splitters<a class="headerlink" href="#module-swisstext.cmd.scraping.tools.punkt_splitter" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.punkt_splitter.</code><code class="descname">PunktSplitter</code><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/punkt_splitter.html#PunktSplitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.punkt_splitter.</code><code class="descname">PunktSplitter</code><span class="sig-paren">(</span><em>modelfile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/punkt_splitter.html#PunktSplitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISplitter" title="swisstext.cmd.scraping.interfaces.ISplitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISplitter</span></code></a></p>
 <p>A splitter using the
 <a class="reference external" href="https://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.punkt">PunktSentenceTokenizer</a>, the NLTK
@@ -457,14 +500,34 @@ implementation of the “Unsupervised Multilingual Sentence Boundary Detection (
 pretrained Punkt Models for other languages as well, including German. In my tests though, German models
 performed poorly compared to the default…</p>
 </div>
-<div class="admonition-todo admonition" id="index-1">
+<div class="admonition-todo admonition" id="index-3">
 <p class="admonition-title">Todo</p>
-<p>Train a Punkt model for Swiss-German.</p>
+<p>Train a Punkt model for Swiss-German.
+(<a class="reference external" href="https://stackoverflow.com/questions/21160310/training-data-format-for-nltk-punkt">https://stackoverflow.com/questions/21160310/training-data-format-for-nltk-punkt</a>)</p>
 </div>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter.split">
 <code class="descname">split</code><span class="sig-paren">(</span><em>text: str</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/punkt_splitter.html#PunktSplitter.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter.split" title="Permalink to this definition">¶</a></dt>
-<dd><p>This should be overriden. The default implementation just splits on newlines.</p>
+<dd><p>Split text using Punkt.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-swisstext.cmd.scraping.tools.moses_splitter"></span><dl class="class">
+<dt id="swisstext.cmd.scraping.tools.moses_splitter.MosesSplitter">
+<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.tools.moses_splitter.</code><code class="descname">MosesSplitter</code><span class="sig-paren">(</span><em>lang='de'</em>, <em>do_norm=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/moses_splitter.html#MosesSplitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.moses_splitter.MosesSplitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISplitter" title="swisstext.cmd.scraping.interfaces.ISplitter"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISplitter</span></code></a></p>
+<p>A splitter using the Moses tool
+<a class="reference external" href="https://github.com/moses-smt/mosesdecoder/blob/master/scripts/ems/support/split-sentences.perl">split_sentences.perl</a>.
+The tool has been wrapped for use from Python, see <a class="reference external" href="https://pypi.org/project/mosestokenizer/">mosestokenizer</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The language option defines the non-breaking prefixes to use. Here, we use ‘de’ (German) by default.</p>
+</div>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.tools.moses_splitter.MosesSplitter.split">
+<code class="descname">split</code><span class="sig-paren">(</span><em>text: str</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/swisstext/cmd/scraping/tools/moses_splitter.html#MosesSplitter.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.moses_splitter.MosesSplitter.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split text using Moses.</p>
 </dd></dl>
 
 </dd></dl>

@@ -106,7 +106,13 @@ finding new sentences and generating seeds.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.html">Scraping commandline tool</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.interfaces">Tool interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#tool-implementations">Tool implementations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html">Command line scraping tools</a><ul>
@@ -125,8 +131,16 @@ finding new sentences and generating seeds.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.data">Pipeline implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#pipeline-implementation">Pipeline implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.impl.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -139,7 +153,12 @@ new URLs to scrape.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.html">Searching commandline tool</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#st-search">st_search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.interfaces">Tool interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#tool-implementations">Tool implementations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.tools.html">Command line searching tools</a><ul>
@@ -152,8 +171,27 @@ new URLs to scrape.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.config">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.data">Pipeline implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#pipeline-implementation">Pipeline implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html">Pipeline implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="parsing-alswiki-dumps-or-text-files">
+<h2>Parsing Alswiki dumps or text files<a class="headerlink" href="#parsing-alswiki-dumps-or-text-files" title="Permalink to this headline">¶</a></h2>
+<p>Commandline tools to extract/process sentences from an Alemmanic Wikipedia dump or for processing a text file using the scraping tools (splitter/filter/lid).</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.alswiki.html">AlsWiki dumps parser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.alswiki.html#commandline">Commandline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.alswiki.html#alswiki-dumps">Alswiki dumps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.alswiki.html#processing-text-files">Processing text files</a></li>
 </ul>
 </li>
 </ul>
@@ -174,6 +212,7 @@ new URLs to scrape.</p>
 <li><a class="reference internal" href="#commandline-tools">Commandline tools</a></li>
 <li><a class="reference internal" href="#scraping-the-web">Scraping the web</a></li>
 <li><a class="reference internal" href="#making-search-engine-queries">Making search engine queries</a></li>
+<li><a class="reference internal" href="#parsing-alswiki-dumps-or-text-files">Parsing Alswiki dumps or text files</a></li>
 </ul>
 </li>
 </ul>

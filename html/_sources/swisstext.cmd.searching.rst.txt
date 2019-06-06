@@ -6,14 +6,13 @@ Searching commandline tool
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: swisstext.cmd.searching.commandline
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. click:: swisstext.cmd.searching.commandline:cli
+  :prog: st_search
+  :show-nested:
+
 
 Tool interfaces
 ---------------
-
 
 .. automodule:: swisstext.cmd.searching.interfaces
     :members:
@@ -28,27 +27,11 @@ Tool implementations
     swisstext.cmd.searching.tools
 
 
-Configuration
---------------
-
-.. automodule:: swisstext.cmd.searching.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Pipeline implementation
 ------------------------
 
-.. automodule:: swisstext.cmd.searching.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
 
-
-.. automodule:: swisstext.cmd.searching.pipeline
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    swisstext.cmd.searching.impl
 
 

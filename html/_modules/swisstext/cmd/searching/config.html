@@ -56,12 +56,12 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.html#swisstext.cmd.searching.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.impl.html#swisstext.cmd.searching.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default configuration file for the searching pipeline (search engine) is defined in ``config.yaml``.</span>
 <span class="sd">    This is the best way to understand what options are available.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Config.Options"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.html#swisstext.cmd.searching.config.Config.Options">[docs]</a>    <span class="k">class</span> <span class="nc">Options</span><span class="p">:</span>
+<div class="viewcode-block" id="Config.Options"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.impl.html#swisstext.cmd.searching.config.Config.Options">[docs]</a>    <span class="k">class</span> <span class="nc">Options</span><span class="p">:</span>
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">max_results</span> <span class="o">=</span> <span class="n">max_results</span>
             <span class="sd">&quot;&quot;&quot;</span>
@@ -85,7 +85,7 @@
     <span class="k">def</span> <span class="nf">tool_entry_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;search_engine&#39;</span>
 
-<div class="viewcode-block" id="Config.create_search_engine"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.html#swisstext.cmd.searching.config.Config.create_search_engine">[docs]</a>    <span class="k">def</span> <span class="nf">create_search_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchEngine</span><span class="p">:</span>
+<div class="viewcode-block" id="Config.create_search_engine"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.impl.html#swisstext.cmd.searching.config.Config.create_search_engine">[docs]</a>    <span class="k">def</span> <span class="nf">create_search_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchEngine</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate a search engine from the YAML configuration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

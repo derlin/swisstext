@@ -67,15 +67,19 @@ docker run -d --name st-mongo -p <span class="m">27017</span>:27017 -v <span cla
 This will run Flask, but as clearly stated in their documentation, this should be avoided in a real environment.</p>
 <p>To launch the frontend in a <strong>production-like</strong> fashion, the one way is to use <a class="reference external" href="http://gunicorn.org/">gunicon</a>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install gunicorn and its dependencies</span>
-pip install gevent greenlet gunicorn
+pip install  gunicorn
 
 <span class="c1"># run the frontend using gunicorn (instead of st_frontend)</span>
 <span class="c1"># note that the actual port is setup with the gunicorn --bind option</span>
-gunicorn --preload --log-level<span class="o">=</span>info --bind<span class="o">=</span>:80 <span class="s2">&quot;swisstext.frontend.server:init_app()&quot;</span>
+gunicorn --preload --log-level<span class="o">=</span>info --bind<span class="o">=</span>:80 <span class="s2">&quot;swisstext.frontend.__main__:init_app()&quot;</span>
 
 <span class="c1"># You can also pass parameters to the app through the init_app call. Here is an example:</span>
 gunicorn --preload --log-level<span class="o">=</span>info --bind<span class="o">=</span>:80 <span class="se">\</span>
-    <span class="s2">&quot;swisstext.frontend.server:init_app(debug=True, mongo_host=&#39;192.131.23.10&#39;, mongo_port=27000, db=&#39;st1&#39;)&quot;</span>
+    <span class="s2">&quot;swisstext.frontend.__main__:init_app(debug=True, mongo_host=&#39;192.131.23.10&#39;, mongo_port=27000, db=&#39;st1&#39;)&quot;</span>
+
+<span class="c1"># to use gevent and multiple workers</span>
+pip install gevent
+gunicorn -k gevent -w <span class="m">2</span> <span class="s1">&#39;swisstext.frontend.__main__:init_app()&#39;</span>
 </pre></div>
 </div>
 </div>

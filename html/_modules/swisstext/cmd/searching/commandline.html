@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>swisstext.cmd.searching.commandline &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swisstext.cmd.searching.commandline</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/user/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the commandline interface for the searcher.</span>
+
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+
+<span class="sd">Use the `--help` option to discover the capabilities and options of the tool.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span>
+
+<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">.pipeline</span> <span class="k">import</span> <span class="n">SearchEngine</span>
+<span class="kn">from</span> <span class="nn">.config</span> <span class="k">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="k">import</span> <span class="n">Seed</span>
+
+<span class="c1"># ============== global variables</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;swisstext.searching&#39;</span><span class="p">)</span>
+<span class="n">logger_default_level</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
+
+
+<div class="viewcode-block" id="GlobalOptions"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.html#swisstext.cmd.searching.commandline.GlobalOptions">[docs]</a><span class="k">class</span> <span class="nc">GlobalOptions</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Hold the options used by all tools, using lazy instantiation if possible.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_path</span> <span class="o">=</span> <span class="n">config_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_search_engine</span><span class="p">:</span> <span class="n">SearchEngine</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Configuration object (lazy loaded).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;saver_options.db&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">search_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SearchEngine</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Search engine holding the tool instances (lazy loaded).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_search_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_search_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">create_search_engine</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_search_engine</span></div>
+
+
+<span class="c1"># ============== main entrypoint</span>
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">context_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">help_option_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">]))</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--log-level&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="s2">&quot;fatal&quot;</span><span class="p">]),</span>
+              <span class="n">default</span><span class="o">=</span><span class="n">logger_default_level</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--db&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, this will override the database set in the config&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config-path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">cli</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">log_level</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">config_path</span><span class="p">):</span>
+    <span class="c1"># configure logger</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">%(asctime)s</span><span class="s2"> [</span><span class="si">%(name)-15s</span><span class="s2"> </span><span class="si">%(levelname)-5s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S&#39;</span><span class="p">)</span>
+
+    <span class="c1"># only set the logging level on our classes</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;swisstext&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLevelName</span><span class="p">(</span><span class="n">log_level</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+
+    <span class="c1"># instantiate configuration and global variables</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">GlobalOptions</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+
+
+<span class="c1"># ============== available commands</span>
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;dump_config&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Also instantiate the tools&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">dump_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints the active configuration. If &lt;test&gt; is set, the search engine is also instantiated,</span>
+<span class="sd">    ensuring all tool names exist and use correct options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Instantiating tools...&#39;</span><span class="p">)</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instantiate_tools</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Success.&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Error instantiating tools.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;from_mongo&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--num-seeds&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Max seeds used.&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--new/--any&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only search new seeds&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">from_mongo</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">num_seeds</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This script runs the search engine system using -n seeds pulled from Mongo. Those seeds are</span>
+<span class="sd">    selected depending on the number of usages and the date of the last use (less used first, oldest usage first).</span>
+<span class="sd">    If --new is specified, only seeds that have never been used will be queried.</span>
+<span class="sd">    If --any is specified, exactly -n seeds are selected.</span>
+
+<span class="sd">    Note that to connect to MongoDB, it relies on the host, port and db options present in the `saver_options` property</span>
+<span class="sd">    of the configuration. So whatever saver you use, ensure that those properties are correct</span>
+<span class="sd">    (default: localhost:27017, db=swisstext).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">swisstext.mongo.models</span> <span class="k">import</span> <span class="n">MongoSeed</span><span class="p">,</span> <span class="n">get_connection</span>
+    <span class="k">with</span> <span class="n">get_connection</span><span class="p">(</span><span class="o">**</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;saver_options&#39;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">new</span><span class="p">:</span>
+            <span class="c1"># just get the seeds that have never been used (give priority to user seeds)</span>
+            <span class="n">queryset</span> <span class="o">=</span> <span class="n">MongoSeed</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">search_history__0__exists</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-source.type&quot;</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">num_seeds</span><span class="p">)</span>
+            <span class="n">seeds</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># origin: user vs auto... we want the user to have the priority =&gt; sort descending (origin: -1)</span>
+            <span class="n">aggregation_pipeline</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;$project&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;num_searches&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$size&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$ifNull&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;$search_history&quot;</span><span class="p">,</span> <span class="p">[]]}},</span>
+                    <span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="s2">&quot;$source.type&quot;</span><span class="p">,</span>
+                    <span class="s1">&#39;date_added&#39;</span><span class="p">:</span> <span class="s2">&quot;$date_added&quot;</span><span class="p">,</span>
+                    <span class="s1">&#39;last_searched&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$ifNull&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;$delta_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]}</span>
+                <span class="p">}},</span>
+                <span class="p">{</span><span class="s2">&quot;$sort&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;num_searches&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;date_added&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;last_searched&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}},</span>
+                <span class="p">{</span><span class="s2">&quot;$limit&quot;</span><span class="p">:</span> <span class="n">num_seeds</span><span class="p">}</span>
+            <span class="p">]</span>
+            <span class="n">seeds</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">MongoSeed</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="o">*</span><span class="n">aggregation_pipeline</span><span class="p">))</span>
+
+    <span class="n">_search</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">seeds</span><span class="p">)</span>
+
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;from_file&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;seedsfile&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">))</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">seedsfile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search using seeds from a file.</span>
+
+<span class="sd">    This script runs the search engine using the query terms present in a file.</span>
+<span class="sd">    The file should have one seed per line; any line starting with a space will ignored.</span>
+<span class="sd">    Seeds and results will be persisted using the configured saver.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seeds</span> <span class="o">=</span> <span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">seedsfile</span> <span class="k">if</span> <span class="n">l</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
+    <span class="n">_search</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">seeds</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_search</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">GlobalOptions</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using config:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
+    <span class="c1"># do the magic</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">Seed</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;About to search </span><span class="si">%d</span><span class="s2"> seeds&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">))</span>
+    <span class="n">new_urls_found</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">search_engine</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">max_results</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">max_results</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Found </span><span class="si">%d</span><span class="s1"> new URLs.&#39;</span> <span class="o">%</span> <span class="n">new_urls_found</span><span class="p">)</span>
+    <span class="n">stop</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done. It took </span><span class="si">{}</span><span class="s2"> seconds.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>

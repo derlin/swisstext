@@ -99,7 +99,13 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.html">Scraping commandline tool</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.interfaces">Tool interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#tool-implementations">Tool implementations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.tools.html">Command line scraping tools</a><ul>
@@ -118,12 +124,25 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#module-swisstext.cmd.scraping.data">Pipeline implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.html#pipeline-implementation">Pipeline implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.scraping.impl.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.html">Searching commandline tool</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#st-search">st_search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.interfaces">Tool interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#tool-implementations">Tool implementations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.tools.html">Command line searching tools</a><ul>
@@ -136,8 +155,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.config">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#module-swisstext.cmd.searching.data">Pipeline implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.searching.html#pipeline-implementation">Pipeline implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html">Pipeline implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -176,6 +200,11 @@ It is used by both commandline tools.</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>This class encapsulates the configuration options of a toolchain. It is able to load options from YAML files
 and also to instantiate tools from a dictionary of module+class names.</p>
+<dl class="method">
+<dt id="swisstext.cmd.base_config.BaseConfig.dumps">
+<code class="descname">dumps</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/base_config.html#BaseConfig.dumps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.base_config.BaseConfig.dumps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="swisstext.cmd.base_config.BaseConfig.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>prop_name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/base_config.html#BaseConfig.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.base_config.BaseConfig.get" title="Permalink to this definition">¶</a></dt>
@@ -288,14 +317,14 @@ See <a class="reference external" href="https://gist.github.com/derlin/421d2bb55
 
 <dl class="data">
 <dt id="swisstext.cmd.link_utils.INCLUDED_WIKI_DOMAINS">
-<code class="descclassname">swisstext.cmd.link_utils.</code><code class="descname">INCLUDED_WIKI_DOMAINS</code><em class="property"> = {'als': True}</em><a class="headerlink" href="#swisstext.cmd.link_utils.INCLUDED_WIKI_DOMAINS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">swisstext.cmd.link_utils.</code><code class="descname">INCLUDED_WIKI_DOMAINS</code><em class="property"> = {}</em><a class="headerlink" href="#swisstext.cmd.link_utils.INCLUDED_WIKI_DOMAINS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quick lookup dictionary to exclude any URL from wikipedia, except the ones from the given subdomains.
 See <a class="reference external" href="https://en.wikipedia.org/wiki/List_of_Wikipedias">https://en.wikipedia.org/wiki/List_of_Wikipedias</a> for a full list of wikipedia subdomains.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="swisstext.cmd.link_utils.filter_links">
-<code class="descclassname">swisstext.cmd.link_utils.</code><code class="descname">filter_links</code><span class="sig-paren">(</span><em>base_url: str, links: Iterable[str]</em><span class="sig-paren">)</span> &#x2192; Generator[[str, None], None]<a class="reference internal" href="_modules/swisstext/cmd/link_utils.html#filter_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.link_utils.filter_links" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">swisstext.cmd.link_utils.</code><code class="descname">filter_links</code><span class="sig-paren">(</span><em>base_url: str, links: Iterable[str]</em><span class="sig-paren">)</span> &#x2192; Generator[str, None, None]<a class="reference internal" href="_modules/swisstext/cmd/link_utils.html#filter_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.link_utils.filter_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve, clean and filter links found in a page. By links we mean here any value of <cite>href</cite> attribute found
 in a page. This is especially useful for the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interface.ICrawler</span></code> to constitute and populate the crawl results’s

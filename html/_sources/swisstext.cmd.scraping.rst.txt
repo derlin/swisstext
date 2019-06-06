@@ -7,10 +7,10 @@ Scraping commandline tool
     :show-inheritance:
 
 
-.. automodule:: swisstext.cmd.scraping.commandline
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. click:: swisstext.cmd.scraping.commandline:cli
+  :prog: st_scrape
+  :show-nested:
+
 
 Tool interfaces
 -----------------
@@ -29,33 +29,11 @@ Tool implementations
     swisstext.cmd.scraping.tools
 
 
-Configuration
---------------
-
-.. automodule:: swisstext.cmd.scraping.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
 Pipeline implementation
 ------------------------
 
-.. automodule:: swisstext.cmd.scraping.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
 
-
-.. automodule:: swisstext.cmd.scraping.page_queue
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-.. automodule:: swisstext.cmd.scraping.pipeline
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    swisstext.cmd.scraping.impl
 
 

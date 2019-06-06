@@ -31,15 +31,19 @@ To launch the frontend in a **production-like** fashion, the one way is to use `
 .. code-block:: bash
 
     # install gunicorn and its dependencies
-    pip install gevent greenlet gunicorn
+    pip install  gunicorn
 
     # run the frontend using gunicorn (instead of st_frontend)
     # note that the actual port is setup with the gunicorn --bind option
-    gunicorn --preload --log-level=info --bind=:80 "swisstext.frontend.server:init_app()"
+    gunicorn --preload --log-level=info --bind=:80 "swisstext.frontend.__main__:init_app()"
 
     # You can also pass parameters to the app through the init_app call. Here is an example:
     gunicorn --preload --log-level=info --bind=:80 \
-        "swisstext.frontend.server:init_app(debug=True, mongo_host='192.131.23.10', mongo_port=27000, db='st1')"
+        "swisstext.frontend.__main__:init_app(debug=True, mongo_host='192.131.23.10', mongo_port=27000, db='st1')"
+
+    # to use gevent and multiple workers
+    pip install gevent
+    gunicorn -k gevent -w 2 'swisstext.frontend.__main__:init_app()'
 
 Running the backend
 --------------------

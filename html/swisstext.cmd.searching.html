@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Command line searching tools" href="swisstext.cmd.searching.tools.html" />
-    <link rel="prev" title="Command line scraping tools" href="swisstext.cmd.scraping.tools.html" /> 
+    <link rel="prev" title="Pipeline implementation" href="swisstext.cmd.scraping.impl.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -33,7 +33,7 @@
           <a href="swisstext.cmd.searching.tools.html" title="Command line searching tools"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="swisstext.cmd.scraping.tools.html" title="Command line scraping tools"
+          <a href="swisstext.cmd.scraping.impl.html" title="Pipeline implementation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="apireference.html" >API Reference</a> &#187;</li>
@@ -49,10 +49,86 @@
   <div class="section" id="module-swisstext.cmd.searching">
 <span id="searching-commandline-tool"></span><h1>Searching commandline tool<a class="headerlink" href="#module-swisstext.cmd.searching" title="Permalink to this headline">¶</a></h1>
 <p>The searching module uses seeds to query search engines and discover new URLs to scrape.</p>
-<span class="target" id="module-swisstext.cmd.searching.commandline"></span><p>This module contains the commandline interface for the searcher.</p>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>Use the <cite>–help</cite> option to discover the capabilities and options of the tool.</p>
+<div class="section" id="st-search">
+<h2>st_search<a class="headerlink" href="#st-search" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_search <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-search-l">
+<code class="descname">-l</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--log-level</code><code class="descclassname"> &lt;log_level&gt;</code><a class="headerlink" href="#cmdoption-st-search-l" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-search-d">
+<code class="descname">-d</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--db</code><code class="descclassname"> &lt;db&gt;</code><a class="headerlink" href="#cmdoption-st-search-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, this will override the database set in the config</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-search-c">
+<code class="descname">-c</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--config-path</code><code class="descclassname"> &lt;config_path&gt;</code><a class="headerlink" href="#cmdoption-st-search-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="section" id="st-search-dump-config">
+<h3>dump_config<a class="headerlink" href="#st-search-dump-config" title="Permalink to this headline">¶</a></h3>
+<p>Prints the active configuration. If &lt;test&gt; is set, the search engine is also instantiated,
+ensuring all tool names exist and use correct options.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_search dump_config <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-search-dump-config-t">
+<code class="descname">-t</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--test</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-search-dump-config-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Also instantiate the tools</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-search-from-file">
+<h3>from_file<a class="headerlink" href="#st-search-from-file" title="Permalink to this headline">¶</a></h3>
+<p>Search using seeds from a file.</p>
+<p>This script runs the search engine using the query terms present in a file.
+The file should have one seed per line; any line starting with a space will ignored.
+Seeds and results will be persisted using the configured saver.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_search from_file <span class="o">[</span>OPTIONS<span class="o">]</span> SEEDSFILE
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-st-search-from-file-arg-seedsfile">
+<code class="descname">SEEDSFILE</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-search-from-file-arg-seedsfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-search-from-mongo">
+<h3>from_mongo<a class="headerlink" href="#st-search-from-mongo" title="Permalink to this headline">¶</a></h3>
+<p>This script runs the search engine system using -n seeds pulled from Mongo. Those seeds are
+selected depending on the number of usages and the date of the last use (less used first, oldest usage first).
+If –new is specified, only seeds that have never been used will be queried.
+If –any is specified, exactly -n seeds are selected.</p>
+<p>Note that to connect to MongoDB, it relies on the host, port and db options present in the <cite>saver_options</cite> property
+of the configuration. So whatever saver you use, ensure that those properties are correct
+(default: localhost:27017, db=swisstext).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_search from_mongo <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-search-from-mongo-n">
+<code class="descname">-n</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--num-seeds</code><code class="descclassname"> &lt;num_seeds&gt;</code><a class="headerlink" href="#cmdoption-st-search-from-mongo-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max seeds used.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-search-from-mongo-new">
+<code class="descname">--new</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--any</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-search-from-mongo-new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only search new seeds</p>
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="module-swisstext.cmd.searching.interfaces">
 <span id="tool-interfaces"></span><h2>Tool interfaces<a class="headerlink" href="#module-swisstext.cmd.searching.interfaces" title="Permalink to this headline">¶</a></h2>
@@ -92,7 +168,7 @@ The use of an iterator allows for lazy implementations, in case we are limited b
 
 <dl class="method">
 <dt id="swisstext.cmd.searching.interfaces.ISearcher.top_results">
-<code class="descname">top_results</code><span class="sig-paren">(</span><em>query</em>, <em>max_results=10</em><span class="sig-paren">)</span> &#x2192; List<a class="reference internal" href="_modules/swisstext/cmd/searching/interfaces.html#ISearcher.top_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISearcher.top_results" title="Permalink to this definition">¶</a></dt>
+<code class="descname">top_results</code><span class="sig-paren">(</span><em>query</em>, <em>max_results=10</em><span class="sig-paren">)</span> &#x2192; List[T]<a class="reference internal" href="_modules/swisstext/cmd/searching/interfaces.html#ISearcher.top_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISearcher.top_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use the <a class="reference internal" href="#swisstext.cmd.searching.interfaces.ISearcher.search" title="swisstext.cmd.searching.interfaces.ISearcher.search"><code class="xref py py-meth docutils literal notranslate"><span class="pre">search()</span></code></a> to return the x top results for a query.</p>
 </dd></dl>
 
@@ -114,106 +190,16 @@ The use of an iterator allows for lazy implementations, in case we are limited b
 </ul>
 </div>
 </div>
-<div class="section" id="module-swisstext.cmd.searching.config">
-<span id="configuration"></span><h2>Configuration<a class="headerlink" href="#module-swisstext.cmd.searching.config" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="swisstext.cmd.searching.config.Config">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.searching.config.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config: Union[str</em>, <em>dict</em>, <em>io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/searching/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="swisstext.cmd.html#swisstext.cmd.base_config.BaseConfig" title="swisstext.cmd.base_config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.base_config.BaseConfig</span></code></a></p>
-<p>The default configuration file for the searching pipeline (search engine) is defined in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>.
-This is the best way to understand what options are available.</p>
-<dl class="class">
-<dt id="swisstext.cmd.searching.config.Config.Options">
-<em class="property">class </em><code class="descname">Options</code><span class="sig-paren">(</span><em>max_results=10</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/searching/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.config.Config.Options.max_results">
-<code class="descname">max_results</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options.max_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Max number of URLs retrieved in one search.
-Note that this is only the number of URLs returned by the search engine, not the number of
-URLs added to the db. Indeed, duplicates or uninteresting URLs won’t be saved.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.searching.config.Config.create_search_engine">
-<code class="descname">create_search_engine</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; swisstext.cmd.searching.pipeline.SearchEngine<a class="reference internal" href="_modules/swisstext/cmd/searching/config.html#Config.create_search_engine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config.create_search_engine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiate a search engine from the YAML configuration.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.config.Config.interfaces_package">
-<code class="descname">interfaces_package</code><a class="headerlink" href="#swisstext.cmd.searching.config.Config.interfaces_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the complete package where the interfaces are defined, if any.
-In case this is defined and a tool is missing from the list, we will try to instantiate
-the interface instead.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.config.Config.tool_entry_name">
-<code class="descname">tool_entry_name</code><a class="headerlink" href="#swisstext.cmd.searching.config.Config.tool_entry_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the name of the tool_entries option, i.e. the YAML path to the dictionary of
-[interface name, canonical class to instantiate].</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.config.Config.valid_tool_entries">
-<code class="descname">valid_tool_entries</code><a class="headerlink" href="#swisstext.cmd.searching.config.Config.valid_tool_entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the list of valid tool entries under the <a class="reference internal" href="#swisstext.cmd.searching.config.Config.tool_entry_name" title="swisstext.cmd.searching.config.Config.tool_entry_name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tool_entry_name</span></code></a>.
-Note that the order of tools in the list defines the order of tools instances returned by
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">instantiate_tools()</span></code>.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="pipeline-implementation">
+<h2>Pipeline implementation<a class="headerlink" href="#pipeline-implementation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.impl.html">Pipeline implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.searching.impl.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
 </div>
-<div class="section" id="module-swisstext.cmd.searching.data">
-<span id="pipeline-implementation"></span><h2>Pipeline implementation<a class="headerlink" href="#module-swisstext.cmd.searching.data" title="Permalink to this headline">¶</a></h2>
-<p>This module defines the generic data structures used across the module / between the different tools.
-They have been thought to be decoupled from MongoDB for better flexibility/adaptability.</p>
-<dl class="class">
-<dt id="swisstext.cmd.searching.data.Seed">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.searching.data.</code><code class="descname">Seed</code><span class="sig-paren">(</span><em>query: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/searching/data.html#Seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.data.Seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Holds informations on a seed, i.e. a query.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.data.Seed.new_links">
-<code class="descname">new_links</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.data.Seed.new_links" title="Permalink to this definition">¶</a></dt>
-<dd><p>the new links found after the search</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.data.Seed.query">
-<code class="descname">query</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.data.Seed.query" title="Permalink to this definition">¶</a></dt>
-<dd><p>the query terms</p>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-swisstext.cmd.searching.pipeline"></span><p>This module contains the core of the searching system.</p>
-<dl class="class">
-<dt id="swisstext.cmd.searching.pipeline.SearchEngine">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.searching.pipeline.</code><code class="descname">SearchEngine</code><span class="sig-paren">(</span><em>searcher: swisstext.cmd.searching.interfaces.ISearcher</em>, <em>saver: swisstext.cmd.searching.interfaces.ISaver</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/searching/pipeline.html#SearchEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>The search engine implements all the logic of searching seeds and persisting results.</p>
-<p>Note that this class is usually instantiated by a <a class="reference internal" href="#swisstext.cmd.searching.config.Config" title="swisstext.cmd.searching.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> object.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.searching.pipeline.SearchEngine.new_urls">
-<code class="descname">new_urls</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.new_urls" title="Permalink to this definition">¶</a></dt>
-<dd><p>the list of URLs discovered during the lifetime of the object</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.searching.pipeline.SearchEngine.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>seeds: List[swisstext.cmd.searching.data.Seed], max_results=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do the magic.</p>
-<p>Note that this method has not been implemented having multithreading in minds, as most of the time
-search engine APIs are limited and pretty fast…</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 </div>
 
@@ -226,18 +212,22 @@ search engine APIs are limited and pretty fast…</p>
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Searching commandline tool</a><ul>
-<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#st-search">st_search</a><ul>
+<li><a class="reference internal" href="#st-search-dump-config">dump_config</a></li>
+<li><a class="reference internal" href="#st-search-from-file">from_file</a></li>
+<li><a class="reference internal" href="#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-swisstext.cmd.searching.interfaces">Tool interfaces</a></li>
 <li><a class="reference internal" href="#tool-implementations">Tool implementations</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.searching.config">Configuration</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.searching.data">Pipeline implementation</a></li>
+<li><a class="reference internal" href="#pipeline-implementation">Pipeline implementation</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="swisstext.cmd.scraping.tools.html"
-                        title="previous chapter">Command line scraping tools</a></p>
+  <p class="topless"><a href="swisstext.cmd.scraping.impl.html"
+                        title="previous chapter">Pipeline implementation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="swisstext.cmd.searching.tools.html"
                         title="next chapter">Command line searching tools</a></p>
@@ -275,7 +265,7 @@ search engine APIs are limited and pretty fast…</p>
           <a href="swisstext.cmd.searching.tools.html" title="Command line searching tools"
              >next</a> |</li>
         <li class="right" >
-          <a href="swisstext.cmd.scraping.tools.html" title="Command line scraping tools"
+          <a href="swisstext.cmd.scraping.impl.html" title="Pipeline implementation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="apireference.html" >API Reference</a> &#187;</li>

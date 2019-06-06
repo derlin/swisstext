@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AlsWiki dumps parser &#8212; SwissText  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About this documentation" href="aboutthedoc.html" />
+    <link rel="prev" title="Command line searching tools" href="swisstext.cmd.searching.tools.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="aboutthedoc.html" title="About this documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="swisstext.cmd.searching.tools.html" title="Command line searching tools"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="apireference.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-swisstext.alswiki">
+<span id="alswiki-dumps-parser"></span><h1>AlsWiki dumps parser<a class="headerlink" href="#module-swisstext.alswiki" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="commandline">
+<h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">st_alswiki</span> <span class="pre">-h</span></code> to discover all the capabilities of the tool.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Usage: st_alswiki [OPTIONS] COMMAND [ARGS]...
+
+  A suite of tools for downloading, parsing and processing wikipedia dumps.
+
+Options:
+  -l, --log-level [debug|info|warning|fatal]
+  -h, --help                      Show this message and exit.
+
+Commands:
+  download  Download the latest dump of als.wikipedia.org.
+  parse     Extract articles from a wiki dump.
+  process   Process articles using the scraping pipeline.
+  txt       Process a text file.
+</pre></div>
+</div>
+</div>
+<div class="section" id="alswiki-dumps">
+<h2>Alswiki dumps<a class="headerlink" href="#alswiki-dumps" title="Permalink to this headline">¶</a></h2>
+<p>If you want to add the sentences from an alswiki dump to the mongo database, you can use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>st_alswiki download
+st_alsiwiki parse alswiki-latest-pages-articles.xml.bz2
+st_alswiki process alswiki-20190101-pages-articles.json.bz2
+</pre></div>
+</div>
+<p>Remember that by default, the scraping pipeline is configured to use MongoDB on localhost. If you would rather get the output into a file, just pass a custom <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> file to the <code class="docutils literal notranslate"><span class="pre">process</span></code> subcommand using the <code class="docutils literal notranslate"><span class="pre">-c</span></code> option.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># custom config: output the results to stdout</span>
+<span class="nt">pipeline</span><span class="p">:</span>
+  <span class="nt">saver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.console_saver.ConsoleSaver</span>
+
+<span class="nt">saver_options</span><span class="p">:</span>
+  <span class="c1"># where to save the output (default to stdout)</span>
+  <span class="nt">sentences_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alswiki_sentences.txt</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For old dumps with older XML syntax, you can use <a class="reference external" href="https://github.com/attardi/wikiextractor">WikiExtractor.py</a> to extract text from the dumps, get the text from the JSON file and then use the txt subcommand.</p>
+</div>
+</div>
+<div class="section" id="processing-text-files">
+<h2>Processing text files<a class="headerlink" href="#processing-text-files" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">alswiki</span> <span class="pre">txt</span></code> subcommand will use only a subpart of the pipeline. It will use:</p>
+<ol class="arabic simple">
+<li><p><em>splitter</em>: split text into sentences</p></li>
+<li><p><em>filter</em>: filter out ill/invalid sentences</p></li>
+<li><p><em>language id</em>: filter out non Swiss German sentences</p></li>
+</ol>
+<p>And write the results to stdout.</p>
+<p>The configuration file is the same as the scraping tool, so it is possible to select which tool implementation to use. To skip any of the above steps, create a custom configuration and:</p>
+<ul class="simple">
+<li><p>for 1. and 2., specify the interface in the configuration pipeline</p></li>
+<li><p>for 3., set the <code class="docutils literal notranslate"><span class="pre">option.min_proba</span></code> to 0 in the configuration</p></li>
+</ul>
+<p>For example, this configuration will do nothing:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># turn off EVERY TOOl (hence doing nothing)</span>
+
+<span class="nt">pipeline</span><span class="p">:</span>
+    <span class="nt">splitter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swisstext.cmd.scraping.interfaces.ISplitter</span>
+    <span class="nt">sentence_filter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swisstext.cmd.scraping.interfaces.ISentenceFilter</span>
+
+<span class="nt">options</span><span class="p">:</span>
+  <span class="nt">min_proba</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.85</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AlsWiki dumps parser</a><ul>
+<li><a class="reference internal" href="#commandline">Commandline</a></li>
+<li><a class="reference internal" href="#alswiki-dumps">Alswiki dumps</a></li>
+<li><a class="reference internal" href="#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="swisstext.cmd.searching.tools.html"
+                        title="previous chapter">Command line searching tools</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="aboutthedoc.html"
+                        title="next chapter">About this documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/swisstext.alswiki.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="aboutthedoc.html" title="About this documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="swisstext.cmd.searching.tools.html" title="Command line searching tools"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SwissText  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="apireference.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Lucy Linder.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>

@@ -46,7 +46,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
 
-<div class="viewcode-block" id="PageScore"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.data.PageScore">[docs]</a><span class="k">class</span> <span class="nc">PageScore</span><span class="p">:</span>
+<div class="viewcode-block" id="PageScore"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.data.PageScore">[docs]</a><span class="k">class</span> <span class="nc">PageScore</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Scoring information for a page used, among other things, to decide if a URL should be crawled or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -57,7 +57,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">delta_date</span> <span class="o">=</span> <span class="n">delta_date</span>  <span class="c1">#: date of the last visit (in UTC) or None if never visited</span></div>
 
 
-<div class="viewcode-block" id="Sentence"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.data.Sentence">[docs]</a><span class="k">class</span> <span class="nc">Sentence</span><span class="p">:</span>
+<div class="viewcode-block" id="Sentence"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.data.Sentence">[docs]</a><span class="k">class</span> <span class="nc">Sentence</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Information about a sentence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -70,7 +70,7 @@
         <span class="k">return</span> <span class="s2">&quot;(&lt;</span><span class="si">%.2f</span><span class="s2">|</span><span class="si">%s</span><span class="s2">&gt;)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proba</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Page"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.data.Page">[docs]</a><span class="k">class</span> <span class="nc">Page</span><span class="p">:</span>
+<div class="viewcode-block" id="Page"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.data.Page">[docs]</a><span class="k">class</span> <span class="nc">Page</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Information about a page.</span>
 <span class="sd">    Some attributes should be defined upon creation (see :py:meth:`swisstext.cmd.scraping.interfaces.ISaver.get_page`),</span>
@@ -87,7 +87,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sg_count</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#: number of Swiss German sentences on the page, wether they are new or not</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">:</span> <span class="n">PageScore</span> <span class="o">=</span> <span class="n">score</span> <span class="ow">or</span> <span class="n">PageScore</span><span class="p">()</span>  <span class="c1">#: page score</span>
 
-<div class="viewcode-block" id="Page.is_new"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.data.Page.is_new">[docs]</a>    <span class="k">def</span> <span class="nf">is_new</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="Page.is_new"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.data.Page.is_new">[docs]</a>    <span class="k">def</span> <span class="nf">is_new</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Test if the page is new or not, based on the :py:attr:`delta_date`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="o">.</span><span class="n">delta_date</span></div>
 

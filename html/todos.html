@@ -49,11 +49,6 @@
 <p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/__init__.py:docstring of swisstext.cmd, line 43.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Also exit cleanly when only one worker runs in the main thread</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/commandline.py:docstring of swisstext.cmd.scraping.commandline, line 9.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>This piece of code (and the commandline) has many flaws and should clearly be enhanced… For example:</p>
 <p><strong>Multithreading</strong>: currently, the worker stops when the queue is empty. This also means that if
 you launch the system with only 3 base urls but 5 workers, 2 workers will exit immediately instead
@@ -63,18 +58,29 @@ when all workers reached a task with a depth &gt; max depth…</p>
 <p><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
 Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-1"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/pipeline.py:docstring of swisstext.cmd.scraping.pipeline.PipelineWorker.run, line 19.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/pipeline.py:docstring of swisstext.cmd.scraping.pipeline.PipelineWorker.run, line 23.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Find a way to avoid altering the soup object.. ?</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/bs_crawler.py:docstring of swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_text_blocks, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Make more thorough tests to determine if those heuristics are worth it. If so, make this implementation
 the default.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-0"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/bs_crawler.py:docstring of swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler, line 14.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-1"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/bs_crawler.py:docstring of swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler, line 14.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Train a Punkt model for Swiss-German.</p>
+<p>Find a way to avoid altering the soup object.. ?</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-1"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/punkt_splitter.py:docstring of swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-2"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/bs_crawler.py:docstring of swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler.extract_text_blocks, line 8.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Train a Punkt model for Swiss-German.
+(<a class="reference external" href="https://stackoverflow.com/questions/21160310/training-data-format-for-nltk-punkt">https://stackoverflow.com/questions/21160310/training-data-format-for-nltk-punkt</a>)</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="swisstext.cmd.scraping.tools.html#index-3"><em>original entry</em></a> is located in /Users/lin/git/swisstext/backend/swisstext/cmd/scraping/tools/punkt_splitter.py:docstring of swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter, line 11.)</p>
 </div>
 
 

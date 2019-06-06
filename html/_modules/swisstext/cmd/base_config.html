@@ -184,6 +184,9 @@
         <span class="k">if</span> <span class="n">root</span> <span class="ow">and</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">root</span><span class="p">:</span>
             <span class="n">root</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
+<div class="viewcode-block" id="BaseConfig.dumps"><a class="viewcode-back" href="../../../swisstext.cmd.html#swisstext.cmd.base_config.BaseConfig.dumps">[docs]</a>    <span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">_get_subdict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop_name</span><span class="p">):</span>
         <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span>
         <span class="n">props</span> <span class="o">=</span> <span class="n">prop_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>

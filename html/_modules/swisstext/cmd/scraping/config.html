@@ -57,13 +57,13 @@
     <span class="s1">&#39;saver&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The default configuration file for the scraping pipeline is defined in ``config.yaml``. This is the best way</span>
 <span class="sd">    to understand what options are available.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Config.Options"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.config.Config.Options">[docs]</a>    <span class="k">class</span> <span class="nc">Options</span><span class="p">:</span>
+<div class="viewcode-block" id="Config.Options"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.config.Config.Options">[docs]</a>    <span class="k">class</span> <span class="nc">Options</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Holds the general options for the scraping pipeline.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_proba</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">crawl_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -86,7 +86,7 @@
     <span class="k">def</span> <span class="nf">tool_entry_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;pipeline&#39;</span>
 
-<div class="viewcode-block" id="Config.create_pipeline"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.config.Config.create_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">create_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipeline</span><span class="p">:</span>
+<div class="viewcode-block" id="Config.create_pipeline"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.config.Config.create_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">create_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipeline</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate a pipeline from the YAML configuration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

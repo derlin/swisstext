@@ -13,4 +13,5 @@ Subpackages
 
     swisstext.mongo
     swisstext.cmd
+    swisstext.alswiki
 

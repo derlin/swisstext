@@ -49,11 +49,6 @@
 
 <span class="sd">Use the `--help` option to discover the capabilities and options of the tool.</span>
 
-
-<span class="sd">.. todo::</span>
-
-<span class="sd">    Also exit cleanly when only one worker runs in the main thread</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">threading</span>
@@ -70,26 +65,55 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;swisstext.cmd.scraper&#39;</span><span class="p">)</span>
 <span class="n">logger_default_level</span> <span class="o">=</span> <span class="s2">&quot;info&quot;</span>
 
-<span class="c1"># Those variables will be populated automatically in the cli method, which is</span>
-<span class="c1"># called previous to any other click command</span>
-<span class="n">config</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">pipeline</span><span class="p">:</span> <span class="n">Pipeline</span>
-<span class="n">queue</span><span class="p">:</span> <span class="n">Queue</span>
+
+<div class="viewcode-block" id="GlobalOptions"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.commandline.GlobalOptions">[docs]</a><span class="k">class</span> <span class="nc">GlobalOptions</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Hold the options used by all tools, using lazy instantiation if possible.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gen_seeds</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param config_path: path to an optional user configuration path</span>
+<span class="sd">        :param gen_seeds: whether or not to generate seeds</span>
+<span class="sd">        :param db: name of the mongo db to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gen_seeds</span> <span class="o">=</span> <span class="n">gen_seeds</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_path</span> <span class="o">=</span> <span class="n">config_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">:</span> <span class="n">Pipeline</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">PageQueue</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Configuration object (lazy loaded).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;saver_options.db&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipeline</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Pipeline holding the tool instances (lazy loaded).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">create_pipeline</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span></div>
 
 
 <span class="c1"># ============== main entrypoint</span>
 
-<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">context_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">help_option_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">]))</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--log-level&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="s2">&quot;fatal&quot;</span><span class="p">]),</span>
               <span class="n">default</span><span class="o">=</span><span class="n">logger_default_level</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config-path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--db&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If set, this will override the database set in the config&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">cli</span><span class="p">(</span><span class="n">log_level</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">cli</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">log_level</span><span class="p">,</span> <span class="n">config_path</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">sys</span>
     <span class="c1"># configure all loggers (log to stderr)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
         <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
-        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&#39;</span><span class="si">%(asctime)s</span><span class="s2"> [</span><span class="si">%(name)-15s</span><span class="s2"> </span><span class="si">%(levelname)-5s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> [</span><span class="si">%(name)-15s</span><span class="s2"> </span><span class="si">%(levelname)-5s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S&#39;</span><span class="p">)</span>
 
     <span class="c1"># only set the logging level on our classes</span>
@@ -98,20 +122,27 @@
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;swisstext.cmd.scraping.tools.pattern_sentence_filter&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
 
     <span class="c1"># instantiate configuration and global variables</span>
-    <span class="k">global</span> <span class="n">config</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">gen_seeds</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span> <span class="k">if</span> <span class="n">config_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">db</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;saver_options.db&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">create_pipeline</span><span class="p">()</span>
-    <span class="n">queue</span> <span class="o">=</span> <span class="n">PageQueue</span><span class="p">()</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">GlobalOptions</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">gen_seeds</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
 
 
 <span class="c1"># ============== available commands</span>
 
 <span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;dump_config&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">dump_config</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Prints the active configuration.&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">pyaml</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">pyaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">conf</span><span class="p">))</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Also instantiate the tools&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">dump_config</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints the active configuration. If &lt;test&gt; is set, the pipeline is also instantiated,</span>
+<span class="sd">    ensuring all tool names exist and use correct options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">test</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Instantiating tools...&#39;</span><span class="p">)</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">instantiate_tools</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Success.&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Error instantiating tools.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
 
 <span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;gen_seeds&#39;</span><span class="p">)</span>
@@ -119,7 +150,8 @@
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--num&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of seeds to generate.&quot;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--new/--any&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use the newest sentences&quot;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--confirm&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Ask for confirmation before saving.&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">gen_seeds</span><span class="p">(</span><span class="n">num_sentences</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">confirm</span><span class="p">):</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">gen_seeds</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">num_sentences</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">confirm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate seeds from a sample of mongo sentences.</span>
 
@@ -133,7 +165,7 @@
 <span class="sd">    (default: localhost:27017, db=swisstext).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">swisstext.mongo.models</span> <span class="k">import</span> <span class="n">MongoSentence</span><span class="p">,</span> <span class="n">get_connection</span>
-    <span class="k">with</span> <span class="n">get_connection</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;saver_options&#39;</span><span class="p">)):</span>
+    <span class="k">with</span> <span class="n">get_connection</span><span class="p">(</span><span class="o">**</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;saver_options&#39;</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">new</span><span class="p">:</span>
             <span class="c1"># simply order sentences by date_added, descending</span>
             <span class="n">sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">MongoSentence</span><span class="o">.</span><span class="n">objects</span> \
@@ -148,19 +180,20 @@
             <span class="p">]</span>
             <span class="n">sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">MongoSentence</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="o">*</span><span class="n">aggregation_pipeline</span><span class="p">)]</span>
 
-    <span class="n">seeds</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">seeder</span><span class="o">.</span><span class="n">generate_seeds</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+    <span class="n">seeds</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">seeder</span><span class="o">.</span><span class="n">generate_seeds</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">confirm</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">click</span><span class="o">.</span><span class="n">confirm</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
-                <span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+                <span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seeds</span><span class="p">(</span><span class="n">seeds</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seeds</span><span class="p">(</span><span class="n">seeds</span><span class="p">)</span>
 
 
 <span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;from_mongo&#39;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--num-urls&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Max URLs crawled in one pass.&quot;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--new/--any&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only crawl new URLs&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">crawl_mongo</span><span class="p">(</span><span class="n">num_urls</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">crawl_mongo</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">num_urls</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Scrape using mongo URLs as base.</span>
 
@@ -176,11 +209,11 @@
 <span class="sd">    (default: localhost:27017, db=swisstext).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">swisstext.mongo.models</span> <span class="k">import</span> <span class="n">MongoURL</span><span class="p">,</span> <span class="n">get_connection</span>
-    <span class="k">with</span> <span class="n">get_connection</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;saver_options&#39;</span><span class="p">)):</span>
+    <span class="k">with</span> <span class="n">get_connection</span><span class="p">(</span><span class="o">**</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;saver_options&#39;</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">new</span><span class="p">:</span>
             <span class="c1"># just get the URLs never visited</span>
             <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">get_never_crawled</span><span class="p">()</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">num_urls</span><span class="p">):</span>
-                <span class="n">enqueue</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">_enqueue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># order URLs by number of visits (ascending) and last visited date (ascending)</span>
             <span class="n">aggregation_pipeline</span> <span class="o">=</span> <span class="p">[</span>
@@ -192,15 +225,16 @@
                 <span class="p">{</span><span class="s2">&quot;$limit&quot;</span><span class="p">:</span> <span class="n">num_urls</span><span class="p">}</span>
             <span class="p">]</span>
             <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="o">*</span><span class="n">aggregation_pipeline</span><span class="p">):</span>
-                <span class="n">enqueue</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">])</span>
+                <span class="n">_enqueue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">])</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Enqueued </span><span class="si">%d</span><span class="s2"> URLs from Mongo&quot;</span> <span class="o">%</span> <span class="n">queue</span><span class="o">.</span><span class="n">unfinished_tasks</span><span class="p">)</span>
-    <span class="n">_scrape</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Enqueued </span><span class="si">%d</span><span class="s2"> URLs from Mongo&quot;</span> <span class="o">%</span> <span class="n">ctx</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">unfinished_tasks</span><span class="p">)</span>
+    <span class="n">_scrape</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
 
 
 <span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;from_file&#39;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;urlfile&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">))</span>
-<span class="k">def</span> <span class="nf">crawl_from_file</span><span class="p">(</span><span class="n">urlfile</span><span class="p">):</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_obj</span>
+<span class="k">def</span> <span class="nf">crawl_from_file</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">urlfile</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Scrape using URLs in a file as base.</span>
 
@@ -208,19 +242,20 @@
 <span class="sd">    The file should have one URL per line. Any line starting with something other that &quot;http&quot; will be ignored.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">urlfile</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">is_url_blacklisted</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
-            <span class="n">enqueue</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-    <span class="n">_scrape</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">is_url_blacklisted</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+            <span class="n">_enqueue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">_scrape</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
 
 
 <span class="c1"># ============== main methods</span>
 
-<div class="viewcode-block" id="enqueue"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.commandline.enqueue">[docs]</a><span class="k">def</span> <span class="nf">enqueue</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
-    <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># set depth to 1</span></div>
+<span class="k">def</span> <span class="nf">_enqueue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">ctx</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># set depth to 1</span>
 
 
-<span class="k">def</span> <span class="nf">_scrape</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">_scrape</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">worker_cls</span><span class="o">=</span><span class="n">PipelineWorker</span><span class="p">):</span>
     <span class="c1"># do the magic</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using config:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
 
     <span class="kn">import</span> <span class="nn">time</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -237,7 +272,7 @@
         <span class="c1"># use multiple threads</span>
         <span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">NUM_WORKERS</span><span class="p">,</span> <span class="n">queue</span><span class="o">.</span><span class="n">unfinished_tasks</span><span class="p">)):</span>
-            <span class="n">worker</span> <span class="o">=</span> <span class="n">PipelineWorker</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">worker</span> <span class="o">=</span> <span class="n">worker_cls</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
             <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
             <span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">worker</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
@@ -260,7 +295,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># TODO: also make the pipeline finish smoothly on ctrl+c ??</span>
         <span class="c1"># only one worker -&gt; don&#39;t bother with threads</span>
-        <span class="n">worker</span> <span class="o">=</span> <span class="n">PipelineWorker</span><span class="p">()</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">worker_cls</span><span class="p">()</span>
         <span class="n">worker</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Found </span><span class="si">%d</span><span class="s2"> new sentences.&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_sentences</span><span class="p">))</span>

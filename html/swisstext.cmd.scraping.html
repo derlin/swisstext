@@ -49,19 +49,127 @@
   <div class="section" id="module-swisstext.cmd.scraping">
 <span id="scraping-commandline-tool"></span><h1>Scraping commandline tool<a class="headerlink" href="#module-swisstext.cmd.scraping" title="Permalink to this headline">¶</a></h1>
 <p>The scraping module is able to scrape the web in order to find new Swiss German sentences.</p>
-<span class="target" id="module-swisstext.cmd.scraping.commandline"></span><p>This module contains the commandline interface for the scraper.</p>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p>Use the <cite>–help</cite> option to discover the capabilities and options of the tool.</p>
-<div class="admonition-todo admonition" id="index-0">
-<p class="admonition-title">Todo</p>
-<p>Also exit cleanly when only one worker runs in the main thread</p>
+<div class="section" id="st-scrape">
+<h2>st_scrape<a class="headerlink" href="#st-scrape" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_scrape <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
 </div>
-<dl class="function">
-<dt id="swisstext.cmd.scraping.commandline.enqueue">
-<code class="descclassname">swisstext.cmd.scraping.commandline.</code><code class="descname">enqueue</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/commandline.html#enqueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.commandline.enqueue" title="Permalink to this definition">¶</a></dt>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-scrape-l">
+<code class="descname">-l</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--log-level</code><code class="descclassname"> &lt;log_level&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-l" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="option">
+<dt id="cmdoption-st-scrape-c">
+<code class="descname">-c</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--config-path</code><code class="descclassname"> &lt;config_path&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-scrape-d">
+<code class="descname">-d</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--db</code><code class="descclassname"> &lt;db&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, this will override the database set in the config</p>
+</dd></dl>
+
+<div class="section" id="st-scrape-dump-config">
+<h3>dump_config<a class="headerlink" href="#st-scrape-dump-config" title="Permalink to this headline">¶</a></h3>
+<p>Prints the active configuration. If &lt;test&gt; is set, the pipeline is also instantiated,
+ensuring all tool names exist and use correct options.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_scrape dump_config <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-scrape-dump-config-t">
+<code class="descname">-t</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--test</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-scrape-dump-config-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Also instantiate the tools</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-scrape-from-file">
+<h3>from_file<a class="headerlink" href="#st-scrape-from-file" title="Permalink to this headline">¶</a></h3>
+<p>Scrape using URLs in a file as base.</p>
+<p>This script runs the scraping pipeline using the URLs present in a file as bootstrap URLs.
+The file should have one URL per line. Any line starting with something other that “http” will be ignored.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_scrape from_file <span class="o">[</span>OPTIONS<span class="o">]</span> URLFILE
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-st-scrape-from-file-arg-urlfile">
+<code class="descname">URLFILE</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-scrape-from-file-arg-urlfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-scrape-from-mongo">
+<h3>from_mongo<a class="headerlink" href="#st-scrape-from-mongo" title="Permalink to this headline">¶</a></h3>
+<p>Scrape using mongo URLs as base.</p>
+<p>This script runs the scraping pipeline using -n bootstrap URLs pulled from Mongo. Those URLs are
+selected depending on the number of visits and the date of the last visit (less visited first, oldest visit first).
+If –new is specified, only URLs that have never been visited will be used (so the number of bootstrap URLs
+actually used might be less than -n, if not enough new URLs are present).
+If –any is specified, exactly -n URLs are selected (except if -n is less than the total number of URLs in the
+collection).</p>
+<p>Note that to connect to MongoDB, it relies on the host, port and db options present in the <cite>saver_options</cite> property
+of the configuration. So whatever saver you use, ensure that those properties are correct
+(default: localhost:27017, db=swisstext).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_scrape from_mongo <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-scrape-from-mongo-n">
+<code class="descname">-n</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--num-urls</code><code class="descclassname"> &lt;num_urls&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-from-mongo-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max URLs crawled in one pass.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-scrape-from-mongo-new">
+<code class="descname">--new</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--any</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-scrape-from-mongo-new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only crawl new URLs</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-scrape-gen-seeds">
+<h3>gen_seeds<a class="headerlink" href="#st-scrape-gen-seeds" title="Permalink to this headline">¶</a></h3>
+<p>Generate seeds from a sample of mongo sentences.</p>
+<p>This script generates -n seeds using a given number of sentences (-s) pulled from MongoDB.
+If –new is specified, the latest sentences are used (date_added).
+If –any is specified, sentences are selected randomly.</p>
+<p>Note that: (1) seeds will be saved to the persistence layer using the saver class specified in the configuration.
+(2) to connect to MongoDB, it relies on the host, port and db options present in the <cite>saver_options</cite> property
+of the configuration. So whatever saver you use, ensure that those properties are correct
+(default: localhost:27017, db=swisstext).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_scrape gen_seeds <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-scrape-gen-seeds-s">
+<code class="descname">-s</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--num-sentences</code><code class="descclassname"> &lt;num_sentences&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-gen-seeds-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of sentences to use.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-scrape-gen-seeds-n">
+<code class="descname">-n</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--num</code><code class="descclassname"> &lt;num&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-gen-seeds-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of seeds to generate.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-scrape-gen-seeds-new">
+<code class="descname">--new</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--any</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-scrape-gen-seeds-new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the newest sentences</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-scrape-gen-seeds-c">
+<code class="descname">-c</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--confirm</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-st-scrape-gen-seeds-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask for confirmation before saving.</p>
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="module-swisstext.cmd.scraping.interfaces">
 <span id="tool-interfaces"></span><h2>Tool interfaces<a class="headerlink" href="#module-swisstext.cmd.scraping.interfaces" title="Permalink to this headline">¶</a></h2>
@@ -193,7 +301,7 @@ list of new :py:class::<cite>~swisstext.cmd.scraping.data.Sentence</cite> found.
 <dt id="swisstext.cmd.scraping.interfaces.ISaver.sentence_exists">
 <code class="descname">sentence_exists</code><span class="sig-paren">(</span><em>sentence: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/swisstext/cmd/scraping/interfaces.html#ISaver.sentence_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISaver.sentence_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>[ABSTRACT] Tells if the given Swiss German <cite>sentence</cite> already exists.
-Only new sentences will be added to the page’s <a class="reference internal" href="#swisstext.cmd.scraping.data.Page.new_sg" title="swisstext.cmd.scraping.data.Page.new_sg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">new_sg</span></code></a> attribute.</p>
+Only new sentences will be added to the page’s <a class="reference internal" href="swisstext.cmd.scraping.impl.html#swisstext.cmd.scraping.data.Page.new_sg" title="swisstext.cmd.scraping.data.Page.new_sg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">new_sg</span></code></a> attribute.</p>
 </dd></dl>
 
 </dd></dl>
@@ -303,298 +411,19 @@ The default implementation just splits on the newline character.</p>
 </ul>
 </div>
 </div>
-<div class="section" id="module-swisstext.cmd.scraping.config">
-<span id="configuration"></span><h2>Configuration<a class="headerlink" href="#module-swisstext.cmd.scraping.config" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.config.Config">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.config.</code><code class="descname">Config</code><span class="sig-paren">(</span><em>config: Union[str</em>, <em>dict</em>, <em>io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="swisstext.cmd.html#swisstext.cmd.base_config.BaseConfig" title="swisstext.cmd.base_config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.base_config.BaseConfig</span></code></a></p>
-<p>The default configuration file for the scraping pipeline is defined in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>. This is the best way
-to understand what options are available.</p>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.config.Config.Options">
-<em class="property">class </em><code class="descname">Options</code><span class="sig-paren">(</span><em>num_workers=1</em>, <em>min_proba=0.85</em>, <em>crawl_depth=2</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Holds the general options for the scraping pipeline.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.Options.crawl_depth">
-<code class="descname">crawl_depth</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.crawl_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>maximum depth of the crawl, inclusive.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.Options.min_proba">
-<code class="descname">min_proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.min_proba" title="Permalink to this definition">¶</a></dt>
-<dd><p>minimum Swiss German probability to keep a sentence</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.Options.num_workers">
-<code class="descname">num_workers</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.num_workers" title="Permalink to this definition">¶</a></dt>
-<dd><p>maximum number of threads to use</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.scraping.config.Config.create_pipeline">
-<code class="descname">create_pipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.pipeline.Pipeline<a class="reference internal" href="_modules/swisstext/cmd/scraping/config.html#Config.create_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.create_pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instantiate a pipeline from the YAML configuration.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.interfaces_package">
-<code class="descname">interfaces_package</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.interfaces_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the complete package where the interfaces are defined, if any.
-In case this is defined and a tool is missing from the list, we will try to instantiate
-the interface instead.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.tool_entry_name">
-<code class="descname">tool_entry_name</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the name of the tool_entries option, i.e. the YAML path to the dictionary of
-[interface name, canonical class to instantiate].</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.config.Config.valid_tool_entries">
-<code class="descname">valid_tool_entries</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.valid_tool_entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return the list of valid tool entries under the <a class="reference internal" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="swisstext.cmd.scraping.config.Config.tool_entry_name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tool_entry_name</span></code></a>.
-Note that the order of tools in the list defines the order of tools instances returned by
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">instantiate_tools()</span></code>.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-swisstext.cmd.scraping.data">
-<span id="pipeline-implementation"></span><h2>Pipeline implementation<a class="headerlink" href="#module-swisstext.cmd.scraping.data" title="Permalink to this headline">¶</a></h2>
-<p>This module defines the generic data structures used across the module / between the different tools.
-They have been thought to be decoupled from MongoDB for better flexibility/adaptability.</p>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.data.Page">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">Page</code><span class="sig-paren">(</span><em>url</em>, <em>score=None</em>, <em>parent_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Information about a page.
-Some attributes should be defined upon creation (see <a class="reference internal" href="#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="swisstext.cmd.scraping.interfaces.ISaver.get_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISaver.get_page()</span></code></a>),
-will other will be added/used incrementally by the different tools of the pipeline.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.blacklisted">
-<code class="descname">blacklisted</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.blacklisted" title="Permalink to this definition">¶</a></dt>
-<dd><p>is the URL blacklisted ?</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.crawl_results">
-<code class="descname">crawl_results</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.crawl_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>results of the crawl (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ICrawler</span></code>)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.scraping.data.Page.is_new">
-<code class="descname">is_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Page.is_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.is_new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if the page is new or not, based on the <code class="xref py py-attr docutils literal notranslate"><span class="pre">delta_date</span></code>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.new_sg">
-<code class="descname">new_sg</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.new_sg" title="Permalink to this definition">¶</a></dt>
-<dd><p>new sentences found</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.parent_url">
-<code class="descname">parent_url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.parent_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>the parent URL, if the crawl depth is &gt; 1</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.score">
-<code class="descname">score</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>page score</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.sentence_count">
-<code class="descname">sentence_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sentence_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>total number of sentences on the page</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.sg_count">
-<code class="descname">sg_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sg_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>number of Swiss German sentences on the page, wether they are new or not</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Page.url">
-<code class="descname">url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.url" title="Permalink to this definition">¶</a></dt>
-<dd><p>the URL of the page</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="swisstext.cmd.scraping.data.PageScore">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">PageScore</code><span class="sig-paren">(</span><em>count=0</em>, <em>delta_count=0</em>, <em>delta_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#PageScore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Scoring information for a page used, among other things, to decide if a URL should be crawled or not.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.PageScore.count">
-<code class="descname">count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.count" title="Permalink to this definition">¶</a></dt>
-<dd><p>total number of new sentences found on this page (for all the visits)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.PageScore.delta_count">
-<code class="descname">delta_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>number of new sentences found on this page in the last visit</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.PageScore.delta_date">
-<code class="descname">delta_date</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>date of the last visit (in UTC) or None if never visited</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="swisstext.cmd.scraping.data.Sentence">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.data.</code><code class="descname">Sentence</code><span class="sig-paren">(</span><em>text: str</em>, <em>proba: float</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/data.html#Sentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Information about a sentence.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Sentence.proba">
-<code class="descname">proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.proba" title="Permalink to this definition">¶</a></dt>
-<dd><p>the Swiss German probability</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.data.Sentence.text">
-<code class="descname">text</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.text" title="Permalink to this definition">¶</a></dt>
-<dd><p>the exact text</p>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-swisstext.cmd.scraping.page_queue"></span><dl class="class">
-<dt id="swisstext.cmd.scraping.page_queue.PageQueue">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.page_queue.</code><code class="descname">PageQueue</code><span class="sig-paren">(</span><em>maxsize=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/page_queue.html#PageQueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.page_queue.PageQueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">queue.Queue</span></code></a></p>
-<p>A <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that ensures enqueued pages are unique and not clearly pointing to images or PDFs
-(i.e. ending with .jpg, .jpeg, .png or .pdf).</p>
-<p>Elements in the queue should be <strong>tuples</strong>, with the first element a <code class="xref py py-class docutils literal notranslate"><span class="pre">Page</span></code> and the second the
-crawl depth (as int)</p>
-</dd></dl>
-
-<span class="target" id="module-swisstext.cmd.scraping.pipeline"></span><p>This module contains the core of the scraping system.</p>
-<p>In order to be fully customizable, it uses the concept of interfaces heavily: most of the decisions and steps
-are delegated to instances of classes defined in <a class="reference internal" href="#module-swisstext.cmd.scraping.interfaces" title="swisstext.cmd.scraping.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a>.</p>
-<p>Here is an example usage.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">PipelineWorker</span>
-<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.data</span> <span class="kn">import</span> <span class="n">Page</span>
-<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.page_queue</span> <span class="kn">import</span> <span class="n">PageQueue</span>
-<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.config</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-
-<span class="c1"># print some information to the console</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;swisstext&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-
-<span class="n">queue</span><span class="p">:</span> <span class="n">PageQueue</span> <span class="o">=</span> <span class="n">PageQueue</span><span class="p">()</span>
-<span class="n">new_sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="c1"># load the config and create the default pipeline</span>
-<span class="c1"># WARNING: the default config will try to connect to MongoDB on localhost:27017</span>
-<span class="c1"># if you don&#39;t want to use Mongo, create a config file and use the ConsoleSaver instead</span>
-<span class="c1"># or use the hack: pipeline.saver = ConsoleSaver()</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="c1"># set the config path if you have one</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">create_pipeline</span><span class="p">()</span>
-
-<span class="c1"># add one page to the queue</span>
-<span class="n">start_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.hunold.ch/zw/goeteborg.html&#39;</span>
-<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">Page</span><span class="p">(</span><span class="n">start_url</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># add the tuple (url, depth) with a depth of 1</span>
-
-<span class="c1"># launch one worker</span>
-<span class="n">worker</span> <span class="o">=</span> <span class="n">PipelineWorker</span><span class="p">()</span>
-<span class="n">worker</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">new_sentences</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">crawl_depth</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="class">
-<dt id="swisstext.cmd.scraping.pipeline.Pipeline">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.pipeline.</code><code class="descname">Pipeline</code><span class="sig-paren">(</span><em>crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em>splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em>filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em>detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em>seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em>decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em>saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em>min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/pipeline.html#Pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Holds instances of all needed interfaces and variables.</p>
-<p>Note that pipelines are meant to be instantiated by a <a class="reference internal" href="#swisstext.cmd.scraping.config.Config" title="swisstext.cmd.scraping.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> object,
-not manually.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker">
-<em class="property">class </em><code class="descclassname">swisstext.cmd.scraping.pipeline.</code><code class="descname">PipelineWorker</code><span class="sig-paren">(</span><em>id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/pipeline.html#PipelineWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Pipeline workers actually do the magic and can be run in parallel.</p>
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.id">
-<code class="descname">id</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.id" title="Permalink to this definition">¶</a></dt>
-<dd><p>an identifier used in log messages, especially useful if multiple threads are used.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received">
-<code class="descname">kill_received</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received" title="Permalink to this definition">¶</a></dt>
-<dd><p>If the worker is launched in a thread, you can use this flag to make it exit prematurely.
-Workers will always finish processing the current page before exiting, so that we can ensure
-coherence in the persistence layer.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>queue: queue.Queue, p: swisstext.cmd.scraping.pipeline.Pipeline, new_sentences: List[str], max_depth=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swisstext/cmd/scraping/pipeline.html#PipelineWorker.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do the work ! All the magic is in here :)</p>
-<p>For each page pulled from the queue, the worker will execute all the steps of the scraping pipeline:</p>
-<ul class="simple">
-<li><p>get text and links,</p></li>
-<li><p>split and filter sentences,</p></li>
-<li><p>keep sentences with Swiss German,</p></li>
-<li><p>persist the results (url + sentences), if any</p></li>
-<li><p>add new tasks to the queue (if the page contains links to interesting URLs)</p></li>
+<div class="section" id="pipeline-implementation">
+<h2>Pipeline implementation<a class="headerlink" href="#pipeline-implementation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="swisstext.cmd.scraping.impl.html">Pipeline implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swisstext.cmd.scraping.impl.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
 </ul>
-<p>New sentences are added to the new_sentences list, so that the caller can easily know how fruitful the
-scraping was and optionaly use the new sentences to generate seeds.</p>
-<p>This method will stop:</p>
-<ul class="simple">
-<li><p>when the queue is empty or</p></li>
-<li><p>if the <a class="reference internal" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received" title="swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received"><code class="xref py py-attr docutils literal notranslate"><span class="pre">kill_received</span></code></a> is set to true. In this case, it finishes processing the current task and exit</p></li>
+</li>
 </ul>
-<div class="admonition-todo admonition" id="index-1">
-<p class="admonition-title">Todo</p>
-<p>This piece of code (and the commandline) has many flaws and should clearly be enhanced… For example:</p>
-<p><strong>Multithreading</strong>: currently, the worker stops when the queue is empty. This also means that if
-you launch the system with only 3 base urls but 5 workers, 2 workers will exit immediately instead
-of waiting for new tasks to be added to the queue.</p>
-<p>A better way would be to keep track of active workers and stop only when all workers are idle, or
-when all workers reached a task with a depth &gt; max depth…</p>
-<p><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
-Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?</p>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> – the task queue</p></li>
-<li><p><strong>p</strong> – the pipeline to use</p></li>
-<li><p><strong>new_sentences</strong> – all new sentences discovered will be added to this list</p></li>
-<li><p><strong>max_depth</strong> – when do we stop (inclusive)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 </div>
 
@@ -607,11 +436,16 @@ Should we also remove/blacklist the URL ? Should we allow the URL to fail X time
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Scraping commandline tool</a><ul>
-<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#st-scrape">st_scrape</a><ul>
+<li><a class="reference internal" href="#st-scrape-dump-config">dump_config</a></li>
+<li><a class="reference internal" href="#st-scrape-from-file">from_file</a></li>
+<li><a class="reference internal" href="#st-scrape-from-mongo">from_mongo</a></li>
+<li><a class="reference internal" href="#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-swisstext.cmd.scraping.interfaces">Tool interfaces</a></li>
 <li><a class="reference internal" href="#tool-implementations">Tool implementations</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.config">Configuration</a></li>
-<li><a class="reference internal" href="#module-swisstext.cmd.scraping.data">Pipeline implementation</a></li>
+<li><a class="reference internal" href="#pipeline-implementation">Pipeline implementation</a></li>
 </ul>
 </li>
 </ul>

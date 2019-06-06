@@ -49,7 +49,7 @@
 <span class="kn">from</span> <span class="nn">.interfaces</span> <span class="k">import</span> <span class="n">ISearcher</span><span class="p">,</span> <span class="n">ISaver</span>
 
 
-<div class="viewcode-block" id="SearchEngine"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.html#swisstext.cmd.searching.pipeline.SearchEngine">[docs]</a><span class="k">class</span> <span class="nc">SearchEngine</span><span class="p">:</span>
+<div class="viewcode-block" id="SearchEngine"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.impl.html#swisstext.cmd.searching.pipeline.SearchEngine">[docs]</a><span class="k">class</span> <span class="nc">SearchEngine</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The search engine implements all the logic of searching seeds and persisting results.</span>
 
@@ -60,20 +60,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">saver</span> <span class="o">=</span> <span class="n">saver</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1">#: the list of URLs discovered during the lifetime of the object</span>
 
-<div class="viewcode-block" id="SearchEngine.process"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.html#swisstext.cmd.searching.pipeline.SearchEngine.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Seed</span><span class="p">],</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="SearchEngine.process"><a class="viewcode-back" href="../../../../swisstext.cmd.searching.impl.html#swisstext.cmd.searching.pipeline.SearchEngine.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Seed</span><span class="p">],</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Do the magic.</span>
 
 <span class="sd">        Note that this method has not been implemented having multithreading in minds, as most of the time</span>
 <span class="sd">        search engine APIs are limited and pretty fast...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">added_urls</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">searcher</span><span class="o">.</span><span class="n">top_results</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="n">max_results</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">is_url_interesting</span><span class="p">(</span><span class="n">link</span><span class="p">)</span> <span class="ow">and</span> <span class="n">link</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">link_exists</span><span class="p">(</span><span class="n">link</span><span class="p">):</span>
                         <span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+                        <span class="n">added_urls</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">added_urls</span></div></div>
 </pre></div>
 
           </div>
