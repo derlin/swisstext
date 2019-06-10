@@ -12,10 +12,11 @@ Use the `--help` option to discover the capabilities and options of the tool.
 """
 import logging
 import threading
+from functools import partial
 
 import click
 
-from .page_queue import PageQueue, Queue
+from .page_queue import PageQueue
 from .config import Config
 from .interfaces import *
 from .pipeline import PipelineWorker, Pipeline
@@ -25,6 +26,7 @@ from .pipeline import PipelineWorker, Pipeline
 logger = logging.getLogger('swisstext.cmd.scraper')
 logger_default_level = "info"
 
+click.option = partial(click.option, show_default=True)  # show default in help (see click issues #646)
 
 class GlobalOptions:
     """Hold the options used by all tools, using lazy instantiation if possible."""
@@ -253,16 +255,30 @@ def _scrape(config, queue, pipeline, worker_cls=PipelineWorker):
             t.join()
 
     else:
-        # TODO: also make the pipeline finish smoothly on ctrl+c ??
         # only one worker -> don't bother with threads
         worker = worker_cls()
-        worker.run(*args)
+        try:
+            worker.run(*args)
+        except KeyboardInterrupt:
+            print('Interrupt received. Cleaning up...')
+            pass
 
     logger.info("Found %d new sentences." % len(new_sentences))
 
     # TODO remove
     with open('/tmp/new_sentences.txt', 'w') as f:
         f.write("\n".join(new_sentences))
+
+    logger.debug('Saving non-scraped pages for later.')
+    saved_urls = 0
+    while not queue.empty():
+        page, _ = queue.get()
+        if page.parent_url is not None:
+            # parent is None for initial URLs
+            pipeline.saver.save_url(page.url, page.parent_url)
+            saved_urls += 1
+        queue.task_done()
+    logger.info('Saved {} for later.'.format(saved_urls))
 
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))

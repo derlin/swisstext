@@ -60,6 +60,7 @@ class Pipeline:
     Note that pipelines are meant to be instantiated by a :py:class:`~swisstext.cmd.scraping.config.Config` object,
     not manually.
     """
+
     def __init__(self,
                  crawler: ICrawler,
                  splitter: ISplitter,
@@ -83,6 +84,7 @@ class PipelineWorker():
     """
     Pipeline workers actually do the magic and can be run in parallel.
     """
+
     def __init__(self, id=-1):
         self.id = id
         """an identifier used in log messages, especially useful if multiple threads are used."""
@@ -141,7 +143,7 @@ class PipelineWorker():
         :param max_depth: when do we stop (inclusive)
         """
         while not queue.empty():
-            (page, page_depth) = queue.get() # blocking !!
+            (page, page_depth) = queue.get()  # blocking !!
 
             if self.kill_received:
                 logger.info(f"W[{self.id}]: Kill received, stopping.")
@@ -149,7 +151,8 @@ class PipelineWorker():
 
             logger.debug(f"W[{self.id}]: processing {page.url} (depth={page_depth})")
             if page_depth > max_depth:
-                logging.info(f"W[{self.id}]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).")
+                logging.info(
+                    f"W[{self.id}]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).")
                 break
 
             if p.decider.should_page_be_crawled(page):
@@ -158,8 +161,8 @@ class PipelineWorker():
                     splitted: List[str] = p.splitter.split(page.crawl_results.text)
                     sentences: List[str] = p.filter.filter(splitted)
 
-                    page.sentence_count = 0 # count all the sentences found
-                    ns = [] # register new sentences here
+                    page.sentence_count = 0  # count all the sentences found
+                    ns = []  # register new sentences here
 
                     # TODO: change the detector interface to avoid zipping ?
                     for (s, proba) in zip(sentences, p.detector.predict(sentences)):
@@ -186,11 +189,7 @@ class PipelineWorker():
                                     child_page = p.saver.get_page(l, parent_url=page.url)
                                     # TODO redondant ?
                                     if p.decider.should_page_be_crawled(child_page):
-                                        if page_depth < max_depth:
-                                            queue.put((child_page, page_depth + 1))
-                                        elif child_page.is_new():
-                                            # save this new URL it for later
-                                            p.saver.save_url(child_page.url, child_page.parent_url)
+                                        queue.put((child_page, page_depth + 1))
                                         added_children += 1
                             logger.info("%s: added %d child URLs" % (page.url, added_children))
 

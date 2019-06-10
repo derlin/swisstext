@@ -17,6 +17,8 @@ Use the `--help` option to discover the capabilities and options of the tool.
 """
 
 import logging
+from functools import partial
+
 import click
 
 from .data import *
@@ -33,6 +35,8 @@ logger_default_level = "info"
 
 
 # ============== main entrypoint
+
+click.option = partial(click.option, show_default=True)  # show default in help (see click issues #646)
 
 @click.group(context_settings=dict(help_option_names=['-h', '--help']))
 @click.option('-l', '--log-level', type=click.Choice(["debug", "info", "warning", "fatal"]),
@@ -91,7 +95,7 @@ def process(config_path, db, gensimfile):
         if not pipeline.saver.is_url_blacklisted(article.url):
             page = pipeline.saver.get_page(article.url)
             page.article = article
-            queue.put((page, 1))  # set depth to 1
+            queue.put((page, None, 1))  # set depth to 1
             # pagewrap = PageWrapper(page, article)
             # queue.put((pagewrap, 1))  # set depth to 1
             worker.run(queue, pipeline, new_sentences, 1)
