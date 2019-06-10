@@ -136,7 +136,7 @@ class CleverBsCrawler(BsCrawler):
     """
     _main_selectors = ['[role=main]'] + \
                       [s
-                       for name in ['main', 'main-content', 'mainContent', 'MainContent']
+                       for name in ['main', 'main-content', 'mainContent', 'MainContent', 'wrapper']
                        for s in [f".{name}", f"#{name}"]]
 
     _exclude_selectors = ','.join(['header', '#header', 'footer', '#footer', '[role=footer]', '[role=navigation]'])
@@ -149,7 +149,7 @@ class CleverBsCrawler(BsCrawler):
         # try to extract main content
         for selector in self._main_selectors:
             main = soup.select(selector)
-            if main:
+            if len(main) == 1:
                 return main[0].stripped_strings
 
         # no main content found... try to remove header and footer
