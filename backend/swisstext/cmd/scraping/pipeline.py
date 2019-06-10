@@ -179,14 +179,18 @@ class PipelineWorker():
 
                     else:
                         p.saver.save_page(page)
-                        if page_depth < max_depth and p.decider.should_children_be_crawled(page):
+                        if p.decider.should_children_be_crawled(page):
                             added_children = 0
                             for l in page.crawl_results.links:
                                 if not p.saver.is_url_blacklisted(l):
                                     child_page = p.saver.get_page(l, parent_url=page.url)
                                     # TODO redondant ?
                                     if p.decider.should_page_be_crawled(child_page):
-                                        queue.put((child_page, page_depth + 1))
+                                        if page_depth < max_depth:
+                                            queue.put((child_page, page_depth + 1))
+                                        elif child_page.is_new():
+                                            # save this new URL it for later
+                                            p.saver.save_url(child_page.url, child_page.parent_url)
                                         added_children += 1
                             logger.info("%s: added %d child URLs" % (page.url, added_children))
 

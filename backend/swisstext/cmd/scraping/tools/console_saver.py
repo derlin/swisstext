@@ -23,6 +23,8 @@ class ConsoleSaver(ISaver):
         super().__init__()
         self._blacklist = set()
         self._sentences = set()
+        self._pages = dict()
+        self._saved_urls = set()
         self.sfile = None
 
         if sentences_file is not None:
@@ -33,6 +35,11 @@ class ConsoleSaver(ISaver):
         print("BLACKLISTING %s" % url)
         self._blacklist.add(url)
 
+    def save_url(self, url: str, parent: str = None):
+        if url not in self._saved_urls:
+            self._saved_urls.add(url)
+            print("URL saved for later: %s (parent: %s)" % (url, parent))
+
     def is_url_blacklisted(self, url: str) -> bool:
         return url in self._blacklist
 
@@ -40,12 +47,15 @@ class ConsoleSaver(ISaver):
         return sentence in self._sentences
 
     def save_page(self, page):
+        self._pages[page.url] = page
         if page.new_sg and self.sfile is not None:
             with self.lock:
                 self.sfile.write("\n".join((s.text for s in page.new_sg)))
         print("SAVING %s " % page)
 
     def get_page(self, url: str, **kwargs):
+        if url in self._pages:
+            return self._pages[url]
         return Page(url=url, score=PageScore(), **kwargs)
 
     def close(self):

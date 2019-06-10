@@ -59,6 +59,9 @@ class MongoSaver(ISaver):
         MongoURL.try_delete(url)  # remove URL if exists
         MongoBlacklist.add_url(url, source=Source(SourceType.AUTO))
 
+    def save_url(self, url: str, parent: str = None):
+        MongoURL.create(url, Source(SourceType.AUTO, parent)).save()
+
     def save_seed(self, seed: str):
         if not MongoSeed.exists(seed):
             MongoSeed.create(seed, Source(SourceType.AUTO)).save()

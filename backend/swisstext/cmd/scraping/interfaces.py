@@ -181,6 +181,16 @@ class ISaver(ABC):
         pass
 
     @abstractmethod
+    def save_url(self, url: str, parent: str = None):
+        """
+        [ABSTRACT] Save a potentially interesting URL which won't be visited during this round
+        (e.g. max_depth reached).
+        :param url: the url
+        :param parent: the parent url
+        """
+        pass
+
+    @abstractmethod
     def sentence_exists(self, sentence: str) -> bool:
         """
         [ABSTRACT] Tells if the given Swiss German `sentence` already exists.
