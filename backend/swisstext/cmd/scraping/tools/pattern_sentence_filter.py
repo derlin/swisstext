@@ -190,7 +190,7 @@ class Rules:
         """Returns true if any rule that apply failed."""
         for idx, r in enumerate(self.rules):
             if r.is_invalid(sentence):
-                # print("RULE %d %s FAILED on |%s|" % (idx, violation, sentence), file=sys.stderr)
+                # print("RULE %d %s FAILED on |%s|" % (idx, r.descr, sentence))
                 return True
         return False
 

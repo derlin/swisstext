@@ -59,6 +59,13 @@
     count:
       max: 0
 
+- slashes:
+  descr: lonely slash
+  find:
+    pattern: ' / '
+    count:
+      max: 0
+
 - spelled_words:
   descr: W O R D
   find:
