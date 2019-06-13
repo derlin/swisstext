@@ -18,6 +18,9 @@ requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.
 DEFAULT_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36'}
 
+#: Timeout used in requests.get
+GET_TIMEOUT = 60
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,7 +58,7 @@ class BsCrawler(ICrawler):
     def get_soup(cls, url):
         """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
         try:
-            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS)  # ignore SSL certificates
+            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS, timeout=GET_TIMEOUT)  # ignore SSL certificates
             # try to avoid encoding issues
             # see https://stackoverflow.com/a/45643551/2667536
             # Note: the encoding might be wrong if the content-type is declaring a charset with
