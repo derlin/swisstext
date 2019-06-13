@@ -197,12 +197,15 @@ class PipelineWorker():
                                     if p.decider.should_page_be_crawled(child_page):
                                         queue.put((child_page, page_depth + 1))
                                         added_children += 1
-                            logger.info(f'[W[{self.id}] {page.url}: added {added_children} child URLs')
+                            logger.info(f'W[{self.id}] {page.url}: added {added_children} child URLs')
 
                 except Exception as e:
                     # TODO
-                    if not isinstance(e, ICrawler.CrawlError):
+                    if isinstance(e, ICrawler.CrawlError):
+                        logger.debug(f'W[{self.id}]: exception -- {e}')
+                    else:
                         logger.exception(e)
+
             else:
                 logger.debug(f'W[{self.id}]: skipped {page.url}')
 

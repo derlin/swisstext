@@ -9,7 +9,7 @@ pipeline:
   crawler: .CleverBsCrawler
   splitter: .MosesSplitter
   sentence_filter: .PatternSentenceFilter
-  sg_detector:  .SwigspotLangid # swisstext.mclid.lstm.lid.TfLangidGsw
+  sg_detector: .SwigspotLangid # swisstext.mclid.TfLangidGsw
   decider: .BasicDecider
   saver: .MongoSaver
   seed_creator: .IdfSeedCreator
