@@ -16,15 +16,21 @@ class MosesSplitter(ISplitter):
 
     def __init__(self, lang='de', do_norm=False):
         self.lang = lang
-        self.norm = MosesPunctuationNormalizer(lang) if do_norm else None
-        self.tokenizer = MosesSentenceSplitter(lang)
+        self.do_norm = do_norm
 
     def split(self, text: str) -> List[str]:
         """ Split text using Moses. """
         paragraphs = [p for p in text.split('\n') if p and not p.isspace()]
         sentences = []
-        for p in paragraphs:
-            if self.norm is not None:
-                p = self.norm(p)
-            sentences.extend(self.tokenizer([p]))
+
+        # ensure to create a new toolwrapper each time for multithreading purpose
+        # without this, random deadlocks will occur when num_workers > 1
+        norm = MosesPunctuationNormalizer(self.lang) if self.do_norm else None
+        with MosesSentenceSplitter(self.lang) as tokenizer:
+            for p in paragraphs:
+                if norm is not None:
+                    p = norm(p)
+                sentences.extend(tokenizer([p]))
+        if norm is not None: norm.close()
+
         return sentences
