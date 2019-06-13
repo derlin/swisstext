@@ -45,13 +45,14 @@ Here is an example usage.
 """
 
 import logging
-from queue import Queue
+from queue import Queue, Empty
 
 from .interfaces import *
 from .data import Sentence
 
 logger = logging.getLogger(__name__)
 
+GET_TIMEOUT = 60 * 3 # in seconds
 
 class Pipeline:
     """
@@ -143,11 +144,16 @@ class PipelineWorker():
         :param max_depth: when do we stop (inclusive)
         """
         while not queue.empty():
-            (page, page_depth) = queue.get()  # blocking !!
 
             if self.kill_received:
                 logger.info(f"W[{self.id}]: Kill received, stopping.")
                 return
+
+            try:
+                (page, page_depth) = queue.get(timeout=GET_TIMEOUT)  # blocking !!
+            except Empty:
+                logger.error(f'W[{self.id}]: Empty exception was raised.')
+                break
 
             logger.debug(f"W[{self.id}]: processing {page.url} (depth={page_depth})")
             if page_depth > max_depth:

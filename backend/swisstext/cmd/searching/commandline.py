@@ -9,7 +9,7 @@ Usage
 
 Use the `--help` option to discover the capabilities and options of the tool.
 """
-
+from functools import partial
 from typing import Iterable
 
 import click
@@ -24,6 +24,7 @@ from .data import Seed
 logger = logging.getLogger('swisstext.searching')
 logger_default_level = "info"
 
+click.option = partial(click.option, show_default=True)  # show default in help (see click issues #646)
 
 class GlobalOptions:
     """Hold the options used by all tools, using lazy instantiation if possible."""

@@ -47,6 +47,7 @@ class Source(EmbeddedDocument):
 
     If the source is attached to a URL, possible values are:
         * ``(SourceType.UNKNOWN, None)``
+        * ``(SourceType.UNKNOWN, "extra info")``
         * ``(SourceType.USER, "user ID")``
         * ``(SourceType.SEED, "seed ID")``
         * ``(SourceType.AUTO, "parent url")``
