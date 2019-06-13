@@ -146,7 +146,7 @@ class PipelineWorker():
         while not queue.empty():
 
             if self.kill_received:
-                logger.info(f"W[{self.id}]: Kill received, stopping.")
+                logger.info(f'W[{self.id}]: Kill received, stopping.')
                 return
 
             try:
@@ -155,10 +155,10 @@ class PipelineWorker():
                 logger.error(f'W[{self.id}]: Empty exception was raised.')
                 break
 
-            logger.debug(f"W[{self.id}]: processing {page.url} (depth={page_depth})")
+            logger.debug(f'W[{self.id}]: processing {page.url} (depth={page_depth})')
             if page_depth > max_depth:
-                logging.info(
-                    f"W[{self.id}]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).")
+                logger.info(
+                    f'W[{self.id}]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).')
                 break
 
             if p.decider.should_page_be_crawled(page):
@@ -183,7 +183,7 @@ class PipelineWorker():
                     if ns: new_sentences.extend(ns)
 
                     if p.decider.should_url_be_blacklisted(page):
-                        logger.info("blacklisting %s" % page.url)
+                        logger.info(f'W[{self.id}]: blacklisting {page.url}')
                         p.saver.blacklist_url(page.url)
 
                     else:
@@ -197,16 +197,16 @@ class PipelineWorker():
                                     if p.decider.should_page_be_crawled(child_page):
                                         queue.put((child_page, page_depth + 1))
                                         added_children += 1
-                            logger.info("%s: added %d child URLs" % (page.url, added_children))
+                            logger.info(f'[W[{self.id}] {page.url}: added {added_children} child URLs')
 
                 except Exception as e:
                     # TODO
                     if not isinstance(e, ICrawler.CrawlError):
                         logger.exception(e)
             else:
-                logger.debug("Skipped '%s'" % page.url)
+                logger.debug(f'W[{self.id}]: skipped {page.url}')
 
             queue.task_done()
 
         if self.id >= 0:
-            logger.info(f"W[{self.id}]: my job is done.")
+            logger.info(f'W[{self.id}]: my job is done.')
