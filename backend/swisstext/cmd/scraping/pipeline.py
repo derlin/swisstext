@@ -52,7 +52,8 @@ from .data import Sentence
 
 logger = logging.getLogger(__name__)
 
-GET_TIMEOUT = 60 * 3 # in seconds
+GET_TIMEOUT = 60 * 3  # in seconds
+
 
 class Pipeline:
     """
@@ -204,7 +205,7 @@ class PipelineWorker():
                     if isinstance(e, ICrawler.CrawlError):
                         logger.debug(f'W[{self.id}]: exception -- {e}')
                     else:
-                        logger.exception(e)
+                        logger.exception(f'An error occurred while processing {page.url}')
 
             else:
                 logger.debug(f'W[{self.id}]: skipped {page.url}')

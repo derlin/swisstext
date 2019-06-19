@@ -274,9 +274,12 @@ def _scrape(config, queue, pipeline, worker_cls=PipelineWorker):
     while not queue.empty():
         page, _ = queue.get()
         if page.parent_url is not None:
-            # parent is None for initial URLs
-            pipeline.saver.save_url(page.url, page.parent_url)
-            saved_urls += 1
+            try:
+                # parent is None for initial URLs
+                pipeline.saver.save_url(page.url, page.parent_url)
+                saved_urls += 1
+            except:
+                logger.exception(f'Failed to save {page.url} for later.')
         queue.task_done()
     logger.info('Saved {} for later.'.format(saved_urls))
 

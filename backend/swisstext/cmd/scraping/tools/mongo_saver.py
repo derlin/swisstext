@@ -1,3 +1,5 @@
+from mongoengine import NotUniqueError
+
 from ..interfaces import ISaver
 from ..data import Page, PageScore
 from swisstext.mongo.models import *
@@ -37,9 +39,13 @@ class MongoSaver(ISaver):
         return MongoSentence.exists(sentence)
 
     def save_page(self, page: Page):
-        # save sentences first
+        # save sentences first, ignoring duplicates
         for sentence in page.new_sg:
-            MongoSentence.create(sentence.text, page.url, sentence.proba).save()
+            try:
+                MongoSentence.create(sentence.text, page.url, sentence.proba).save()
+            except NotUniqueError:
+                # TODO decrease new_sg ?
+                logger.warning(f'Exception ignored -- Duplicate sentence found (url: {page.url}.')
         # save or update url
         new_count = len(page.new_sg)
         mu: MongoURL = MongoURL.get(page.url)
