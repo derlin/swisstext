@@ -55,10 +55,11 @@ class BsCrawler(ICrawler):
             links=links)
 
     @classmethod
-    def get_soup(cls, url):
-        """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
+    def get_content(cls, url):
+        """Get the HTML content from a URL (as a string), dealing somewhat correctly with encoding."""
         try:
-            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS, timeout=GET_TIMEOUT)  # ignore SSL certificates
+            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS,
+                                timeout=GET_TIMEOUT)  # ignore SSL certificates
             # try to avoid encoding issues
             # see https://stackoverflow.com/a/45643551/2667536
             # Note: the encoding might be wrong if the content-type is declaring a charset with
@@ -78,12 +79,17 @@ class BsCrawler(ICrawler):
                 ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
                 # TODO: ensure it works as expected
                 content = resp.content.decode(encoding, 'ignore') if encoding is not None else resp.content
-                return BeautifulSoup(content, 'html.parser')
+                return content
             else:
                 raise ICrawler.CrawlError("'%s' not HTML (ctype=%s) " % (url, ctype))
 
         except Exception as e:
             raise ICrawler.CrawlError("'%s' raised an error (%s)" % (url, e)) from e
+
+    @classmethod
+    def get_soup(cls, url):
+        """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
+        return BeautifulSoup(cls.get_content(url), 'html.parser')
 
     @classmethod
     def extract_text_blocks(cls, soup) -> Generator[str, None, None]:
