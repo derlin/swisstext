@@ -61,9 +61,13 @@ class MongoSaver(ISaver):
     def is_url_blacklisted(self, url: str):
         return MongoBlacklist.exists(url)
 
-    def blacklist_url(self, url: str):
+    def blacklist_url(self, url: str, error_message=None, **kwargs):
         MongoURL.try_delete(url)  # remove URL if exists
-        MongoBlacklist.add_url(url, source=Source(SourceType.AUTO))
+        if error_message:
+            source = Source(SourceType.ERROR, error_message)
+        else:
+            source = Source(SourceType.AUTO)
+        MongoBlacklist.add_url(url, source=source)
 
     def save_url(self, url: str, parent: str = None):
         MongoURL.create(url, Source(SourceType.AUTO, parent)).save()

@@ -201,9 +201,10 @@ class PipelineWorker():
                             logger.info(f'W[{self.id}] {page.url}: added {added_children} child URLs')
 
                 except Exception as e:
-                    # TODO
+                    # TODO blacklist url ?
                     if isinstance(e, ICrawler.CrawlError):
-                        logger.debug(f'W[{self.id}]: exception -- {e}')
+                        p.saver.blacklist_url(page.url, error_message=e.name)
+                        logger.info(f'W[{self.id}]: exception -- {e}. Blacklisted.')
                     else:
                         logger.exception(f'An error occurred while processing {page.url}')
 

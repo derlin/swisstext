@@ -31,8 +31,8 @@ class ConsoleSaver(ISaver):
             self.lock = Lock()
             self.sfile = open(sentences_file, 'w')
 
-    def blacklist_url(self, url: str):
-        print("BLACKLISTING %s" % url)
+    def blacklist_url(self, url: str, **kwargs):
+        print(f'BLACKLISTING {url} (kwargs={kwargs})')
         self._blacklist.add(url)
 
     def save_url(self, url: str, parent: str = None):

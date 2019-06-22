@@ -37,6 +37,7 @@ class SourceType:
     USER = "user"  #: When user is set, the source.extra should contain the user id
     AUTO = "auto"  #: Auto means it has been generated automatically by the system during regular execution
     SEED = "seed"  #: The URL was found by searching the seed whose ID figures in source.extra
+    ERROR = "error" #: The URL raised an error while scraping (for blacklist) source.extra should have more info.
 
 
 class Source(EmbeddedDocument):
@@ -56,6 +57,11 @@ class Source(EmbeddedDocument):
         * ``(SourceType.UNKNOWN, None)``
         * ``(SourceType.USER, "user ID")``
         * ``(SourceType.AUTO, None)``
+
+    If the source is attached to a _blacklisted_ URL, possible values are:
+        * ``(SourceType.USER, "user ID")``
+        * ``(SourceType.AUTO, None)``
+        * ``(SourceType.ERROR, "... details ...")``
     """
     type_ = StringField(db_field='type', default=SourceType.UNKNOWN)
     extra = StringField()

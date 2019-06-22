@@ -60,31 +60,38 @@ class BsCrawler(ICrawler):
         try:
             resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS,
                                 timeout=GET_TIMEOUT)  # ignore SSL certificates
-            # try to avoid encoding issues
-            # see https://stackoverflow.com/a/45643551/2667536
-            # Note: the encoding might be wrong if the content-type is declaring a charset with
-            # uppercase, for example 'text/html; Charset=xxx'. I posted an issue, see
-            # https://github.com/requests/requests/issues/4748
-            ctype = resp.headers.get('content-type', '').lower()
-            if 'html' in ctype or 'text/plain' in ctype:
-                encoding = resp.encoding if 'charset' in ctype else None
-                ## (1) Nice encoding detection, but waaayy to slow
-                # http_encoding = resp.encoding if 'charset' in ctype else None
-                # html_encoding = EncodingDetector.find_declared_encoding(resp.content, is_html=True)
-                # encoding = html_encoding or http_encoding
-
-                ## (2) another possibility: use the from_encoding argument in BSoup. The problem ? it uses
-                # .decode(encoding, 'replace'), which adds strange symbols to the text...
-
-                ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
-                # TODO: ensure it works as expected
-                content = resp.content.decode(encoding, 'ignore') if encoding is not None else resp.content
-                return content
-            else:
-                raise ICrawler.CrawlError("'%s' not HTML (ctype=%s) " % (url, ctype))
-
         except Exception as e:
-            raise ICrawler.CrawlError("'%s' raised an error (%s)" % (url, e)) from e
+            # here, don't use from_ex so we can trim the error message
+            raise ICrawler.CrawlError(name=e.__class__.__name__, message=str(e)[:50])
+
+        # try to avoid encoding issues
+        # see https://stackoverflow.com/a/45643551/2667536
+        # Note: the encoding might be wrong if the content-type is declaring a charset with
+        # uppercase, for example 'text/html; Charset=xxx'. I posted an issue, see
+        # https://github.com/requests/requests/issues/4748
+        ctype = resp.headers.get('content-type', '').lower()
+        if not ('html' in ctype or 'text/plain' in ctype):
+            raise ICrawler.CrawlError(name='CtypeError', message=f'{url} not HTML (ctype={ctype})')
+
+        if len(resp.content) == 0 or resp.content.isspace():
+            raise ICrawler.CrawlError(name=f'EmptyDocumentError', message='Content is empty.')
+
+        if 'charset' in ctype:
+            ## (1) Nice encoding detection, but waaayy to slow
+            # http_encoding = resp.encoding if 'charset' in ctype else None
+            # html_encoding = EncodingDetector.find_declared_encoding(resp.content, is_html=True)
+            # encoding = html_encoding or http_encoding
+
+            ## (2) another possibility: use the from_encoding argument in BSoup. The problem ? it uses
+            # .decode(encoding, 'replace'), which adds strange symbols to the text...
+
+            ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
+            try:
+                return resp.content.decode(resp.encoding, 'ignore')
+            except LookupError:
+                pass  # encoding is unknown, e.g. "none" or ""
+
+        return resp.content
 
     @classmethod
     def get_soup(cls, url):

@@ -21,8 +21,15 @@ class ICrawler(ABC):
     class CrawlError(Exception):
         """This wrapper should be used for any exception that arise during scraping."""
 
-        def __init__(self, message: str):
-            super().__init__(message)
+        def __init__(self, name='CrawlError', message=''):
+            super().__init__(f'{name}: {message}')
+            self.name = name
+            self.message = message
+
+        @classmethod
+        def from_ex(cls, e: Exception):
+            """Create an exception using the original exception name and repr"""
+            return cls(name=e.__class__.__name__, message=str(e))
 
     class CrawlResults:
         """Holds the results of a page crawl."""
@@ -163,7 +170,7 @@ class ISaver(ABC):
         pass
 
     @abstractmethod
-    def blacklist_url(self, url: str):
+    def blacklist_url(self, url: str, **kwargs):
         """
         [ABSTRACT] Add the `url` to a blacklist.
 
