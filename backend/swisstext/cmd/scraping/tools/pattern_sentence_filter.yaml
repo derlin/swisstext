@@ -104,9 +104,39 @@
     count:
       max: 0
 
-- isbn_wiki:
-  descr: ISBN sentences in als.wikipedia
+# not used anymore, as wikipedia domains are not visited anymore (see filter_links.py)
+#- isbn_wiki:
+#  descr: ISBN sentences in als.wikipedia
+#  find:
+#    pattern: 'ISBN-Suech'
+#    count:
+#      max: 0
+
+- hashtags:
+  descr: too many hashtags
   find:
-    pattern: 'ISBN-Suech'
+    pattern: \# ?[^\W\d]
     count:
-      max: 0
+      max: 2
+
+- only_caps:
+  # works great, but will also discard all upper sentences
+  descr: too many capitalized words
+  find:
+    pattern: (^[a-zäü])|([\s’'][a-zäü]) #^([\dA-Z#"'\(]\S+\s?)+$
+    count:
+      min: 3 #TODO ask Andreas about using 3
+
+- dashes:
+  descr: too many dashes
+  find:
+    pattern: '([\u00AF\u2010-\u2015\u2212\uFE58-\uFF0D-] )|( [\u00AF\u2010-\u2015\u2212\uFE58-\uFF0D-])'
+    count:
+      max: 2
+
+- arrows:
+  descr: too many arrows
+  find:
+    pattern: '[←→↑↓↔↕↖↗↘↙↚↛↮⟵⟶⟷><]'
+    count:
+      max: 1

@@ -101,6 +101,7 @@ class PatternSentenceFilter(ISentenceFilter):
 
 class MinMax:
     """Encapsulates and handles min/max bounds. A bound set to -1 will be ignored."""
+
     def __init__(self, min=-1, max=-1):
         self.min = min
         self.max = max
@@ -117,15 +118,16 @@ class MinMax:
 
 class Find:
     """Handles pattern-based rule logic (find entry in yaml)"""
+
     def __init__(self, pattern, count=None, ratio=None):
         if count is None and ratio is None:
-            logger.warning("%s: missing find condition: count or ratio..." % self)
-        self.pattern = pattern
+            logger.warning(f"{pattern}: missing find condition: count or ratio...")
+        self.pattern = re.compile(pattern)
         self.count = MinMax(**count) if count else None
         self.ratio = MinMax(**ratio) if ratio else None
 
     def is_invalid(self, s):
-        matches = re.findall(self.pattern, s)
+        matches = self.pattern.findall(s)
         nb_matches = len(matches)
         if self.count and self.count.is_out_of_range(nb_matches):
             return True
@@ -141,12 +143,13 @@ class Find:
 
 class Rule:
     """Encapsulates one rule"""
+
     def __init__(self, id, descr, find=None, length=None, **kwargs):
         self.id = id
         self.descr = descr
         self.iff = []
         # TODO: better way ?
-        if 'if' in kwargs: # if is a reserved keyword in python
+        if 'if' in kwargs:  # if is a reserved keyword in python
             if 'length' in kwargs['if']:
                 self.iff.append(MinMax(**kwargs['if']['length']))
             if 'pattern' in kwargs['if']:
@@ -180,6 +183,7 @@ class Rules:
     """
     This class represents a list of rules.
     """
+
     def __init__(self, rules_dict):
         """
         :param rules_dict: a dictionary of rules (as loaded by yaml)
@@ -198,3 +202,9 @@ class Rules:
         """Prints all the rules, useful for debug."""
         for idx, r in enumerate(self.rules):
             print(idx, "=>", r.__repr__())
+
+    def __getitem__(self, idx):
+        return self.rules[idx]
+
+    def __len__(self):
+        return len(self.rules)
