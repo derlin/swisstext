@@ -3,7 +3,7 @@
 #
 # A python script that mimics what Moses remove-non-printing-char.perl
 # and normalize-punctuation.perl do, with some slight improvements:
-#  - normalize combining diacritics at the beginning
+#  - normalize combining diacritics at the beginning (and remove any extra one, e.g. Gguppò̃ò̃s -> Gguppòòs)
 #  - properly handle GSW apostrophes (i.e. ' surrounded by accented/special chars)
 #  - replace [non-breakable spaces+space separator unicode category]
 #    by regular spaces as a last step
@@ -22,6 +22,8 @@ normalization_patterns = [  # largely inspired from Moses normalize-punctuation.
     # strip control chars
     (REG, u'\x00–\x1F\x7F–\x9F', ' '),
     (STR, '\r', ""),
+    # strip extra combining diacritics
+    (REG, '[\u0300-\u036F]', ''),
     # remove extra spaces
     (STR, '(', ' ('),
     (STR, ')', ') '),
