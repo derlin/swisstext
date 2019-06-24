@@ -16,6 +16,7 @@ from functools import partial
 
 import click
 
+from swisstext.cmd import link_utils
 from .page_queue import PageQueue
 from .config import Config
 from .interfaces import *
@@ -27,6 +28,7 @@ logger = logging.getLogger('swisstext.cmd.scraper')
 logger_default_level = "info"
 
 click.option = partial(click.option, show_default=True)  # show default in help (see click issues #646)
+
 
 class GlobalOptions:
     """Hold the options used by all tools, using lazy instantiation if possible."""
@@ -203,19 +205,28 @@ def crawl_from_file(ctx, urlfile):
     This script runs the scraping pipeline using the URLs present in a file as bootstrap URLs.
     The file should have one URL per line. Any line starting with something other that "http" will be ignored.
     """
-    for u in urlfile:
-        if u.startswith("http") and not ctx.pipeline.saver.is_url_blacklisted(u):
-            _enqueue(ctx, u.strip())
+    for i, u in enumerate(urlfile):
+        _enqueue(ctx, u.strip())
+
+    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i} URLs from {urlfile}.')
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 
 # ============== main methods
 
-def _enqueue(ctx, url):
-    ctx.queue.put((ctx.pipeline.saver.get_page(url), 1))  # set depth to 1
+def _enqueue(ctx, url) -> bool:
+    if link_utils.is_url_interesting(url) and not ctx.pipeline.saver.is_url_blacklisted(url):
+        ctx.queue.put((ctx.pipeline.saver.get_page(url), 1))  # set depth to 1
+        return True
+    return False
 
 
 def _scrape(config, queue, pipeline, worker_cls=PipelineWorker):
+    # stop right away if nothing to scrape
+    if queue.empty():
+        print('Nothing to scrape.')
+        return
+
     # do the magic
     logger.info('Using config:\n' + config.dumps())
 
