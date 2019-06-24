@@ -2,6 +2,7 @@ import argparse
 import sys
 
 from swisstext.mongo.models import MongoURL, Source, SourceType, get_connection
+from swisstext.cmd.link_utils import is_url_interesting
 from urllib.parse import urlparse
 import logging
 
@@ -31,7 +32,7 @@ def main():
 
     get_connection(db=args.db, host=args.host, port=args.port)
 
-    enqueued, malformed = 0, 0
+    enqueued, malformed, ignored = 0, 0, 0
     for i, line in enumerate(args.url_file):
         url = line.strip()
         if len(url) == 0 or url.isspace():
@@ -41,6 +42,10 @@ def main():
             malformed += 1
             logging.error(f'malformed url: {url}')
 
+        elif not is_url_interesting(url):
+            ignored += 1
+            logging.warning(f'Uninteresting url: {url}')
+
         elif MongoURL.exists(url):
             logging.debug(f'Duplicate url {url}. Skipping.')
 
@@ -49,7 +54,7 @@ def main():
             enqueued += 1
             logging.debug(f'enqueued {url}')
 
-    print(f'Enqueued URLs: {enqueued}/{i+1} ({malformed} malformed).')
+    print(f'Enqueued URLs: {enqueued}/{i+1} ({malformed} malformed) ({ignored} ignored).')
 
 
 if __name__ == '__main__':

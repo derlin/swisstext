@@ -1,15 +1,19 @@
 """
 This module contains multiple :py:class:`~swisstext.cmd.scraping.interfaces.IDecider` implementations.
 """
+import logging
 from datetime import datetime, timedelta
 
 from pytimeparse.timeparse import timeparse
 
-from ..interfaces import IDecider
 from ..data import Page
+from ..interfaces import IDecider
 
+ABSOLUTE_MIN_RECRAWL_DELTA = timedelta(seconds=timeparse("4d"))
 MIN_RECRAWL_DELTA = "7d"
 MIN_RATIO = 0
+
+logger = logging.getLogger(__name__)
 
 
 class BasicDecider(IDecider):
@@ -33,22 +37,30 @@ class BasicDecider(IDecider):
         :param min_recrawl_delta: a string that can be parsed to a time difference using ``pytimeparse.timeparse``
         """
         self.min_ratio = min_ratio  #: Child URLs are added only if sentence_count / sg_count > min_ratio
-        try:
-            delta_sec = timeparse(min_recrawl_delta)
-        except:
+        delta_sec = None
+        if min_recrawl_delta is not None:
+            try:
+                delta_sec = timeparse(min_recrawl_delta)
+            except:
+                logger.warning(f'Could not parse min_recrawl_delta ({min_recrawl_delta}). Using default.')
+        if delta_sec is None:
             delta_sec = timeparse(MIN_RECRAWL_DELTA)
-        self.min_recrawl_delta = timedelta(
-            seconds=delta_sec)  #: a timedelta. URLs are revisited if now() - last visit > min_recrawl_delta (UTC)
+
+        self.min_recrawl_delta = timedelta(seconds=delta_sec)  #: a timedelta. URLs are revisited if now() - last visit > min_recrawl_delta (UTC)
 
     def should_page_be_crawled(self, page: Page) -> bool:
         """
         Returns true if the URL is new,
-        the page's :py:attr:`~..data.Page.delta_count` above 0 or
+        or the page's :py:attr:`~..data.Page.delta_count` above 0 and
         the page's `:py:attr:~..data.Page.delta_date` is older than :py:attr:`min_recrawl_delta`
+        note that a page will NEVER be recrawled if the last crawl is less than ABSOLUTE_MIN_RECRAWL_DELTA old.
         """
-        return page.is_new() or \
-               page.score.delta_count > 0 or \
-               datetime.utcnow() - page.score.delta_date > self.min_recrawl_delta
+        if page.is_new(): return True
+
+        delta = datetime.utcnow() - page.score.delta_date
+        return delta > ABSOLUTE_MIN_RECRAWL_DELTA \
+            if page.score.delta_count > 0 \
+            else delta > self.min_recrawl_delta
 
     def should_children_be_crawled(self, page: Page) -> bool:
         """
