@@ -22,21 +22,6 @@ class Article:
         return '\n'.join(self.section_texts)
 
 
-class PageWrapper:
-
-    def __init__(self, page, article):
-        self.article = article
-        self._page = page
-
-    def __getattr__(self, attr):
-        # NOTE do not use hasattr, it goes into infinite recursion
-        if attr in self.__dict__:
-            # this object has it
-            return getattr(self, attr)
-        # proxy to the wrapped page
-        return getattr(self._page, attr)
-
-
 class PipelineWorkerWrapper(PipelineWorker):
 
     def _crawl_page(self, crawler: ICrawler, page: Page):

@@ -208,7 +208,7 @@ def crawl_from_file(ctx, urlfile):
     for i, u in enumerate(urlfile):
         _enqueue(ctx, u.strip())
 
-    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i} URLs from {urlfile}.')
+    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i} URLs from {urlfile.name}.')
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 
@@ -276,10 +276,6 @@ def _scrape(config, queue, pipeline, worker_cls=PipelineWorker):
 
     logger.info("Found %d new sentences." % len(new_sentences))
 
-    # TODO remove
-    with open('/tmp/new_sentences.txt', 'w') as f:
-        f.write("\n".join(new_sentences))
-
     logger.debug('Saving non-scraped pages for later.')
     saved_urls = 0
     while not queue.empty():
@@ -296,3 +292,7 @@ def _scrape(config, queue, pipeline, worker_cls=PipelineWorker):
 
     stop = time.time()
     print("Done. It took {} seconds.".format(stop - start))
+
+    # TODO remove
+    with open('/tmp/new_sentences.txt', 'w') as f:
+        f.write("\n".join(new_sentences))

@@ -95,7 +95,7 @@ def process(config_path, db, gensimfile):
         if not pipeline.saver.is_url_blacklisted(article.url):
             page = pipeline.saver.get_page(article.url)
             page.article = article
-            queue.put((page, None, 1))  # set depth to 1
+            queue.put((page, 1))  # set depth to 1
             # pagewrap = PageWrapper(page, article)
             # queue.put((pagewrap, 1))  # set depth to 1
             worker.run(queue, pipeline, new_sentences, 1)
