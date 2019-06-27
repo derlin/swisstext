@@ -45,11 +45,31 @@ class ICrawler(ABC):
             The method :py:meth:`swisstext.cmd.link_utils.filter_links` is available to do the filtering. 
             """
 
+        @classmethod
+        def empty(cls):
+            return cls(text='', links=[])
+
     @abstractmethod
     def crawl(self, url: str) -> CrawlResults:
         """[ABSTRACT]
         Should crawl the page and extract the text and the links into a :py:class:`ICrawler.CrawlResults` instance."""
         pass
+
+
+class INormalizer:
+    """
+    A normalizer should take a [long] text (extracted from a web page) and clean it in a consistant way.
+    For example: uncurling quotes, normalizing punctuation, fix unicode, etc.
+    The default implementation just return the text as-is.
+    """
+
+    def normalize(self, text: str) -> str:
+        """This should be overriden. The default implementation just returns the text as-is."""
+        return text
+
+    def normalize_all(self, texts: List[str]) -> List[str]:
+        """Calls normalize on each element of text."""
+        return [self.normalize(t) for t in texts]
 
 
 class ISplitter:

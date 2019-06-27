@@ -46,13 +46,20 @@ class MongoSaver(ISaver):
             except NotUniqueError:
                 # TODO decrease new_sg ?
                 logger.warning(f'Exception ignored -- Duplicate sentence found (url: {page.url}.')
+
+        # save text
+        text: MongoText = MongoText.create_or_update(page.url, page.text)
+        if len(text.urls) > 1:
+            logger.info(f'duplicate text found: {text.urls}')
         # save or update url
         new_count = len(page.new_sg)
         mu: MongoURL = MongoURL.get(page.url)
         if mu is None:
             source = Source(SourceType.AUTO, page.parent_url) if page.parent_url else Source()
             mu = MongoURL.create(page.url, source=source)
-        mu.add_crawl_history(new_count)
+        mu.add_crawl_history(new_count, hash=text.id)
+        # persist
+        text.save()
         mu.save()
 
         logger.info("saved %s (crawled=%d times, new_count=%d)" %
@@ -75,3 +82,8 @@ class MongoSaver(ISaver):
     def save_seed(self, seed: str):
         if not MongoSeed.exists(seed):
             MongoSeed.create(seed, Source(SourceType.AUTO)).save()
+
+    @staticmethod
+    def url_to_filename(url):
+        from urllib.parse import quote
+        return quote(url).replace('/', '@')

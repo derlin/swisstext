@@ -7,6 +7,7 @@ pipeline:
 
   # default tools to use
   crawler: .CleverBsCrawler
+  normalizer: _I_
   splitter: .MosesSplitter
   sentence_filter: .PatternSentenceFilter
   sg_detector: .SwigspotLangid # swisstext.mclid.TfLangidGsw

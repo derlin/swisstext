@@ -13,7 +13,7 @@ class BpCrawler(ICrawler):
         self.extractor = Extractor(extractor, kMin=min_words)
 
     def crawl(self, url: str) -> ICrawler.CrawlResults:
-        soup = BsCrawler.get_soup(url)
+        soup, content = BsCrawler.get_soup(url)
         sentences = self.extractor.getTextBlocks(html=str(soup))
         text = '\n'.join(sentences)
 
@@ -31,6 +31,7 @@ def cli(url, extractor, min_words):
     print('===== LINK =====')
     print('\n'.join(results.links))
 
+
 @click.command()
 @click.option('-e', '--extractor', type=click.Choice(EXTRACTORS), default=EXTRACTORS[0])
 @click.option('-u', '--url', required=True, type=str)
@@ -42,6 +43,7 @@ def test(url, extractor, min_words):
     results1 = BpCrawler(extractor, min_words).crawl(url)
     results2 = BsCrawler().crawl(url)
     assert results1.links == results2.links, '\n'.join(set(results1.links) ^ set(results2.links))
+
 
 if __name__ == "__main__":
     cli()

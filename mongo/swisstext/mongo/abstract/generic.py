@@ -37,7 +37,7 @@ class SourceType:
     USER = "user"  #: When user is set, the source.extra should contain the user id
     AUTO = "auto"  #: Auto means it has been generated automatically by the system during regular execution
     SEED = "seed"  #: The URL was found by searching the seed whose ID figures in source.extra
-    ERROR = "error" #: The URL raised an error while scraping (for blacklist) source.extra should have more info.
+    ERROR = "error"  #: The URL raised an error while scraping (for blacklist) source.extra should have more info.
 
 
 class Source(EmbeddedDocument):
@@ -73,6 +73,8 @@ class CrawlMeta(EmbeddedDocument):
     """The creation/added date, in UTC."""
     count = IntField(default=0)
     """Items count, for example the number of new URLs found."""
+    hash = StringField(default=None)
+    """Optional hash of the text/results/..."""
 
 
 class Deleted(EmbeddedDocument):

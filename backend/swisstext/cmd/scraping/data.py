@@ -42,6 +42,7 @@ class Page:
         self.parent_url = parent_url  #: the parent URL, if the crawl depth is > 1
         self.blacklisted = False  #: is the URL blacklisted ?
         self.crawl_results = None  #: results of the crawl (see :py:class:`~cmd.scraping.interfaces.ICrawler`)
+        self.text = None #: normalized text of the page
         self.new_sg: List[Sentence] = []  #: new sentences found
         self.sentence_count = 0  #: total number of sentences on the page
         self.sg_count = 0  #: number of Swiss German sentences on the page, wether they are new or not

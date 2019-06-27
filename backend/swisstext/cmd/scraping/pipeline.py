@@ -65,6 +65,7 @@ class Pipeline:
 
     def __init__(self,
                  crawler: ICrawler,
+                 normalizer: INormalizer,
                  splitter: ISplitter,
                  filter: ISentenceFilter,
                  detector: ISgDetector,
@@ -73,8 +74,9 @@ class Pipeline:
                  saver: ISaver,
                  min_proba=0.85):
         self.crawler: ICrawler = crawler
-        self.filter: ISentenceFilter = filter
+        self.normalizer: INormalizer = normalizer
         self.splitter: ISplitter = splitter
+        self.filter: ISentenceFilter = filter
         self.detector: ISgDetector = detector
         self.seeder: ISeedCreator = seeder
         self.saver: ISaver = saver
@@ -165,6 +167,7 @@ class PipelineWorker():
             if p.decider.should_page_be_crawled(page):
                 try:
                     page.crawl_results = self._crawl_page(p.crawler, page)
+                    page.text = p.normalizer.normalize(page.crawl_results.text)
                     splitted: List[str] = p.splitter.split(page.crawl_results.text)
                     sentences: List[str] = p.filter.filter(splitted)
 

@@ -90,7 +90,7 @@ class AbstractMongoURL(Document):
         # remove from url if it exists
         cls.objects(id=url).delete()
 
-    def add_crawl_history(self, new_sg_count):
+    def add_crawl_history(self, new_sg_count, hash=None):
         """
         Add a crawl history entry. Note that this will update the document instance,
         but won't persist the change to mongo. You need to call :py:meth:`mongoengine.Document.save` yourself.
@@ -98,7 +98,7 @@ class AbstractMongoURL(Document):
         :param new_sg_count: the number of new sentences found on this crawl.
         :return: self
         """
-        meta = CrawlMeta(count=new_sg_count)
+        meta = CrawlMeta(count=new_sg_count, hash=hash)
         self.crawl_history.append(meta)
         self.count += new_sg_count
         self.delta = meta.count

@@ -66,3 +66,6 @@ class MongoSeed(AbstractMongoSeed):
 
 class MongoSentence(AbstractMongoSentence):
     pass
+
+class MongoText(AbstractMongoText):
+    pass

@@ -9,6 +9,7 @@ from ..base_config import BaseConfig
 # and in the order expected by the Pipeline's __init__ method.
 _pipeline_entries = [
     'crawler',
+    'normalizer',
     'splitter',
     'sentence_filter',
     'sg_detector',

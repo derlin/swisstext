@@ -26,4 +26,4 @@ class PipelineWorkerWrapper(PipelineWorker):
 
     def _crawl_page(self, crawler: ICrawler, page: Page):
         assert hasattr(page, 'article')
-        return ICrawler.CrawlResults(page.article.text, [])
+        return ICrawler.CrawlResults(page.article.text, page.article.text, [])

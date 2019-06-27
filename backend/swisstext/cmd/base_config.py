@@ -48,6 +48,9 @@ class BaseConfig(ABC):
     and also to instantiate tools from a dictionary of module+class names.
     """
 
+    #: if this is used, try to instantiate the interface of the tool
+    INTERFACE_WILDCARD = '_I_'
+
     def __init__(self, default_config_path: str, option_class: classmethod = dict,
                  config: Union[str, dict, IOBase] = None):
         """
@@ -162,8 +165,8 @@ class BaseConfig(ABC):
     def instantiate_tools(self) -> List[object]:
         """
         For each :py:attr:`valid_tool_entries` under :py:attr:`tool_entry_name`, try to create an instance.
-        In case a tool is not defined and :py:attr:`interfaces_package` is not None,
-        it will try to instantiate the tool name interface instead.
+        In case a tool is not defined and :py:attr:`interfaces_package` is not None or the value is
+        :py:attr:`INTERFACE_WILDCARD` it will try to instantiate the tool name interface instead.
 
         :return: a list of tool instances, in the same order as :py:attr:`interfaces_package`
         :raises RuntimeError: if a tool could not be instantiated
@@ -173,7 +176,7 @@ class BaseConfig(ABC):
         base_package = root.get('_base_package', '')
 
         for e in self.valid_tool_entries:
-            if e not in root:
+            if e not in root or root[e] == self.INTERFACE_WILDCARD:
                 self.logger.warning("missing entry in toolchain '%s'" % e)
                 module_name = self.interfaces_package
                 class_name = "I%s" % self._to_camelcase(e)
@@ -191,7 +194,7 @@ class BaseConfig(ABC):
             except Exception as err:
                 raise RuntimeError(
                     "Error instantiating %s (%s.%s(%s))" %
-                    (e, module_name, class_name, arguments)) from err
+                    (e, module_name, class_name, arguments))
 
         return tools
 

@@ -117,6 +117,16 @@ def normalize_text(text, strip_emojis=True, fix_encoding=False):
     return spaces_pattern.sub(' ', text)
 
 
+class Normalizer():
+    def normalize(self, *args, **kwargs):
+        return normalize_text(*args, **kwargs)
+
+
+__all__ = ['Normalizer', 'normalize_text']
+
+
+# ---
+
 def cli():
     parser = argparse.ArgumentParser(
         description=

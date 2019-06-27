@@ -3,7 +3,7 @@ This module contains the implementation of a :py:class:`~swisstext.cmd.scraping.
 that uses BeautifulSoup to extract text and links.
 """
 import logging
-from typing import List, Generator
+from typing import List, Generator, Tuple
 
 import requests
 from bs4 import BeautifulSoup
@@ -46,7 +46,7 @@ class BsCrawler(ICrawler):
 
     def crawl(self, url: str) -> ICrawler.CrawlResults:
         """Extract links and text from a URL."""
-        soup: BeautifulSoup = self.get_soup(url)
+        soup, content = self.get_soup(url)
         # get links first, as extract_text_blocks is destructive
         links = self.extract_links(url, soup)
         text_blocks = self.extract_text_blocks(soup)
@@ -94,9 +94,10 @@ class BsCrawler(ICrawler):
         return resp.content
 
     @classmethod
-    def get_soup(cls, url):
+    def get_soup(cls, url) -> Tuple[BeautifulSoup, str]:
         """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
-        return BeautifulSoup(cls.get_content(url), 'html.parser')
+        content = cls.get_content(url)
+        return BeautifulSoup(content, 'html.parser'), content
 
     @classmethod
     def extract_text_blocks(cls, soup) -> Generator[str, None, None]:

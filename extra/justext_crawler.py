@@ -7,7 +7,6 @@ import argparse
 import logging
 
 import justext
-from bs4 import BeautifulSoup
 from swisstext.cmd.scraping.interfaces import ICrawler
 from swisstext.cmd.scraping.tools import BsCrawler
 
@@ -21,7 +20,6 @@ class JustextCrawler(BsCrawler):
     def __init__(self, joiner='\n',
                  keep_bad=True,
                  stoplist=None,
-                 normalize=False,
                  stopwords_low=justext.core.STOPWORDS_LOW_DEFAULT,
                  stopwords_high=justext.core.STOPWORDS_HIGH_DEFAULT,
                  **kwargs):
@@ -38,20 +36,15 @@ class JustextCrawler(BsCrawler):
 
         self.kwargs.update(kwargs)
         self.keep_bad = keep_bad
-        self.normalize = normalize
         logger.debug(self)
 
     def crawl(self, url: str):
-        content = self.get_content(url)
         # get links using bs4 (easier)
-        soup = BeautifulSoup(content, 'html.parser')
+        soup, content = self.get_soup(url)
         links = self.extract_links(url, soup)
         # use raw content, as str(soup) is somewhat altered HTML and doesn't work as well...
         paragraphs = justext.justext(content, encoding=soup.original_encoding, **self.kwargs)
         text_blocks = (p.text.replace('\n', ' ') for p in paragraphs if self._paragraph_ok(p))
-        if self.normalize:
-            # TODO: maybe use the fix_encoding option as well (nice, but quite slow)
-            text_blocks = [normalize_text(t) for t in text_blocks]
         return ICrawler.CrawlResults(
             text=self.joiner.join(text_blocks),
             links=links)
@@ -71,12 +64,16 @@ if __name__ == '__main__':
     parser.add_argument('-good', default=False, action='store_true', help='Keep only good|neergood sentences.')
     args = parser.parse_args()
 
-    jt = JustextCrawler(joiner=args.joiner, keep_bad=not args.good, normalize=args.norm)
+    jt = JustextCrawler(joiner=args.joiner, keep_bad=not args.good)
+
     for url in args.url:
         try:
             res = jt.crawl(url)
             print(f'==== {url}')
-            print(res.text)
+            if args.norm:
+                print(normalize_text(res.text))
+            else:
+                print(res.text)
         except Exception as e:
             print(e)
             # raise e
