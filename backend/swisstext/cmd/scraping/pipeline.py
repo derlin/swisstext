@@ -168,7 +168,7 @@ class PipelineWorker():
                 try:
                     page.crawl_results = self._crawl_page(p.crawler, page)
                     page.text = p.normalizer.normalize(page.crawl_results.text)
-                    splitted: List[str] = p.splitter.split(page.crawl_results.text)
+                    splitted: List[str] = p.splitter.split(page.text)
                     sentences: List[str] = p.filter.filter(splitted)
 
                     page.sentence_count = 0  # count all the sentences found
