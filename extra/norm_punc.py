@@ -46,6 +46,9 @@ normalization_patterns = [  # largely inspired from Moses normalize-punctuation.
     (REG, r'([^\W\d_])[‘’]([^\W\d_])', r"\1'\2"),  # I
     (STR, '‘', '"'),
     (STR, '’', '"'),
+    (STR, '’', '"'),
+    (STR, u'\u0092', "'"),
+    (STR, u'\u0093', '"'),
     (STR, '‚', '"'),
     (STR, "''", '"'),
     (STR, '´´', '"'),
@@ -132,14 +135,14 @@ def cli():
         description=
         "Normalise text (remove control chars, uncurl quotes, normalise spaces...)"
     )
-    parser.add_argument('file', type=argparse.FileType('r'), default=sys.stdin)
+    parser.add_argument('-i', type=argparse.FileType('r'), required=True)
     parser.add_argument('--fix-encoding', default=False, action='store_true')
     parser.add_argument('--strip-emojis', default=False, action='store_true')
     parser.add_argument('-o', '--out', type=argparse.FileType('w'), default=sys.stdout)
     args = parser.parse_args()
 
     try:
-        text = normalize_text(args.file.read(), strip_emojis=args.strip_emojis, fix_encoding=args.fix_encoding)
+        text = normalize_text(args.i.read(), strip_emojis=args.strip_emojis, fix_encoding=args.fix_encoding)
         args.out.write(text)
     except ModuleNotFoundError as e:
         print(e)
