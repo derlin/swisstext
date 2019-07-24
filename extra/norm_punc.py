@@ -20,8 +20,7 @@ REG, STR = 0, 1  # flags for using re.sub vs string.replace
 
 normalization_patterns = [  # largely inspired from Moses normalize-punctuation.perl (lang=de)
     # strip control chars
-    (REG, u'\x00–\x1F\x7F–\x9F', ' '),
-    (STR, '\r', ""),
+    (REG, u'[\x00-\x1F\x7F-\x9F]', ' '), #(STR, '\r', ""),
     # strip extra combining diacritics
     (REG, '[\u0300-\u036F]', ''),
     # remove extra spaces
