@@ -116,7 +116,7 @@ def normalize_text(text, strip_emojis=True, fix_encoding=False):
             raise ModuleNotFoundError('Stripping emojis requires the emoji package: pip install emoji.')
 
     # don't forget to normalise spaces in the end
-    return spaces_pattern.sub(' ', text)
+    return spaces_pattern.sub(' ', text).strip()
 
 
 class Normalizer():
