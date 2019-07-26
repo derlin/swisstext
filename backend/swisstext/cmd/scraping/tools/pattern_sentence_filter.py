@@ -72,6 +72,7 @@ simply ignored:
 """
 
 import re
+#import regex as re
 import yaml
 import logging
 from os import path
@@ -92,6 +93,7 @@ class PatternSentenceFilter(ISentenceFilter):
         if rulespath is None:
             rulespath = path.join(path.dirname(path.realpath(__file__)), 'pattern_sentence_filter.yaml')
 
+        self.rulespath = rulespath
         self.rules = Rules(yaml.safe_load(open(rulespath)))
 
     def is_valid(self, sentence):
@@ -208,3 +210,12 @@ class Rules:
 
     def __len__(self):
         return len(self.rules)
+
+def create_filter_using_regex_module(*args, **kwargs):
+    """Use the regex module instead of the default re for this object"""
+    global re
+    import regex
+    _real_re, re = re, regex
+    ft = PatternSentenceFilter(*args, **kwargs)
+    re = _real_re
+    return ft

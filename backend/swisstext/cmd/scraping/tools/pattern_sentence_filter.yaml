@@ -139,4 +139,4 @@
   find:
     pattern: '[←→↑↓↔↕↖↗↘↙↚↛↮⟵⟶⟷><]'
     count:
-      max: 1
+      max: 0

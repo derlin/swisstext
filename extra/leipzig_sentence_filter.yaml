@@ -1,0 +1,278 @@
+# to use this, ensure you call the create_filter_using_regex_module function !
+
+- rule_1:
+  descr: 'R1 Satzanfang: Kleinbuchstaben, math.Zeichen, ...'
+  find:
+    pattern: ^[\p{Ll}\p{Sm}\p{Pd}\p{Ps}\p{Pc}]
+    count:
+      max: 0
+
+- rule_2:
+  descr: 'R2 Satzanfang: weitere besondere Zeichen'
+  find:
+    pattern: (^[*\?\.\,\/])|(^\))|(^\.)
+    count:
+      max: 0
+
+- rule_3:
+  descr: R3 Kein Satzendezeichen
+  find:
+    pattern: '[^\p{P}]$'
+    count:
+      max: 0
+
+- rule_5:
+  descr: R5 G e s p e r r t e r Text
+  find:
+    pattern:  ' \p{L} \p{L} '
+    count:
+      max: 0
+
+- rule_6:
+  descr: R6 Zwei aufeinanderfolgende Leerzeichen
+  find:
+    pattern: '  '
+    count:
+      max: 0
+
+- rule_7:
+  descr: R7 Zu viele Kommata (mind. 10)
+  find:
+    pattern: ',.*,.*,.*,.*,.*,.*,.*,.*,.*,'
+    count:
+      max: 0
+
+- rule_8:
+  descr: R8 Zu viele Punkte (mind. 8)
+  find:
+    pattern: '\..*\..*\..*\..*\..*\..*\..*\.'
+    count:
+      max: 0
+
+- rule_9:
+  descr: Zu viele Leerzeichen
+  pattern: \s
+  count:
+    max: 49
+
+- rule_10:
+  descr: R10 Anteilig zu viele Leerzeichen
+  pattern: '\s'
+  ratio:
+    max: 1.4
+
+- rule_11:
+  descr: R11 Sätze mit auffälligen Sonderzeichen
+  find:
+    pattern: '[|\[\]]|(>>)|(<<)|\\'
+    count:
+      max: 0
+
+- rule_12:
+  descr: R12 Sätze, die mehrere Zeichen '/', ')', '&', ':' besitzen.
+  find:
+    pattern: '[/\)&:#]'
+    count:
+      max: 7
+
+
+- rule_13:
+  descr: R13 Viele Großbuchstaben/Zeichen gleicher Art hintereinander
+  find:
+    pattern: '[\p{Lu} \.,\/-]{22}'
+    count:
+      max: 0
+
+- rule_14:
+  descr: R14 Viele Ziffern und Sonderzeichen hintereinander
+  find:
+    pattern: '[\p{N} :\\.,\/-]{16}'
+    count:
+      max: 0
+
+- rule_15:
+  descr: R15 Kurze Sätze, die viele Ziffern vor .,/ besitzen
+  if:
+    length:
+      max: 45
+  find:
+    pattern: '[\p{N}.,\/-]{6}'
+    count:
+      max: 0
+
+- rule_16:
+  descr: R16 Sätze, die . . . am Satzende besitzen und maximal 60 Zeichen lang sind
+  if:
+    length:
+      max: 60
+  find:
+    pattern: '\. \. \.$'
+    count:
+      max: 0
+
+- rule_17:
+  descr: R17 Satz enthält '...'
+  find:
+    pattern: '\.\.\.'
+    count:
+      max: 0
+
+- rule_18:
+  descr: R18 Sätze, die mehrere aufeinanderfolgende '!', '?' besitzen
+  find:
+    pattern: '[?!]{2}'
+    count:
+      max: 0
+
+- rule_19:
+  descr: R19 Sätze, die mindestens 8 großgeschriebene Wörter hintereinander besitzen
+  find:
+    pattern: '(\p{Lu}\p{L}* ){8}'
+    count:
+      max: 0
+
+- rule_20:
+  descr: R20 Sätze, die Leerzeichen vor Satzzeichen (außer ,wort) besitzen
+  find:
+    pattern: ' [\.,?!]'
+    count:
+      max: 0
+
+- rule_21:
+  descr: R21 Sätze, die Initialien bzw. getrennte Abkürzungen am Satzende besitzen
+  find:
+    pattern: ([\. ]\p{Lu}| \p{N}|-ing|str)[\.:][\"\']*$
+    count:
+      max: 0
+
+- rule_22_23:
+  descr: R22-23  Satz ist zu kurz/zu lang
+  length:
+    min: 15
+    max: 255
+
+- rule_24:
+  descr: R24 Tabulator im Satz
+  find:
+    pattern: \t
+    count:
+      max: 0
+
+- rule_25:
+  descr: R25 Zeichen die durch Kodierungsfehler im Satz enthalten sind
+  find:
+    pattern: '\u0007|\u007F|\u0080|\u0082|\u0083|\u0084|\u0085|\u0086|\u0087|\u0088|\u0089|\u008A|\u008B|\u008C|\u008D|\u008E|\u008F|\u0090|\u0091|\u0092|\u0093|\u0094|\u0095|\u0096|\u0097|\u0098|\u0099|\u009A|\u009B|\u009C|\u009D|\u009E|\u009F|\u00A0|\u00C2|\u00C3|\u0084\uFFFD|\uF0B7|\u00AD'
+    count:
+      max: 0
+
+- rule_26:
+  descr: R26 Sonderzeichen am Satzanfang
+  find:
+    pattern: ^[#\*\|§\[-\\:]
+    count:
+      max: 0
+
+- rule_27:
+  descr: R27 Sätze mit Raute
+  find:
+    pattern: '#'
+    count:
+      max: 0
+
+- rule_28:
+  descr: R28 Istgleich-Zeichen
+  find:
+    pattern: '='
+    count:
+      max: 0
+
+- rule_29:
+  descr: R29 Diverse illegale Zeichen (z.B. Copyright, at-Symbole, eckige Klammern, geschweifte Klammern, Unterstrich)
+  find:
+    pattern: '©|@@|\[|\]|\{|\}|\_|√|■|►|●|♥|♩|♪|♫|♬|\p{Cc}'
+    count:
+      max: 0
+
+- rule_30:
+  descr: R30 Illegale Satzendezeichen
+  find:
+    pattern: '[%\):;\,/*]$'
+    count:
+      max: 0
+
+- rule_31:
+  descr: 'R31 Illegale Zeichenkombinationen: Mathematik'
+  find:
+    pattern: (.*\*.*\*.*\*.*)|(.*\+.*\+.*\+.*)|(.*=.*=.*)|(\^)
+    count:
+      max: 0
+
+- rule_32:
+  descr: R32 HTML Entities
+  find:
+    pattern: '&[a-z]{2,5};'
+    count:
+      max: 0
+
+- rule_33:
+  descr: R33 Fragezeichen vor Buchstaben
+  find:
+    pattern: '[\?][\p{L}]'
+    count:
+      max: 0
+
+- rule_34:
+  descr: R34 Satzende = Komma + Großbuchstabe + Punkt
+  find:
+    pattern: ',\\p{Lu}\.$'
+    count:
+      max: 0
+
+- rule_35:
+  descr: R35 Große Zahlen am Satzanfang
+  find:
+    pattern: ^[0-9]{5}
+    count:
+      max: 0
+
+- rule_36:
+  descr: R36 Vier-Byte Unicode.
+  find:
+    pattern: '[^\u0000-\uFFFF]'
+    count:
+      max: 0
+
+- rule_37:
+  descr: R37 Ungewoehnlicher Zeilenumbruch.
+  find:
+    pattern: '\u2028'
+    count:
+      max: 0
+
+- rule_38:
+  descr: R38 Wahrscheinlich falsche Satzsegmentierung
+  find:
+    pattern: '[a-zäöüß]{5}\. [a-zäöüß]{2}'
+    count:
+      max: 0
+
+- rule_39:
+  descr: R39 Mehrere Punkte hintereinander
+  find:
+    pattern: \.\.
+    count:
+      max: 0
+
+- rule_40:
+  descr: R40 Sätze, die mit Ziffern anfangen
+  find:
+    pattern: ^[0-9]
+    count:
+      max: 0
+
+- rule_3000:
+  descr: different html-tags
+  find:
+    pattern: 'a href|<tr>'
+    count:
+      max: 0
