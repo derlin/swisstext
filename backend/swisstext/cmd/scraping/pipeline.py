@@ -207,7 +207,7 @@ class PipelineWorker():
                     # TODO blacklist url ?
                     if isinstance(e, ICrawler.CrawlError):
                         p.saver.blacklist_url(page.url, error_message=e.name)
-                        logger.info(f'W[{self.id}]: exception -- {e}. Blacklisted.')
+                        logger.info(f'W[{self.id}]: exception -- {e}. {page.url} blacklisted.')
                     else:
                         logger.exception(f'An error occurred while processing {page.url}')
 

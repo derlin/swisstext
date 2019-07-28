@@ -3,7 +3,7 @@ This module contains the implementation of a :py:class:`~swisstext.cmd.scraping.
 that uses BeautifulSoup to extract text and links.
 """
 import logging
-from typing import List, Generator, Tuple
+from typing import List, Generator, Tuple, Union
 
 import requests
 from bs4 import BeautifulSoup
@@ -39,6 +39,9 @@ class BsCrawler(ICrawler):
         :py:class:`~swisstext.cmd.scraping.interfaces.ISplitter` (recall that the default implementation split text
         based on newlines...) such as the :py:class:`~swisstext.cmd.scraping.punkt_splitter.PunktSplitter`.
 
+    .. todo::
+
+        Try using just the response.text from requests to get a proper encoding ?
     """
 
     def __init__(self, joiner=' '):
@@ -60,6 +63,7 @@ class BsCrawler(ICrawler):
         try:
             resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS,
                                 timeout=GET_TIMEOUT)  # ignore SSL certificates
+            content = resp.content  # trigger content decoding to catch ContentDecodingError as well
         except Exception as e:
             # here, don't use from_ex so we can trim the error message
             raise ICrawler.CrawlError(name=e.__class__.__name__, message=str(e)[:50])
@@ -73,7 +77,8 @@ class BsCrawler(ICrawler):
         if not ('html' in ctype or 'text/plain' in ctype):
             raise ICrawler.CrawlError(name='CtypeError', message=f'{url} not HTML (ctype={ctype})')
 
-        if len(resp.content) == 0 or resp.content.isspace():
+        # also test the .text, so that we avoid returning content with only unprintable chars, e.g. b'\xef\xbb\xbf'
+        if len(content) == 0 or len(resp.text.strip()) == 0:
             raise ICrawler.CrawlError(name=f'EmptyDocumentError', message='Content is empty.')
 
         if 'charset' in ctype:
@@ -87,14 +92,14 @@ class BsCrawler(ICrawler):
 
             ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
             try:
-                return resp.content.decode(resp.encoding, 'ignore')
+                return content.decode(resp.encoding, 'ignore')
             except LookupError:
                 pass  # encoding is unknown, e.g. "none" or ""
 
-        return resp.content
+        return content
 
     @classmethod
-    def get_soup(cls, url) -> Tuple[BeautifulSoup, str]:
+    def get_soup(cls, url) -> Tuple[BeautifulSoup, Union[bytes,str]]:
         """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
         content = cls.get_content(url)
         return BeautifulSoup(content, 'html.parser'), content

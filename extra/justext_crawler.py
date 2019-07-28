@@ -39,15 +39,27 @@ class JustextCrawler(BsCrawler):
         logger.debug(self)
 
     def crawl(self, url: str):
-        # get links using bs4 (easier)
         soup, content = self.get_soup(url)
+        # For links, use bs4 (easier)
         links = self.extract_links(url, soup)
-        # use raw content, as str(soup) is somewhat altered HTML and doesn't work as well...
-        paragraphs = justext.justext(content, encoding=soup.original_encoding, **self.kwargs)
-        text_blocks = (p.text.replace('\n', ' ') for p in paragraphs if self._paragraph_ok(p))
-        return ICrawler.CrawlResults(
-            text=self.joiner.join(text_blocks),
-            links=links)
+
+        try:
+            # Use raw content, as str(soup) is somewhat altered HTML and doesn't work as well...
+            # Decode the content here instead of passing the encoding parameter to justext.
+            # why ? because in some cases justtext uses the raw bytes (see core.html_to_dom)
+            # and if there are any unicode errors, it fails. By converting here, if justtext
+            # goes back to bytes, the unicode decode errors will have been replaced (default strategy).
+            text = content if isinstance(content, str) else content.decode(encoding=soup.original_encoding)
+            paragraphs = justext.justext(text, **self.kwargs)
+            text_blocks = (p.text.replace('\n', ' ') for p in paragraphs if self._paragraph_ok(p))
+            return ICrawler.CrawlResults(
+                text=self.joiner.join(text_blocks),
+                links=links)
+        except Exception as e:
+            if 'Document is empty' in str(e):
+                # might happen if the content is not HTML/has no tags
+                raise ICrawler.CrawlError(name='JustextError', message=str(e))
+            raise e
 
     def _paragraph_ok(self, p):
         return self.keep_bad or p.class_type != 'bad'
