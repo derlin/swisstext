@@ -179,17 +179,24 @@ def crawl_mongo(ctx, num_urls, new):
             for u in MongoURL.get_never_crawled().fields(id=True).limit(num_urls):
                 _enqueue(ctx, u.id)
         else:
-            # order URLs by number of visits (ascending) and last visited date (ascending)
-            aggregation_pipeline = [
+            # order URLs by number of visits (ascending), last visited date (ascending) and date added (ascending)
+            # hence, URLs never seen will be visited from oldest to latest adds.
+            aggregation_pipeline = [  # TODO check this order
                 {"$project": {
-                    'last_crawl': {"$ifNull": ["$delta_date", None]},
-                    'num_crawls': {"$size": {"$ifNull": ["$crawl_history", []]}}
+                    "added": "$date_added",
+                    "typ": "$source.type",
+                    "extra": "$source.extra",
+                    "last_crawl": {"$ifNull": ["$delta_date", None]},
+                    "num_crawls": {"$size": {"$ifNull": ["$crawl_history", []]}}
                 }},
-                {"$sort": {"num_crawls": 1, "last_crawl": 1}},
+                {"$sort": {"num_crawls": 1, "last_crawl": 1, "added": 1}},
                 {"$limit": num_urls}
             ]
             for u in MongoURL.objects.aggregate(*aggregation_pipeline):
-                _enqueue(ctx, u['_id'])
+                if u['typ'] == 'auto' and u['extra'].startswith('http'):
+                    _enqueue(ctx, u['_id'], parent_url=u['extra'])
+                else:
+                    _enqueue(ctx, u['_id'])
 
     logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
@@ -214,9 +221,10 @@ def crawl_from_file(ctx, urlfile):
 
 # ============== main methods
 
-def _enqueue(ctx, url) -> bool:
-    if link_utils.is_url_interesting(url) and not ctx.pipeline.saver.is_url_blacklisted(url):
-        ctx.queue.put((ctx.pipeline.saver.get_page(url), 1))  # set depth to 1
+def _enqueue(ctx, url, **kwargs) -> bool:
+    fixed_url, interesting = link_utils.fix_url(url)
+    if interesting and not ctx.pipeline.saver.is_url_blacklisted(fixed_url):
+        ctx.queue.put((ctx.pipeline.saver.get_page(fixed_url, **kwargs), 1))  # set depth to 1
         return True
     return False
 
