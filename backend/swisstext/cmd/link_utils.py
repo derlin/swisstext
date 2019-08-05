@@ -20,11 +20,11 @@ Dealing with search results
 ---------------------------
 
 When querying Google or another search engine for results, returned URLs might point to PDFs, videos or other
-uninteresting websites. The :py:meth:`is_url_interesting` method is here to help filtering out those "bad" results.
+uninteresting websites. The :py:meth:`fix_url` method is here to help normalize URLs and filtering out those "bad" results.
 """
 
 from typing import Iterable, Generator
-from urllib.parse import urljoin, urlparse, ParseResult
+import urllib.parse as up
 
 #: Quick lookup dictionary to exclude URLs with an extensions typical of non text resources
 EXCLUDED_EXTENSIONS = dict((s, True) for s in [
@@ -65,7 +65,7 @@ EXCLUDED_TLDS = dict((s[1:], True) for s in [
 
 #: Quick lookup dictionary to exclude any URL from wikipedia, except the ones from the given subdomains.
 #: See `<https://en.wikipedia.org/wiki/List_of_Wikipedias>`_ for a full list of wikipedia subdomains.
-INCLUDED_WIKI_DOMAINS = dict() #dict((s, True) for s in ["als"])
+INCLUDED_WIKI_DOMAINS = dict()  # dict((s, True) for s in ["als"])
 
 
 def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, None]:
@@ -75,20 +75,17 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
     :py:class:`swisstext.cmd.scraping.interface.ICrawler` to constitute and populate the crawl results's
     :py:attr:`~swisstext.cmd.scraping.interface.ICrawler.CrawlResults.links` attribute.
 
-    In addition to transforming relative to absolute URLs, this method will also exclude:
+    In addition to what :py:meth:`fix_url` does, this method will also exclude:
 
     * the base URL
-    * non HTTP links (`mailto:`, `javascript:`, anchors, ...)
     * Duplicates
-    * URLs pointing to non text resources (see :py:const:`EXCLUDED_EXTENSIONS`)
-    * URLs with a Country Code TLD unlikely to contain Swiss German (see :py:const:`EXCLUDED_EXTENSIONS`)
 
     For two links to be considered duplicates, they need to match exactly. Exceptions are anchors (stripped
-    automatically from the URL) and trailing slashes (in this case, the first encountered link will be returned).
+    automatically) and trailing slashes (in this case, the first encountered link will be returned).
 
     .. code-block:: python
 
-        from swisstext.cmd.scraping.link_utils import filter_links
+        from swisstext.cmd.link_utils import filter_links
         base_url = 'http://example.ch/page/1'
         hrefs = [
             '#',
@@ -101,7 +98,8 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
             'https://ru.wikipedia.org/wiki',
             'https://als.wikipedia.org',
             'http://other.resource.test',
-            'javascript:return false'
+            'javascript:return false',
+            '?p=66383&sid=aaece0dfd1e47e08505dcb5fae2d3f03'
         ]
         links = list(filter_links(base_url, hrefs))
 
@@ -111,6 +109,7 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
         #  http://example.ch/page/1?page=2
         #  https://als.wikipedia.org
         #  http://other.resource.test
+        #  http://example.ch/page/1?p=66383
 
     :param base_url: the URL of the current page (not returned and used to resolve relative links).
     :param links: a list of links found, relative or absolute
@@ -119,33 +118,66 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
     seen = {base_url, base_url + '/'}  # keep a set of seen urls
 
     for link in links:
-        abs_url: str = urljoin(base_url, link)
-        parsed: ParseResult = urlparse(abs_url)
-
-        if _should_url_be_kept(parsed):
-            if parsed.fragment:
-                abs_url = abs_url.replace(f"#{parsed.fragment}", '')
-            if abs_url not in seen:
-                yield abs_url
-                # add it as is
-                seen.add(abs_url)
-                # avoid duplicate links with just an ending slash that differ
-                seen.add(abs_url[:-1] if abs_url.endswith('/') else abs_url + '/')
-            else:
-                pass
+        fixed_url, ok = fix_url(link, base_url)
+        if ok and fixed_url not in seen:
+            yield fixed_url
+            # add it as is
+            seen.add(fixed_url)
+            # avoid duplicate links with just an ending slash that differ
+            seen.add(fixed_url[:-1] if fixed_url.endswith('/') else fixed_url + '/')
 
 
-def is_url_interesting(url: str) -> bool:
+def strip_sid(url: str) -> str:
     """
-    Test is an absolute URL is interesting to crawl.
-
-    The decision will be based on criteria such as the extension (exclude PDFs, images, etc.),
-    the TLD (exclude some country-specific TLDs) or the domain (exclude some wikipedia links)...
+    Remove the SID parameter from an url. SIDs are mostly used
+    by magento to track the users and won't change the page rendered.
+    see also https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/.
+    :param url: the url
+    :return: the url without sid
     """
-    return _should_url_be_kept(urlparse(url))
+    return up.urlunparse(_strip_sid(up.urlparse(url)))
 
 
-def _should_url_be_kept(parsed: ParseResult) -> bool:
+def fix_url(url: str, base_url: str = None) -> (str, bool):
+    """
+    Fix/normalize and URL and decide if it is interesting to crawl.
+
+    The URL is potentially transformed by:
+
+        * resolving relative to absolute URLs (only if base_url is set)
+        * removing potential sid query parameters (Magento)
+        * removing anchors
+
+    The "is interesting" decision will exclude:
+
+        * relative URLs (so ensure to provide a base_url if the url is relative)
+        * non HTTP links (`mailto:`, `javascript:`, anchors, ...)
+        * URLs pointing to non text resources (see :py:const:`EXCLUDED_EXTENSIONS`)
+        * URLs with a Country Code TLD unlikely to contain Swiss German (see :py:const:`EXCLUDED_EXTENSIONS`)
+
+    :param url: the url
+    :param base_url: the base url, required if the url is a relative one
+    :return: a tuple (fixed_url, is_interesting)
+    """
+    if base_url is not None:
+        # make relative into absolute links
+        url = up.urljoin(base_url, url)
+
+    parsed: up.ParseResult = up.urlparse(url)
+    parsed = _strip_sid(parsed)
+    if parsed.fragment:
+        parsed = parsed._replace(fragment='')
+
+    return up.urlunparse(parsed), _should_url_be_kept(parsed)
+
+
+def _strip_sid(parsed: up.ParseResult) -> up.ParseResult:
+    qs = up.parse_qsl(parsed.query)
+    new_qs = up.urlencode(list(filter(lambda t: t[0] != 'sid', qs)))
+    return parsed._replace(query=new_qs)
+
+
+def _should_url_be_kept(parsed: up.ParseResult) -> bool:
     if not parsed.scheme or not parsed.scheme.startswith('http'):
         # not a HTTP or HTTPS URL
         return False

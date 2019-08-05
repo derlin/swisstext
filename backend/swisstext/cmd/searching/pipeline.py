@@ -4,7 +4,7 @@ This module contains the core of the searching system.
 
 from typing import List
 
-from ..link_utils import is_url_interesting
+from ..link_utils import filter_links
 from .data import Seed
 from .interfaces import ISearcher, ISaver
 
@@ -15,10 +15,11 @@ class SearchEngine:
 
     Note that this class is usually instantiated by a :py:class:`~swisstext.cmd.searching.config.Config` object.
     """
+
     def __init__(self, searcher: ISearcher, saver: ISaver):
         self.searcher = searcher
         self.saver = saver
-        self.new_urls = set() #: the list of URLs discovered during the lifetime of the object
+        self.new_urls = set()  #: the list of URLs discovered during the lifetime of the object
 
     def process(self, seeds: List[Seed], max_results=10):
         """
@@ -29,8 +30,8 @@ class SearchEngine:
         """
         added_urls = 0
         for seed in seeds:
-            for link in self.searcher.top_results(seed.query, max_results):
-                if is_url_interesting(link) and link not in self.new_urls:
+            for link in filter_links('', self.searcher.top_results(seed.query, max_results)):
+                if link not in self.new_urls:
                     if not self.saver.link_exists(link):
                         seed.new_links.append(link)
                         added_urls += 1
