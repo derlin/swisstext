@@ -62,7 +62,10 @@ class JustextCrawler(BsCrawler):
             raise e
 
     def _paragraph_ok(self, p):
-        return self.keep_bad or p.class_type != 'bad'
+        # look at context-free and accept neargood as well
+        # "good" class may be skipped because the cf class is "short" (titles)
+        return self.keep_bad or 'good' in p.cf_class
+        #return self.keep_bad or p.class_type != 'bad'
 
     def __str__(self):
         return f'Justext({vars(self)})'.replace("'", '')
@@ -73,7 +76,7 @@ if __name__ == '__main__':
     parser.add_argument('url', nargs='+')
     parser.add_argument('-joiner', default='\n')
     parser.add_argument('-norm', default=False, action='store_true', help='Also normalize text')
-    parser.add_argument('-good', default=False, action='store_true', help='Keep only good|neergood sentences.')
+    parser.add_argument('-good', default=False, action='store_true', help='Keep only good|neargood sentences.')
     args = parser.parse_args()
 
     jt = JustextCrawler(joiner=args.joiner, keep_bad=not args.good)
