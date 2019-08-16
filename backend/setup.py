@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/derlin/swisstext",
 
     packages=setuptools.find_packages(),
-    package_data={'': ['*.yaml', '*.pickle']},  # include yaml and pickle from any module
+    package_data={'': ['*.yaml', '*.pickle', '*.txt']},  # include yaml and pickle from any module
     entry_points={
         'console_scripts': [
             'st_scrape = swisstext.cmd.scraping.__main__:main',
@@ -30,23 +30,17 @@ setuptools.setup(
     install_requires=[
         "swisstext_mongo",  # TODO
         "beautifulsoup4>=4.6.0",
-        "bs4>=0.0.1",
-        "certifi>=2018.4.16",
-        "chardet>=3.0.4",
-        "cityhash>=0.2.3.post9",
-        "click>=6.7",
-        "idna>=2.7",
-        "nltk>=3.3",
-        "numpy>=1.14.5",
-        "ordered-set>=3.0.0",
-        "pymongo>=3.7.0",
-        "pytimeparse>=1.1.8",
         "requests>=2.20.0",
+        "bs4>=0.0.1",
+        "pyyaml>=5.1",
+        "cityhash>=0.2.3.post9",
+        "nltk>=3.3",
+        "pytimeparse>=1.1.8",
         "scikit-learn>=0.19.1",
-        "scipy>=1.1.0",
-        "six>=1.11.0",
-        "sklearn>=0.0",
-        "urllib3>=1.23",
-        "mosestokenizer"
-    ]
+        "regex",
+        "click>=6.7",
+    ],
+    extras_require={
+        'extra': ['jusText==2.2.0', 'emoji>=0.5.2']
+    }
 )
