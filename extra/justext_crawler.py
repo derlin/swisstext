@@ -47,9 +47,10 @@ class JustextCrawler(BsCrawler):
             # Use raw content, as str(soup) is somewhat altered HTML and doesn't work as well...
             # Decode the content here instead of passing the encoding parameter to justext.
             # why ? because in some cases justtext uses the raw bytes (see core.html_to_dom)
-            # and if there are any unicode errors, it fails. By converting here, if justtext
-            # goes back to bytes, the unicode decode errors will have been replaced (default strategy).
-            text = content if isinstance(content, str) else content.decode(encoding=soup.original_encoding)
+            # and if there are any unicode errors, it fails. By converting here (with replace strategy!!),
+            # if justtext goes back to bytes, the unicode decode errors will have been replaced.
+            text = content if isinstance(content, str) \
+                else content.decode(encoding=soup.original_encoding, errors='replace')
             paragraphs = justext.justext(text, **self.kwargs)
             text_blocks = (p.text.replace('\n', ' ') for p in paragraphs if self._paragraph_ok(p))
             return ICrawler.CrawlResults(
@@ -92,3 +93,6 @@ if __name__ == '__main__':
         except Exception as e:
             print(e)
             # raise e
+
+if __name__ == '__main__':
+    print(JustextCrawler(keep_bad=False).crawl("http://archiv.davesblog.ch/tag/bloggen/index.html").text)

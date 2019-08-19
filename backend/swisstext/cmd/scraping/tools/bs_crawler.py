@@ -81,7 +81,7 @@ class BsCrawler(ICrawler):
         if len(content) == 0 or len(resp.text.strip()) == 0:
             raise ICrawler.CrawlError(name=f'EmptyDocumentError', message='Content is empty.')
 
-        if 'charset' in ctype:
+        if 'charset' in ctype: # TODO just return content and let bs4 take care of encoding ?
             ## (1) Nice encoding detection, but waaayy to slow
             # http_encoding = resp.encoding if 'charset' in ctype else None
             # html_encoding = EncodingDetector.find_declared_encoding(resp.content, is_html=True)
