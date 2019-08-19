@@ -58,11 +58,17 @@ class BsCrawler(ICrawler):
             links=links)
 
     @classmethod
-    def get_content(cls, url):
-        """Get the HTML content from a URL (as a string), dealing somewhat correctly with encoding."""
+    def get_content(cls, url) -> Tuple[bytes,str]:
+        """
+        Get the raw content from a URL (as a string), with the response encoding as reported by the requests module.
+        Exceptions may be raised if:
+        * an error occurs during the GET request (timeout, decoding issue, too many redirects, etc.)
+        * the content-type is not of a supported type (namely html or text)
+        * the response body is empty
+        """
         try:
-            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS,
-                                timeout=GET_TIMEOUT)  # ignore SSL certificates
+            # ignore SSL certificates
+            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS, timeout=GET_TIMEOUT)
             content = resp.content  # trigger content decoding to catch ContentDecodingError as well
         except Exception as e:
             # here, don't use from_ex so we can trim the error message
@@ -81,27 +87,14 @@ class BsCrawler(ICrawler):
         if len(content) == 0 or len(resp.text.strip()) == 0:
             raise ICrawler.CrawlError(name=f'EmptyDocumentError', message='Content is empty.')
 
-        if 'charset' in ctype: # TODO just return content and let bs4 take care of encoding ?
-            ## (1) Nice encoding detection, but waaayy to slow
-            # http_encoding = resp.encoding if 'charset' in ctype else None
-            # html_encoding = EncodingDetector.find_declared_encoding(resp.content, is_html=True)
-            # encoding = html_encoding or http_encoding
-
-            ## (2) another possibility: use the from_encoding argument in BSoup. The problem ? it uses
-            # .decode(encoding, 'replace'), which adds strange symbols to the text...
-
-            ## (3) Here, we try another thing: decoding the content by ourselves using the 'ignore' stragegy
-            try:
-                return content.decode(resp.encoding, 'ignore')
-            except LookupError:
-                pass  # encoding is unknown, e.g. "none" or ""
-
-        return content
+        # the resp.encoding is an educated guess about the encoding of the response based on the HTTP headers
+        return content, resp.encoding
 
     @classmethod
-    def get_soup(cls, url) -> Tuple[BeautifulSoup, Union[bytes,str]]:
-        """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding."""
-        content = cls.get_content(url)
+    def get_soup(cls, url) -> Tuple[BeautifulSoup, bytes]:
+        """Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML)."""
+        content, _ = cls.get_content(url)
+        # here, the encoding should be ok, since bs4 uses the decode/replace strategy by default
         return BeautifulSoup(content, 'html.parser'), content
 
     @classmethod
