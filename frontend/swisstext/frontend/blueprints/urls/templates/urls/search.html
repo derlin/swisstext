@@ -3,7 +3,6 @@
 
 {% block body %}
     {% from 'includes/_macros.html' import render_search_form %}
-
     {{ render_search_form(form, collapse) }}
 
     {% if urls %}
@@ -15,6 +14,18 @@
                 {{ render_navigation(urls, **request.args) }}
             {% endif %}
             {% include 'urls/_table.html' %}
+
+            {% if current_user.is_admin %}
+                <div class="card mt-5 small">
+                    <div class="card-body pt-2 pb-2">
+                        {% from 'bootstrap/form.html' import render_form %}
+                        <span>Blacklist all URLs matching the query and mark their sentences as deleted ?</span>
+                        {{ render_form(delete_form,
+                        action=request.url,
+                        form_type="inline", button_map=dict(go='outline-danger btn-sm')) }}
+                    </div>
+                </div>
+            {% endif %}
         {% else %}
             <p class="alert alert-danger">No URL match this search.</p>
         {% endif %}

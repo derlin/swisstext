@@ -4,9 +4,9 @@ from flask_login import login_required, current_user
 
 from swisstext.frontend.persistence.models import MongoURL, MongoSentence, SourceType, Source, MongoBlacklist
 from swisstext.frontend.user_management import role_required
-from swisstext.frontend.utils.flash import flash_success
+from swisstext.frontend.utils.flash import flash_success, flash_error
 from swisstext.frontend.utils.utils import templated
-from .forms import DeleteUrlForm, SearchUrlsForm, AddUrlForm
+from .forms import DeleteUrlForm, SearchUrlsForm, AddUrlForm, DeleteUrlsForm
 
 blueprint_urls = Blueprint('urls', __name__, template_folder='templates')
 
@@ -56,9 +56,38 @@ def view():
                 .paginate(page, per_page=20)
             collapse = urls.total > 0
 
-        return dict(form=form, urls=urls, collapse=collapse)
+        return dict(form=form, delete_form=DeleteUrlsForm(), urls=urls, collapse=collapse)
 
     else:
+        delete_form = DeleteUrlsForm()
+
+        if delete_form.go.data:
+            # the delete form is only available after search,
+            # so the url should contain some query parameters
+
+            if not delete_form.validate():
+                # ensure the checkbox is selected to avoid silly mistakes
+                flash_error('You must know what you are doing.')
+                return redirect(request.url)
+
+            form = SearchUrlsForm.from_get()
+            if not form.search.data:
+                # don't let the user delete everything
+                flash_error('You must have some filtering before delete.')
+                return redirect(request.url)
+
+            urls = MongoURL.objects(**form.get_mongo_params())
+            ud, sd = 0, 0
+            for url in urls:
+                try:
+                    sd += _delete_url(url.id)
+                    ud += 1
+                except Exception as e:
+                        print(e)
+
+            flash_success(f'Delete {ud}/{len(urls)} urls ({sd} sentences).')
+            return redirect(request.url)
+
         return SearchUrlsForm.redirect_as_get()
 
 
@@ -68,12 +97,7 @@ def view():
 def details(id):
     form = DeleteUrlForm()
     if request.method == 'POST' and form.validate():
-        # remove all sentences
-        all_sentences = MongoSentence.objects(url=id).fields(id=True)
-        MongoSentence.mark_deleted(all_sentences, current_user.id)
-        # blacklist url
-        MongoURL.try_delete(id)  # remove URL if exists
-        MongoBlacklist.add_url(id)
+        _delete_url(id)
 
         flash_success("URL '%s' has been blacklisted." % id)
         return redirect(request.args.get('next') or url_for('.view'))
@@ -82,3 +106,14 @@ def details(id):
     url = MongoURL.objects(id=id).get_or_404()
     sentences = MongoSentence.objects(url=id).order_by('-date_added').paginate(page=page, per_page=20)
     return dict(form=form, url=url, sentences=sentences)
+
+
+def _delete_url(id):
+    # remove all sentences
+    all_sentences = MongoSentence.objects(url=id).fields(id=True)
+    MongoSentence.mark_deleted(all_sentences, current_user.id)
+    # blacklist url
+    MongoURL.try_delete(id)  # remove URL if exists
+    MongoBlacklist.add_url(id)
+
+    return len(all_sentences)

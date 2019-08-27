@@ -33,6 +33,11 @@ button, html [type="button"], [type="reset"], [type="submit"] {
 .btn {
     vertical-align: initial;
 }
+
+.btn-sm, .btn-group-sm>.btn {
+    padding: 0.1rem 0.5rem; /* vs 0.25rem 0.5rem */
+}
+
 .table th, .table td {
     vertical-align: middle;
 }

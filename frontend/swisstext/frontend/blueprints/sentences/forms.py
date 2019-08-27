@@ -18,6 +18,10 @@ class SentencesForm(SearchForm):
         'Search',
         validators=[validators.Optional(), validators.Length(min=2)]
     )
+    url_part = StringField(
+        'Search URL part',
+        validators=[validators.Optional(), validators.Length(min=2)]
+    )
     validated_only = BooleanField('Validated sentences only', default=False)
     labelled_only = BooleanField('Labelled sentences only', default=False)
 
@@ -48,6 +52,8 @@ class SentencesForm(SearchForm):
 
         if self.search.data:
             query_params['text__icontains'] = self.search.data.strip()
+        if self.url_part.data:
+            query_params['url__icontains'] = self.url_part.data.strip()
 
         if self.validated_only.data:
             query_params['validated_by__0__exists'] = True

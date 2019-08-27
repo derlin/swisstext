@@ -1,7 +1,7 @@
 from typing import Dict
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, SelectField, IntegerField, HiddenField
+from wtforms import StringField, SubmitField, BooleanField, SelectField, IntegerField
 from wtforms import validators
 
 from swisstext.frontend.utils.search_form import SearchForm
@@ -53,3 +53,13 @@ class SearchUrlsForm(SearchForm):
             query_params['crawl_history__0__exists'] = self.crawl_history.data == 'True'
 
         return query_params
+
+
+class DeleteUrlsForm(FlaskForm):
+    i_understand = BooleanField('I know what I am doing')
+
+    go = SubmitField('Delete')
+
+    def validate(self):
+        return self.go.data and self.i_understand.data
+
