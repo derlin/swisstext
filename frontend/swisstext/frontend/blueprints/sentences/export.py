@@ -17,7 +17,7 @@ def stream_csv(sentences: QuerySet):
     buffer = CsvLine()
     writer = csv.writer(buffer)
     # write the header line first
-    writer.writerow(['id', 'text', 'url', 'dialect', 'dialect_confidence', 'dialect_nb_votes'])
+    writer.writerow(['id', 'text', 'url', 'crawl_proba', 'dialect', 'dialect_confidence', 'dialect_nb_votes'])
     yield buffer.read()
     # then yield the sentences
     for s in sentences:
@@ -25,6 +25,7 @@ def stream_csv(sentences: QuerySet):
             s.id,
             s.text,
             s.url,
+            s.crawl_proba,
             s.dialect.label,
             s.dialect.confidence,
             s.dialect.count

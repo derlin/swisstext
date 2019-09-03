@@ -8,6 +8,8 @@ __pycache__
 build
 _build
 
+*.ipynb_checkpoints
+
 
 dist
 *.egg-info
@@ -18,4 +20,5 @@ logs
 venv
 virtualenv
 mongodir
+prod_tests
 

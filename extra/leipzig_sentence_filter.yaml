@@ -21,12 +21,14 @@
     count:
       max: 0
 
-- rule_5:
-  descr: R5 G e s p e r r t e r Text
-  find:
-    pattern:  ' \p{L} \p{L} '
-    count:
-      max: 0
+# VERY BAD IDEA for GSW, as we often have two one letter word in a row...
+# - rule_5:
+#  descr: R5 G e s p e r r t e r Text
+#  find:
+#    pattern:  ' \p{L} \p{L} '
+#    count:
+#      max: 0
+
 
 - rule_6:
   descr: R6 Zwei aufeinanderfolgende Leerzeichen

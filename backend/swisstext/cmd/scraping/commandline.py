@@ -213,7 +213,9 @@ def crawl_from_file(ctx, urlfile):
     The file should have one URL per line. Any line starting with something other that "http" will be ignored.
     """
     for i, u in enumerate(urlfile):
-        _enqueue(ctx, u.strip())
+        u = u.strip()
+        if not u.startswith('#'):
+            _enqueue(ctx, u)
 
     logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i} URLs from {urlfile.name}.')
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
