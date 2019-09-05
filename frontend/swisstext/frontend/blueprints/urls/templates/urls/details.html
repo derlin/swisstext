@@ -58,7 +58,10 @@
                         {% for entry in url.crawl_history %}
                             <li class="list-group-item">
                                 <span class="text-monospace">{{ entry.date|datetime }}</span>
-                                - {{ entry.count }} new sentences.
+                                - {{ entry.count }} new sentence(s)
+                                {% if entry.hash %}
+                                    <small><a href="{{ url_for('texts.details', id=entry.hash) }}">see text</a></small>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

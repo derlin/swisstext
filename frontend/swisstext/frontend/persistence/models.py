@@ -39,6 +39,10 @@ class MongoURL(db.Document, AbstractMongoURL):
     pass
 
 
+class MongoText(db.Document, AbstractMongoText):
+    pass
+
+
 class MongoSeed(db.Document, AbstractMongoSeed):
     pass
 

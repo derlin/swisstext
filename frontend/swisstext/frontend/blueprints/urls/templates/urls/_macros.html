@@ -1,18 +1,45 @@
 {#
+    Render an eye icon with a link to the URL details page.
+    :param url: the url (i.e. href), not the url ID.
+    :param id: the ID (hash), if known. This will avoid recomputing it.
+#}
+{% macro url_details_icon(url=None, id=None) %}
+    {# ensure to derive the URL ID using CityHash64 if not given #}
+    <a class="ml-2 btn btn-light btn-sm" href="{{ url_for('urls.details', id=id or (url | chs64), **kwargs) }}">
+        <span class="oi oi-eye"></span>
+    </a>
+{% endmacro %}
+
+
+{#
+    Render a link (using code font) along with a "open external" icon on the left.
+    :param url: the href.
+    :param as_icon: if set, only show the icon
+#}
+{% macro external_link(url=None, as_icon=False) %}
+    {% if as_icon %}
+        {# render an icon button #}
+        <a class="btn btn-light btn-sm" href="{{ url }}" target="_blank">
+            <span class="oi oi-external-link"></span>
+        </a>
+    {% else %}
+        {# render a link with the text #}
+        <a class="card-link ml-2" href="{{ url }}" target="_blank">
+            <code>{{ url }}</code>
+            <span class="ml-1 oi oi-external-link"></span>
+        </a>
+    {% endif %}
+{% endmacro %}
+
+{#
     Render a url as external link, with an "eye" icon to see the URL details.
     :param url: the full url, not the url ID.
     :param id: the ID (hash), if known. This will avoid recomputing it.
     :param show_eye: if set to false, don't show the eye icon (which redirect to the URL details view)
 #}
-{% macro render_url(url, show_eye=True) %}
-    <a class="card-link ml-2" href="{{ url }}" target="_blank">
-        <code>{{ url }}</code>
-        <span class="ml-1 oi oi-external-link"></span>
-    </a>
+{% macro render_url(url, id=None, show_eye=True) %}
+    {{ external_link(url) }}
     {% if show_eye %}
-        {# ensure to derive the URL ID using CityHash64 if not given #}
-        <a class="ml-2 btn btn-light btn-sm" href="{{ url_for('urls.details', id=id or (url | chs64), **kwargs) }}">
-            <span class="oi oi-eye"></span>
-        </a>
+        {{ url_details_icon(url, id) }}
     {% endif %}
 {% endmacro %}

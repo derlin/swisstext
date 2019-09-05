@@ -52,6 +52,7 @@ app.register_blueprint(blueprint_validation, url_prefix='/validate')
 app.register_blueprint(blueprint_labelling, url_prefix='/label')
 app.register_blueprint(blueprint_sentences, url_prefix='/sentences')
 app.register_blueprint(blueprint_urls, url_prefix='/urls')
+app.register_blueprint(blueprint_texts, url_prefix='/texts')
 
 
 # === index

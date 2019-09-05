@@ -6,3 +6,4 @@ from .sentences import blueprint_sentences
 from .urls import blueprint_urls
 from .validation import blueprint_validation
 from .users import blueprint_users
+from .texts import blueprint_texts

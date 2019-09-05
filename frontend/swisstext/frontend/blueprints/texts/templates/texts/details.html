@@ -1,0 +1,62 @@
+{% extends '_layout.html' %}
+{% set title = 'Text detail' %}
+
+{% block header_include %}
+    <style type="text/css">
+        .text-content {
+            font-family: monospace;
+        }
+
+        /* toogle fullscreen icon on the right of the title */
+        [class*="oi-fullscreen"] {
+            float: right;
+        }
+
+        /* toggle fullscreen mode */
+        .text-content:not(.fullscreen) {
+            max-height: 400px;
+            overflow: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block js_include %}
+    <script type="text/javascript">
+        $text_content = $('.text-content');
+        $('[class*=oi-fullscreen]').on('click', function (e) {
+            $elt = $(e.target || e.sourceElement);
+            // update the icon
+            $elt.toggleClass('oi-fullscreen-enter');
+            $elt.toggleClass('oi-fullscreen-exit');
+            // update the text
+            $text_content.toggleClass('fullscreen');
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="card mt-3">
+        <div class="card-header">Text <code>{{ mongo_text.id }}</code> <span class="oi oi-fullscreen-enter"></span>
+        </div>
+        <div class="card-body">
+            <p class="card-text text-content">
+                {{ mongo_text.text }}
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card mt-2">
+        <div class="card-header collapsed"
+             data-toggle="collapse" href="#urls-body" role="button" aria-controls="urls-body">
+            Found on {{ urls.items | length }} page(s).
+        </div>
+        <div id="urls-body" class="collapse" aria-labelledby="urls-header">
+            <div class="card-body">
+                {% include 'urls/_table.html' %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
