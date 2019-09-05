@@ -47,16 +47,19 @@ class MongoSaver(ISaver):
                 # TODO decrease new_sg ?
                 logger.warning(f'Exception ignored -- Duplicate sentence found (url: {page.url}.')
 
-        # save text
-        text: MongoText = MongoText.create_or_update(page.url, page.text)
-        if len(text.urls) > 1:
-            logger.info(f'duplicate text found: {text.urls}')
         # save or update url
         new_count = len(page.new_sg)
         mu: MongoURL = MongoURL.get(page.url)
         if mu is None:
             source = Source(SourceType.AUTO, page.parent_url) if page.parent_url else Source()
             mu = MongoURL.create(page.url, source=source)
+
+        # save text
+        text: MongoText = MongoText.create_or_update(mu.id, page.text)
+        if len(text.urls) > 1:
+            logger.info(f'duplicate text found: {text.urls}')
+
+        # add crawl history
         mu.add_crawl_history(new_count, hash=text.id)
         # persist
         text.save()

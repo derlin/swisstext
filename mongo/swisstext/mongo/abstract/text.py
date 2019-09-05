@@ -18,7 +18,7 @@ class AbstractMongoText(Document):
     """The text hash, also used as a primary key."""
 
     urls = ListField(default=None)
-    """Source URL(s)."""
+    """Source URL(s) IDs."""
 
     text = StringField(default=None)
     """The actual text."""
@@ -34,32 +34,35 @@ class AbstractMongoText(Document):
         return cls.get(text, hash) is not None
 
     @classmethod
-    def get(cls, text, hash=None) -> object:
+    def get(cls, text, hash=None) -> Document:
         """Get a Text instance."""
         if hash is None: hash = cls.get_hash(text)
         return cls.objects.with_id(hash)
 
     @classmethod
-    def create(cls, url, text, hash=None) -> object:
+    def create(cls, url_id, text, hash=None) -> Document:
         """
         Create a Text. *Warning*: this **won't save** the document automatically.
         You need to call the ``.save`` method to persist it into the database.
         """
         if hash is None: hash = cls.get_hash(text)
-        return cls(id=hash, urls=[url], text=text)
+        return cls(id=hash, urls=[url_id], text=text)
 
     @classmethod
-    def create_or_update(cls, url, text, hash=None) -> object:
+    def create_or_update(cls, url_id, text, hash=None) -> Document:
         """
         Get or create a Text, adding the URL. *Warning*: this **won't save** the document automatically.
         You need to call the ``.save`` method to persist it into the database.
+
+        Notes: if the hash of the text has already been computed for the text, it can be specified to avoid
+        a recomputation; URL should be the id of the related URL document (a hash in latest versions).
         """
         if hash is None: hash = cls.get_hash(text)
-        txt: AbstractMongoText = cls.get(text, hash=hash)
+        txt: Document = cls.get(text, hash=hash)
         if txt is not None:
-            txt.update(add_to_set__urls=url)  # update
+            txt.update(add_to_set__urls=url_id)  # update
         else:
-            txt = cls.create(url, text, hash=hash)  # create
+            txt = cls.create(url_id, text, hash=hash)  # create
         return txt
 
     @staticmethod

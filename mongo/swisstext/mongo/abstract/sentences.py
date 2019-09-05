@@ -18,6 +18,7 @@ from mongoengine import *
 
 from .generic import Deleted
 from .users import AbstractMongoUser
+from .urls import AbstractMongoURL
 
 
 class DialectEntry(EmbeddedDocument):
@@ -214,6 +215,10 @@ class AbstractMongoSentence(Document):
     Note that this field can be absent (never labelled by anyone) or its label empty (all labels removed)."""
 
     meta = {'collection': 'sentences', 'abstract': True}
+
+    @property
+    def url_id(self):
+        return AbstractMongoURL.get_hash(self.url)
 
     @classmethod
     def add_label(cls, obj, uuid, label, **kwargs):

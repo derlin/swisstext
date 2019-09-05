@@ -177,12 +177,13 @@ def crawl_mongo(ctx, num_urls, new):
         if new:
             # just get the URLs never visited
             for u in MongoURL.get_never_crawled().fields(id=True).limit(num_urls):
-                _enqueue(ctx, u.id)
+                _enqueue(ctx, u.url)
         else:
             # order URLs by number of visits (ascending), last visited date (ascending) and date added (ascending)
             # hence, URLs never seen will be visited from oldest to latest adds.
             aggregation_pipeline = [  # TODO check this order
                 {"$project": {
+                    "url": "$url",
                     "added": "$date_added",
                     "typ": "$source.type",
                     "extra": "$source.extra",
@@ -194,9 +195,9 @@ def crawl_mongo(ctx, num_urls, new):
             ]
             for u in MongoURL.objects.aggregate(*aggregation_pipeline):
                 if u['typ'] == 'auto' and u['extra'].startswith('http'):
-                    _enqueue(ctx, u['_id'], parent_url=u['extra'])
+                    _enqueue(ctx, u['url'], parent_url=u['extra'])
                 else:
-                    _enqueue(ctx, u['_id'])
+                    _enqueue(ctx, u['url'])
 
     logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
     _scrape(ctx.config, ctx.queue, ctx.pipeline)

@@ -16,6 +16,7 @@ updated or moved to the `blacklist` after the first visit.
 
 from datetime import datetime
 
+from cityhash import CityHash64
 from mongoengine import *
 
 from .generic import Source, CrawlMeta
@@ -32,7 +33,10 @@ class AbstractMongoURL(Document):
     """
 
     id = StringField(primary_key=True)
-    """The URL, also used as a primary key."""
+    """The url ID, computed by hashing the text using :py:meth:`get_hash`."""
+
+    url = StringField()
+    """The URL, indexed by hash."""
 
     source = EmbeddedDocumentField(Source, default=Source())
     """The source of the URL (see :py:class:`~swisstext.mongo.abstract.generic.Source`). 
@@ -59,12 +63,20 @@ class AbstractMongoURL(Document):
     delta_date = DateTimeField(default=None)
     """The date of the last visit (same as ``crawl_history[-1].date``). Inexistant if the URL was never crawled."""
 
-    meta = {'collection': 'urls', 'abstract': True}
+    meta = {'collection': 'urls', 'abstract': True, 'indexes': [
+        {'fields': ['#url']}  # add a hashed index on URL
+    ]}
+
+    @staticmethod
+    def get_hash(text) -> str:
+        """Hash the given text using
+        `CityHash64 <https://opensource.googleblog.com/2011/04/introducing-cityhash.html>`_. """
+        return str(CityHash64(text))
 
     @classmethod
-    def exists(cls, url) -> bool:
-        """Test if a URL exists."""
-        return cls.objects.with_id(url) is not None
+    def exists(cls, url: str = None, id: str = None) -> bool:
+        """Test if a url exists."""
+        return cls.get(url, id) is not None
 
     @classmethod
     def create(cls, url, source=Source()) -> Document:
@@ -72,12 +84,15 @@ class AbstractMongoURL(Document):
         Create a URL. *Warning*: this **won't save** the document automatically.
         You need to call the ``.save`` method to persist it into the database.
         """
-        return cls(id=url, source=source)
+        return cls(id=cls.get_hash(url), url=url, source=source)
 
     @classmethod
-    def get(cls, url) -> object:
-        """Get a URL Document instance by ID."""
-        return cls.objects.with_id(url)
+    def get(cls, url=None, id=None) -> Document:
+        """Get a URL Document instance by ID or url (or None if not exist)."""
+        if id is not None:
+            return cls.objects.with_id(id)
+        else:
+            return cls.objects(url=url).first()
 
     @classmethod
     def get_never_crawled(cls) -> QuerySet:
@@ -85,10 +100,10 @@ class AbstractMongoURL(Document):
         return cls.objects(crawl_history__size=0)
 
     @classmethod
-    def try_delete(cls, url: str):
+    def try_delete(cls, url: str = None, id: str = None):
         """Delete a URL if it exists. Otherwise, do nothing silently."""
         # remove from url if it exists
-        cls.objects(id=url).delete()
+        (cls.objects(id=id) if id is not None else cls.objects(url=url)).delete()
 
     def add_crawl_history(self, new_sg_count, hash=None):
         """
@@ -110,20 +125,28 @@ class AbstractMongoURL(Document):
 class AbstractMongoBlacklist(Document):
     """An abstract :py:class:`mongoengine.Document` for *uninteresting* URLs, stored in the ``blacklist`` collection."""
 
-    url = StringField(primary_key=True)
-    """The blacklisted URL, acting as a primary key."""
+    id = StringField(primary_key=True)
+    """The url ID, computed by hashing the text using :py:meth:`get_hash`."""
+
+    url = StringField()
+    """The blacklisted URL, indexed by hash."""
 
     date_added = DateTimeField(default=lambda: datetime.utcnow())
     """When the URL was added to the blacklist"""
 
     source = EmbeddedDocumentField(Source, default=Source())
     """What/who triggered the blacklisting, see :py:class:`swisstext.mongo.abstract.generic.Source`."""
-    meta = {'collection': 'blacklist', 'abstract': True}
+
+    meta = {'collection': 'blacklist', 'abstract': True, 'indexes': [
+        {'fields': ['#url']}  # add a hashed index on URL
+    ]}
 
     @classmethod
-    def exists(cls, url) -> bool:
+    def exists(cls, url: str = None, hash: str = None) -> bool:
         """Test if a url is blacklisted."""
-        return cls.objects.with_id(url) is not None
+        return (cls.objects.with_id(hash) if hash is not None
+                else cls.objects(url=url).first()
+                ) is not None
 
     @classmethod
     def add_url(cls, url: str, source: Source = None):
@@ -136,6 +159,11 @@ class AbstractMongoBlacklist(Document):
         """
         # add it to the blacklist
         cls(
+            id=cls.get_hash(url),
             url=url,
             source=source or Source()
         ).save()
+
+    @staticmethod
+    def get_hash(text) -> str:
+        return str(CityHash64(text))
