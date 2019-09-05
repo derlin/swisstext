@@ -1,5 +1,7 @@
 # ---------------------- jinja filters
 from urllib.parse import unquote, quote, urlparse, urlunparse
+
+from cityhash import CityHash64
 from swisstext.frontend.persistence.models import DialectsWrapper
 
 def percentToColor(percent, opacity=1):
@@ -22,11 +24,16 @@ def format_datetime(d, format='%Y-%m-%d %H:%M'):
 
 
 def encode_next_url(current_url):
+    # extract the endpoint from the url, useful to encode the "next" query parameter. Example:
+    # encode_next_url('http://localhost:8000/validate?p=3') -> '/validate?p=3'
     c = urlparse(current_url)
     return urlunparse(('', '', c.path, c.params, c.query, ''))
 
+def chs64(s):
+    return str(CityHash64(s))
 
 def register(app):
+    app.jinja_env.filters['chs64'] = chs64
     app.jinja_env.filters['toColor'] = percentToColor
     app.jinja_env.filters['unquote'] = unquote
     app.jinja_env.filters['quote'] = quote

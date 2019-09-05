@@ -34,21 +34,29 @@
 {% block js_include %}
     <script type="text/javascript">
         $(function () {
-            let dialect_default = '{{ form.dialect.data }}';
+            // dialect_default stores the dialect that is globally selected (hence default for all sentences)
+            let dialect_default = '{{ form.dialect.data or form.dialect.choices[0][0] }}';
 
             $('#dialect').on('change', (e) => {
+                // when the user change the global dialect select, update all sentences, except the
+                // ones that have been manually changed
                 $elt = $(e.target || e.sourceElement);
-                dialect_default = $elt.val();
-                $('[data-selected=default] select').val(dialect_default).trigger('change');
+                dialect_default = $elt.val(); // update the current dialect default
+                $('[data-selected=default] select').val(dialect_default).trigger('change'); // change sentence labels
             });
 
-            $('table [type=checkbox]').on('change', (e) => {
-                $select = $(e.target || e.sourceElement).next();
-                $select.val($select.val() === dialect_default ? '{{ form.dialect.default }}' : dialect_default);
-                $select.trigger('change');
+            $('table .sentence-td').on('click', (e) => {
+                // when a user clicks on a sentence (i.e. a row):
+                //  - if set to default dialect, make it strike-through (will be ignored completely / not sent on save)
+                //  - if labelled manually or ignored (strike-through), set it back to dialect default
+                $select = $(e.target || e.sourceElement).parent().find('select');
+                $select.val($select.val() === dialect_default ? '' : dialect_default);
+                $select.trigger('change'); // notify the select that its value has changed
             });
 
             $('table select').on('change', (e) => {
+                // the select value has changed: update the data-selected parameter
+                // note that an empty string value ('') is equivalent to removing the attribute altogether
                 $elt = $(e.target || e.sourceElement);
                 $elt.closest('tr').attr('data-selected', $elt.val() === dialect_default ? 'default' : $elt.val());
             });
@@ -60,17 +68,25 @@
 
     <form method="post">
         {{ form.csrf_token }}
-        {% if get_params.sid %}
+        {% if param_sid %}
+            {#
+                A sentence has been specified, meaning we are coming from the single labelling view.
+                Show a back button.
+            #}
             <div class="text-right">
-                <a class="btn btn-light btn-sm float-right" href="{{ url_for('.label_one', id=get_params.sid) }}">
+                <a class="btn btn-light btn-sm float-right" href="{{ url_for('.label_one', id=param_sid) }}">
                     Cancel & back
                 </a>
             </div>
         {% endif %}
 
         {% if sentences %}
+            {#
+                There are sentences to label: show a global dialect select and individual selects for each sentences.
+                See the JS above for the behavior.
+            #}
             {% from 'urls/_macros.html' import render_url %}
-            <p>Displaying validated sentences from <br>{{ render_url(get_params.url) }}
+            <p>Displaying validated sentences from <br>{{ render_url(url) }}
                 {% if sentences.has_next %}
                     <br>
                     <span class="font-italic">
@@ -79,27 +95,27 @@
                 {% endif %}
             </p>
 
+            {# display a select to change all sentence's dialects, except if changed manually #}
             {% from 'bootstrap/form.html' import render_field %}
             {{ render_field(form.dialect) }}
 
+            {# display the sentences along with individual selects #}
             <table class="table table-sm table-hover">
                 {% for s in sentences.items %}
                     <tr data-selected="default">
                         <td>
-                            <input style="display:none" id="checkbox-{{ s.id }}" type="checkbox" checked="checked">
-                            <select name="sentence-{{ s.id }}"> <!-- TODO class="form-control-sm" ? -->
+                            {# create a select with id sentence-<sid>, values being labels #}
+                            <select name="sentence-{{ s.id }}">
                                 {% for (v,d) in form.dialect.choices %}
                                     <option value="{{ v }}" {{ 'selected' if v == form.dialect.data else '' }}>
-                                        {# {{ "[%s] %s" % (v,d) }}#}
                                         {{ d }}
                                     </option>
                                 {% endfor %}
                             </select>
                         </td>
                         <td class="sentence-td">
-                            <label for="checkbox-{{ s.id }}">
-                                {{ s.text }}
-                            </label>
+                            {# display the actual sentence #}
+                            {{ s.text }}
                         </td>
                     </tr>
                 {% endfor %}

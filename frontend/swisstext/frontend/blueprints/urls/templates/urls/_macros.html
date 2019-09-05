@@ -1,9 +1,18 @@
-{% macro render_url(url) %}
+{#
+    Render a url as external link, with an "eye" icon to see the URL details.
+    :param url: the full url, not the url ID.
+    :param id: the ID (hash), if known. This will avoid recomputing it.
+    :param show_eye: if set to false, don't show the eye icon (which redirect to the URL details view)
+#}
+{% macro render_url(url, show_eye=True) %}
     <a class="card-link ml-2" href="{{ url }}" target="_blank">
         <code>{{ url }}</code>
         <span class="ml-1 oi oi-external-link"></span>
     </a>
-    <a class="ml-2 btn btn-light btn-sm" href="{{ url_for('urls.details', id=url, **kwargs) }}">
-        <span class="oi oi-eye"></span>
-    </a>
+    {% if show_eye %}
+        {# ensure to derive the URL ID using CityHash64 if not given #}
+        <a class="ml-2 btn btn-light btn-sm" href="{{ url_for('urls.details', id=id or (url | chs64), **kwargs) }}">
+            <span class="oi oi-eye"></span>
+        </a>
+    {% endif %}
 {% endmacro %}

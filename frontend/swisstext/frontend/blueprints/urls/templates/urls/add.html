@@ -36,7 +36,7 @@
                     <ul class="list-group list-group-item-action" style="max-height: 200px; overflow: auto">
                         {% for u in similar_urls.items %}
                             <li class="list-group-item">
-                                {{ render_url(u.id) }}
+                                {{ render_url(u.url, u.id) }}
                             </li>
                         {% endfor %}
                     </ul>

@@ -115,7 +115,7 @@
                             </a>
                             <a class="dropdown-item" href="{{ s.url }}" target="_blank">View site</a>
                             <a class="dropdown-item"
-                               href="{{ url_for('urls.details', id=s.url, next=encode_next_url(request.url)) }}">
+                               href="{{ url_for('urls.details', id=s.url_id, next=encode_next_url(request.url)) }}">
                                 View URL details
                             </a>
                         </div>

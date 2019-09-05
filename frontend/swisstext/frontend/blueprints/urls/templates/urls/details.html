@@ -22,20 +22,18 @@
         </div>
     </div>
 
+    {% from 'urls/_macros.html' import render_url %}
     <div class="card mt-3">
-        <div class="card-header">URL info</div>
+        <div class="card-header">URL <code>{{ url.id }}</code></div>
         <div class="card-body">
             <p class="card-text">Page link:<br/>
-                <a class="card-link ml-2" href="{{ url.id }}" target="_blank">
-                    <code>{{ url.id }}</code>
-                    <span class="oi oi-external-link"></span>
-                </a>
+                {# show the URL link, but don't show the icon redirecting to this current page... #}
+                {{ render_url(url.url, show_eye=False) }}
             </p>
             <p class="card-text">Source:
                 <span class="badge badge-pill badge-info">{{ url.source.type_ }}</span><br/>
                 {% if url.source.extra %}
                     {% if url.source.extra.startswith('http') %}
-                        {% from 'urls/_macros.html' import render_url %}
                         {{ render_url(url.source.extra) }}
                     {% elif url.source.type_ == 'seed' %}
                         <code>{{ url.source.extra }}</code>
@@ -79,11 +77,11 @@
             {% if sentences.total %}
                 <div class="text-right">
                     <a class="btn btn-sm btn-light" target="_blank"
-                       href="{{ url_for('validation.validate', url=url.id) }}">
+                       href="{{ url_for('validation.validate', uid=url.id) }}">
                         Validate all sentences
                     </a>
                     <a class="btn btn-sm btn-light" target="_blank"
-                       href="{{ url_for('labelling.label_from_url', url=url.id) }}">
+                       href="{{ url_for('labelling.label_from_url', uid=url.id) }}">
                         Label all sentences
                     </a>
                 </div>
