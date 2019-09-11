@@ -16,6 +16,13 @@ Rules are defined using a simple YAML syntax and can be of two types: *length-ba
     * Rules are checked in the same order as they are defined, so it is advised to put the most generic / efficient
       ones first.
 
+.. note::
+
+    This module uses the `regex library <https://pypi.org/project/regex/>`_ (version V0)
+    instead of the default re. You can thus freely use
+    `unicode regular expressions <https://www.regular-expressions.info/unicode.html>`_
+    in your rules.
+
 Rule syntax
 -----------
 
@@ -34,7 +41,7 @@ The rule succeeds if ``min <= len(s) <= max``. Here is an example:
 of occurrences of a *pattern* (i.e. the number of matches when calling ``re.findall(pattern, s)``).
 The rule itself can be based on the raw count or based on a ratio:
 
-* count: the rule succeeds if ``min <= nb_matches <= max``
+* count: the rule succeeds if ``min <= nb_matches <= max`` (inclusive !)
 * ratio: the rule succeeds if ``min <= len(s) / (len(s) - nb_matches + 1) <= max```
 
 Here are examples:
@@ -69,15 +76,29 @@ simply ignored:
         pattern: '(\.\s?){3}$'
         count:
           max: 0
+
+Rules can additionnally specify examples that could be used to check quickly if they work. For example:
+
+.. code-block:: yaml
+
+    - spelled_words:
+      descr: W O R D
+      find:
+        pattern: ' ([\p{L}] ){3,}'
+        count:
+          max: 0
+      examples:
+        - 'you must B E L I E V E me.'
+        - 'span spells S P A N.'
+        - 'S P A N means span!!'
 """
 
-import re
-#import regex as re
+import regex
 import yaml
 import logging
 from os import path
 
-from ..interfaces import ISentenceFilter
+from swisstext.cmd.scraping.interfaces import ISentenceFilter
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +145,7 @@ class Find:
     def __init__(self, pattern, count=None, ratio=None):
         if count is None and ratio is None:
             logger.warning(f"{pattern}: missing find condition: count or ratio...")
-        self.pattern = re.compile(pattern)
+        self.pattern = regex.compile(pattern)
         self.count = MinMax(**count) if count else None
         self.ratio = MinMax(**ratio) if ratio else None
 
@@ -146,9 +167,10 @@ class Find:
 class Rule:
     """Encapsulates one rule"""
 
-    def __init__(self, id, descr, find=None, length=None, **kwargs):
+    def __init__(self, id, descr, find=None, length=None, examples=None, **kwargs):
         self.id = id
         self.descr = descr
+        self.examples = examples
         self.iff = []
         # TODO: better way ?
         if 'if' in kwargs:  # if is a reserved keyword in python
@@ -211,11 +233,22 @@ class Rules:
     def __len__(self):
         return len(self.rules)
 
-def create_filter_using_regex_module(*args, **kwargs):
-    """Use the regex module instead of the default re for this object"""
-    global re
-    import regex
-    _real_re, re = re, regex
-    ft = PatternSentenceFilter(*args, **kwargs)
-    re = _real_re
-    return ft
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', type=argparse.FileType('r'), default='-')
+    parser.add_argument('-o', '--out', type=argparse.FileType('w'), default='-')
+    parser.add_argument('-r', '--rules-file', default=None)
+
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, stream=sys.stderr, format='%(levelname)s: %(msg)s')
+
+    psf = PatternSentenceFilter(rulespath=args.rules_file)
+
+    args.out.write('\n'.join(
+        t for t in args.input if psf.is_valid(t)
+    ))

@@ -1,21 +1,32 @@
-- start:
-  descr: start character
-  find:
-    pattern: '^[\W|\d]'
-    count:
-      max: 0
+#- start:
+#  descr: start character
+#  find:
+#    pattern: ^["']?\p{L}
+#    count:
+#      min: 1
 
-- min_letters:
-  descr: not enough letters
-  find:
-    pattern: '[^\W\d]'
-    count:
-      min: 30
+# =================================
+# SENTENCE LENGTH AND CHARACTER SET
+# =================================
 
 - max_length:
   descr: too long
   length:
     max: 1000
+
+- min_letters:
+  descr: not enough letters
+  find:
+    pattern: '\p{L}'
+    count:
+      min: 30
+
+- min_words:
+  descr: not enough words
+  find:
+    pattern: '\p{L}+'
+    count:
+      min: 5
 
 #- ascii_letters:
 #  descr: not enough ascii letter
@@ -24,6 +35,13 @@
 #    ratio:
 #      min: 1.5
 
+#- letters_proportional:
+#  descr: not enough letters proportion
+#  find:
+#    pattern: '[\W|\d]'
+#    ratio:
+#      max: 1.4
+
 - non_sg_letters:
   descr: too much non SG letters
   find:
@@ -31,21 +49,12 @@
     count:
       max: 2
 
-- min_words:
-  descr: not enough words
-  find:
-    pattern: '\S+'
-    count:
-      min: 5
-
-- letters_proportional:
-  descr: not enough letters proportion
-  find:
-    pattern: '[\W|\d]'
-    ratio:
-      max: 1.4
+# =================================
+# SYMBOLS AND NON-LETTERS
+# =================================
 
 - has_tabs:
+  # well, shouldn't happen if the text was normalized prior to this
   descr: tabular data
   find:
     pattern: \t|\s{4,}
@@ -59,26 +68,31 @@
     count:
       max: 0
 
-- slashes:
-  descr: lonely slash
+- lonelies:
+  descr: lonely slash or =
   find:
-    pattern: ' / '
+    pattern: ' [/=] '
     count:
       max: 0
+  examples:
+    - 'I think 4 = 4'
 
-- spelled_words:
-  descr: W O R D
+- hashtags:
+  descr: too many hashtags
   find:
-    pattern: ' ([^\W\d] ){3,}'
+    pattern: \# ?\p{L}
     count:
-      max: 0
+      max: 1
+  examples:
+    - 'Reply at #things # test'
+    - '#warden #tonightsTHEnight yes bro !! #CHEERS'
 
-- many_commas:
-  descr: too many commas
+- too_many_symbols:
+  descr: 'too many /)&:'
   find:
-    pattern: ','
+    pattern: '[/\)&:]'
     count:
-      max: 10
+      max: 7
 
 - many_dots:
   descr: too many dots
@@ -86,46 +100,10 @@
     pattern: '\.'
     count:
       max: 5
-
-- ellipsis:
-  descr: ellispsis on short sentences.
-  if:
-    length:
-      max: 30
-  find:
-    pattern: '(\.\s?){3}$'
-    count:
-      max: 0
-
-- http:
-  descr: links and HTML garbage
-  find:
-    pattern: '@|(https?:)|(nbsp;)|(a href)'
-    count:
-      max: 0
-
-# not used anymore, as wikipedia domains are not visited anymore (see filter_links.py)
-#- isbn_wiki:
-#  descr: ISBN sentences in als.wikipedia
-#  find:
-#    pattern: 'ISBN-Suech'
-#    count:
-#      max: 0
-
-- hashtags:
-  descr: too many hashtags
-  find:
-    pattern: \# ?[^\W\d]
-    count:
-      max: 2
-
-- only_caps:
-  # works great, but will also discard all upper sentences
-  descr: too many capitalized words
-  find:
-    pattern: (^[a-zäü])|([\s’'][a-zäü]) #^([\dA-Z#"'\(]\S+\s?)+$
-    count:
-      min: 3 #TODO ask Andreas about using 3
+  examples:
+    - 'YOU. MUST. LISTEN. TO. ME. NOW.'
+    - 'I dunno... maybe...'
+    - 'no ........ way !'
 
 - dashes:
   descr: too many dashes
@@ -138,5 +116,74 @@
   descr: too many arrows
   find:
     pattern: '[←→↑↓↔↕↖↗↘↙↚↛↮⟵⟶⟷><]'
+    count:
+      max: 0
+
+# =================================
+# OTHER SPECIALTIES
+# =================================
+
+- spelled_words:
+  descr: W O R D
+  find:
+    pattern: ' ([\p{L}] ){3,}'
+    count:
+      max: 0
+  examples:
+    - 'you must B E L I E V E me.'
+    - 'span spells S P A N.'
+    - 'S P A N means span!!'
+
+- ellipsis:
+  descr: ellispsis on short sentences.
+  if:
+    length:
+      max: 30
+  find:
+    pattern: '(\.\s?){3}$'
+    count:
+      max: 0
+  examples:
+    - 'read more at ...'
+    - 'read more at... '
+
+- too_many_caps:
+  descr: too many truecased words
+  find:
+    pattern: (\p{Lu}\p{Ll}*,? ){5}
+    count:
+      max: 0
+  examples:
+    - 'De Zürcher Schtadtrat Gerold Lauber und de Diräkter vom Schportamt Züri'
+    - 'John Doe, Mike Merk, Sarah and Lee Johnson'
+
+- repeated_letters:
+  descr: repeated letters (more than 8 in a row)
+  find:
+    pattern: ([^?!])\1{8}
+    count:
+      max: 0
+  examples:
+    - 'Jaaaaaaaaaaaaa klar'
+    - '...........'
+
+- non_letters_in_a_row:
+  descr: too many non-letters in a row
+  find:
+    pattern: '[\p{N} :\\.,\/?!-]{16}'
+    count:
+      max: 0
+  examples:
+    - '2014.03.12, ??? !!'
+    - 'prod-324383391-235913 im Stock'
+
+# =================================
+# WEB
+# =================================
+
+- http:
+  descr: links and HTML garbage
+  find:
+    pattern: '@|(https?:)|(nbsp;)|(a href)'
     count:
       max: 0

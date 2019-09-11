@@ -52,7 +52,7 @@
       max: 0
 
 - rule_9:
-  descr: Zu viele Leerzeichen
+  descr: R9 Zu viele Leerzeichen
   pattern: \s
   count:
     max: 49
@@ -273,7 +273,7 @@
       max: 0
 
 - rule_3000:
-  descr: different html-tags
+  descr: R3000 different html-tags
   find:
     pattern: 'a href|<tr>'
     count:
