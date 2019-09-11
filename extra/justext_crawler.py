@@ -5,12 +5,11 @@
 
 import argparse
 import logging
+import re
 
 import justext
 from swisstext.cmd.scraping.interfaces import ICrawler
 from swisstext.cmd.scraping.tools import BsCrawler
-
-from extra.norm_punc import normalize_text
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +46,7 @@ class JustextCrawler(BsCrawler):
             # justext uses the decode/replace strategy by default, so encoding errors shouldn't happen
             # see justext core.py:DEFAULT_ENC_ERRORS
             paragraphs = justext.justext(content, encoding=soup.original_encoding, **self.kwargs)
-            text_blocks = (p.text.replace('\n', ' ') for p in paragraphs if self._paragraph_ok(p))
+            text_blocks = (self._get_text(p) for p in paragraphs if self._paragraph_ok(p))
             return ICrawler.CrawlResults(
                 text=self.joiner.join(text_blocks),
                 links=links)
@@ -57,11 +56,17 @@ class JustextCrawler(BsCrawler):
                 raise ICrawler.CrawlError(name='JustextError', message=str(e))
             raise e
 
+    def _get_text(self, p):
+        # mmhh... In justext, they join on '', such that we often have things like:
+        # "end of sentence.Start of sentence".
+        text = ' '.join(p.text_nodes).replace('\n', ' ')
+        return re.sub(' +', ' ', text).strip()
+
     def _paragraph_ok(self, p):
         # look at context-free and accept neargood as well
         # "good" class may be skipped because the cf class is "short" (titles)
         return self.keep_bad or 'good' in p.cf_class
-        #return self.keep_bad or p.class_type != 'bad'
+        # return self.keep_bad or p.class_type != 'bad'
 
     def __str__(self):
         return f'Justext({vars(self)})'.replace("'", '')
@@ -71,7 +76,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('url', nargs='+')
     parser.add_argument('-joiner', default='\n')
-    parser.add_argument('-norm', default=False, action='store_true', help='Also normalize text')
     parser.add_argument('-good', default=False, action='store_true', help='Keep only good|neargood sentences.')
     args = parser.parse_args()
 
@@ -81,10 +85,7 @@ if __name__ == '__main__':
         try:
             res = jt.crawl(url)
             print(f'==== {url}')
-            if args.norm:
-                print(normalize_text(res.text))
-            else:
-                print(res.text)
+            print(res.text)
         except Exception as e:
             print(e)
             # raise e
