@@ -125,6 +125,7 @@ Hon
 Hosp
 Insp
 Lt
+Min
 MM
 MR
 MRS

@@ -105,6 +105,8 @@ Nos
 Art #NUMERIC_ONLY#
 Nr
 pp #NUMERIC_ONLY#
+max #NUMERIC_ONLY#
+min #NUMERIC_ONLY#
 
 #month abbreviations
 Jan
