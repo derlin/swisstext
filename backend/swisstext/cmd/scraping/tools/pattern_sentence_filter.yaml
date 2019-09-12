@@ -80,12 +80,23 @@
 - hashtags:
   descr: too many hashtags
   find:
-    pattern: \# ?\p{L}
+    pattern: \# ?\p{L}[^ ]+
     count:
       max: 1
   examples:
     - 'Reply at #things # test'
     - '#warden #tonightsTHEnight yes bro !! #CHEERS'
+  counterexamples:
+    - 'blabla #hash#tag.'
+
+- too_many_commas:
+  # TODO: better to directly look for lists ('(\p{L}+, ){4}') ?
+  descr: too many commas
+  compare:
+    num: ','
+    denom: '\p{L}+'
+    ratio:
+      max: 0.25
 
 - too_many_symbols:
   descr: 'too many /)&:'
@@ -105,10 +116,11 @@
     - 'I dunno... maybe...'
     - 'no ........ way !'
 
+
 - dashes:
   descr: too many dashes
   find:
-    pattern: '([\u00AF\u2010-\u2015\u2212\uFE58-\uFF0D-] )|( [\u00AF\u2010-\u2015\u2212\uFE58-\uFF0D-])'
+    pattern: '([\u00AF\u2010-\u2015\u2212\uFE58\uFF0D-] )|( [\u00AF\u2010-\u2015\u2212\uFE58\uFF0D-])'
     count:
       max: 2
 
@@ -132,7 +144,9 @@
   examples:
     - 'you must B E L I E V E me.'
     - 'span spells S P A N.'
-    - 'S P A N means span!!'
+    - 's p a n means span!!'
+  counterexamples:
+    - 'I ha d S Doctor'
 
 - ellipsis:
   descr: ellispsis on short sentences.

@@ -37,30 +37,46 @@ The rule succeeds if ``min <= len(s) <= max``. Here is an example:
       length:
         max: 1000
 
-**Pattern-based rules (find)** a bit similarly, but instead of counting the number of characters, they count the number
-of occurrences of a *pattern* (i.e. the number of matches when calling ``re.findall(pattern, s)``).
-The rule itself can be based on the raw count or based on a ratio:
+**Pattern-based rules (find)** a bit similar, but instead of counting the number of characters, they count the number
+of occurrences of a *pattern* (i.e. the number of matches when calling ``regex.findall(pattern, s)``).
+The rule succeeds if ``min <= nb_matches <= max`` (inclusive !)
 
-* count: the rule succeeds if ``min <= nb_matches <= max`` (inclusive !)
-* ratio: the rule succeeds if ``min <= len(s) / (len(s) - nb_matches + 1) <= max```
 
-Here are examples:
+Examples:
 
 .. code-block:: yaml
 
-    - min_words:
-      descr: not enough words
+    - dashes:
+      descr: too many dashes
       find:
-        pattern: '\S+'
+        pattern: '[\u00AF\u2010\u2015\u2212\uFE58\uFF0D-]'
+        count:
+          max: 2
+
+    - right_number_of_punctuation:
+      descr: punctuation is between 5 and 10
+      find:
+        pattern: '\p{P}'
         count:
           min: 5
+          max: 10
 
-    - letters_proportional:
-      descr: not enough letters proportion
-      find:
-        pattern: '[\W|\d]'
+**Comparison rules (compare)** they define both a numerator and a denominator pattern. The number of matches is
+found for each pattern, then a ratio is computed as:
+``ratio = count(num matches) / (count(denom matches)+1)``. The matches is once again based on ``regex.findall``.
+The rule succeeds if ``min <= ratio <= max`` (inclusive !).
+
+Example:
+
+.. code-block:: yaml
+
+    - too_many_commas:
+      descr: compare the number of commas against the number of words in the sentence
+      compare:
+        num: ','
+        denom: '\p{L}+'
         ratio:
-          max: 1.4
+          max: 0.25
 
 Finally, **an if condition** can be used. If conditions are checked first, and if the check fails, the rule is
 simply ignored:
@@ -77,7 +93,8 @@ simply ignored:
         count:
           max: 0
 
-Rules can additionnally specify examples that could be used to check quickly if they work. For example:
+Rules can additionnally specify ``examples`` and ``counterexamples`` that could be used to check quickly if they work
+(see the ``Rule.self_check`` method). For example:
 
 .. code-block:: yaml
 
@@ -90,7 +107,10 @@ Rules can additionnally specify examples that could be used to check quickly if 
       examples:
         - 'you must B E L I E V E me.'
         - 'span spells S P A N.'
-        - 'S P A N means span!!'
+        - 's p a n means span!!'
+      counterexamples:
+        - 'this is O K :)'
+
 """
 
 import regex
@@ -102,6 +122,9 @@ from swisstext.cmd.scraping.interfaces import ISentenceFilter
 
 logger = logging.getLogger(__name__)
 
+
+# TODO: a good way to detect encoding errors is to compare the result of
+# len(re.findall('[^\W\d]')) and len(regex.findall('\p{L}'))
 
 class PatternSentenceFilter(ISentenceFilter):
     """
@@ -139,6 +162,20 @@ class MinMax:
         return "(min={}, max={})".format(self.min, self.max)
 
 
+class Compare:
+    def __init__(self, num, denom, ratio):
+        self.num = regex.compile(num)
+        self.denom = regex.compile(denom)
+        self.ratio = MinMax(**ratio)
+
+    def is_invalid(self, s):
+        ratio = len(self.num.findall(s)) / (len(self.denom.findall(s)) + 1)
+        return self.ratio.is_out_of_range(ratio)
+
+    def __repr__(self):
+        return "Compare(num=%s, denom=%s, ratio=%s)" % (self.num, self.denom, self.ratio)
+
+
 class Find:
     """Handles pattern-based rule logic (find entry in yaml)"""
 
@@ -161,16 +198,17 @@ class Find:
         return False
 
     def __repr__(self):
-        return "(pattern=%s, count=%s, ratio=%s)" % (self.pattern, self.count, self.ratio)
+        return "Find(pattern=%s, count=%s, ratio=%s)" % (self.pattern, self.count, self.ratio)
 
 
 class Rule:
     """Encapsulates one rule"""
 
-    def __init__(self, id, descr, find=None, length=None, examples=None, **kwargs):
+    def __init__(self, id, descr, find=None, compare=None, length=None, examples=None, counterexamples=None, **kwargs):
         self.id = id
         self.descr = descr
         self.examples = examples
+        self.counterexamples = counterexamples
         self.iff = []
         # TODO: better way ?
         if 'if' in kwargs:  # if is a reserved keyword in python
@@ -179,8 +217,14 @@ class Rule:
             if 'pattern' in kwargs['if']:
                 self.iff.append(Find(**kwargs['if']['pattern']))
 
-        self.find = Find(**find) if find else None
-        self.length = MinMax(**length) if length else None
+        if length is not None:
+            self.logic = MinMax(**length) if length else None
+        elif find is not None:
+            self.logic = Find(**find)
+        elif compare is not None:
+            self.logic = Compare(**compare)
+        else:
+            raise Exception('Found a rule with no length, find or ratio defined.')
 
     def is_applicable(self, s) -> bool:
         """Check for the if condition"""
@@ -188,7 +232,7 @@ class Rule:
 
     def is_invalid(self, s) -> bool:
         if self.is_applicable(s):
-            if (self.length and self.length.is_invalid(s)) or (self.find and self.find.is_invalid(s)):
+            if self.logic.is_invalid(s):
                 logger.debug("%s FAILED on |%s|" % (self, s))
                 return True
             return False
@@ -196,11 +240,24 @@ class Rule:
             # logger.debug("SKIPPED   RULE %s: |%s|" % (self.descr, s))
             return False
 
+    def self_check(self, verbose=True) -> bool:
+        passed = True
+        for examples, expected in [(self.examples, True), (self.counterexamples, False)]:
+            if examples is not None:
+                if verbose: print(f' Checking {len(examples)} {str(expected):5s} examples...', end=' ', flush=True)
+                fails = [e for e in examples if not (self.is_invalid(e) == expected)]
+                if len(fails):
+                    if verbose: print('Failed on:\n   ', '\n   '.join(fails))
+                    passed = False
+                else:
+                    if verbose: print('OK.')
+        return passed
+
     def __str__(self):
         return "RULE %d %s" % (self.id, self.descr)
 
     def __repr__(self):
-        return "{}: [if {}] find={}, length={}".format(self.descr, self.iff, self.find, self.length)
+        return "{}: [if {}] logic={}".format(self.descr, self.iff, self.logic)
 
 
 class Rules:
