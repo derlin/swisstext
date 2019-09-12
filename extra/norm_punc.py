@@ -46,7 +46,7 @@ normalization_patterns = [
         (STR, '“', '"'),
         (STR, '”', '"'),
         (STR, '—', ' - '),
-        (REG, u'[\u00AF\u2010-\u2015\u2212\uFE58-\uFF0D]', '-'),  # dashes
+        (REG, u'[\u00AF\u2010-\u2015\u2212\uFE58\uFE63\uFF0D\u1806]', '-'),  # dashes
         (STR, '´', "'"),
         (REG, r'([^\W\d_])[‘’]([^\W\d_])', r"\1'\2"),  # I
         (STR, '‘', '"'),
