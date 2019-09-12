@@ -56,6 +56,7 @@ Hon
 Hr
 Hosp
 Insp
+Jr
 Lt
 MM
 MR

@@ -122,8 +122,8 @@ class MosesSplitter(ISplitter):
             text = regex.sub(r'([\:;])([^\d\)\(/-])', r'\1\n\2', text)
 
         # split if ?! is followed by a lowercase (often on the web)
-        # text = regex.sub(r'([\?!])([^\?!])', r'\1\n\2', text)
-        text = regex.sub(r'([?!]) +([\'\"\(\[\¿\¡\p{Pi}]*[\p{L}])', r'\1\n\2', text)
+        text = regex.sub(r'([\?!]+)([^\?!\p{Pe}\p{Pf}\"])', r'\1\n\2', text)
+        #text = regex.sub(r'([?!]) +([\'\"\(\[\¿\¡\p{Pi}]*[\p{L}])', r'\1\n\2', text)
 
         # Multi-dots followed by sentence starters.
         text = regex.sub(r'(\.[\.]+) +([\'\"\(\[\¿\¡\p{Pi}]*[\p{L}])', r'\1\n\2', text)
@@ -131,16 +131,17 @@ class MosesSplitter(ISplitter):
         # Add breaks for sentences that end with some sort of punctuation
         # inside a quote or parenthetical and are followed by a possible
         # sentence starter punctuation and ~upper case~ letter
-        text = regex.sub(r'([?!\.][\ ]*[\'\"\)\]\p{Pf}]+) +([\'\"\(\[\¿\¡\p{Pi}]*[\ ]*[\p{L}])', r'\1\n\2', text)
+        text = regex.sub(r'([?!\.][\ ]*[\'\"\)\]\p{Pf}]+) +([\'\"\(\[\¿\¡\p{Pi}]*[\ ]*[\p{Lu}])', r'\1\n\2', text)
 
         # Add breaks for sentences that end with some sort of punctuation,
-        # and are followed by a sentence starter punctuation and ~upper case~ letter.
+        # and are followed by a sentence starter punctuation and upper case letter.
         text = regex.sub(r'([?!\.]) +([\'\"\(\[\¿\¡\p{Pi}]+[\ ]*[\p{L}])', r'\1\n\2', text)
 
         # Special punctuation cases are covered. Check all remaining periods.
         words = text.split(' ')
         text = ''
         for i in range(len(words) - 1):
+            # TODO: add the # as a possible sentence start ? (twitter and hashtags)
             m = regex.search(r'([\p{IsAlnum}\.\-]*)([\'\"\)\]\%\p{Pf}]*)(\.+)$', words[i])
             if m is not None:
                 # Check if $1 is a known honorific and $2 is empty, never break.
