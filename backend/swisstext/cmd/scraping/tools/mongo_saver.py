@@ -20,6 +20,10 @@ class MongoSaver(ISaver):
     """
 
     def __init__(self, db='st1', **kwargs):
+        """
+        :param db: the database to use
+        :param kwargs: may include ``host`` and ``port``
+        """
         super().__init__()
         get_connection(db, **kwargs)
 
@@ -54,8 +58,8 @@ class MongoSaver(ISaver):
             source = Source(SourceType.AUTO, page.parent_url) if page.parent_url else Source()
             mu = MongoURL.create(page.url, source=source)
 
-        # save text
-        text: MongoText = MongoText.create_or_update(mu.id, page.text)
+        # save raw, unormalized text
+        text: MongoText = MongoText.create_or_update(mu.id, page.crawl_results.text)
         if len(text.urls) > 1:
             logger.info(f'duplicate text found: {text.urls}')
 

@@ -17,6 +17,7 @@ from .basic_seed_creator import BasicSeedCreator, IdfSeedCreator
 # crawlers
 from .bs_crawler import BsCrawler, CleverBsCrawler
 # splitters
+from .mocy_splitter import MocySplitter
 from .moses_splitter import MosesSplitter
 from .punkt_splitter import PunktSplitter
 # sentence filters

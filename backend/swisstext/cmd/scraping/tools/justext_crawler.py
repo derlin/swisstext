@@ -1,8 +1,18 @@
-#
-# requirements:
-#   pip install justext
-#
+"""
+This module contains a subclass of :py:class:`~.bs_crawler.BsCrawler`
+relying on `JusText <https://github.com/miso-belica/jusText>`_ for text extraction.
 
+It seems to work better than :py:class:`~.bs_crawler.BsCrawler` or :py:class:`~.bs_crawler.CleverBsCrawler`.
+To get a feel, try the `online demo of the original JustText <http://nlp.fi.muni.cz/projects/justext/>`_.
+
+.. note::
+
+    * usually, jusText uses ``''`` (empty string) to join text nodes inside a paragraph, thus making things like
+      "*One sentence.Second sentence*" likely. Here, we always use a space to join, then normalize the spaces.
+    * justext will throw an error on an empty document content, which is wrapped inside a
+      :py:class:`~swisstext.cmd.scraping.interface.ICrawler.CrawlError`.
+
+"""
 import argparse
 import logging
 import re
@@ -15,6 +25,10 @@ logger = logging.getLogger(__name__)
 
 
 class JustextCrawler(BsCrawler):
+    """
+    A :py:class:`~.bs_crawler.BsCrawler` that relies on
+    `JusText <https://github.com/miso-belica/jusText>`_ to cleverly extract meaningful text from webpages.
+    """
 
     def __init__(self, joiner='\n',
                  keep_bad=True,
@@ -22,6 +36,16 @@ class JustextCrawler(BsCrawler):
                  stopwords_low=justext.core.STOPWORDS_LOW_DEFAULT,
                  stopwords_high=justext.core.STOPWORDS_HIGH_DEFAULT,
                  **kwargs):
+        """
+        Create a crawler instance.
+        :param joiner: character used to join paragraphs;
+        :param keep_bad: if set, keep everything.
+        If unset, keep only paragraphs with a context-free class of "neargood" or "good".
+        :param stoplist: see the `justText doc <https://github.com/miso-belica/jusText/blob/dev/doc/algorithm.rst>`_
+        :param stopwords_low: idem
+        :param stopwords_high: idem
+        :param kwargs: unused
+        """
         super().__init__(joiner=joiner)
 
         if stoplist is not None:

@@ -2,3 +2,74 @@
     text-align: left !important;
     font-size: .9em;
 }
+
+div.admonition-todo {
+    background-color: #e0f5f0;
+    border: 1px solid #6eaba8;
+}
+
+/* ==== nature theme === */
+
+/* bigger sidebar
+div.bodywrapper {
+    margin: 0 0 0 250px;
+}
+div.sphinxsidebar {
+    width: 250px;
+}
+*/
+
+div.sphinxsidebar ul {
+    margin: 10px 5px;
+}
+
+/* allow word break */
+code {
+    word-break: break-all;
+}
+
+/* nicer constant values */
+em.property {
+    font-family: monospace;
+    font-style: normal;
+}
+
+/* bigger body */
+div.body {
+    max-width: 900px;
+}
+/* make classes look like titles */
+dl.class > dt {
+    background: #eceff1;
+    padding: 5px 10px;
+}
+
+/* nice titles */
+div.body h4 {
+    font-size: 110%;
+    background-color: white;
+    border-left: 4px solid #d8dee3;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+
+/* top bar */
+body > div.related[role=navigation] {
+    position: fixed;
+    top: 0;
+}
+
+.document {
+    margin-top: 30px;
+}
+
+/* left sidebar */
+div.sphinxsidebar {
+    top: 30px;
+    bottom: 0;
+    margin: 0;
+    position: fixed;
+    overflow: auto;
+    height: auto;
+}

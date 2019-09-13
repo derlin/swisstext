@@ -46,13 +46,14 @@ class BasicDecider(IDecider):
         if delta_sec is None:
             delta_sec = timeparse(MIN_RECRAWL_DELTA)
 
-        self.min_recrawl_delta = timedelta(seconds=delta_sec)  #: a timedelta. URLs are revisited if now() - last visit > min_recrawl_delta (UTC)
+        self.min_recrawl_delta = timedelta(
+            seconds=delta_sec)  #: a timedelta. URLs are revisited if now() - last visit > min_recrawl_delta (UTC)
 
     def should_page_be_crawled(self, page: Page) -> bool:
         """
         Returns true if the URL is new,
-        or the page's :py:attr:`~..data.Page.delta_count` above 0 and
-        the page's `:py:attr:~..data.Page.delta_date` is older than :py:attr:`min_recrawl_delta`
+        or the page's :py:attr:`~swisstext.cmd.scraping.data.Page.delta_count` above 0 and
+        the page's `:py:attr:~swisstext.cmd.scraping.data.Page.delta_date` is older than :py:attr:`min_recrawl_delta`
         note that a page will NEVER be recrawled if the last crawl is less than ABSOLUTE_MIN_RECRAWL_DELTA old.
         """
         if page.is_new(): return True
@@ -66,8 +67,8 @@ class BasicDecider(IDecider):
         """
         Returns true if
         the page's :py:attr:`~swisstext.cmd.scraping.data.Page.sg_count` is above 0 and
-        :py:attr:`~..data.Page.sentence_count` /
-        :py:attr:`~..data.Page.sg_count` >= :py:attr:`min_ratio`"""
+        :py:attr:`~swisstext.cmd.scraping.data.Page.sentence_count` /
+        :py:attr:`~swisstext.cmd.scraping.data.Page.sg_count` >= :py:attr:`min_ratio`"""
         # TODO: use new_count vs sg_count ?
         return page.sg_count > 0 and page.sentence_count / page.sg_count > self.min_ratio
 
@@ -84,3 +85,15 @@ class OnlyNewDecider(BasicDecider):
     def should_page_be_crawled(self, page: Page) -> bool:
         """Returns true only if the page is new."""
         return page.is_new()
+
+
+class OneNewSgDecider(BasicDecider):
+    """
+    Same as :py:class:`BasicDecider`,
+    but children will be crawled only if at least one *NEW* Swiss-German sentence was found.
+    """
+
+    def should_children_be_crawled(self, page: Page) -> bool:
+        if super().should_children_be_crawled(page):
+            # just don't try going further if no new sg is found
+            return len(page.new_sg) > 0

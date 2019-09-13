@@ -212,6 +212,7 @@ class ISaver(ABC):
         """
         [ABSTRACT] Save a potentially interesting URL which won't be visited during this round
         (e.g. max_depth reached).
+
         :param url: the url
         :param parent: the parent url
         """

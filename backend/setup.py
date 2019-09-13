@@ -39,8 +39,9 @@ setuptools.setup(
         "scikit-learn>=0.19.1",
         "regex",
         "click>=6.7",
+        "jusText==2.2.0"
     ],
     extras_require={
-        'extra': ['jusText==2.2.0', 'emoji>=0.5.2']
+        'extra': ['ftfy', 'emoji>=0.5.2']
     }
 )
