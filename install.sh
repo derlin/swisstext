@@ -29,7 +29,13 @@ dirs="mongo backend frontend"
 for dir in $dirs; do
     cd $dir
     echo "======== installing $dir ..."
-    pip install $editable_mode .$install_extra
-    [ $? -ne 0 ] && echo Something went wrong. Stopping... && exit 1
+
+    cmd="pip install $editable_mode ."
+    if [[ $dir =~ backend ]]; then
+      cmd="$cmd$install_extra"
+    fi
+
+    echo "Running $cmd"
+    $cmd; [ $? -ne 0 ] && echo Something went wrong. Stopping... && exit 1
     cd ..
 done

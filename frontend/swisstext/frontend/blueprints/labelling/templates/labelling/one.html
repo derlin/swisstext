@@ -79,7 +79,7 @@
                 <div id="sentence" class="card-text text-center">{{ sentence.text }}</div>
                 <div class="card-text text-right">
                     {% from 'urls/_macros.html' import render_url %}
-                    Source: {{ render_url(sentence.url, next=request.endpoint) }}
+                    Source: {{ render_url(sentence.url, next=encode_next_url(request.url)) }}
                 </div>
                 <div class="card-text text-muted font-italic text-sm-right">added
                     on {{ sentence.date_added | datetime }}</div>

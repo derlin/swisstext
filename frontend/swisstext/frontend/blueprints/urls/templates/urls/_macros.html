@@ -40,6 +40,6 @@
 {% macro render_url(url, id=None, show_eye=True) %}
     {{ external_link(url) }}
     {% if show_eye %}
-        {{ url_details_icon(url, id) }}
+        {{ url_details_icon(url, id, **kwargs) }}
     {% endif %}
 {% endmacro %}

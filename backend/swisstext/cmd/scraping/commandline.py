@@ -176,7 +176,7 @@ def crawl_mongo(ctx, num_urls, new):
     with get_connection(**ctx.config.get('saver_options')):
         if new:
             # just get the URLs never visited
-            for u in MongoURL.get_never_crawled().fields(id=True).limit(num_urls):
+            for u in MongoURL.get_never_crawled().fields(url=True).limit(num_urls):
                 _enqueue(ctx, u.url)
         else:
             # order URLs by number of visits (ascending), last visited date (ascending) and date added (ascending)
