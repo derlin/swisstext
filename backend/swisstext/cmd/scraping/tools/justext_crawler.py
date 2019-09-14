@@ -68,8 +68,13 @@ class JustextCrawler(BsCrawler):
 
         try:
             # justext uses the decode/replace strategy by default, so encoding errors shouldn't happen
-            # see justext core.py:DEFAULT_ENC_ERRORS
-            paragraphs = justext.justext(content, encoding=soup.original_encoding, **self.kwargs)
+            # see justext core.py:DEFAULT_ENC_ERRORS ... well I don't know why, but errors are still triggered,
+            # but not if I do the decoding here... maybe the encoding parameter ? Problematic URLs examples
+            # - http://www.triumphowners.ch/index.php?page=Thread%3D654%3D13
+            # - https://angerweit.tikon.ch/lieder/lied.php?src=folk-de%2Fsimeli
+            decoded = content.decode(encoding=soup.original_encoding, errors='replace')
+            paragraphs = justext.justext(decoded, **self.kwargs)
+            #paragraphs = justext.justext(content, encoding=soup.original_encoding, **self.kwargs)
             text_blocks = (self._get_text(p) for p in paragraphs if self._paragraph_ok(p))
             return ICrawler.CrawlResults(
                 text=self.joiner.join(text_blocks),
