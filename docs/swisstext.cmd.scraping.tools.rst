@@ -1,8 +1,8 @@
 :tocdepth: 3
 
-=========================================================
-Command line scraping tools: swisstext.cmd.scraping.tools
-=========================================================
+============================
+swisstext.cmd.scraping.tools
+============================
 
 
 .. automodule:: swisstext.cmd.scraping.tools

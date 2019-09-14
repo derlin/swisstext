@@ -1,3 +1,4 @@
+=============
 API Reference
 =============
 
@@ -11,8 +12,8 @@ The :mod:`swisstext` namespace contains the following:
 
 
 
-MongoDB persistence
--------------------
+swisstext.mongo
+===================
 
 All MongoDB collection definitions.
 
@@ -21,8 +22,8 @@ All MongoDB collection definitions.
 
    swisstext.mongo
 
-Commandline tools
------------------
+swisstext.cmd
+=================
 
 Base package for searching and scraping.
 
@@ -32,8 +33,8 @@ Base package for searching and scraping.
    swisstext.cmd
 
 
-Scraping the web
------------------
+swisstext.cmd.scraping
+-----------------------
 
 Everything related to scraping the web,
 finding new sentences and generating seeds.
@@ -44,8 +45,8 @@ finding new sentences and generating seeds.
    swisstext.cmd.scraping
 
 
-Making search engine queries
-----------------------------
+swisstext.cmd.searching
+-----------------------------
 
 Everything for querying search engines in order to find
 new URLs to scrape.
@@ -56,8 +57,8 @@ new URLs to scrape.
    swisstext.cmd.searching
 
 
-Parsing Alswiki dumps or text files
-------------------------------------
+swisstext.alswiki
+==================
 
 Commandline tools to extract/process sentences from an Alemmanic Wikipedia dump or for processing a text file using the scraping tools (splitter/filter/lid).
 

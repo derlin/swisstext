@@ -12,6 +12,7 @@ Available commands
 Two commands are available, each in it own subpackage.
 
 .. toctree::
+    :maxdepth: 1
 
     swisstext.cmd.scraping
     swisstext.cmd.searching

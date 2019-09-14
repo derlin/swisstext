@@ -16,6 +16,7 @@ from .basic_decider import BasicDecider
 from .basic_seed_creator import BasicSeedCreator, IdfSeedCreator
 # crawlers
 from .bs_crawler import BsCrawler, CleverBsCrawler
+from .justext_crawler import JustextCrawler
 # splitters
 from .mocy_splitter import MocySplitter
 from .moses_splitter import MosesSplitter

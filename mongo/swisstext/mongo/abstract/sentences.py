@@ -214,7 +214,9 @@ class AbstractMongoSentence(Document):
     """All the informations about dialect tagging (see :py:class:`DialectInfo`). 
     Note that this field can be absent (never labelled by anyone) or its label empty (all labels removed)."""
 
-    meta = {'collection': 'sentences', 'abstract': True}
+    meta = {'collection': 'sentences', 'abstract': True, 'indexes': [
+        {'fields': ['-date_added']}  # add a sorted (descending) index on the date_added
+    ]}
 
     @property
     def url_id(self):

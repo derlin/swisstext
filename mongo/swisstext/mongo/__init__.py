@@ -30,6 +30,8 @@ The available collections are:
 * `blacklist`: all other URLs crawled,
 * `users`: the users and their roles (for the frontend)
 
+.. image:: https://docs.google.com/drawings/d/e/2PACX-1vQuDsGs0WcDIreW4WOjSrxSaONIqCAS9CzP8ajLVlxCqWaREGA1kJQWHvLsLnm8nkVI4w3wj1S6e86Y/pub?w=960&h=540
+
 About the code
 --------------
 
