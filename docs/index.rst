@@ -12,6 +12,7 @@ Welcome to SwissText's documentation!
 
    installation
    usage
+   confs
    apireference
    aboutthedoc
    ideas

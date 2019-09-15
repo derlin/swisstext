@@ -8,6 +8,10 @@ div.admonition-todo {
     border: 1px solid #6eaba8;
 }
 
+.bodywrapper p {
+    text-align: justify;
+}
+
 /* ==== nature theme === */
 
 /* bigger sidebar
@@ -54,7 +58,7 @@ div.body h4 {
 }
 
 
-/* top bar */
+/* top bar
 body > div.related[role=navigation] {
     position: fixed;
     top: 0;
@@ -62,7 +66,8 @@ body > div.related[role=navigation] {
 
 .document {
     margin-top: 30px;
-}
+}*/
+
 
 /* left sidebar */
 div.sphinxsidebar {
