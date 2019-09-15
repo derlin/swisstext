@@ -17,6 +17,8 @@ from .basic_seed_creator import BasicSeedCreator, IdfSeedCreator
 # crawlers
 from .bs_crawler import BsCrawler, CleverBsCrawler
 from .justext_crawler import JustextCrawler
+# normalizers
+from .norm_punc import Normalizer
 # splitters
 from .mocy_splitter import MocySplitter
 from .moses_splitter import MosesSplitter
