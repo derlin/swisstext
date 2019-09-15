@@ -51,22 +51,53 @@ class MocySplitter(ISplitter):
 
     """
 
-    def __init__(self, langs=None, prefix_file=None, more=True):
+    def __init__(self, langs=None, prefix_file=None, more=True, keep_newlines=True):
         """
         :param lang: a List[str] of language(s) for nonbreaking_prefix file to load (default: en, de)
         :param prefix_file: path to a custom nonbreaking_prefix file
         :param more: if set, systematically split on ``:;``
+        :param keep_newlines: if set, treat newlines as paragraph delimiters that will be preserved.
+            If unset, newlines are ignored and empty lines are treated as paragraph delimiters
+            (Moses original behavior, see :py:meth:`split`).
+
         """
         self.langs = langs if langs is not None else ['en', 'de']  #: nonbreaking prefixes files to load
         self.more = more  #: whether or not to split on ``:;``
         self.nb_prefixes = self.load_nb_prefixes(self.langs, prefix_file)  #: nonbreaking prefix lookup table
+        self.keep_newlines = keep_newlines
+        # TODO: keep_newlines seems better with Justext, but http://www.raere-waggis.ch/p300fasnacht2007.htm
+        # things like songs etc ...
 
     def split(self, input_text):  # -> List[str]
         """
-        Split a text into sentences. Newlines already present in text will be preserved.
+        Split a text into sentences. Depending on the value of :py:attr:`.keep_newlines`, either :py:meth:`split_sentences`
+        or :py:meth:`split_text` will be called.
 
         :param input_text: the input text
-        :return: a list of sentences (no blanks)
+        :return: a list of sentences (no blank lines)
+        """
+        return self.split_sentences(input_text) if self.keep_newlines else self.split_text(input_text)
+
+    def split_sentences(self, input_text):  # -> List[str]
+        """
+        Split a text into sentences. Newlines already present in text will be preserved and act as paragraph delimiters.
+
+        :param input_text: the input text
+        :return: a list of sentences (no blank lines)
+        """
+        return sum((
+            self.split_paragraph(p, self.nb_prefixes, self.more)
+            for p in input_text.split('\n')
+            if p and not p.isspace()
+        ), [])
+
+    def split_text(self, input_text):  # -> List[str]
+        """
+        Split a text into sentences. Newlines already present in text won't be preserved and empty lines act as
+        paragraph delimiter.
+
+        :param input_text: the input text
+        :return: a list of sentences (no blank lines)
         """
         # equivalent of process_text in moses, but returns a list
         current_paragraph = ''
