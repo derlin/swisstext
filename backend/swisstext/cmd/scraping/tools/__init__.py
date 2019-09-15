@@ -11,7 +11,7 @@ This package contains various implementations of the different pipeline tools.
 """
 
 # deciders
-from .basic_decider import BasicDecider
+from .basic_decider import BasicDecider, OnlyNewDecider, OneNewSgDecider
 # seed creators
 from .basic_seed_creator import BasicSeedCreator, IdfSeedCreator
 # crawlers
