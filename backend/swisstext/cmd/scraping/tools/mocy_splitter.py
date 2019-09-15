@@ -98,7 +98,7 @@ class MocySplitter(ISplitter):
     @classmethod
     def split_paragraph(cls, text, nb_prefixes, more=False):  # -> List[str]
         """
-        Handle on paragraph of text.
+        Handle one paragraph of text.
 
         :param text: the paragraph to split
         :param nb_prefixes: the dictionary of nonbreaking_prefix (see perl implementation/doc)
@@ -183,8 +183,8 @@ class MocySplitter(ISplitter):
             print(f'Using custom prefix file: {prefix_file}', file=sys.stderr)
             return cls._read_prefix_file(prefix_file)
 
-        this_file = os.path.realpath(__file__)
-        prefix_file_pattern = this_file.replace('.py', '_prefixes.{}.txt')  # TODO
+        this_dir = os.path.dirname(os.path.realpath(__file__))
+        prefix_file_pattern = os.path.join(this_dir, 'moses_splitter_prefixes.{}.txt')
 
         prefixes = dict()
         for lang in langs:
