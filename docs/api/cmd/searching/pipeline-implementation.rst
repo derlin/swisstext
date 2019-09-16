@@ -1,5 +1,6 @@
+=======================
 Pipeline implementation
-------------------------
+=======================
 
 Configuration
 --------------
@@ -25,5 +26,3 @@ Search engine
     :members:
     :undoc-members:
     :show-inheritance:
-
-

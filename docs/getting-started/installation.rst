@@ -15,8 +15,8 @@ at the root of the three directories ``mongo``, ``backend`` and ``frontend``. Ju
 mongo first, as it is a dependency to the others.
 
 
-Example: full install on a Linux server
----------------------------------------
+Installation on a Linux server
+------------------------------
 
 This are the steps to install the system in Ubuntu 18.04:
 

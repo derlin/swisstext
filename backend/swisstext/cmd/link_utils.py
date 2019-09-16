@@ -130,8 +130,9 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
 def strip_sid(url: str) -> str:
     """
     Remove the SID parameter from an url. SIDs are mostly used
-    by magento to track the users and won't change the page rendered.
-    see also https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/.
+    by magento to track the users and won't change the page rendered. See also
+    `why-do-my-magento-urls-have-a-query-sid <https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/>`_.
+
     :param url: the url
     :return: the url without sid
     """

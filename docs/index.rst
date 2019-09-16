@@ -8,16 +8,25 @@ Welcome to SwissText's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting started:
+   :caption: Getting Started
 
-   installation
-   usage
-   confs
-   apireference
-   aboutthedoc
-   ideas
+   getting-started/installation
+   getting-started/usage
+   getting-started/confs
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API
+
+   api/index
    todos
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Other
+
+   ideas
+   aboutthedoc
 
 Indices and tables
 ==================
@@ -25,3 +34,6 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+:github_url: https://github.com/derlin/swisstext

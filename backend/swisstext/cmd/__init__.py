@@ -5,7 +5,7 @@ It is implemented using two command-line programs, each in its own package:
 
 * ``st_scrape`` defined in :py:mod:`swisstext.cmd.scraping`, is used to scrape URLs and detect/save Swiss German sentences,
 * ``st_search`` defined in :py:mod:`swisstext.cmd.searching`, is used to do submit search queries using seeds and gather
-    new URLs to scrape
+  new URLs to scrape
 
 After installing the package, here is an example use:
 

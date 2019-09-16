@@ -108,6 +108,29 @@ normalization_patterns = [
 
 
 def normalize_text(text, fix_encoding=False, strip_emojis=False):
+    """
+    Normalize text:
+
+    * normalize accents (using NFC convention),
+    * strip control/invisible chars and leftover combining diacritics,
+    * undo ligatures,
+    * normalize quotes, apostrophes and unicode characters (dashes, etc.),
+    * normalize spaces (all spaces, including nbsp and tabs, will be encoded as 0x20),
+    * strip and collapse multiple spaces into one,
+    * etc.
+
+    Optionally:
+
+    * try to detect and fix encoding issues (see `ftfy.fix_encoding <https://ftfy.readthedocs.io/en/latest/>`_)
+       on a per-sentence basis (delimited by newlines);
+    * strip emojis (using a simple regex, not all cases are covered !)
+
+
+    :param text: the text to normalize, newlines will be preserved;
+    :param fix_encoding: if set, use ftfy to fix encoding issues on a per-sentence basis;
+    :param strip_emojis: if set, try to find and strip unicode emojis;
+    :return: the normalized text
+    """
     # optionally fix encoding using ftfy
     if fix_encoding and wrong_encoding_pattern.search(text) is not None:
         try:
@@ -148,10 +171,14 @@ def normalize_text(text, fix_encoding=False, strip_emojis=False):
 
 
 class Normalizer():
+    """A wrapper around :py:meth:`normalize_text`"""
+
     def __init__(self, **kwargs):
-        self.kwargs = kwargs
+        """Initialize a normalizer. The ``kwargs`` will be passed to :py:meth:`normalize_text` as-is. """
+        self.kwargs = kwargs  #: extra options to pass to :py:meth:`normalize_text`
 
     def normalize(self, text):
+        """Call :py:meth:`normalize_text` on ``text`` with the extra :py:attr:`kwargs` options."""
         return normalize_text(text, **self.kwargs)
 
 

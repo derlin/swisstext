@@ -1,6 +1,9 @@
 About this documentation
 ========================
 
+Generation
+----------
+
 This documentation was generated using Sphinx:
 
 .. code-block:: bash

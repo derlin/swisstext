@@ -14,6 +14,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../backend'))
 sys.path.insert(0, os.path.abspath('../mongo'))
 sys.path.insert(0, os.path.abspath('../frontend'))
@@ -28,7 +29,6 @@ author = 'Lucy Linder'
 version = ''
 # The full version, including alpha/beta/rc tags
 release = ''
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -75,14 +75,13 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-# html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_rtd_theme'
 # html_theme = 'haiku'
-html_theme = 'nature'
+# html_theme = 'nature'
 # html_theme = 'classic'
 # html_theme = 'alabaster'
 
@@ -91,16 +90,23 @@ html_theme = 'nature'
 # documentation.
 #
 html_theme_options = {
-    'stickysidebar': True,  # only works for the classic theme
+    'collapse_navigation': False,
+    'navigation_depth': 4,
+    'titles_only': False,
+    # 'stickysidebar': True,  # only works for the classic theme
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-# add our custom css
+# add our custom css + options from sphinx_rtd_theme
 html_context = {
     'css_files': ['_static/custom.css'],
+    'display_github': True,
+    'github_user': 'derlin',
+    'github_repo': 'swisstext',
+    'github_version': 'master/docs/'
 }
 
 # Custom sidebar templates, must be a dictionary that maps document names
@@ -118,7 +124,6 @@ html_context = {
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'SwissTextdoc'
-
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -148,7 +153,6 @@ latex_documents = [
      'Lucy Linder', 'manual'),
 ]
 
-
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
@@ -157,7 +161,6 @@ man_pages = [
     (master_doc, 'swisstext', 'SwissText Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -169,7 +172,6 @@ texinfo_documents = [
      author, 'SwissText', 'One line description of project.',
      'Miscellaneous'),
 ]
-
 
 # -- Extension configuration -------------------------------------------------
 

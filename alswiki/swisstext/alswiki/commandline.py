@@ -75,7 +75,7 @@ def process(config_path, db, gensimfile):
     <config-path> and <db> are the same as in ``st_scrape``.
     The <gensimfile> can be either in json or json.bz2. To generate it:
 
-    1. download an "alswiki-*-pages-articles.xml.bz2" from
+    1. download an ``alswiki-*-pages-articles.xml.bz2`` from
        https://dumps.wikimedia.org/alswiki (or use the download command),
 
     2. use gensim's segment_wiki tool (python -m gensim.scripts.segment_wiki -h)
@@ -137,7 +137,7 @@ def parse(dumpfile, min_chars):
     """
     Extract articles from a wiki dump.
 
-    <dumpfile> must be a wiki-*-pages-articles.xml.bz2 file. The output file
+    <dumpfile> must be a ``wiki-*-pages-articles.xml.bz2`` file. The output file
     will be saved alongside the dump with the json.bz2 extension.
     See gensim's segment_wiki tool for more details (python -m gensim.scripts.segment_wiki -h).
     """

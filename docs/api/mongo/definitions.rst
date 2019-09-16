@@ -1,5 +1,7 @@
-MongoDB Collections definitions
-================================
+Abstract Definitions
+====================
+
+All defined in the :py:mod:`swisstext.mongo.abstract` package:
 
 .. automodule:: swisstext.mongo.abstract
     :members:
@@ -45,4 +47,11 @@ Users collection
 .. automodule:: swisstext.mongo.abstract.users
     :members:
     :undoc-members:
+    :show-inheritance:
+
+MongoEngine-ready classes
+=========================
+
+.. automodule:: swisstext.mongo.models
+    :members:
     :show-inheritance:
