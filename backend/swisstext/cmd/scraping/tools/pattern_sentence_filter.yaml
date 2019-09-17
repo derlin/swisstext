@@ -127,7 +127,7 @@
 - arrows:
   descr: too many arrows
   find:
-    pattern: '[←→↑↓↔↕↖↗↘↙↚↛↮⟵⟶⟷><]'
+    pattern: '[\u2190-\u21FF\u2798-\u27FF\u2B00-\u2B4C\u2900-\u297F><]'
     count:
       max: 0
 
@@ -161,7 +161,7 @@
     - 'read more at ...'
     - 'read more at... '
 
-- too_many_caps:
+- caps_in_a_row:
   descr: too many truecased words
   find:
     pattern: (\p{Lu}\p{Ll}*,? ){5}
@@ -190,6 +190,14 @@
   examples:
     - '2014.03.12, ??? !!'
     - 'prod-324383391-235913 im Stock'
+
+- too_many_caps:
+  descr: too many caps (upper/(lower+1)) > 1.5
+  compare:
+    num: '(?:^| |\p{P})\p{Lu}\p{L}*'
+    denom: '(?:^| |\p{P})\p{Ll}\p{L}*'
+    ratio:
+      max: 1.5 # TODO we could even go lower
 
 # =================================
 # WEB
