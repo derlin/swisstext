@@ -6,14 +6,26 @@ pipeline:
   _base_package: swisstext.cmd.scraping.tools
 
   # default tools to use
-  crawler: .CleverBsCrawler
-  normalizer: _I_
-  splitter: .MosesSplitter
+  crawler: .JustextCrawler
+  normalizer: .Normalizer
+  splitter: .MocySplitter
   sentence_filter: .PatternSentenceFilter
   sg_detector: .SwigspotLangid # swisstext.mclid.TfLangidGsw
-  decider: .BasicDecider
+  decider: .OneNewSgDecider
   saver: .MongoSaver
   seed_creator: .IdfSeedCreator
+
+# special options to pass to the tools constructors
+crawler_options:
+  keep_bad: false # ignore sentences labelled as 'bad' or 'short' by justext
+
+normalizer_options:
+  fix_encoding: true
+  strip_emojis: true
+
+splitter_options:
+  more: true  # split on :;
+  keep_newlines: true # trust justext segmentation
 
 # global options
 options:
