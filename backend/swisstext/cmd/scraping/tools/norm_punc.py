@@ -20,7 +20,10 @@ import unicodedata
 
 REG, STR = 0, 1  # flags for using re.sub vs string.replace
 
+# from Leipzig rules
 wrong_encoding_pattern = re.compile(r'\u0007|\u007F|\u0080-\u00A0|\u00C2|\u00C3|\u0084\uFFFD|\uF0B7|\u00AD', re.UNICODE)
+# misc symbols + http://stackoverflow.com/a/13752628/6762004
+emoji_pattern = re.compile('[\u2300-\u23ff\u2b50-\u2b55\u2600-\u2800\U00010000-\U0010FFFF]', re.UNICODE)
 
 spaces_pattern = re.compile(
     # non-breakable space + https://www.compart.com/en/unicode/category/Zs
@@ -101,7 +104,7 @@ normalization_patterns = [
         # normalize spaces around, trying to avoid emojis
         (REG, r'([\w"\']) ?(:|;) ?([\w"\'\n]|$)', r'\1\2 \3'),
         (STR, ' , ', ', '),
-        (STR, ' .', '.'),
+        (STR, ' .', '.'),  # TODO: useful ?
         (REG, '\( +(\w|\d)', r'(\1'),
         (REG, '(\w|\d) +\)', r'\1)'),
     ]]
@@ -145,20 +148,19 @@ def normalize_text(text, fix_encoding=False, strip_emojis=False):
     # normalize (e.g. combining diacritics)
     text = unicodedata.normalize('NFC', text)
 
+    # optionally strip emojis
+    if strip_emojis:
+        # I formally used the emoji library, which is really nice but slooooow (and doesn't cover ASCII misc symbols).
+        # I thus preferred to use a simpler regex that covers most cases is is waaaay faster
+        # (203ms to process 164343 short sentences, against 31s with emoji)
+        text = emoji_pattern.sub(' ', text)
+
     # apply patterns in order
     for i, (typ, pattern, replace) in enumerate(normalization_patterns):
         if typ == REG:
             text = pattern.sub(replace, text)
         else:
             text = text.replace(pattern, replace)
-
-    # optionally strip emojis
-    if strip_emojis:
-        try:
-            import emoji
-            text = emoji.get_emoji_regexp().sub('', text)
-        except ModuleNotFoundError:
-            raise ModuleNotFoundError('Stripping emojis requires the emoji package: pip install emoji.')
 
     # normalize spaces
     text = spaces_pattern.sub(' ', text)
