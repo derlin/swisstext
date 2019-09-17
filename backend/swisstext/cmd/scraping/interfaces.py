@@ -101,7 +101,7 @@ class ISentenceFilter:
         return [s for s in sentences if self.is_valid(s)]
 
 
-class ISgDetector(ABC):
+class ISgDetector:
     """
     [ABSTRACT] An SG Detector is a Language Identifier supporting Swiss German.
     """
@@ -109,9 +109,10 @@ class ISgDetector(ABC):
     @abstractmethod
     def predict(self, sentences: List[str]) -> List[float]:
         """
-        [ABSTRACT] Predict the Swiss German probability (between 0 and 1) of a list of sentences.
+        Predict the Swiss German probability (between 0 and 1) of a list of sentences.
+        Always return 1 by default.
         """
-        pass
+        return [1] * len(sentences)
 
     def predict_one(self, sentence: str) -> float:
         """
