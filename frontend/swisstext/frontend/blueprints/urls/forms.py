@@ -44,7 +44,7 @@ class SearchUrlsForm(SearchForm):
         query_params = dict(**kwargs)
 
         if self.search.data:
-            query_params['id__icontains'] = self.search.data.strip()
+            query_params['url__icontains'] = self.search.data.strip()
 
         if self.min_count.data and self.min_count.data > 0:
             query_params['count__gte'] = self.min_count.data

@@ -7,11 +7,6 @@
             font-family: monospace;
         }
 
-        /* toogle fullscreen icon on the right of the title */
-        [class*="oi-fullscreen"] {
-            float: right;
-        }
-
         /* toggle fullscreen mode */
         .text-content:not(.fullscreen) {
             max-height: 400px;
@@ -37,12 +32,16 @@
 {% block body %}
 
     <div class="card mt-3">
-        <div class="card-header">Text <code>{{ mongo_text.id }}</code> <span class="oi oi-fullscreen-enter"></span>
+        <div class="card-header">
+            <span class="oi oi-fullscreen-enter float-right"></span>
+            Text <code>{{ mongo_text.id }}</code>
         </div>
         <div class="card-body">
-            <p class="card-text text-content">
-                {{ mongo_text.text }}
-            </p>
+            <div class="card-text text-content">
+                {% for block in mongo_text.text.split('\n') %}
+                    <div>{{ block }}</div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 

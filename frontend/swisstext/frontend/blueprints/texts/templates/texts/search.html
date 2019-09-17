@@ -1,0 +1,58 @@
+{% extends '_layout.html' %}
+{% set title = 'texts' %}
+
+{% block header_include %}
+    <style type="text/css">
+        .text-content {
+            max-height: 200px;
+            overflow: auto;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+    {% from 'includes/_macros.html' import render_search_form %}
+    {{ render_search_form(form, collapse) }}
+
+    {% if texts %}
+        {% if texts.total %}
+            <p>{{ texts.total }} texts found.</p>
+
+            {% if texts.has_prev or texts.has_next %}
+                {% from 'includes/_macros.html' import render_navigation %}
+                {{ render_navigation(texts, **request.args) }}
+            {% endif %}
+
+            {% if texts is defined %}
+                {% for text in texts.items %}
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <a class="ml-2 btn btn-light btn-sm float-right" href="{{ url_for('texts.details', id=text.id) }}">
+                                <span class="oi oi-eye"></span>
+                            </a>
+                            Text <code>{{ text.id }}</code>
+                            <p class="card-text">
+                                <small>
+                                    {{ text.date_added | datetime }}.
+                                    Found on {{ text.urls | length }} page(s).
+                                </small>
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text text-content">
+                                {% for block in text.text.split('\n') %}
+                                    <div>{{  block }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+        {% else %}
+            <p class="alert alert-danger">No URL match this search.</p>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
