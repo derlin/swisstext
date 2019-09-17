@@ -32,6 +32,7 @@ from gensim.scripts.segment_wiki import segment_and_write_all_articles
 
 logger = logging.getLogger('swisstext.alswiki')
 logger_default_level = "info"
+logging.getLogger('smart_open').setLevel(logging.ERROR)
 
 
 # ============== main entrypoint

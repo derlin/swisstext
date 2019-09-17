@@ -22,8 +22,8 @@ If you want to add the sentences from an alswiki dump to the mongo database, you
 .. code-block:: bash
 
     st_alswiki download
-    st_alsiwiki parse alswiki-latest-pages-articles.xml.bz2
-    st_alswiki process alswiki-20190101-pages-articles.json.bz2
+    st_alswiki parse alswiki-latest-pages-articles.xml.bz2
+    st_alswiki process alswiki-latest-pages-articles.json.bz2
 
 Remember that by default, the scraping pipeline is configured to use MongoDB on localhost.
 If you would rather get the output into a file, just pass a custom ``config.yaml`` file to
@@ -60,7 +60,7 @@ so it is possible to select which tool implementation to use.
 To skip any of the above steps, create a custom configuration and:
 
 * for 1. and 2., specify the interface in the configuration pipeline or use the special ``_I_`` magic;
-* for 3., set the ``option.min_proba`` to 0 in the configuration
+* for 3., set the ``options.min_proba`` to 0 in the configuration (or set the ``sg_detector`` to the interface);
 
 For example, this configuration will do nothing:
 
@@ -73,4 +73,4 @@ For example, this configuration will do nothing:
         sentence_filter: swisstext.cmd.scraping.interfaces.ISentenceFilter # or _I_
 
     options:
-      min_proba: 0.85
+      min_proba: 0.0
