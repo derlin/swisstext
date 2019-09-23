@@ -25,7 +25,7 @@ class SearchEngine:
         """
         Do the magic.
 
-        Note that this method has not been implemented having multithreading in minds, as most of the time
+        Note that this method was not been implemented with multithreading in mind, as most of the time
         search engine APIs are limited and pretty fast...
         """
         added_urls = 0

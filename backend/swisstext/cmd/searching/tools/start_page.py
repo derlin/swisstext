@@ -23,7 +23,7 @@ _SEARCH_LINK = "https://www.startpage.com/do/asearch"
 # DEFAULT_PARAMS = dict(hmb=1, cat='web', cmd='process_search', engine0='v1all', abp=1, t='air', nj=0)
 _DEFAULT_PARAMS = dict(cat='web', cmd='process_search', dgf=1, hmb=1, pl="", ff="")
 # CSS selector used to retrieve all the results links from startpage
-_RESULT_LINK_CSS_SELECTOR = '.search-item__title a'
+_RESULT_LINK_CSS_SELECTOR = 'a[class$="result-url"]'
 # regex excluding some URLs we know are not interested
 excludes = [
     'www.youtube.com',

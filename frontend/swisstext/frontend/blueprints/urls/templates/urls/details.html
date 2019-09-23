@@ -30,19 +30,21 @@
                 {# show the URL link, but don't show the icon redirecting to this current page... #}
                 {{ render_url(url.url, show_eye=False) }}
             </p>
-            <p class="card-text">Source:
-                <span class="badge badge-pill badge-info">{{ url.source.type_ }}</span><br/>
+            <div class="card-text">Source:
+                <span class="badge badge-pill badge-info">{{ url.source.type_ }}</span>
                 {% if url.source.extra %}
                     {% if url.source.extra.startswith('http') %}
-                        {{ render_url(url.source.extra) }}
+                        <div>{{ render_url(url.source.extra) }}</div>
                     {% elif url.source.type_ == 'seed' %}
-                        <code>{{ url.source.extra }}</code>
+                        <code class="ml-2">{{ url.source.extra }}</code>
                         <a class="btn btn-light btn-sm" href="{{ url_for('seeds.details', id=url.source.extra) }}">
                             <span class="oi oi-eye"></span>
                         </a>
+                    {% else %}
+                        <span class="badge badge-pill badge-info bg-secondarydb.">{{ url.source.extra }}</span>
                     {% endif %}
                 {% endif %}
-            </p>
+            </div>
         </div>
     </div>
     <div class="card mt-2">
