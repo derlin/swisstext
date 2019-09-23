@@ -1,41 +1,269 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>swisstext.cmd.scraping.interfaces &#8212; SwissText  documentation</title>
-    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>swisstext.cmd.scraping.interfaces &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
     
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
     
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/cmd/package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/cmd/scraping/package.html">swisstext.cmd.scraping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/scraping/package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/scraping/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/scraping/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/cmd/searching/package.html">swisstext.cmd.searching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/searching/package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/searching/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/searching/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/cmd/searching/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/alswiki/package.html">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/alswiki/package.html#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/alswiki/package.html#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/alswiki/package.html#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/alswiki/package.html#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/alswiki/package.html#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/alswiki/package.html#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/alswiki/package.html#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>swisstext.cmd.scraping.interfaces</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for swisstext.cmd.scraping.interfaces</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -51,23 +279,30 @@
 <span class="kn">from</span> <span class="nn">.data</span> <span class="k">import</span> <span class="n">Page</span>
 
 
-<div class="viewcode-block" id="ICrawler"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ICrawler">[docs]</a><span class="k">class</span> <span class="nc">ICrawler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ICrawler"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler">[docs]</a><span class="k">class</span> <span class="nc">ICrawler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    [ABSTRACT] This tool is in charge of crawling a page. More specifically, it should be able to:</span>
 <span class="sd">    1. extract the text of the page (stripped of any HTML or other structural clue),</span>
 <span class="sd">    2. extract links pointing to other pages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ICrawler.CrawlError"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlError">[docs]</a>    <span class="k">class</span> <span class="nc">CrawlError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ICrawler.CrawlError"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlError">[docs]</a>    <span class="k">class</span> <span class="nc">CrawlError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This wrapper should be used for any exception that arise during scraping.&quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ICrawler.CrawlError.__init__"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlError.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CrawlError&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: </span><span class="si">{message}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span></div>
 
-<div class="viewcode-block" id="ICrawler.CrawlResults"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults">[docs]</a>    <span class="k">class</span> <span class="nc">CrawlResults</span><span class="p">:</span>
+<div class="viewcode-block" id="ICrawler.CrawlError.from_ex"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlError.from_ex">[docs]</a>        <span class="nd">@classmethod</span>
+        <span class="k">def</span> <span class="nf">from_ex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Create an exception using the original exception name and repr&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div></div>
+
+<div class="viewcode-block" id="ICrawler.CrawlResults"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults">[docs]</a>    <span class="k">class</span> <span class="nc">CrawlResults</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Holds the results of a page crawl.&quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="ICrawler.CrawlResults.__init__"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">text</span>
             <span class="sd">&quot;&quot;&quot;the clean text found in the page, free of any structural marker such as HTML tags, etc.&quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">links</span>
@@ -78,67 +313,88 @@
 <span class="sd">            The method :py:meth:`swisstext.cmd.link_utils.filter_links` is available to do the filtering. </span>
 <span class="sd">            &quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="ICrawler.crawl"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ICrawler.crawl">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ICrawler.CrawlResults.empty"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults.empty">[docs]</a>        <span class="nd">@classmethod</span>
+        <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="p">[])</span></div></div>
+
+<div class="viewcode-block" id="ICrawler.crawl"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.crawl">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">crawl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CrawlResults</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;[ABSTRACT]</span>
 <span class="sd">        Should crawl the page and extract the text and the links into a :py:class:`ICrawler.CrawlResults` instance.&quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="ISplitter"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISplitter">[docs]</a><span class="k">class</span> <span class="nc">ISplitter</span><span class="p">:</span>
+<div class="viewcode-block" id="INormalizer"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.INormalizer">[docs]</a><span class="k">class</span> <span class="nc">INormalizer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A normalizer should take a [long] text (extracted from a web page) and clean it in a consistant way.</span>
+<span class="sd">    For example: uncurling quotes, normalizing punctuation, fix unicode, etc.</span>
+<span class="sd">    The default implementation just return the text as-is.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="INormalizer.normalize"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.INormalizer.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;This should be overriden. The default implementation just returns the text as-is.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">text</span></div>
+
+<div class="viewcode-block" id="INormalizer.normalize_all"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.INormalizer.normalize_all">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Calls normalize on each element of text.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ISplitter"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISplitter">[docs]</a><span class="k">class</span> <span class="nc">ISplitter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A splitter should take a [long] text (extracted from a web page) and split it into well-formed sentences.</span>
 <span class="sd">    The default implementation just splits on the newline character.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ISplitter.split"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISplitter.split">[docs]</a>    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="ISplitter.split"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISplitter.split">[docs]</a>    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This should be overriden. The default implementation just splits on newlines.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ISplitter.split_all"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISplitter.split_all">[docs]</a>    <span class="k">def</span> <span class="nf">split_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="ISplitter.split_all"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISplitter.split_all">[docs]</a>    <span class="k">def</span> <span class="nf">split_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Takes a list of texts and returns a list of sentences (see :py:meth:`split`).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">splitted</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span> <span class="k">for</span> <span class="n">splitted</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span></div></div>
 
 
-<div class="viewcode-block" id="ISentenceFilter"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISentenceFilter">[docs]</a><span class="k">class</span> <span class="nc">ISentenceFilter</span><span class="p">:</span>
+<div class="viewcode-block" id="ISentenceFilter"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISentenceFilter">[docs]</a><span class="k">class</span> <span class="nc">ISentenceFilter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A sentence filter should be able to tell if a given sentence is well-formed (i.e. valid) or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ISentenceFilter.is_valid"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISentenceFilter.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ISentenceFilter.is_valid"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISentenceFilter.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;This should be overriden. The default implementation just returns true.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="ISentenceFilter.filter"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISentenceFilter.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="ISentenceFilter.filter"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISentenceFilter.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Filter a list of sentences by calling :py:meth:`ISentenceFilter.is_valid` on each element.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sentences</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span></div></div>
 
 
-<div class="viewcode-block" id="ISgDetector"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISgDetector">[docs]</a><span class="k">class</span> <span class="nc">ISgDetector</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ISgDetector"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISgDetector">[docs]</a><span class="k">class</span> <span class="nc">ISgDetector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    [ABSTRACT] An SG Detector is a Language Identifier supporting Swiss German.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ISgDetector.predict"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISgDetector.predict">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ISgDetector.predict"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISgDetector.predict">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        [ABSTRACT] Predict the Swiss German probability (between 0 and 1) of a list of sentences.</span>
+<span class="sd">        Predict the Swiss German probability (between 0 and 1) of a list of sentences.</span>
+<span class="sd">        Always return 1 by default.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ISgDetector.predict_one"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISgDetector.predict_one">[docs]</a>    <span class="k">def</span> <span class="nf">predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="ISgDetector.predict_one"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISgDetector.predict_one">[docs]</a>    <span class="k">def</span> <span class="nf">predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Call :py:meth:`predict` with one sentence.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span><span class="n">sentence</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span></div></div>
 
 
-<div class="viewcode-block" id="ISeedCreator"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISeedCreator">[docs]</a><span class="k">class</span> <span class="nc">ISeedCreator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ISeedCreator"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISeedCreator">[docs]</a><span class="k">class</span> <span class="nc">ISeedCreator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    [ABSTRACT] A seed creator should generate seeds, i.e. search queries, out of Swiss German sentences.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ISeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ISeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Should generate interesting seeds.</span>
@@ -152,12 +408,12 @@
         <span class="k">pass</span></div></div>
 
 
-<div class="viewcode-block" id="IDecider"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.IDecider">[docs]</a><span class="k">class</span> <span class="nc">IDecider</span><span class="p">:</span>
+<div class="viewcode-block" id="IDecider"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IDecider">[docs]</a><span class="k">class</span> <span class="nc">IDecider</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A decider should implement the logic behind whether or not a URL is considered interesting/should be crawled.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="IDecider.should_url_be_blacklisted"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.IDecider.should_url_be_blacklisted">[docs]</a>    <span class="k">def</span> <span class="nf">should_url_be_blacklisted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IDecider.should_url_be_blacklisted"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IDecider.should_url_be_blacklisted">[docs]</a>    <span class="k">def</span> <span class="nf">should_url_be_blacklisted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Decide if a URL/page is blacklisted. The default implementation returns true if the URL has never been</span>
 <span class="sd">        visited before *and* contains no Swiss German sentence. The *new* criteria is important to avoid blacklisting</span>
@@ -166,14 +422,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">page</span><span class="o">.</span><span class="n">is_new</span><span class="p">()</span> <span class="ow">and</span> <span class="n">page</span><span class="o">.</span><span class="n">sg_count</span> <span class="o">==</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="IDecider.should_page_be_crawled"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.IDecider.should_page_be_crawled">[docs]</a>    <span class="k">def</span> <span class="nf">should_page_be_crawled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IDecider.should_page_be_crawled"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IDecider.should_page_be_crawled">[docs]</a>    <span class="k">def</span> <span class="nf">should_page_be_crawled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Decide if a page should be scraped on this run. By default, it returns always true, but we could devise other</span>
 <span class="sd">        rules based on the last crawl, etc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="IDecider.should_children_be_crawled"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.IDecider.should_children_be_crawled">[docs]</a>    <span class="k">def</span> <span class="nf">should_children_be_crawled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IDecider.should_children_be_crawled"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IDecider.should_children_be_crawled">[docs]</a>    <span class="k">def</span> <span class="nf">should_children_be_crawled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Decide if the links found on a page should be scraped on this run. Returns true by default.</span>
 
@@ -184,12 +440,12 @@
         <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
-<div class="viewcode-block" id="ISaver"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver">[docs]</a><span class="k">class</span> <span class="nc">ISaver</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="ISaver"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver">[docs]</a><span class="k">class</span> <span class="nc">ISaver</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    [ABSTRACT] The saver is responsible for persisting everything somewhere, such as a database, a file or the console.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ISaver.__init__"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        .. warning:</span>
@@ -200,10 +456,10 @@
 <span class="sd">            This is because some entrypoints need to fetch informations from Mongo and thus rely on</span>
 <span class="sd">            those options to connect. This is not yet part of an interface... but should be !</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+        <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.blacklist_url"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.blacklist_url">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">blacklist_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="ISaver.blacklist_url"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.blacklist_url">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">blacklist_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Add the `url` to a blacklist.</span>
 
@@ -212,7 +468,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.is_url_blacklisted"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.is_url_blacklisted">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ISaver.is_url_blacklisted"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.is_url_blacklisted">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">is_url_blacklisted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Tells if the given `url` is part of the blacklist. This is called at the beginning,</span>
@@ -220,7 +476,18 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.sentence_exists"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.sentence_exists">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ISaver.save_url"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.save_url">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">save_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        [ABSTRACT] Save a potentially interesting URL which won&#39;t be visited during this round</span>
+<span class="sd">        (e.g. max_depth reached).</span>
+
+<span class="sd">        :param url: the url</span>
+<span class="sd">        :param parent: the parent url</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ISaver.sentence_exists"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.sentence_exists">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">sentence_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Tells if the given Swiss German `sentence` already exists.</span>
@@ -228,7 +495,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.save_page"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.save_page">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ISaver.save_page"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.save_page">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">save_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Persist a page.</span>
@@ -237,7 +504,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.get_page"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ISaver.get_page"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a page. The simplest implementation is just ``return Page(url)``.</span>
 <span class="sd">        If the subclass uses a data store, it should also populate the other page attributes (e.g. the score</span>
@@ -245,54 +512,56 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.save_seed"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.save_seed">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="ISaver.save_seed"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.save_seed">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">save_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Persist a seed (usually generated by the :py:class::`ISeedGenerator`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.save_seeds"><a class="viewcode-back" href="../../../../swisstext.cmd.scraping.html#swisstext.cmd.scraping.interfaces.ISaver.save_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">save_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="ISaver.save_seeds"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.save_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">save_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Persist multiple seeds (see :py:meth:`save_seed`).&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div></div>
 </pre></div>
 
+           </div>
+           
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

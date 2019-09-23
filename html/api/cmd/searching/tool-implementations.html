@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tool implementations &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Pipeline implementation" href="pipeline-implementation.html" />
+    <link rel="prev" title="Tool interfaces" href="tool-interfaces.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scraping/package.html">swisstext.cmd.scraping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../scraping/package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../scraping/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../scraping/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../scraping/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="package.html">swisstext.cmd.searching</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../alswiki/package.html">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../alswiki/package.html#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../alswiki/package.html#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../alswiki/package.html#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">API Overview</a> &raquo;</li>
+        
+          <li><a href="package.html">swisstext.cmd.searching</a> &raquo;</li>
+        
+      <li>Tool implementations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/derlin/swisstext/blob/master/docs/api/cmd/searching/tool-implementations.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-swisstext.cmd.searching.tools">
+<span id="tool-implementations"></span><h1>Tool implementations<a class="headerlink" href="#module-swisstext.cmd.searching.tools" title="Permalink to this headline">¶</a></h1>
+<p>This package contains various implementations of the different search engine tools.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="tool-interfaces.html#module-swisstext.cmd.searching.interfaces" title="swisstext.cmd.searching.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a></dt><dd><p>The tools interfaces definitions</p>
+</dd>
+<dt><a class="reference internal" href="pipeline-implementation.html#module-swisstext.cmd.searching.config" title="swisstext.cmd.searching.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config</span></code></a></dt><dd><p>The default configuration instantiates tools from this package</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="module-swisstext.cmd.searching.tools.console_saver">
+<span id="savers"></span><h2>Savers<a class="headerlink" href="#module-swisstext.cmd.searching.tools.console_saver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="swisstext.cmd.searching.tools.console_saver.ConsoleSaver">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.tools.console_saver.</code><code class="sig-name descname">ConsoleSaver</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/console_saver.html#ConsoleSaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.console_saver.ConsoleSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver" title="swisstext.cmd.searching.interfaces.ISaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.searching.interfaces.ISaver</span></code></a></p>
+<p>Implementation of an <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver" title="swisstext.cmd.searching.interfaces.ISaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISaver</span></code></a> useful for testing and debugging.
+It does not persist any results, but prints everything to the console instead.</p>
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.console_saver.ConsoleSaver.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/console_saver.html#ConsoleSaver.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.console_saver.ConsoleSaver.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.console_saver.ConsoleSaver.save_seed">
+<code class="sig-name descname">save_seed</code><span class="sig-paren">(</span><em class="sig-param">seed: swisstext.cmd.searching.data.Seed</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/console_saver.html#ConsoleSaver.save_seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.console_saver.ConsoleSaver.save_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>[ABSTRACT] Should persist a seed and its associated results.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-swisstext.cmd.searching.tools.mongo_saver"></span><dl class="class">
+<dt id="swisstext.cmd.searching.tools.mongo_saver.MongoSaver">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.tools.mongo_saver.</code><code class="sig-name descname">MongoSaver</code><span class="sig-paren">(</span><em class="sig-param">host='localhost'</em>, <em class="sig-param">port=27017</em>, <em class="sig-param">db='st1'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/mongo_saver.html#MongoSaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.mongo_saver.MongoSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver" title="swisstext.cmd.searching.interfaces.ISaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.searching.interfaces.ISaver</span></code></a></p>
+<p>This <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver" title="swisstext.cmd.searching.interfaces.ISaver"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISaver</span></code></a> implementation persists everything to
+a MongoDB database.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../../mongo/package.html#module-swisstext.mongo" title="swisstext.mongo"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo</span></code></a></dt><dd><p>Package defining the Mongo collections.</p>
+</dd>
+</dl>
+</div>
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.mongo_saver.MongoSaver.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">host='localhost'</em>, <em class="sig-param">port=27017</em>, <em class="sig-param">db='st1'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/mongo_saver.html#MongoSaver.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.mongo_saver.MongoSaver.link_exists">
+<code class="sig-name descname">link_exists</code><span class="sig-paren">(</span><em class="sig-param">url: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/mongo_saver.html#MongoSaver.link_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.link_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the url already exists in the persistence layer. Returns false by default.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.mongo_saver.MongoSaver.save_seed">
+<code class="sig-name descname">save_seed</code><span class="sig-paren">(</span><em class="sig-param">seed: swisstext.cmd.searching.data.Seed</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/mongo_saver.html#MongoSaver.save_seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.save_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>[ABSTRACT] Should persist a seed and its associated results.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-swisstext.cmd.searching.tools.google_search">
+<span id="searchers"></span><h2>Searchers<a class="headerlink" href="#module-swisstext.cmd.searching.tools.google_search" title="Permalink to this headline">¶</a></h2>
+<p>This module let’s you use the
+<a class="reference external" href="https://developers.google.com/custom-search/json-api/v1/overview">Google Custom Search API</a>
+to retrieve URLs.</p>
+<div class="section" id="example-usages">
+<h3>Example usages<a class="headerlink" href="#example-usages" title="Permalink to this headline">¶</a></h3>
+<p>Create a factory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span> <span class="o">=</span> <span class="n">GoogleGeneratorFactory</span><span class="p">(</span><span class="n">apikey</span><span class="o">=</span><span class="s2">&quot;your apikey&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To <strong>retrieve a list of results</strong>, you can use the interface’s <code class="docutils literal notranslate"><span class="pre">top_results</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># retrieve at most 13 results from a search using the interface</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">top_results</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;es isch sone seich&quot;</span><span class="p">,</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to use the iterator, it is advised to use <code class="docutils literal notranslate"><span class="pre">itertools</span></code>, since it deals with
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StopIteration</span></code></a> exceptions silently:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># retrieve at most 13 results from a search using the builtin python iterator</span>
+<span class="n">results_iterator</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;es isch sone seich&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">results_iterator</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span> <span class="c1"># won&#39;t throw StopIteration</span>
+</pre></div>
+</div>
+<p>Iterators are useful when you need to <strong>process URLs in a loop</strong>, or have a more complex stop criteria than
+just the number of results. For that, you can use the builtin iterator interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># process results one by one using the builtin python iterator</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stderr</span>
+<span class="n">results_iterator</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;es isch sone seich&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">):</span> <span class="c1"># usually, here we have a while some_dynamic_condition</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">results_iterator</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Processing url: {url}&quot;</span><span class="p">)</span>
+        <span class="c1"># ... do something more with the result ...</span>
+    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+        <span class="c1"># even though Google is pretty good at retrieving billions of results,</span>
+        <span class="c1"># you might hit the limit...</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Oops, no result left!&quot;</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+<p>You can also use the <a class="reference internal" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.next" title="swisstext.cmd.searching.tools.google_search.GoogleGenerator.next"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GoogleGenerator.next()</span></code></a> and <a class="reference internal" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next" title="swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GoogleGenerator.has_next()</span></code></a> methods
+in place of the try-except, like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># process results one by one using the Google Iterator methods</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stderr</span>
+<span class="n">results_iterator</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s2">&quot;es isch sone seich&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">results_iterator</span><span class="o">.</span><span class="n">has_next</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Oops, no result left!&quot;</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">results_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Processing url: {url}&quot;</span><span class="p">)</span>
+    <span class="c1"># ... do something more with the result ...</span>
+</pre></div>
+</div>
+<dl class="data">
+<dt id="swisstext.cmd.searching.tools.google_search.BASE_URL">
+<code class="sig-prename descclassname">swisstext.cmd.searching.tools.google_search.</code><code class="sig-name descname">BASE_URL</code><em class="property"> = 'https://www.googleapis.com/customsearch/v1'</em><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.BASE_URL" title="Permalink to this definition">¶</a></dt>
+<dd><p>google api URL
+see <a class="reference external" href="https://developers.google.com/custom-search/json-api/v1/reference/cse/list#request">https://developers.google.com/custom-search/json-api/v1/reference/cse/list#request</a> for the json API reference</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.tools.google_search.</code><code class="sig-name descname">GoogleGenerator</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">apikey: str</em>, <em class="sig-param">context='015058622601103575455:cpfpm27mio8'</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A new Google Generator should be created for each query. It allows for lazy loading of
+results, thus sparing API quotas.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This generator might raise an <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a>, for example if you reached your daily quota limit.
+In this case, the exception message should contain the error code and error message as delivered
+by the Google API.</p>
+</div>
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">apikey: str</em>, <em class="sig-param">context='015058622601103575455:cpfpm27mio8'</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGenerator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator.ctx">
+<code class="sig-name descname">ctx</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.ctx" title="Permalink to this definition">¶</a></dt>
+<dd><p>the context to use</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next">
+<code class="sig-name descname">has_next</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGenerator.has_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator.key">
+<code class="sig-name descname">key</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>the Google API key</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGenerator.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGenerator.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.next" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you use this method directly (instead of the classic python iterator interface), you
+need to check that results are available by yourself using the <a class="reference internal" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next" title="swisstext.cmd.searching.tools.google_search.GoogleGenerator.has_next"><code class="xref py py-meth docutils literal notranslate"><span class="pre">has_next()</span></code></a> method.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.tools.google_search.</code><code class="sig-name descname">GoogleGeneratorFactory</code><span class="sig-paren">(</span><em class="sig-param">apikey: str</em>, <em class="sig-param">context='015058622601103575455:cpfpm27mio8'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGeneratorFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISearcher" title="swisstext.cmd.searching.interfaces.ISearcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.searching.interfaces.ISearcher</span></code></a></p>
+<p>This factory creates a new <a class="reference internal" href="#swisstext.cmd.searching.tools.google_search.GoogleGenerator" title="swisstext.cmd.searching.tools.google_search.GoogleGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">GoogleGenerator</span></code></a> for each query.</p>
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">apikey: str</em>, <em class="sig-param">context='015058622601103575455:cpfpm27mio8'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGeneratorFactory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.ctx">
+<code class="sig-name descname">ctx</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.ctx" title="Permalink to this definition">¶</a></dt>
+<dd><p>The context to use (see the official API reference for more info).
+The default context is usually fine: it is parameterized to search all the web.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.key">
+<code class="sig-name descname">key</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Google Custom Search API key</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.search">
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">query</em><span class="sig-paren">)</span> &#x2192; Iterable[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/google_search.html#GoogleGeneratorFactory.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a query using the Google Custom Search API.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<span class="target" id="module-swisstext.cmd.searching.tools.start_page"></span><p>This module implements an <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISearcher" title="swisstext.cmd.searching.interfaces.ISearcher"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ISearcher</span></code></a> using
+<a class="reference external" href="http://startpage.com/">http://startpage.com/</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This module highjacks startpage.com !! There are no API available, so this is really a dirty
+hack. But we couldn’t find free APIs to run tests… So use this module sparsely and
+<strong>ONLY IN DEVELOPMENT</strong>. We decline all responsibility in case startpage detects the robot…</p>
+</div>
+<dl class="class">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGenerator">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.tools.start_page.</code><code class="sig-name descname">StartPageGenerator</code><span class="sig-paren">(</span><em class="sig-param">query</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGenerator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A new generator is created for each query. Its usage is similar to the generator described in the
+<a class="reference internal" href="#module-swisstext.cmd.searching.tools.google_search" title="swisstext.cmd.searching.tools.google_search"><code class="xref py py-mod docutils literal notranslate"><span class="pre">google_search</span></code></a> module.</p>
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGenerator.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">query</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGenerator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGenerator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGenerator.has_next">
+<code class="sig-name descname">has_next</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGenerator.has_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGenerator.has_next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGenerator.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGenerator.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGenerator.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.tools.start_page.</code><code class="sig-name descname">StartPageGeneratorFactory</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGeneratorFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.searching.interfaces.ISearcher" title="swisstext.cmd.searching.interfaces.ISearcher"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.searching.interfaces.ISearcher</span></code></a></p>
+<p>Implementation of a searcher using startpage. Its usage is similar to the factory described in the
+<a class="reference internal" href="#module-swisstext.cmd.searching.tools.google_search" title="swisstext.cmd.searching.tools.google_search"><code class="xref py py-mod docutils literal notranslate"><span class="pre">google_search</span></code></a> module.</p>
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGeneratorFactory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.search">
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">query</em><span class="sig-paren">)</span> &#x2192; Iterable[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/tools/start_page.html#StartPageGeneratorFactory.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>[ABSTRACT] Should query a real search engine and returns an iterator of results/URLs.
+The use of an iterator allows for lazy implementations, in case we are limited by an API quota.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pipeline-implementation.html" class="btn btn-neutral float-right" title="Pipeline implementation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tool-interfaces.html" class="btn btn-neutral float-left" title="Tool interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

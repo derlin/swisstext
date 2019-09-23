@@ -1,0 +1,20 @@
+===========================
+Known issues
+===========================
+
+* Sentences from Facebook often start with *e, ...* or things like that; this is because in the HTML
+  (see the content of ``BeautifulSoup``) there are hidden spans of the form
+
+   .. code-block:: html
+
+        Bevor mer aber am Donnschti afange Prob<span class="text_exposed_hide">...</span>
+        <span class="text_exposed_show">e, hei mer eusne Neumitglieder [...]
+
+  (this comes from `this page <https://it-it.facebook.com/wisnergugge/posts/10161364868570526>`_).
+
+..
+    https://github.com/JamieFarrelly/Popular-Site-Subdomains/blob/master/Facebook.com.txt
+
+
+* When enqueuing URLs automatically (found on a page), the crawler does not test for redirection;
+  thus, URLs in the database can be redirections to another known URL, etc.

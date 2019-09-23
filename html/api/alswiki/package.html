@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>swisstext.alswiki &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="TODOs" href="../../todos.html" />
+    <link rel="prev" title="Abstract Definitions" href="../mongo/definitions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmd/package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cmd/scraping/package.html">swisstext.cmd.scraping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/scraping/package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/scraping/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/scraping/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/scraping/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cmd/searching/package.html">swisstext.cmd.searching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/searching/package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/searching/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/searching/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cmd/searching/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">API Overview</a> &raquo;</li>
+        
+      <li>swisstext.alswiki</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/derlin/swisstext/blob/master/docs/api/alswiki/package.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-swisstext.alswiki">
+<span id="swisstext-alswiki"></span><h1>swisstext.alswiki<a class="headerlink" href="#module-swisstext.alswiki" title="Permalink to this headline">¶</a></h1>
+<p>The magic happens by calling <code class="docutils literal notranslate"><span class="pre">st_alswiki</span></code>.</p>
+<div class="section" id="st-alswiki">
+<h2>st_alswiki<a class="headerlink" href="#st-alswiki" title="Permalink to this headline">¶</a></h2>
+<p>A suite of tools for downloading, parsing and processing wikipedia dumps.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_alswiki <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-l">
+<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--log-level</code><code class="sig-prename descclassname"> &lt;log_level&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>[default: info]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>debug|info|warning|fatal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="st-alswiki-download">
+<h3>download<a class="headerlink" href="#st-alswiki-download" title="Permalink to this headline">¶</a></h3>
+<p>Download the latest dump of als.wikipedia.org.</p>
+<p>It will save alswiki-latest-pages-articles.xml.bz2 in the directory given by &lt;dir&gt;.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_alswiki download <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-download-d">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--dir</code><code class="sig-prename descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-download-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>directory where to download files  [default: .]</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-alswiki-parse">
+<h3>parse<a class="headerlink" href="#st-alswiki-parse" title="Permalink to this headline">¶</a></h3>
+<p>Extract articles from a wiki dump.</p>
+<p>&lt;dumpfile&gt; must be a <code class="docutils literal notranslate"><span class="pre">wiki-*-pages-articles.xml.bz2</span></code> file. The output file
+will be saved alongside the dump with the json.bz2 extension.
+See gensim’s segment_wiki tool for more details (python -m gensim.scripts.segment_wiki -h).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_alswiki parse <span class="o">[</span>OPTIONS<span class="o">]</span> DUMPFILE
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-parse-m">
+<code class="sig-name descname">-m</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--min-chars</code><code class="sig-prename descclassname"> &lt;min_chars&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-parse-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ignore articles with fewer characters than this (article stubs)  [default: 200]</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-parse-arg-dumpfile">
+<code class="sig-name descname">DUMPFILE</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-st-alswiki-parse-arg-dumpfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-alswiki-process">
+<h3>process<a class="headerlink" href="#st-alswiki-process" title="Permalink to this headline">¶</a></h3>
+<p>Process articles using the scraping pipeline.</p>
+<p>&lt;config-path&gt; and &lt;db&gt; are the same as in <code class="docutils literal notranslate"><span class="pre">st_scrape</span></code>.
+The &lt;gensimfile&gt; can be either in json or json.bz2. To generate it:</p>
+<ol class="arabic simple">
+<li><p>download an <code class="docutils literal notranslate"><span class="pre">alswiki-*-pages-articles.xml.bz2</span></code> from
+<a class="reference external" href="https://dumps.wikimedia.org/alswiki">https://dumps.wikimedia.org/alswiki</a> (or use the download command),</p></li>
+<li><p>use gensim’s segment_wiki tool (python -m gensim.scripts.segment_wiki -h)
+to extract articles (in json format) from the raw dump (or use the parse command)</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_alswiki process <span class="o">[</span>OPTIONS<span class="o">]</span> GENSIMFILE
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-process-c">
+<code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--config-path</code><code class="sig-prename descclassname"> &lt;config_path&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-process-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-alswiki-process-d">
+<code class="sig-name descname">-d</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--db</code><code class="sig-prename descclassname"> &lt;db&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-process-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, this will override the database set in the config</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-process-arg-gensimfile">
+<code class="sig-name descname">GENSIMFILE</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-st-alswiki-process-arg-gensimfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="st-alswiki-txt">
+<h3>txt<a class="headerlink" href="#st-alswiki-txt" title="Permalink to this headline">¶</a></h3>
+<p>Process a text file.</p>
+<p>This command reads a file and pass it through a simplified pipeline (split -&gt; filter -&gt; sg_detect).
+The actual splitter/filter/detector used depends on the configuration given by &lt;config-path&gt;.
+The config is the same as in the backend, but only options for those 3 tools are used.</p>
+<p>Output is printed to the terminal, in one of the two formats given by the &lt;format&gt; argument:</p>
+<div class="line-block">
+<div class="line">* txt: prints sentences</div>
+<div class="line">* csv: prints proba, sentence using csv format (quotes escaped)</div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>st_alswiki txt <span class="o">[</span>OPTIONS<span class="o">]</span> TEXTFILE
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-txt-c">
+<code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--config-path</code><code class="sig-prename descclassname"> &lt;config_path&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-txt-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-alswiki-txt-f">
+<code class="sig-name descname">-f</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--format</code><code class="sig-prename descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-txt-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>[default: txt]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>txt|csv</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-alswiki-txt-p">
+<code class="sig-name descname">-p</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--min-proba</code><code class="sig-prename descclassname"> &lt;min_proba&gt;</code><a class="headerlink" href="#cmdoption-st-alswiki-txt-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override min_proba in config</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-st-alswiki-txt-arg-textfile">
+<code class="sig-name descname">TEXTFILE</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-st-alswiki-txt-arg-textfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="processing-alswiki-dumps">
+<h2>Processing Alswiki dumps<a class="headerlink" href="#processing-alswiki-dumps" title="Permalink to this headline">¶</a></h2>
+<p>If you want to add the sentences from an alswiki dump to the mongo database, you can use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>st_alswiki download
+st_alswiki parse alswiki-latest-pages-articles.xml.bz2
+st_alswiki process alswiki-latest-pages-articles.json.bz2
+</pre></div>
+</div>
+<p>Remember that by default, the scraping pipeline is configured to use MongoDB on localhost.
+If you would rather get the output into a file, just pass a custom <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> file to
+the <code class="docutils literal notranslate"><span class="pre">process</span></code> subcommand using the <code class="docutils literal notranslate"><span class="pre">-c</span></code> option.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># custom config: output the results to stdout</span>
+<span class="nt">pipeline</span><span class="p">:</span>
+  <span class="nt">saver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.console_saver.ConsoleSaver</span>
+
+<span class="nt">saver_options</span><span class="p">:</span>
+  <span class="c1"># where to save the output (default to stdout)</span>
+  <span class="nt">sentences_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alswiki_sentences.txt</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For old dumps with older XML syntax, you can use <a class="reference external" href="https://github.com/attardi/wikiextractor">WikiExtractor.py</a>
+to extract text from the dumps, get the text from the JSON file and then use the txt subcommand.</p>
+</div>
+</div>
+<div class="section" id="processing-text-files">
+<h2>Processing text files<a class="headerlink" href="#processing-text-files" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">alswiki</span> <span class="pre">txt</span></code> subcommand will use only a subpart of the pipeline. It will use:</p>
+<ol class="arabic simple">
+<li><p><em>splitter</em>: split text into sentences</p></li>
+<li><p><em>filter</em>: filter out ill/invalid sentences</p></li>
+<li><p><em>language id</em>: filter out non Swiss German sentences</p></li>
+</ol>
+<p>And write the results to stdout.</p>
+<p>The configuration file is the same as the scraping tool (see <a class="reference internal" href="../cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config" title="swisstext.cmd.scraping.config"><code class="xref py py-mod docutils literal notranslate"><span class="pre">st_scrape</span> <span class="pre">config</span></code></a>),
+so it is possible to select which tool implementation to use.
+To skip any of the above steps, create a custom configuration and:</p>
+<ul class="simple">
+<li><p>for 1. and 2., specify the interface in the configuration pipeline or use the special <code class="docutils literal notranslate"><span class="pre">_I_</span></code> magic;</p></li>
+<li><p>for 3., set the <code class="docutils literal notranslate"><span class="pre">options.min_proba</span></code> to 0 in the configuration (or set the <code class="docutils literal notranslate"><span class="pre">sg_detector</span></code> to the interface);</p></li>
+</ul>
+<p>For example, this configuration will do nothing:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># turn off EVERY TOOl (hence doing nothing)</span>
+
+<span class="nt">pipeline</span><span class="p">:</span>
+    <span class="nt">splitter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swisstext.cmd.scraping.interfaces.ISplitter</span> <span class="c1"># or _I_</span>
+    <span class="nt">sentence_filter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swisstext.cmd.scraping.interfaces.ISentenceFilter</span> <span class="c1"># or _I_</span>
+
+<span class="nt">options</span><span class="p">:</span>
+  <span class="nt">min_proba</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../todos.html" class="btn btn-neutral float-right" title="TODOs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../mongo/definitions.html" class="btn btn-neutral float-left" title="Abstract Definitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

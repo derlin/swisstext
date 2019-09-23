@@ -1,41 +1,269 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>swisstext.cmd.scraping.tools.bs_crawler &#8212; SwissText  documentation</title>
-    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>swisstext.cmd.scraping.tools.bs_crawler &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
     
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
     
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/index.html">API Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/cmd/package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html">swisstext.cmd.scraping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/cmd/searching/package.html">swisstext.cmd.searching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/alswiki/package.html">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/alswiki/package.html#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/alswiki/package.html#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>swisstext.cmd.scraping.tools.bs_crawler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for swisstext.cmd.scraping.tools.bs_crawler</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -43,7 +271,7 @@
 <span class="sd">that uses BeautifulSoup to extract text and links.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
@@ -58,10 +286,13 @@
 <span class="n">DEFAULT_HEADERS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36&#39;</span><span class="p">}</span>
 
+<span class="c1">#: Timeout used in requests.get</span>
+<span class="n">GET_TIMEOUT</span> <span class="o">=</span> <span class="mi">60</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="BsCrawler"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler">[docs]</a><span class="k">class</span> <span class="nc">BsCrawler</span><span class="p">(</span><span class="n">ICrawler</span><span class="p">):</span>
+<div class="viewcode-block" id="BsCrawler"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler">[docs]</a><span class="k">class</span> <span class="nc">BsCrawler</span><span class="p">(</span><span class="n">ICrawler</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A basic crawler implemented using `BeautifulSoup &lt;https://www.crummy.com/software/BeautifulSoup/bs4/doc/&gt;`_.</span>
 
@@ -76,14 +307,17 @@
 <span class="sd">        :py:class:`~swisstext.cmd.scraping.interfaces.ISplitter` (recall that the default implementation split text</span>
 <span class="sd">        based on newlines...) such as the :py:class:`~swisstext.cmd.scraping.punkt_splitter.PunktSplitter`.</span>
 
+<span class="sd">    .. todo::</span>
+
+<span class="sd">        Try using just the response.text from requests to get a proper encoding ?</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">joiner</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">joiner</span> <span class="o">=</span> <span class="n">joiner</span>  <span class="c1"># used to join text chunks</span>
+<div class="viewcode-block" id="BsCrawler.__init__"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">joiner</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joiner</span> <span class="o">=</span> <span class="n">joiner</span>  <span class="c1"># used to join text chunks</span></div>
 
-<div class="viewcode-block" id="BsCrawler.crawl"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.crawl">[docs]</a>    <span class="k">def</span> <span class="nf">crawl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlResults</span><span class="p">:</span>
+<div class="viewcode-block" id="BsCrawler.crawl"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.crawl">[docs]</a>    <span class="k">def</span> <span class="nf">crawl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlResults</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Extract links and text from a URL.&quot;&quot;&quot;</span>
-        <span class="n">soup</span><span class="p">:</span> <span class="n">BeautifulSoup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_soup</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">soup</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_soup</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="c1"># get links first, as extract_text_blocks is destructive</span>
         <span class="n">links</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_links</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">soup</span><span class="p">)</span>
         <span class="n">text_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_text_blocks</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
@@ -91,38 +325,47 @@
             <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">joiner</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text_blocks</span><span class="p">),</span>
             <span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BsCrawler.get_soup"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.get_soup">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_soup</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML), dealing somewhat correctly with encoding.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BsCrawler.get_content"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.get_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the raw content from a URL (as a string), with the response encoding as reported by the requests module.</span>
+<span class="sd">        Exceptions may be raised if:</span>
+<span class="sd">        * an error occurs during the GET request (timeout, decoding issue, too many redirects, etc.)</span>
+<span class="sd">        * the content-type is not of a supported type (namely html or text)</span>
+<span class="sd">        * the response body is empty</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">DEFAULT_HEADERS</span><span class="p">)</span>  <span class="c1"># ignore SSL certificates</span>
-            <span class="c1"># try to avoid encoding issues</span>
-            <span class="c1"># see https://stackoverflow.com/a/45643551/2667536</span>
-            <span class="c1"># Note: the encoding might be wrong if the content-type is declaring a charset with</span>
-            <span class="c1"># uppercase, for example &#39;text/html; Charset=xxx&#39;. I posted an issue, see</span>
-            <span class="c1"># https://github.com/requests/requests/issues/4748</span>
-            <span class="n">ctype</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="k">if</span> <span class="s1">&#39;html&#39;</span> <span class="ow">in</span> <span class="n">ctype</span> <span class="ow">or</span> <span class="s1">&#39;text/plain&#39;</span> <span class="ow">in</span> <span class="n">ctype</span><span class="p">:</span>
-                <span class="n">encoding</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">encoding</span> <span class="k">if</span> <span class="s1">&#39;charset&#39;</span> <span class="ow">in</span> <span class="n">ctype</span> <span class="k">else</span> <span class="kc">None</span>
-                <span class="c1">## (1) Nice encoding detection, but waaayy to slow</span>
-                <span class="c1"># http_encoding = resp.encoding if &#39;charset&#39; in ctype else None</span>
-                <span class="c1"># html_encoding = EncodingDetector.find_declared_encoding(resp.content, is_html=True)</span>
-                <span class="c1"># encoding = html_encoding or http_encoding</span>
-
-                <span class="c1">## (2) another possibility: use the from_encoding argument in BSoup. The problem ? it uses</span>
-                <span class="c1"># .decode(encoding, &#39;replace&#39;), which adds strange symbols to the text...</span>
-
-                <span class="c1">## (3) Here, we try another thing: decoding the content by ourselves using the &#39;ignore&#39; stragegy</span>
-                <span class="c1"># TODO: ensure it works as expected</span>
-                <span class="n">content</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span>
-                <span class="k">return</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; not HTML (ctype=</span><span class="si">%s</span><span class="s2">) &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">ctype</span><span class="p">))</span>
-
+            <span class="c1"># ignore SSL certificates</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">DEFAULT_HEADERS</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">GET_TIMEOUT</span><span class="p">)</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">content</span>  <span class="c1"># trigger content decoding to catch ContentDecodingError as well</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; raised an error (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="c1"># here, don&#39;t use from_ex so we can trim the error message</span>
+            <span class="k">raise</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)[:</span><span class="mi">50</span><span class="p">])</span>
 
-<div class="viewcode-block" id="BsCrawler.extract_text_blocks"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_text_blocks">[docs]</a>    <span class="nd">@classmethod</span>
+        <span class="c1"># try to avoid encoding issues</span>
+        <span class="c1"># see https://stackoverflow.com/a/45643551/2667536</span>
+        <span class="c1"># Note: the encoding might be wrong if the content-type is declaring a charset with</span>
+        <span class="c1"># uppercase, for example &#39;text/html; Charset=xxx&#39;. I posted an issue, see</span>
+        <span class="c1"># https://github.com/requests/requests/issues/4748</span>
+        <span class="n">ctype</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;html&#39;</span> <span class="ow">in</span> <span class="n">ctype</span> <span class="ow">or</span> <span class="s1">&#39;text/plain&#39;</span> <span class="ow">in</span> <span class="n">ctype</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;CtypeError&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{url}</span><span class="s1"> not HTML (ctype=</span><span class="si">{ctype}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+        <span class="c1"># also test the .text, so that we avoid returning content with only unprintable chars, e.g. b&#39;\xef\xbb\xbf&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;EmptyDocumentError&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Content is empty.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># the resp.encoding is an educated guess about the encoding of the response based on the HTTP headers</span>
+        <span class="k">return</span> <span class="n">content</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">encoding</span></div>
+
+<div class="viewcode-block" id="BsCrawler.get_soup"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.get_soup">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_soup</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">BeautifulSoup</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get a :py:class:`~bs4.BeautifulSoup` object from a URL (HTML).&quot;&quot;&quot;</span>
+        <span class="n">content</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="c1"># here, the encoding should be ok, since bs4 uses the decode/replace strategy by default</span>
+        <span class="k">return</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">),</span> <span class="n">content</span></div>
+
+<div class="viewcode-block" id="BsCrawler.extract_text_blocks"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_text_blocks">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">extract_text_blocks</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">soup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get text blocks from a :py:class:`~bs4.BeautifulSoup` object.</span>
@@ -143,7 +386,7 @@
 
         <span class="k">return</span> <span class="n">soup</span><span class="o">.</span><span class="n">stripped_strings</span></div>
 
-<div class="viewcode-block" id="BsCrawler.extract_links"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_links">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BsCrawler.extract_links"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler.extract_links">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">extract_links</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">soup</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all links from a soup (a href only).</span>
@@ -153,7 +396,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">filter_links</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">links</span><span class="p">)]</span></div></div>
 
 
-<div class="viewcode-block" id="CleverBsCrawler"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler">[docs]</a><span class="k">class</span> <span class="nc">CleverBsCrawler</span><span class="p">(</span><span class="n">BsCrawler</span><span class="p">):</span>
+<div class="viewcode-block" id="CleverBsCrawler"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler">[docs]</a><span class="k">class</span> <span class="nc">CleverBsCrawler</span><span class="p">(</span><span class="n">BsCrawler</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Another implementation of the :py:class:`BsCrawler` that tries to be more clever during the text extraction</span>
 <span class="sd">    step.</span>
@@ -176,12 +419,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_main_selectors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;[role=main]&#39;</span><span class="p">]</span> <span class="o">+</span> \
                       <span class="p">[</span><span class="n">s</span>
-                       <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;main-content&#39;</span><span class="p">,</span> <span class="s1">&#39;mainContent&#39;</span><span class="p">,</span> <span class="s1">&#39;MainContent&#39;</span><span class="p">]</span>
+                       <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="s1">&#39;main-content&#39;</span><span class="p">,</span> <span class="s1">&#39;mainContent&#39;</span><span class="p">,</span> <span class="s1">&#39;MainContent&#39;</span><span class="p">,</span> <span class="s1">&#39;wrapper&#39;</span><span class="p">]</span>
                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="n">f</span><span class="s2">&quot;.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;#</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="p">]]</span>
 
     <span class="n">_exclude_selectors</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;header&#39;</span><span class="p">,</span> <span class="s1">&#39;#header&#39;</span><span class="p">,</span> <span class="s1">&#39;footer&#39;</span><span class="p">,</span> <span class="s1">&#39;#footer&#39;</span><span class="p">,</span> <span class="s1">&#39;[role=footer]&#39;</span><span class="p">,</span> <span class="s1">&#39;[role=navigation]&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="CleverBsCrawler.extract_text_blocks"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler.extract_text_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">extract_text_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="CleverBsCrawler.extract_text_blocks"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.CleverBsCrawler.extract_text_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">extract_text_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 
         <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">([</span><span class="s1">&#39;script&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">]):</span>
             <span class="n">script</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span>  <span class="c1"># rip it out</span>
@@ -189,7 +432,7 @@
         <span class="c1"># try to extract main content</span>
         <span class="k">for</span> <span class="n">selector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_main_selectors</span><span class="p">:</span>
             <span class="n">main</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">main</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">main</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">main</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stripped_strings</span>
 
         <span class="c1"># no main content found... try to remove header and footer</span>
@@ -199,41 +442,43 @@
         <span class="k">return</span> <span class="n">soup</span><span class="o">.</span><span class="n">stripped_strings</span></div></div>
 </pre></div>
 
+           </div>
+           
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

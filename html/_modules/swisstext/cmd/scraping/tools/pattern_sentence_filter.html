@@ -1,41 +1,269 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>swisstext.cmd.scraping.tools.pattern_sentence_filter &#8212; SwissText  documentation</title>
-    <link rel="stylesheet" href="../../../../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>swisstext.cmd.scraping.tools.pattern_sentence_filter &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
     
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
     
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../../../index.html" accesskey="U">Module code</a> &#187;</li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/index.html">API Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/cmd/package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html">swisstext.cmd.scraping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/cmd/searching/package.html">swisstext.cmd.searching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../api/alswiki/package.html">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/alswiki/package.html#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/alswiki/package.html#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../api/alswiki/package.html#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>swisstext.cmd.scraping.tools.pattern_sentence_filter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for swisstext.cmd.scraping.tools.pattern_sentence_filter</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -56,6 +284,13 @@
 <span class="sd">    * Rules are checked in the same order as they are defined, so it is advised to put the most generic / efficient</span>
 <span class="sd">      ones first.</span>
 
+<span class="sd">.. note::</span>
+
+<span class="sd">    This module uses the `regex library &lt;https://pypi.org/project/regex/&gt;`_ (version V0)</span>
+<span class="sd">    instead of the default re. You can thus freely use</span>
+<span class="sd">    `unicode regular expressions &lt;https://www.regular-expressions.info/unicode.html&gt;`_</span>
+<span class="sd">    in your rules.</span>
+
 <span class="sd">Rule syntax</span>
 <span class="sd">-----------</span>
 
@@ -70,30 +305,46 @@
 <span class="sd">      length:</span>
 <span class="sd">        max: 1000</span>
 
-<span class="sd">**Pattern-based rules (find)** a bit similarly, but instead of counting the number of characters, they count the number</span>
-<span class="sd">of occurrences of a *pattern* (i.e. the number of matches when calling ``re.findall(pattern, s)``).</span>
-<span class="sd">The rule itself can be based on the raw count or based on a ratio:</span>
+<span class="sd">**Pattern-based rules (find)** a bit similar, but instead of counting the number of characters, they count the number</span>
+<span class="sd">of occurrences of a *pattern* (i.e. the number of matches when calling ``regex.findall(pattern, s)``).</span>
+<span class="sd">The rule succeeds if ``min &lt;= nb_matches &lt;= max`` (inclusive !)</span>
 
-<span class="sd">* count: the rule succeeds if ``min &lt;= nb_matches &lt;= max``</span>
-<span class="sd">* ratio: the rule succeeds if ``min &lt;= len(s) / (len(s) - nb_matches + 1) &lt;= max```</span>
 
-<span class="sd">Here are examples:</span>
+<span class="sd">Examples:</span>
 
 <span class="sd">.. code-block:: yaml</span>
 
-<span class="sd">    - min_words:</span>
-<span class="sd">      descr: not enough words</span>
+<span class="sd">    - dashes:</span>
+<span class="sd">      descr: too many dashes</span>
 <span class="sd">      find:</span>
-<span class="sd">        pattern: &#39;\S+&#39;</span>
+<span class="sd">        pattern: &#39;[\u00AF\u2010\u2015\u2212\uFE58\uFF0D-]&#39;</span>
+<span class="sd">        count:</span>
+<span class="sd">          max: 2</span>
+
+<span class="sd">    - right_number_of_punctuation:</span>
+<span class="sd">      descr: punctuation is between 5 and 10</span>
+<span class="sd">      find:</span>
+<span class="sd">        pattern: &#39;\p{P}&#39;</span>
 <span class="sd">        count:</span>
 <span class="sd">          min: 5</span>
+<span class="sd">          max: 10</span>
 
-<span class="sd">    - letters_proportional:</span>
-<span class="sd">      descr: not enough letters proportion</span>
-<span class="sd">      find:</span>
-<span class="sd">        pattern: &#39;[\W|\d]&#39;</span>
+<span class="sd">**Comparison rules (compare)** they define both a numerator and a denominator pattern. The number of matches is</span>
+<span class="sd">found for each pattern, then a ratio is computed as:</span>
+<span class="sd">``ratio = count(num matches) / (count(denom matches)+1)``. The matches is once again based on ``regex.findall``.</span>
+<span class="sd">The rule succeeds if ``min &lt;= ratio &lt;= max`` (inclusive !).</span>
+
+<span class="sd">Example:</span>
+
+<span class="sd">.. code-block:: yaml</span>
+
+<span class="sd">    - too_many_commas:</span>
+<span class="sd">      descr: compare the number of commas against the number of words in the sentence</span>
+<span class="sd">      compare:</span>
+<span class="sd">        num: &#39;,&#39;</span>
+<span class="sd">        denom: &#39;\p{L}+&#39;</span>
 <span class="sd">        ratio:</span>
-<span class="sd">          max: 1.4</span>
+<span class="sd">          max: 0.25</span>
 
 <span class="sd">Finally, **an if condition** can be used. If conditions are checked first, and if the check fails, the rule is</span>
 <span class="sd">simply ignored:</span>
@@ -109,38 +360,62 @@
 <span class="sd">        pattern: &#39;(\.\s?){3}$&#39;</span>
 <span class="sd">        count:</span>
 <span class="sd">          max: 0</span>
+
+<span class="sd">Rules can additionnally specify ``examples`` and ``counterexamples`` that could be used to check quickly if they work</span>
+<span class="sd">(see the ``Rule.self_check`` method). For example:</span>
+
+<span class="sd">.. code-block:: yaml</span>
+
+<span class="sd">    - spelled_words:</span>
+<span class="sd">      descr: W O R D</span>
+<span class="sd">      find:</span>
+<span class="sd">        pattern: &#39; ([\p{L}] ){3,}&#39;</span>
+<span class="sd">        count:</span>
+<span class="sd">          max: 0</span>
+<span class="sd">      examples:</span>
+<span class="sd">        - &#39;you must B E L I E V E me.&#39;</span>
+<span class="sd">        - &#39;span spells S P A N.&#39;</span>
+<span class="sd">        - &#39;s p a n means span!!&#39;</span>
+<span class="sd">      counterexamples:</span>
+<span class="sd">        - &#39;this is O K :)&#39;</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">regex</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
 
-<span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISentenceFilter</span>
+<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.interfaces</span> <span class="k">import</span> <span class="n">ISentenceFilter</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="PatternSentenceFilter"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.pattern_sentence_filter.PatternSentenceFilter">[docs]</a><span class="k">class</span> <span class="nc">PatternSentenceFilter</span><span class="p">(</span><span class="n">ISentenceFilter</span><span class="p">):</span>
+<span class="c1"># TODO: a good way to detect encoding errors is to compare the result of</span>
+<span class="c1"># len(re.findall(&#39;[^\W\d]&#39;)) and len(regex.findall(&#39;\p{L}&#39;))</span>
+
+<div class="viewcode-block" id="PatternSentenceFilter"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.pattern_sentence_filter.PatternSentenceFilter">[docs]</a><span class="k">class</span> <span class="nc">PatternSentenceFilter</span><span class="p">(</span><span class="n">ISentenceFilter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    By default, rules are loaded from the default file ``pattern_sentence_filter.yaml`` in the current directory.</span>
 <span class="sd">    You can override this by passing a path to the constructor (``rulespath`` argument).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rulespath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternSentenceFilter.__init__"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.pattern_sentence_filter.PatternSentenceFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rulespath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load rules from the default YAML file or the path provided.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">rulespath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">rulespath</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;pattern_sentence_filter.yaml&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span> <span class="o">=</span> <span class="n">Rules</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">rulespath</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rulespath</span> <span class="o">=</span> <span class="n">rulespath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span> <span class="o">=</span> <span class="n">Rules</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">rulespath</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="PatternSentenceFilter.is_valid"><a class="viewcode-back" href="../../../../../swisstext.cmd.scraping.tools.html#swisstext.cmd.scraping.tools.pattern_sentence_filter.PatternSentenceFilter.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">):</span>
+<div class="viewcode-block" id="PatternSentenceFilter.is_valid"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.pattern_sentence_filter.PatternSentenceFilter.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns true only if all the rules were respected.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">is_invalid</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span></div></div>
 
 
 <span class="k">class</span> <span class="nc">MinMax</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Encapsulates and handles min/max bounds. A bound set to -1 will be ignored.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">min</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="nb">min</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="nb">max</span>
@@ -155,17 +430,32 @@
         <span class="k">return</span> <span class="s2">&quot;(min=</span><span class="si">{}</span><span class="s2">, max=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
 
 
+<span class="k">class</span> <span class="nc">Compare</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">denom</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">denom</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">denom</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="n">MinMax</span><span class="p">(</span><span class="o">**</span><span class="n">ratio</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">denom</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="o">.</span><span class="n">is_out_of_range</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Compare(num=</span><span class="si">%s</span><span class="s2">, denom=</span><span class="si">%s</span><span class="s2">, ratio=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">denom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+
+
 <span class="k">class</span> <span class="nc">Find</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Handles pattern-based rule logic (find entry in yaml)&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: missing find condition: count or ratio...&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{pattern}</span><span class="s2">: missing find condition: count or ratio...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">MinMax</span><span class="p">(</span><span class="o">**</span><span class="n">count</span><span class="p">)</span> <span class="k">if</span> <span class="n">count</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="n">MinMax</span><span class="p">(</span><span class="o">**</span><span class="n">ratio</span><span class="p">)</span> <span class="k">if</span> <span class="n">ratio</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">is_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="n">nb_matches</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">is_out_of_range</span><span class="p">(</span><span class="n">nb_matches</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -176,24 +466,33 @@
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;(pattern=</span><span class="si">%s</span><span class="s2">, count=</span><span class="si">%s</span><span class="s2">, ratio=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Find(pattern=</span><span class="si">%s</span><span class="s2">, count=</span><span class="si">%s</span><span class="s2">, ratio=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Rule</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Encapsulates one rule&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">descr</span><span class="p">,</span> <span class="n">find</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">descr</span><span class="p">,</span> <span class="n">find</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">counterexamples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">examples</span> <span class="o">=</span> <span class="n">examples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counterexamples</span> <span class="o">=</span> <span class="n">counterexamples</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iff</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># TODO: better way ?</span>
-        <span class="k">if</span> <span class="s1">&#39;if&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span> <span class="c1"># if is a reserved keyword in python</span>
+        <span class="k">if</span> <span class="s1">&#39;if&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>  <span class="c1"># if is a reserved keyword in python</span>
             <span class="k">if</span> <span class="s1">&#39;length&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;if&#39;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">iff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MinMax</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;if&#39;</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]))</span>
             <span class="k">if</span> <span class="s1">&#39;pattern&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;if&#39;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">iff</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Find</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;if&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">find</span> <span class="o">=</span> <span class="n">Find</span><span class="p">(</span><span class="o">**</span><span class="n">find</span><span class="p">)</span> <span class="k">if</span> <span class="n">find</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">MinMax</span><span class="p">(</span><span class="o">**</span><span class="n">length</span><span class="p">)</span> <span class="k">if</span> <span class="n">length</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logic</span> <span class="o">=</span> <span class="n">MinMax</span><span class="p">(</span><span class="o">**</span><span class="n">length</span><span class="p">)</span> <span class="k">if</span> <span class="n">length</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">find</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logic</span> <span class="o">=</span> <span class="n">Find</span><span class="p">(</span><span class="o">**</span><span class="n">find</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">compare</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logic</span> <span class="o">=</span> <span class="n">Compare</span><span class="p">(</span><span class="o">**</span><span class="n">compare</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Found a rule with no length, find or ratio defined.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">is_applicable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check for the if condition&quot;&quot;&quot;</span>
@@ -201,7 +500,7 @@
 
     <span class="k">def</span> <span class="nf">is_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_applicable</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">is_invalid</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="o">.</span><span class="n">is_invalid</span><span class="p">(</span><span class="n">s</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logic</span><span class="o">.</span><span class="n">is_invalid</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> FAILED on |</span><span class="si">%s</span><span class="s2">|&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -209,17 +508,31 @@
             <span class="c1"># logger.debug(&quot;SKIPPED   RULE %s: |%s|&quot; % (self.descr, s))</span>
             <span class="k">return</span> <span class="kc">False</span>
 
+    <span class="k">def</span> <span class="nf">self_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">passed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">examples</span><span class="p">,</span> <span class="n">expected</span> <span class="ow">in</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">examples</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counterexamples</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]:</span>
+            <span class="k">if</span> <span class="n">examples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39; Checking {len(examples)} {str(expected):5s} examples...&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">fails</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">examples</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_invalid</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fails</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed on:</span><span class="se">\n</span><span class="s1">   &#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">   &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fails</span><span class="p">))</span>
+                    <span class="n">passed</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OK.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">passed</span>
+
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;RULE </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: [if </span><span class="si">{}</span><span class="s2">] find=</span><span class="si">{}</span><span class="s2">, length=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: [if </span><span class="si">{}</span><span class="s2">] logic=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logic</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Rules</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class represents a list of rules.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rules_dict</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param rules_dict: a dictionary of rules (as loaded by yaml)</span>
@@ -230,7 +543,7 @@
         <span class="sd">&quot;&quot;&quot;Returns true if any rule that apply failed.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">is_invalid</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
-                <span class="c1"># print(&quot;RULE %d %s FAILED on |%s|&quot; % (idx, violation, sentence), file=sys.stderr)</span>
+                <span class="c1"># print(&quot;RULE %d %s FAILED on |%s|&quot; % (idx, r.descr, sentence))</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
@@ -238,43 +551,71 @@
         <span class="sd">&quot;&quot;&quot;Prints all the rules, useful for debug.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">FileType</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--out&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">FileType</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--rules-file&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(levelname)s</span><span class="s1">: </span><span class="si">%(msg)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">psf</span> <span class="o">=</span> <span class="n">PatternSentenceFilter</span><span class="p">(</span><span class="n">rulespath</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">rules_file</span><span class="p">)</span>
+
+    <span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span> <span class="k">if</span> <span class="n">psf</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="p">))</span>
 </pre></div>
 
+           </div>
+           
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>

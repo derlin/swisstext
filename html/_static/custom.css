@@ -1,4 +1,9 @@
-.todo-source {
-    text-align: left !important;
-    font-size: .9em;
+li.toctree-l5 {
+    padding-left: 45px;
+}
+
+/* allow word break */
+body, code {
+    word-break: break-word !important;
+    white-space: normal !important;
 }

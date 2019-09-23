@@ -1,0 +1,698 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pipeline implementation &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="swisstext.cmd.searching" href="../searching/package.html" />
+    <link rel="prev" title="Tool implementations" href="tool-implementations.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="package.html">swisstext.cmd.scraping</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../searching/package.html">swisstext.cmd.searching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../searching/package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../searching/package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../searching/package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../searching/package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../searching/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../searching/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../searching/tool-implementations.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../searching/tool-implementations.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../searching/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../searching/pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../searching/pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../searching/pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../alswiki/package.html">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../alswiki/package.html#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../alswiki/package.html#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../alswiki/package.html#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../alswiki/package.html#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">API Overview</a> &raquo;</li>
+        
+          <li><a href="package.html">swisstext.cmd.scraping</a> &raquo;</li>
+        
+      <li>Pipeline implementation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/derlin/swisstext/blob/master/docs/api/cmd/scraping/pipeline-implementation.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pipeline-implementation">
+<h1>Pipeline implementation<a class="headerlink" href="#pipeline-implementation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-swisstext.cmd.scraping.config">
+<span id="configuration"></span><h2>Configuration<a class="headerlink" href="#module-swisstext.cmd.scraping.config" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.config.Config">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.config.</code><code class="sig-name descname">Config</code><span class="sig-paren">(</span><em class="sig-param">config: Union[str</em>, <em class="sig-param">dict</em>, <em class="sig-param">io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../package.html#swisstext.cmd.base_config.BaseConfig" title="swisstext.cmd.base_config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.cmd.base_config.BaseConfig</span></code></a></p>
+<p>The default configuration file for the scraping pipeline is defined in <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>. This is the best way
+to understand what options are available.</p>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.config.Config.Options">
+<em class="property">class </em><code class="sig-name descname">Options</code><span class="sig-paren">(</span><em class="sig-param">num_workers=1</em>, <em class="sig-param">min_proba=0.85</em>, <em class="sig-param">crawl_depth=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Holds the general options for the scraping pipeline.</p>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.Options.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">num_workers=1</em>, <em class="sig-param">min_proba=0.85</em>, <em class="sig-param">crawl_depth=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/config.html#Config.Options.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.Options.crawl_depth">
+<code class="sig-name descname">crawl_depth</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.crawl_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum depth of the crawl, inclusive.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.Options.min_proba">
+<code class="sig-name descname">min_proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.min_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimum Swiss German probability to keep a sentence</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.config.Config.Options.num_workers">
+<code class="sig-name descname">num_workers</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options.num_workers" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum number of threads to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">config: Union[str</em>, <em class="sig-param">dict</em>, <em class="sig-param">io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a configuration.</p>
+<p>Subclasses should provide the path to a default configuration (YAML file) and optionally an
+option class to hold general options. The config is provided by the user and can be a file, a path
+to a file or even a dictionary (as long as it has the correct structure).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_config_path</strong> – the absolute path to a default configuration file.</p></li>
+<li><p><strong>option_class</strong> – the class to use for holding global options (a dictionary by default).</p></li>
+<li><p><strong>config</strong> – user configuration that overrides the default options. config can be either a path or a
+file object of a YAML configuration, or a dictionary</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.7)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.create_pipeline">
+<code class="sig-name descname">create_pipeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.pipeline.Pipeline<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/config.html#Config.create_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.create_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate a pipeline from the YAML configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.interfaces_package">
+<em class="property">property </em><code class="sig-name descname">interfaces_package</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.interfaces_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return the complete package where the interfaces are defined, if any.
+In case this is defined and a tool is missing from the list, we will try to instantiate
+the interface instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.tool_entry_name">
+<em class="property">property </em><code class="sig-name descname">tool_entry_name</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return the name of the tool_entries option, i.e. the YAML path to the dictionary of
+[interface name, canonical class to instantiate].</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.config.Config.valid_tool_entries">
+<em class="property">property </em><code class="sig-name descname">valid_tool_entries</code><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.valid_tool_entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should return the list of valid tool entries under the <a class="reference internal" href="#swisstext.cmd.scraping.config.Config.tool_entry_name" title="swisstext.cmd.scraping.config.Config.tool_entry_name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tool_entry_name</span></code></a>.
+Note that the order of tools in the list defines the order of tools instances returned by
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">instantiate_tools()</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-swisstext.cmd.scraping.data">
+<span id="data-structures"></span><h2>Data structures<a class="headerlink" href="#module-swisstext.cmd.scraping.data" title="Permalink to this headline">¶</a></h2>
+<p>This module defines the generic data structures used across the module / between the different tools.
+They have been thought to be decoupled from MongoDB for better flexibility/adaptability.</p>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.data.Page">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.data.</code><code class="sig-name descname">Page</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">score=None</em>, <em class="sig-param">parent_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Information about a page.
+Some attributes should be defined upon creation (see <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="swisstext.cmd.scraping.interfaces.ISaver.get_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISaver.get_page()</span></code></a>),
+will other will be added/used incrementally by the different tools of the pipeline.</p>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.data.Page.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">score=None</em>, <em class="sig-param">parent_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Page.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.blacklisted">
+<code class="sig-name descname">blacklisted</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.blacklisted" title="Permalink to this definition">¶</a></dt>
+<dd><p>is the URL blacklisted ?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.crawl_results">
+<code class="sig-name descname">crawl_results</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.crawl_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>results of the crawl (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ICrawler</span></code>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.data.Page.is_new">
+<code class="sig-name descname">is_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Page.is_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.is_new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the page is new or not, based on the <code class="xref py py-attr docutils literal notranslate"><span class="pre">delta_date</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.new_sg">
+<code class="sig-name descname">new_sg</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.new_sg" title="Permalink to this definition">¶</a></dt>
+<dd><p>new sentences found</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.parent_url">
+<code class="sig-name descname">parent_url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.parent_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>the parent URL, if the crawl depth is &gt; 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.score">
+<code class="sig-name descname">score</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>page score</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.sentence_count">
+<code class="sig-name descname">sentence_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sentence_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>total number of sentences on the page</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.sg_count">
+<code class="sig-name descname">sg_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.sg_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of Swiss German sentences on the page, wether they are new or not</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.text">
+<code class="sig-name descname">text</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>normalized text of the page</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Page.url">
+<code class="sig-name descname">url</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Page.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>the URL of the page</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.scraping.data.PageScore">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.data.</code><code class="sig-name descname">PageScore</code><span class="sig-paren">(</span><em class="sig-param">count=0</em>, <em class="sig-param">delta_count=0</em>, <em class="sig-param">delta_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#PageScore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Scoring information for a page used, among other things, to decide if a URL should be crawled or not.</p>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.data.PageScore.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">count=0</em>, <em class="sig-param">delta_count=0</em>, <em class="sig-param">delta_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#PageScore.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.PageScore.count">
+<code class="sig-name descname">count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>total number of new sentences found on this page (for all the visits)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.PageScore.delta_count">
+<code class="sig-name descname">delta_count</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of new sentences found on this page in the last visit</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.PageScore.delta_date">
+<code class="sig-name descname">delta_date</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore.delta_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>date of the last visit (in UTC) or None if never visited</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.scraping.data.Sentence">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.data.</code><code class="sig-name descname">Sentence</code><span class="sig-paren">(</span><em class="sig-param">text: str</em>, <em class="sig-param">proba: float</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Sentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Information about a sentence.</p>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.data.Sentence.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">text: str</em>, <em class="sig-param">proba: float</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Sentence.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Sentence.proba">
+<code class="sig-name descname">proba</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>the Swiss German probability</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.data.Sentence.text">
+<code class="sig-name descname">text</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>the exact text</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-swisstext.cmd.scraping.page_queue">
+<span id="queue"></span><h2>Queue<a class="headerlink" href="#module-swisstext.cmd.scraping.page_queue" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.page_queue.PageQueue">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.page_queue.</code><code class="sig-name descname">PageQueue</code><span class="sig-paren">(</span><em class="sig-param">maxsize=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/page_queue.html#PageQueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.page_queue.PageQueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">queue.Queue</span></code></a></p>
+<p>A <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that ensures enqueued pages are unique and not clearly pointing to images or PDFs
+(i.e. ending with .jpg, .jpeg, .png or .pdf).</p>
+<p>Elements in the queue should be <strong>tuples</strong>, with the first element a <code class="xref py py-class docutils literal notranslate"><span class="pre">Page</span></code> and the second the
+crawl depth (as int)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-swisstext.cmd.scraping.pipeline">
+<span id="pipeline"></span><h2>Pipeline<a class="headerlink" href="#module-swisstext.cmd.scraping.pipeline" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the core of the scraping system.</p>
+<p>In order to be fully customizable, it uses the concept of interfaces heavily: most of the decisions and steps
+are delegated to instances of classes defined in <a class="reference internal" href="tool-interfaces.html#module-swisstext.cmd.scraping.interfaces" title="swisstext.cmd.scraping.interfaces"><code class="xref py py-mod docutils literal notranslate"><span class="pre">interfaces</span></code></a>.</p>
+<p>Here is an example usage.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">PipelineWorker</span>
+<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.data</span> <span class="kn">import</span> <span class="n">Page</span>
+<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.page_queue</span> <span class="kn">import</span> <span class="n">PageQueue</span>
+<span class="kn">from</span> <span class="nn">swisstext.cmd.scraping.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="c1"># print some information to the console</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;swisstext&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">queue</span><span class="p">:</span> <span class="n">PageQueue</span> <span class="o">=</span> <span class="n">PageQueue</span><span class="p">()</span>
+<span class="n">new_sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># load the config and create the default pipeline</span>
+<span class="c1"># WARNING: the default config will try to connect to MongoDB on localhost:27017</span>
+<span class="c1"># if you don&#39;t want to use Mongo, create a config file and use the ConsoleSaver instead</span>
+<span class="c1"># or use the hack: pipeline.saver = ConsoleSaver()</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="c1"># set the config path if you have one</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">create_pipeline</span><span class="p">()</span>
+
+<span class="c1"># add one page to the queue</span>
+<span class="n">start_url</span> <span class="o">=</span> <span class="s1">&#39;http://www.hunold.ch/zw/goeteborg.html&#39;</span>
+<span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">Page</span><span class="p">(</span><span class="n">start_url</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># add the tuple (url, depth) with a depth of 1</span>
+
+<span class="c1"># launch one worker</span>
+<span class="n">worker</span> <span class="o">=</span> <span class="n">PipelineWorker</span><span class="p">()</span>
+<span class="n">worker</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">new_sentences</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">crawl_depth</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="swisstext.cmd.scraping.pipeline.Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.pipeline.</code><code class="sig-name descname">Pipeline</code><span class="sig-paren">(</span><em class="sig-param">crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em class="sig-param">normalizer: swisstext.cmd.scraping.interfaces.INormalizer</em>, <em class="sig-param">splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em class="sig-param">filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em class="sig-param">detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em class="sig-param">seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em class="sig-param">decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em class="sig-param">saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em class="sig-param">min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#Pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Holds instances of all needed interfaces and variables.</p>
+<p>Note that pipelines are meant to be instantiated by a <a class="reference internal" href="#swisstext.cmd.scraping.config.Config" title="swisstext.cmd.scraping.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> object,
+not manually.</p>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.pipeline.Pipeline.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em class="sig-param">normalizer: swisstext.cmd.scraping.interfaces.INormalizer</em>, <em class="sig-param">splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em class="sig-param">filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em class="sig-param">detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em class="sig-param">seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em class="sig-param">decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em class="sig-param">saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em class="sig-param">min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#Pipeline.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.pipeline.</code><code class="sig-name descname">PipelineWorker</code><span class="sig-paren">(</span><em class="sig-param">id=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#PipelineWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Pipeline workers actually do the magic and can be run in parallel.</p>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">id=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#PipelineWorker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.id">
+<code class="sig-name descname">id</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>an identifier used in log messages, especially useful if multiple threads are used.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received">
+<code class="sig-name descname">kill_received</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the worker is launched in a thread, you can use this flag to make it exit prematurely.
+Workers will always finish processing the current page before exiting, so that we can ensure
+coherence in the persistence layer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">queue: queue.Queue, p: swisstext.cmd.scraping.pipeline.Pipeline, new_sentences: List[str], max_depth=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#PipelineWorker.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the work ! All the magic is in here :)</p>
+<p>For each page pulled from the queue, the worker will execute all the steps of the scraping pipeline:</p>
+<ul class="simple">
+<li><p>get text and links,</p></li>
+<li><p>split and filter sentences,</p></li>
+<li><p>keep sentences with Swiss German,</p></li>
+<li><p>persist the results (url + sentences), if any</p></li>
+<li><p>add new tasks to the queue (if the page contains links to interesting URLs)</p></li>
+</ul>
+<p>New sentences are added to the new_sentences list, so that the caller can easily know how fruitful the
+scraping was and optionaly use the new sentences to generate seeds.</p>
+<p>This method will stop:</p>
+<ul class="simple">
+<li><p>when the queue is empty or</p></li>
+<li><p>if the <a class="reference internal" href="#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received" title="swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received"><code class="xref py py-attr docutils literal notranslate"><span class="pre">kill_received</span></code></a> is set to true. In this case, it finishes processing the current task and exit</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is your responsibility to ensure that the URLs in the queue are not blacklisted.</p>
+</div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>This piece of code (and the commandline) has many flaws and should clearly be enhanced… For example:</p>
+<p><strong>Multithreading</strong>: currently, the worker stops when the queue is empty. This also means that if
+you launch the system with only 3 base urls but 5 workers, 2 workers will exit immediately instead
+of waiting for new tasks to be added to the queue.</p>
+<p>A better way would be to keep track of active workers and stop only when all workers are idle, or
+when all workers reached a task with a depth &gt; max depth…</p>
+<p><strong>Comportement on errors</strong>: in case fetching the URL triggers an error, we currently just log the thing.
+Should we also remove/blacklist the URL ? Should we allow the URL to fail X times before removal ?</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> – the task queue</p></li>
+<li><p><strong>p</strong> – the pipeline to use</p></li>
+<li><p><strong>new_sentences</strong> – all new sentences discovered will be added to this list</p></li>
+<li><p><strong>max_depth</strong> – when do we stop (inclusive)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../searching/package.html" class="btn btn-neutral float-right" title="swisstext.cmd.searching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tool-implementations.html" class="btn btn-neutral float-left" title="Tool implementations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,41 +1,269 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>swisstext.cmd.link_utils &#8212; SwissText  documentation</title>
-    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>swisstext.cmd.link_utils &mdash; SwissText  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
     
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
     
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SwissText
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html#installation-on-a-linux-server">Installation on a Linux server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/installation.html#installation-on-macos">Installation on MacOS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-mongodb">Running MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-the-frontend">Running the frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/usage.html#running-the-backend">Running the backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/cmd/package.html">swisstext.cmd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/package.html#module-swisstext.cmd.base_config">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/package.html#module-swisstext.cmd.link_utils">Link utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/package.html#dealing-with-links-in-a-page">Dealing with links in a page</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/package.html#dealing-with-search-results">Dealing with search results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/cmd/scraping/package.html">swisstext.cmd.scraping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/scraping/package.html#st-scrape">st_scrape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/package.html#st-scrape-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/package.html#st-scrape-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/package.html#st-scrape-from-mongo">from_mongo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/package.html#st-scrape-gen-seeds">gen_seeds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/scraping/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_decider">Deciders</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.basic_seed_creator">Seed creators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.bs_crawler">Crawlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/scraping/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.page_queue">Queue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/scraping/pipeline-implementation.html#module-swisstext.cmd.scraping.pipeline">Pipeline</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/cmd/searching/package.html">swisstext.cmd.searching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/searching/package.html#st-search">st_search</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/package.html#st-search-dump-config">dump_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/package.html#st-search-from-file">from_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/package.html#st-search-from-mongo">from_mongo</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/searching/tool-interfaces.html">Tool interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/searching/tool-implementations.html">Tool implementations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.console_saver">Savers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/tool-implementations.html#module-swisstext.cmd.searching.tools.google_search">Searchers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/cmd/searching/pipeline-implementation.html">Pipeline implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.config">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.data">Data structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/cmd/searching/pipeline-implementation.html#module-swisstext.cmd.searching.pipeline">Search engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/mongo/package.html">swisstext.mongo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mongo/package.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mongo/package.html#collections">Collections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mongo/package.html#about-the-code">About the code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mongo/definitions.html">Abstract Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.generic">Common structures and embedded documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.seeds">Seed collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.sentences">Sentences collection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.urls">URLs and Blacklist collections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/mongo/definitions.html#module-swisstext.mongo.abstract.users">Users collection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mongo/definitions.html#module-swisstext.mongo.models">MongoEngine-ready classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/alswiki/package.html">swisstext.alswiki</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/alswiki/package.html#st-alswiki">st_alswiki</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/alswiki/package.html#st-alswiki-download">download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/alswiki/package.html#st-alswiki-parse">parse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/alswiki/package.html#st-alswiki-process">process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/alswiki/package.html#st-alswiki-txt">txt</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/alswiki/package.html#processing-alswiki-dumps">Processing Alswiki dumps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/alswiki/package.html#processing-text-files">Processing text files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../todos.html">TODOs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ideas.html">Ideas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ideas.html#sentence-filtering">Sentence Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ideas.html#url-filtering">URL Filtering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../aboutthedoc.html">About this documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../aboutthedoc.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aboutthedoc.html#deploying-on-github-pages">Deploying on github-pages</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SwissText</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>swisstext.cmd.link_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for swisstext.cmd.link_utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -60,11 +288,11 @@
 <span class="sd">---------------------------</span>
 
 <span class="sd">When querying Google or another search engine for results, returned URLs might point to PDFs, videos or other</span>
-<span class="sd">uninteresting websites. The :py:meth:`is_url_interesting` method is here to help filtering out those &quot;bad&quot; results.</span>
+<span class="sd">uninteresting websites. The :py:meth:`fix_url` method is here to help normalize URLs and filtering out those &quot;bad&quot; results.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Generator</span>
-<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urljoin</span><span class="p">,</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">ParseResult</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">up</span>
 
 <span class="c1">#: Quick lookup dictionary to exclude URLs with an extensions typical of non text resources</span>
 <span class="n">EXCLUDED_EXTENSIONS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span>
@@ -105,30 +333,27 @@
 
 <span class="c1">#: Quick lookup dictionary to exclude any URL from wikipedia, except the ones from the given subdomains.</span>
 <span class="c1">#: See `&lt;https://en.wikipedia.org/wiki/List_of_Wikipedias&gt;`_ for a full list of wikipedia subdomains.</span>
-<span class="n">INCLUDED_WIKI_DOMAINS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="c1">#dict((s, True) for s in [&quot;als&quot;])</span>
+<span class="n">INCLUDED_WIKI_DOMAINS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># dict((s, True) for s in [&quot;als&quot;])</span>
 
 
-<div class="viewcode-block" id="filter_links"><a class="viewcode-back" href="../../../swisstext.cmd.html#swisstext.cmd.link_utils.filter_links">[docs]</a><span class="k">def</span> <span class="nf">filter_links</span><span class="p">(</span><span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="viewcode-block" id="filter_links"><a class="viewcode-back" href="../../../api/cmd/package.html#swisstext.cmd.link_utils.filter_links">[docs]</a><span class="k">def</span> <span class="nf">filter_links</span><span class="p">(</span><span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Resolve, clean and filter links found in a page. By links we mean here any value of `href` attribute found</span>
 <span class="sd">    in a page. This is especially useful for the</span>
 <span class="sd">    :py:class:`swisstext.cmd.scraping.interface.ICrawler` to constitute and populate the crawl results&#39;s</span>
 <span class="sd">    :py:attr:`~swisstext.cmd.scraping.interface.ICrawler.CrawlResults.links` attribute.</span>
 
-<span class="sd">    In addition to transforming relative to absolute URLs, this method will also exclude:</span>
+<span class="sd">    In addition to what :py:meth:`fix_url` does, this method will also exclude:</span>
 
 <span class="sd">    * the base URL</span>
-<span class="sd">    * non HTTP links (`mailto:`, `javascript:`, anchors, ...)</span>
 <span class="sd">    * Duplicates</span>
-<span class="sd">    * URLs pointing to non text resources (see :py:const:`EXCLUDED_EXTENSIONS`)</span>
-<span class="sd">    * URLs with a Country Code TLD unlikely to contain Swiss German (see :py:const:`EXCLUDED_EXTENSIONS`)</span>
 
 <span class="sd">    For two links to be considered duplicates, they need to match exactly. Exceptions are anchors (stripped</span>
-<span class="sd">    automatically from the URL) and trailing slashes (in this case, the first encountered link will be returned).</span>
+<span class="sd">    automatically) and trailing slashes (in this case, the first encountered link will be returned).</span>
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        from swisstext.cmd.scraping.link_utils import filter_links</span>
+<span class="sd">        from swisstext.cmd.link_utils import filter_links</span>
 <span class="sd">        base_url = &#39;http://example.ch/page/1&#39;</span>
 <span class="sd">        hrefs = [</span>
 <span class="sd">            &#39;#&#39;,</span>
@@ -141,7 +366,8 @@
 <span class="sd">            &#39;https://ru.wikipedia.org/wiki&#39;,</span>
 <span class="sd">            &#39;https://als.wikipedia.org&#39;,</span>
 <span class="sd">            &#39;http://other.resource.test&#39;,</span>
-<span class="sd">            &#39;javascript:return false&#39;</span>
+<span class="sd">            &#39;javascript:return false&#39;,</span>
+<span class="sd">            &#39;?p=66383&amp;sid=aaece0dfd1e47e08505dcb5fae2d3f03&#39;</span>
 <span class="sd">        ]</span>
 <span class="sd">        links = list(filter_links(base_url, hrefs))</span>
 
@@ -151,6 +377,7 @@
 <span class="sd">        #  http://example.ch/page/1?page=2</span>
 <span class="sd">        #  https://als.wikipedia.org</span>
 <span class="sd">        #  http://other.resource.test</span>
+<span class="sd">        #  http://example.ch/page/1?p=66383</span>
 
 <span class="sd">    :param base_url: the URL of the current page (not returned and used to resolve relative links).</span>
 <span class="sd">    :param links: a list of links found, relative or absolute</span>
@@ -159,33 +386,67 @@
     <span class="n">seen</span> <span class="o">=</span> <span class="p">{</span><span class="n">base_url</span><span class="p">,</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">}</span>  <span class="c1"># keep a set of seen urls</span>
 
     <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
-        <span class="n">abs_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
-        <span class="n">parsed</span><span class="p">:</span> <span class="n">ParseResult</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">abs_url</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">_should_url_be_kept</span><span class="p">(</span><span class="n">parsed</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">fragment</span><span class="p">:</span>
-                <span class="n">abs_url</span> <span class="o">=</span> <span class="n">abs_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;#</span><span class="si">{parsed.fragment}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">abs_url</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">abs_url</span>
-                <span class="c1"># add it as is</span>
-                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">abs_url</span><span class="p">)</span>
-                <span class="c1"># avoid duplicate links with just an ending slash that differ</span>
-                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">abs_url</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">abs_url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">abs_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">pass</span></div>
+        <span class="n">fixed_url</span><span class="p">,</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">fix_url</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">base_url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ok</span> <span class="ow">and</span> <span class="n">fixed_url</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">fixed_url</span>
+            <span class="c1"># add it as is</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fixed_url</span><span class="p">)</span>
+            <span class="c1"># avoid duplicate links with just an ending slash that differ</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fixed_url</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">fixed_url</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">fixed_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_url_interesting"><a class="viewcode-back" href="../../../swisstext.cmd.html#swisstext.cmd.link_utils.is_url_interesting">[docs]</a><span class="k">def</span> <span class="nf">is_url_interesting</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="strip_sid"><a class="viewcode-back" href="../../../api/cmd/package.html#swisstext.cmd.link_utils.strip_sid">[docs]</a><span class="k">def</span> <span class="nf">strip_sid</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Test is an absolute URL is interesting to crawl.</span>
+<span class="sd">    Remove the SID parameter from an url. SIDs are mostly used</span>
+<span class="sd">    by magento to track the users and won&#39;t change the page rendered. See also</span>
+<span class="sd">    `why-do-my-magento-urls-have-a-query-sid &lt;https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/&gt;`_.</span>
 
-<span class="sd">    The decision will be based on criteria such as the extension (exclude PDFs, images, etc.),</span>
-<span class="sd">    the TLD (exclude some country-specific TLDs) or the domain (exclude some wikipedia links)...</span>
+<span class="sd">    :param url: the url</span>
+<span class="sd">    :return: the url without sid</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_should_url_be_kept</span><span class="p">(</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">up</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">_strip_sid</span><span class="p">(</span><span class="n">up</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)))</span></div>
 
 
-<span class="k">def</span> <span class="nf">_should_url_be_kept</span><span class="p">(</span><span class="n">parsed</span><span class="p">:</span> <span class="n">ParseResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="fix_url"><a class="viewcode-back" href="../../../api/cmd/package.html#swisstext.cmd.link_utils.fix_url">[docs]</a><span class="k">def</span> <span class="nf">fix_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fix/normalize and URL and decide if it is interesting to crawl.</span>
+
+<span class="sd">    The URL is potentially transformed by:</span>
+
+<span class="sd">        * resolving relative to absolute URLs (only if base_url is set)</span>
+<span class="sd">        * removing potential sid query parameters (Magento)</span>
+<span class="sd">        * removing anchors</span>
+
+<span class="sd">    The &quot;is interesting&quot; decision will exclude:</span>
+
+<span class="sd">        * relative URLs (so ensure to provide a base_url if the url is relative)</span>
+<span class="sd">        * non HTTP links (`mailto:`, `javascript:`, anchors, ...)</span>
+<span class="sd">        * URLs pointing to non text resources (see :py:const:`EXCLUDED_EXTENSIONS`)</span>
+<span class="sd">        * URLs with a Country Code TLD unlikely to contain Swiss German (see :py:const:`EXCLUDED_EXTENSIONS`)</span>
+
+<span class="sd">    :param url: the url</span>
+<span class="sd">    :param base_url: the base url, required if the url is a relative one</span>
+<span class="sd">    :return: a tuple (fixed_url, is_interesting)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">base_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># make relative into absolute links</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="n">parsed</span><span class="p">:</span> <span class="n">up</span><span class="o">.</span><span class="n">ParseResult</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">_strip_sid</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">fragment</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">fragment</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">up</span><span class="o">.</span><span class="n">urlunparse</span><span class="p">(</span><span class="n">parsed</span><span class="p">),</span> <span class="n">_should_url_be_kept</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_strip_sid</span><span class="p">(</span><span class="n">parsed</span><span class="p">:</span> <span class="n">up</span><span class="o">.</span><span class="n">ParseResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">up</span><span class="o">.</span><span class="n">ParseResult</span><span class="p">:</span>
+    <span class="n">qs</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">parse_qsl</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">new_qs</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;sid&#39;</span><span class="p">,</span> <span class="n">qs</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">parsed</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">new_qs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_should_url_be_kept</span><span class="p">(</span><span class="n">parsed</span><span class="p">:</span> <span class="n">up</span><span class="o">.</span><span class="n">ParseResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">):</span>
         <span class="c1"># not a HTTP or HTTPS URL</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -201,41 +462,43 @@
     <span class="k">return</span> <span class="kc">True</span>
 </pre></div>
 
+           </div>
+           
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Lucy Linder
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">SwissText  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Lucy Linder.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
 </html>
