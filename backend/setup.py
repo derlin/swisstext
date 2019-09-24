@@ -24,7 +24,7 @@ setuptools.setup(
     },
     classifiers=(
         "Programming Language :: Python :: 3",
-        "License :: Apache 2.0 License",
+        "License :: Creative Commons (CC BY-NC 4.0)",
         "Operating System :: OS Independent",
     ),
     install_requires=[
