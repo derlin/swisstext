@@ -2,6 +2,21 @@
     table.table-urls, .table-urls td:last-child {
         width: 100%;
     }
+
+    table.table-urls .not-visited {
+        color: #888;
+        opacity: 0.8;
+    }
+
+    table.table-urls tr.not-visited:hover {
+        opacity: 1;
+    }
+
+    tr td:nth-child(4) {
+        font-size: .7em;
+    }
+
+
 </style>
 
 <table class="table table-sm table-hover table-urls">
@@ -11,14 +26,20 @@
                         <span data-toggle="tooltip" data-placement="bottom"
                               title="Number of sentences found on this page.">#s</span>
         </th>
+        <th class="text-right ml-1 mr-1" title="Number of crawls">
+                        <span data-toggle="tooltip" data-placement="bottom"
+                              title="Number of times this page was crawled.">#v</span>
+        </th>
         <th>url</th>
     </tr>
     {% from 'urls/_macros.html' import external_link, url_details_icon %}
     {% for url in urls.items %}
-        <tr>
+
+        <tr {% if not url.crawl_history | length %}class="not-visited"{% endif %}>
             <td>{{ url_details_icon(url.url, url.id) }}</td>
             <td>{{ external_link(url.url, as_icon=True) }}</td>
             <td class="text-right ml-1 mr-1">{{ url.count }}</td>
+            <td class="text-right ml-1 mr-1">{{ url.crawl_history | length }}</td>
             <td><code>{{ url.url }}</code></td>
         </tr>
     {% endfor %}

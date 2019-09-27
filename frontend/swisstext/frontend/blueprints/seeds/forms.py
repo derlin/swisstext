@@ -25,6 +25,14 @@ def get_default_seeds_pipeline() -> List:
                 'date_added': '$date_added',
                 'usages': {"$size": {"$ifNull": ["$search_history", []]}},
                 'urls': {'$size': '$use'},
+                'urls_sg': {
+                    '$size': {
+                        '$filter': {
+                            'input': "$use",
+                            'as': "e",
+                            'cond': {'$ne': ["$$e.crawl_history", []]}}
+                    }
+                },
                 'sentences': {'$sum': '$use.count'}
             }}
     ]

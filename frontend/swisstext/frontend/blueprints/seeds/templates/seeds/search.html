@@ -1,9 +1,19 @@
 {% extends '_layout.html' %}
 {% set title = 'Seeds' %}
 
+{% block header_include %}
+    <style type="text/css">
+        th, td {
+            text-align: right;
+        }
+    td:nth-child(2) {
+        width: 99%;
+    }
+    </style>
+{% endblock %}
+
 {% block body %}
-
-
+    
     <p class="clearfix">
         <a class="link link-primary float-right" href="{{ url_for('.add') }}">Add Seed</a>
     </p>
@@ -33,30 +43,32 @@
                 {{ render_navigation(seeds, **request.args) }}
             {% endif %}
 
-            <table class="table table-sm table-hover">
+            <table class="table table-sm table-hover table-responsive">
                 <tr>
-                    <th></th>
-                    <th></th>
-                    <th>Nb.&nbsp;of&nbsp;uses</th>
-                    <th colspan="2" class="text-center" style="min-width:86px"
-                        data-toggle="tooltip" data-placement="top"
-                        title="relevant URLs (after crawl) / URLs found using the seed">
-                        Quality <span class="oi oi-info text-info"></span>
-                    </th>
-                    <th class="text-right"
-                        data-toggle="tooltip" data-placement="top"
-                        title="Sentences found from the URLs (depth=1)">
-                        #s
-                    </th>
+                    <th>{# eye #}</th>
+                    <th>{# text+src #}</th>
+                    <th>Use</th>
+                    <th data-toggle="tooltip" data-placement="top"
+                        title="Number of URLs retrieved during searches">&nbsp;#U</th>
+                    <th data-toggle="tooltip" data-placement="top"
+                        title="Number of URLs visited and kept (relevant)">&nbsp;#R</th>
+                    <th data-toggle="tooltip" data-placement="top"
+                        title="Number of URLs blacklisted">#B</th>
+                    <th data-toggle="tooltip" data-placement="top"
+                        title="Number of URLs not visited yet">#NV</th>
+                    <th data-toggle="tooltip" data-placement="top" colspan="2" class="text-center"
+                        title="Ratio of visited URLs containing GSW">Quality</th>
+                    <th data-toggle="tooltip" data-placement="top"
+                        title="Sentences found from the URLs (depth=1)">#S</th>
                 </tr>
                 {% for seed in seeds.items %}
                     <tr>
-                        <td>
+                        <td class="text-left" style="width: 40px">
                             <a class="btn btn-link" href="{{ url_for('.details', id=seed['id']) }}">
                                 <span class="oi oi-eye"></span>
                             </a>
                         </td>
-                        <td style="width: 100%">
+                        <td  class="text-left">
                             {{ seed['id'] }}
                             <span class="badge text-muted">
                             {{ seed['source']['type'] }}
@@ -65,28 +77,36 @@
                                 <span class="badge badge-danger">Deleted</span>
                             {% endif %}
                         </td>
-                        <td class="text-center">
-                            {{ seed['usages'] }}
-                        </td>
+                        <td>{{ seed['usages'] }}</td>
+
                         {% if seed['usages'] > 0 %}
-                            {% set ratio =  seed['urls'] / seed['count'] if seed['count'] else 0 %}
+                            {% set urls_not_visited = seed['urls'] - seed['urls_sg'] %}
+                            {% set urls_visited = seed['count'] - urls_not_visited %}
+                            {% set urls_blacklisted = urls_visited - seed['urls_sg'] %}
+                            {% set ratio =  seed['urls_sg'] / urls_visited if urls_visited else 0 %}
                             {% set s_ratio =  seed['sentences'] / (1+(10 * seed['count'])) %}
-                            <td class="text-right">
-                                <span>{{ seed['urls'] }}/{{ seed['count'] }}</span>
-                            </td>
-                            <td class="text-right">
+
+                            <td>{{ seed['count'] }}</td>
+                            <td>{{ seed['urls_sg'] }}</td>
+                            <td>{{ urls_blacklisted }}</td>
+                            <td>{{ urls_not_visited }}</td>
+                            <td>{{ seed['urls_sg'] }}/{{ urls_visited }}</td>
+                            <td>
                                 <span class="badge {% if ratio < 0.2 %}text-light{% endif %}"
                                       style="background: {{ ratio|toColor }}; font-size: 1em">
                                     {{ "%.2f" % ratio }}
                                 </span>
                             </td>
-                            <td class="text-right">
+                            <td>
                                 <span class="badge {% if s_ratio < 0.2 %}text-light{% endif %}"
                                       style="background: {{ s_ratio|toColor }}; font-size: 1em">
                                     {{ seed['sentences'] }}
                                 </span>
                             </td>
                         {% else %}
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
