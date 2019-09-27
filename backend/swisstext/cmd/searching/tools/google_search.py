@@ -80,26 +80,7 @@ logger = logging.getLogger(__name__)
 _links_fields = "items(link),queries(nextPage)" # we only need the links and the current page info in the results
 
 
-class GoogleGeneratorFactory(ISearcher):
-    """
-    This factory creates a new :py:class:`GoogleGenerator` for each query.
-    """
-
-    def __init__(self, apikey: str, context='015058622601103575455:cpfpm27mio8', **kwargs):
-        self.key = apikey
-        """The Google Custom Search API key"""
-        self.ctx = context
-        """
-        The context to use (see the official API reference for more info).
-        The default context is usually fine: it is parameterized to search all the web.
-        """
-
-    def search(self, query) -> Iterable[str]:
-        """Search for a query using the Google Custom Search API."""
-        return GoogleGenerator(query, self.key, self.ctx)
-
-
-class GoogleGenerator():
+class GoogleGenerator(Iterable[str]):
     """
     A new Google Generator should be created for each query. It allows for lazy loading of
     results, thus sparing API quotas.
@@ -173,3 +154,21 @@ class GoogleGenerator():
 
     def _extract_results(self, json_response: Dict) -> List:
         return [o['link'] for o in json_response['items']]
+
+class GoogleGeneratorFactory(ISearcher):
+    """
+    This factory creates a new :py:class:`GoogleGenerator` for each query.
+    """
+
+    def __init__(self, apikey: str, context='015058622601103575455:cpfpm27mio8', **kwargs):
+        self.key = apikey
+        """The Google Custom Search API key"""
+        self.ctx = context
+        """
+        The context to use (see the official API reference for more info).
+        The default context is usually fine: it is parameterized to search all the web.
+        """
+
+    def search(self, query) -> GoogleGenerator:
+        """Search for a query using the Google Custom Search API."""
+        return GoogleGenerator(query, self.key, self.ctx)

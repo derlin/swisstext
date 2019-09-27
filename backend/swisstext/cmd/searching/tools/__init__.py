@@ -15,3 +15,5 @@ from .start_page import StartPageGeneratorFactory
 
 from .console_saver import ConsoleSaver
 from .mongo_saver import MongoSaver
+
+from .builders import QuoteQueryBuilder, QuoteWordsQueryBuilder

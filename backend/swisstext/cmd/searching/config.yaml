@@ -1,9 +1,11 @@
 options:
   max_results: 10
+  max_fetches: -1
 
 search_engine:
   _base_package: swisstext.cmd.searching.tools
 
+  query_builder: .QuoteWordsQueryBuilder
   searcher: .StartPageGeneratorFactory
   saver: .MongoSaver
 

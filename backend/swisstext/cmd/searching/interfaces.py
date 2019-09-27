@@ -32,6 +32,17 @@ class ISearcher(ABC):
         return list(itertools.islice(self.search(query), max_results))
 
 
+class IQueryBuilder:
+    """
+    Do some preprocessing on the query before submitting it to a search engine.
+    The builder can be used to prepare a query from a seed, such as quoting words, using "AND" keywords, etc.
+    """
+
+    def prepare(self, query: str, **kwargs):
+        """By default, does nothing."""
+        return query
+
+
 class ISaver(ABC):
     """
     [ABSTRACT] The saver is responsible for persisting everything somewhere, such as a database, a file or the console.
