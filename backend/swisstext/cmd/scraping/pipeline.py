@@ -204,7 +204,6 @@ class PipelineWorker():
                             logger.info(f'W[{self.id}] {page.url}: added {added_children} child URLs')
 
                 except Exception as e:
-                    # TODO blacklist url ?
                     if isinstance(e, ICrawler.CrawlError):
                         p.saver.blacklist_url(page.url, error_message=e.name)
                         logger.info(f'W[{self.id}]: exception -- {e}. {page.url} blacklisted.')

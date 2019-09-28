@@ -28,6 +28,14 @@ class Config(BaseConfig):
         """Holds the general options for the scraping pipeline."""
 
         def __init__(self, num_workers=1, min_proba=0.85, crawl_depth=2, **kwargs):
+            # do some checks first
+            if num_workers < 0:
+                raise Exception('Wrong value for argument num_workers: should be > 0')
+            if not 0 <= min_proba <= 1:
+                raise Exception('Wrong value for argument min_proba: should be between 0 and 1')
+            if crawl_depth < 0:
+                raise Exception('Wrong value for argument crawl_depth: should be > 0')
+
             self.num_workers = num_workers  #: maximum number of threads to use
             self.min_proba = min_proba  #: minimum Swiss German probability to keep a sentence
             self.crawl_depth = crawl_depth  #: maximum depth of the crawl, inclusive.

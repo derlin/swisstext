@@ -218,7 +218,7 @@ def crawl_from_file(ctx, urlfile):
         if not u.startswith('#'):
             _enqueue(ctx, u)
 
-    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i} URLs from {urlfile.name}.')
+    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i+1} URLs from {urlfile.name}.')
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 
