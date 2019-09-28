@@ -21,12 +21,20 @@ Dealing with search results
 
 When querying Google or another search engine for results, returned URLs might point to PDFs, videos or other
 uninteresting websites. The :py:meth:`fix_url` method is here to help normalize URLs and filtering out those "bad" results.
+
+.. note::
+
+    For the stability of the whole system, it is primordial for **all URLs** to pass through this module before
+    being added to the persistance layer (e.g. Mongo Database).
+
 """
 
 from typing import Iterable, Generator
 import urllib.parse as up
 
 #: Quick lookup dictionary to exclude URLs with an extensions typical of non text resources
+from . import link_utils_extra
+
 EXCLUDED_EXTENSIONS = dict((s, True) for s in [
     "3dv", "3g2", "3gp", "pi1", "pi2", "pi3", "ai", "amf", "amv", "art", "art", "ase", "asf", "avi", "awg", "blp",
     "bmp", "bw", "bw", "cd5", "cdr", "cgm", "cit", "cmx", "cpt", "cr2", "cur", "cut", "dds", "dib", "djvu", "doc",
@@ -61,11 +69,18 @@ EXCLUDED_TLDS = dict((s[1:], True) for s in [
     ".si", ".sb", ".so", ".so", ".za", ".gs", ".kr", ".ss", ".es", ".lk", ".sd", ".sr", ".sj", ".sz", ".se", ".ch",
     ".sy", ".tw", ".tj", ".tz", ".th", ".tg", ".tk", ".to", ".tt", ".tn", ".tr", ".tm", ".tc", ".tv", ".ug", ".ua",
     ".ae", ".uk", ".us", ".vi", ".uy", ".uz", ".vu", ".va", ".ve", ".vn", ".wf", ".eh", ".ma", ".ye", ".zm", ".zw"
-] if s not in ['.ch', '.de', '.it', '.fr', '.eu', '.uk', '.us'])  # TODO: tune a bit the whitelist ?
+] if s not in ['.ch', '.de', '.it', '.fr', '.eu', '.uk', '.us'])  # TODO: tune a bit the whitelist ? and youtu.be ?
 
 #: Quick lookup dictionary to exclude any URL from wikipedia, except the ones from the given subdomains.
 #: See `<https://en.wikipedia.org/wiki/List_of_Wikipedias>`_ for a full list of wikipedia subdomains.
 INCLUDED_WIKI_DOMAINS = dict()  # dict((s, True) for s in ["als"])
+
+#: Functions that will also be called during fix_url: facebook, twitter, sid in magento, etc.
+_ADDITIONAL_FIXES = [
+    link_utils_extra.fix_fb_url,
+    link_utils_extra.fix_twitter_url,
+    link_utils_extra.strip_sid, # do it last, since others may change the URL (e.g. facebook redirects)
+]
 
 
 def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, None]:
@@ -99,7 +114,15 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
             'https://als.wikipedia.org',
             'http://other.resource.test',
             'javascript:return false',
-            '?p=66383&sid=aaece0dfd1e47e08505dcb5fae2d3f03'
+            '?p=66383&sid=aaece0dfd1e47e08505dcb5fae2d3f03',
+
+            'http://www.twitter.com/some-hashtag?lang=en-gb',
+            'https://twitter.com/share?text=blabla',
+
+            'http://zh-cn.facebook.com/XXXX',
+            'https://facebook.com/',
+            'https://www.facebook.com',
+            'https://graph.facebook.com'
         ]
         links = list(filter_links(base_url, hrefs))
 
@@ -107,15 +130,20 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
         #  http://example.ch/other/
         #  http://example.ch/page/1?page=2&q=isch
         #  http://example.ch/page/1?page=2
-        #  https://als.wikipedia.org
         #  http://other.resource.test
         #  http://example.ch/page/1?p=66383
+        #  https://twitter.com/some-hashtag
+        #  https://www.facebook.com/XXXX
+        #  https://www.facebook.com/
 
-    :param base_url: the URL of the current page (not returned and used to resolve relative links).
+    :param base_url: the URL of the current page (not returned and used to resolve relative links). Use '' to ignore.
     :param links: a list of links found, relative or absolute
     :return: a generator of unique absolute URLs, all beginning with `http`
     """
-    seen = {base_url, base_url + '/'}  # keep a set of seen urls
+    seen = set()  # keep a set of seen urls
+
+    if base_url is not None:
+        seen.update([base_url, base_url + '/'])
 
     for link in links:
         fixed_url, ok = fix_url(link, base_url)
@@ -125,18 +153,6 @@ def filter_links(base_url: str, links: Iterable[str]) -> Generator[str, None, No
             seen.add(fixed_url)
             # avoid duplicate links with just an ending slash that differ
             seen.add(fixed_url[:-1] if fixed_url.endswith('/') else fixed_url + '/')
-
-
-def strip_sid(url: str) -> str:
-    """
-    Remove the SID parameter from an url. SIDs are mostly used
-    by magento to track the users and won't change the page rendered. See also
-    `why-do-my-magento-urls-have-a-query-sid <https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/>`_.
-
-    :param url: the url
-    :return: the url without sid
-    """
-    return up.urlunparse(_strip_sid(up.urlparse(url)))
 
 
 def fix_url(url: str, base_url: str = None) -> (str, bool):
@@ -165,17 +181,18 @@ def fix_url(url: str, base_url: str = None) -> (str, bool):
         url = up.urljoin(base_url, url)
 
     parsed: up.ParseResult = up.urlparse(url)
-    parsed = _strip_sid(parsed)
+
     if parsed.fragment:
         parsed = parsed._replace(fragment='')
 
+    for fix in _ADDITIONAL_FIXES:
+        # do it first, because the URL may change completely (e.g. facebook redirection)
+        parsed = fix(parsed)
+        if parsed is None:
+            return url, False
+
+
     return up.urlunparse(parsed), _should_url_be_kept(parsed)
-
-
-def _strip_sid(parsed: up.ParseResult) -> up.ParseResult:
-    qs = up.parse_qsl(parsed.query)
-    new_qs = up.urlencode(list(filter(lambda t: t[0] != 'sid', qs)))
-    return parsed._replace(query=new_qs)
 
 
 def _should_url_be_kept(parsed: up.ParseResult) -> bool:
@@ -183,7 +200,10 @@ def _should_url_be_kept(parsed: up.ParseResult) -> bool:
         # not a HTTP or HTTPS URL
         return False
     if '.' in parsed.path and parsed.path.split(".")[-1].lower() in EXCLUDED_EXTENSIONS:
-        # contains an unwanted extension
+        # path contains an unwanted extension
+        return False
+    if '.' in parsed.query and parsed.query.split(".")[-1].lower() in EXCLUDED_EXTENSIONS:
+        # query ends with an unwanted extension (e.g. ?doc=lala.pdf)
         return False
     if parsed.netloc.split(".")[-1].lower() in EXCLUDED_TLDS:
         # is from an unwanted tld

@@ -6,8 +6,6 @@ from .data import Page
 
 logger = logging.getLogger(__name__)
 
-EXCLUDE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'pdf']
-
 
 class PageQueue(Queue):
     """
@@ -39,13 +37,7 @@ class PageQueue(Queue):
             page, depth = tup
             assert isinstance(page, Page)
 
-        if self._should_be_added(page.url):
-            super()._put((page, depth))
-
-    def _should_be_added(self, url):
-        # url = url[:url.index("#")] if "#" in url else url
-        if url in self.uniq or url.split(".")[-1].lower() in EXCLUDE_EXTENSIONS:
-            return False
-        else:
+        url = page.url
+        if url not in self.uniq:
             self.uniq.add(url)
-            return True
+            super()._put((page, depth))
