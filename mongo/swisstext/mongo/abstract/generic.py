@@ -76,6 +76,7 @@ class CrawlMeta(EmbeddedDocument):
     hash = StringField(default=None)
     """Optional hash of the text/results/..."""
 
+    meta = {'allow_inheritance': True}
 
 class Deleted(EmbeddedDocument):
     """ A deleted flag. """

@@ -64,7 +64,7 @@ class MongoSaver(ISaver):
             logger.info(f'duplicate text found: {text.urls}')
 
         # add crawl history
-        mu.add_crawl_history(new_count, hash=text.id)
+        mu.add_crawl_history(new_count, hash=text.id, sents_count=page.sentence_count, sg_sents_count=page.sg_count)
         # persist
         text.save()
         mu.save()

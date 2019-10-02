@@ -21,6 +21,13 @@ from mongoengine import *
 
 from .generic import Source, CrawlMeta
 
+class UrlCrawlMeta(CrawlMeta):
+    """ Keep more information on the crawl """
+    """The creation/added date, in UTC."""
+    sents_count = IntField(default=None)
+    """Number of quality sentences found on the page."""
+    sg_sents_count = IntField(default=None)
+    """Number of quality sentences spotted as GSW (new or not)."""
 
 class AbstractMongoURL(Document):
     """
@@ -45,7 +52,7 @@ class AbstractMongoURL(Document):
     date_added = DateTimeField(default=lambda: datetime.utcnow())
     """When the URL was added to the collection, in UTC."""
 
-    crawl_history = EmbeddedDocumentListField(CrawlMeta, default=[])
+    crawl_history = EmbeddedDocumentListField(UrlCrawlMeta, default=[])
     """One entry for each visit of this URL by the scraper, ordered by the visit date ascending."""
 
     count = IntField(default=0)
@@ -105,15 +112,16 @@ class AbstractMongoURL(Document):
         # remove from url if it exists
         (cls.objects(id=id) if id is not None else cls.objects(url=url)).delete()
 
-    def add_crawl_history(self, new_sg_count, hash=None):
+    def add_crawl_history(self, new_sg_count, hash=None, sents_count=None, sg_sents_count=None):
         """
         Add a crawl history entry. Note that this will update the document instance,
         but won't persist the change to mongo. You need to call :py:meth:`mongoengine.Document.save` yourself.
 
         :param new_sg_count: the number of new sentences found on this crawl.
+        :param kwargs: see :py:class:`~UrlCrawlMeta`
         :return: self
         """
-        meta = CrawlMeta(count=new_sg_count, hash=hash)
+        meta = UrlCrawlMeta(count=new_sg_count, hash=hash, sents_count=sents_count, sg_sents_count=sg_sents_count)
         self.crawl_history.append(meta)
         self.count += new_sg_count
         self.delta = meta.count
