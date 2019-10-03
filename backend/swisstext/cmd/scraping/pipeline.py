@@ -168,7 +168,7 @@ class PipelineWorker():
                 try:
                     page.crawl_results = self._crawl_page(p.crawler, page)
                     page.text = p.normalizer.normalize(page.crawl_results.text)
-                    splitted: List[str] = p.splitter.split(page.text)
+                    splitted: List[str] = self._uniq(p.splitter.split(page.text))
                     sentences: List[str] = p.filter.filter(splitted)
 
                     page.sentence_count = 0  # count all the sentences found
@@ -217,3 +217,10 @@ class PipelineWorker():
 
         if self.id >= 0:
             logger.info(f'W[{self.id}]: my job is done.')
+
+    @staticmethod
+    def _uniq(seq):
+        # remove duplicates from a list while preserving order
+        seen = set()
+        seen_add = seen.add
+        return [x for x in seq if not (x in seen or seen_add(x))]
