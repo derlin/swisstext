@@ -152,7 +152,26 @@ def fix_fb_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
 
     if parsed is None:
         return None
-    
+
     # strip off all query parameters (TODO: really that clever ?)
     parsed = parsed._replace(query='')
+    return parsed
+
+# ========== ZSCFANS / CELICA
+
+def filter_zscfans_celica_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
+    if 'forum.zscfans.ch' in parsed.netloc:
+        if parsed.path == '/posting.php':
+            # ignore, this is just to "quote" a post (authentication required)
+            return None
+        if parsed.path == '/memberlist.php':
+            # ignore, link to a profile
+            return None
+    elif 'celica' in parsed.netloc:
+        for x in ['report.php', 'attachment.php', 'formmail.php']:
+            if x in parsed.path:
+                return None
+        if 'addreply' in parsed.path or 'action=add' in parsed.query:
+            return None
+
     return parsed

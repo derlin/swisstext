@@ -79,6 +79,7 @@ INCLUDED_WIKI_DOMAINS = dict()  # dict((s, True) for s in ["als"])
 _ADDITIONAL_FIXES = [
     link_utils_extra.fix_fb_url,
     link_utils_extra.fix_twitter_url,
+    link_utils_extra.filter_zscfans_celica_url,
     link_utils_extra.strip_sid, # do it last, since others may change the URL (e.g. facebook redirects)
 ]
 
