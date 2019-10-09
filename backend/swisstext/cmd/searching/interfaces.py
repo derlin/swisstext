@@ -6,6 +6,7 @@ See the :py:mod:`swisstext.cmd.searching.tools` module for implementations.
 """
 
 from abc import ABC, abstractmethod
+from enum import IntEnum
 from typing import Iterable, List
 
 from .data import Seed
@@ -48,11 +49,22 @@ class ISaver(ABC):
     [ABSTRACT] The saver is responsible for persisting everything somewhere, such as a database, a file or the console.
     """
 
+    class LinkStatus(IntEnum):
+        NOT_EXIST = 0
+        EXISTS = 1
+        BLACKLISTED = 2
+
+    def seed_exists(self, seed: str, **kwargs) -> bool:
+        """
+        Return whether a seed already exist in the backend.
+        """
+        return False
+
     @abstractmethod
-    def save_seed(self, seed: Seed):
-        """[ABSTRACT] Should persist a seed and its associated results."""
+    def save_seed(self, seed: Seed, was_used: bool):
+        """[ABSTRACT] Should persist a seed and, if was_used is true, its associated results."""
         pass
 
-    def link_exists(self, url: str) -> bool:
+    def link_exists(self, url: str) -> LinkStatus:
         """Test if the url already exists in the persistence layer. Returns false by default."""
-        return False
+        return self.LinkStatus.NOT_EXIST

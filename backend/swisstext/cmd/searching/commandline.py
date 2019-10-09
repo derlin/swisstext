@@ -63,7 +63,7 @@ def cli(ctx, log_level, db, config_path):
     import sys
     logging.basicConfig(
         stream=sys.stderr,
-        format="'%(asctime)s [%(name)-15s %(levelname)-5s] %(message)s",
+        format="%(asctime)s [%(name)-15s %(levelname)-5s] %(message)s",
         datefmt='%Y-%m-%dT%H:%M:%S')
 
     # only set the logging level on our classes
@@ -134,9 +134,10 @@ def from_mongo(ctx, num_seeds, new):
 
 
 @cli.command('from_file')
+@click.option('--no-search', is_flag=True, help="Just save the seeds to Mongo, but don't search for URLs.")
 @click.argument('seedsfile', type=click.File('r'))
 @click.pass_obj
-def from_file(ctx, seedsfile):
+def from_file(ctx, seedsfile, no_search):
     """
     Search using seeds from a file.
 
@@ -145,7 +146,19 @@ def from_file(ctx, seedsfile):
     Seeds and results will be persisted using the configured saver.
     """
     seeds = (l.strip() for l in seedsfile if l and not l.startswith(" "))
-    _search(ctx, seeds)
+    if no_search:
+        n_skipped, n_saved = 0, 0
+        for seed in seeds:
+            if ctx.search_engine.saver.seed_exists(seed):
+                n_skipped += 1
+                logger.debug(f'{seed:20s} skipped. Already exists.')
+            else:
+                ctx.search_engine.saver.save_seed(Seed(seed), was_used=False)
+                n_saved += 1
+                logger.debug(f'{seed:20s} saved.')
+        logger.info(f'Done. Skipped: {n_skipped}, saved: {n_saved}')
+    else:
+        _search(ctx, seeds)
 
 
 def _search(ctx: GlobalOptions, seeds: Iterable[str]):

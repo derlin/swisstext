@@ -1,7 +1,7 @@
 from mongoengine import connect
 import logging
 
-from swisstext.mongo.models import MongoSeed, MongoURL, SourceType, Source
+from swisstext.mongo.models import MongoSeed, MongoURL, SourceType, Source, MongoBlacklist
 from ..data import Seed
 from ..interfaces import ISaver
 
@@ -21,16 +21,22 @@ class MongoSaver(ISaver):
     def __init__(self, host='localhost', port=27017, db='st1', **kwargs):
         connect(db, host=host, port=port)
 
-    def save_seed(self, seed: Seed):
-        for url in seed.new_links:
-            # TODO ensure it is new ?
-            MongoURL.create(url, Source(SourceType.SEED, seed.query)).save()
+    def seed_exists(self, seed: str, **kwargs) -> bool:
+        return MongoSeed.get(seed) is not None
 
-        new_links_count = len(seed.new_links)
+    def save_seed(self, seed: Seed, was_used: bool):
         s = MongoSeed.get(seed.query) or MongoSeed.create(seed.query)
-        s.add_search_history(new_links_count)
+        if was_used:
+            for url in seed.new_links:
+                MongoURL.create(url, Source(SourceType.SEED, seed.query)).save()
+
+            new_links_count = len(seed.new_links)
+            s.add_search_history(new_links_count)
         s.save()
         logging.info('saved %s' % seed)
 
-    def link_exists(self, url: str) -> bool:
-        return MongoURL.exists(url)
+    def link_exists(self, url: str) -> ISaver.LinkStatus:
+        if MongoBlacklist.exists(url):
+            return ISaver.LinkStatus.BLACKLISTED
+        else:
+            return ISaver.LinkStatus(MongoURL.exists(url))

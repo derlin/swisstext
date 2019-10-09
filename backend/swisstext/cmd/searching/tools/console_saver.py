@@ -11,10 +11,11 @@ class ConsoleSaver(ISaver):
     def __init__(self, **kwargs):
         pass
 
-    def save_seed(self, seed: Seed):
+    def save_seed(self, seed: Seed, was_used: bool):
         print('Seed %s' % seed.query)
-        print('=' * (len(seed.query) + 5))
-        for url in seed.new_links:
-            print('   %s' % url)
-        print('total: %d' % len(seed.new_links))
+        if was_used:
+            print('=' * (len(seed.query) + 5))
+            for url in seed.new_links:
+                print('   %s' % url)
+            print('total: %d' % len(seed.new_links))
         print()
