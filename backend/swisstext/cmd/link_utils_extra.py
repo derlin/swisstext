@@ -85,10 +85,10 @@ def fix_twitter_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
                 return None
 
     # strip uninteresting query parameters
-    qs = up.parse_qs(parsed.query).items()
+    qs = up.parse_qsl(parsed.query)
     if len(qs):
         parsed = parsed._replace(query=up.urlencode(
-            {k: v for k, v in qs if k not in _twitter_qs_blacklist}
+            [(k, v) for k, v in qs if k not in _twitter_qs_blacklist]
         ))
     return parsed
 
