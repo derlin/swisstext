@@ -236,7 +236,8 @@ class ISaver(ABC):
         """
         pass
 
-    def get_page(self, url: str, **kwargs):
+    @abstractmethod
+    def get_page(self, url: str, **kwargs) -> Page:
         """
         Load a page. The simplest implementation is just ``return Page(url)``.
         If the subclass uses a data store, it should also populate the other page attributes (e.g. the score

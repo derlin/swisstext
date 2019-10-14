@@ -84,7 +84,7 @@ def view():
             ud, sd = 0, 0
             for url in urls:
                 try:
-                    sd += _delete_url(url.id)
+                    sd += _delete_url(url)
                     ud += 1
                 except Exception as e:
                     print(e)
@@ -116,12 +116,12 @@ def details(id):
     return dict(form=form, url=mu, sentences=sentences)
 
 
-def _delete_url(mu: MongoURL):
+def _delete_url(mu: MongoURL): # TODO: not working !!! changes not saved in Mongo ???
     # remove all sentences
     all_sentences = MongoSentence.objects(url=mu.url).fields(id=True)
     MongoSentence.mark_deleted(all_sentences, current_user.id)
     # blacklist url
-    MongoURL.try_delete(mu.id)  # remove URL if exists
+    MongoURL.try_delete(id=mu.id)  # remove URL if exists
     MongoBlacklist.add_url(mu.url)
 
     return len(all_sentences)

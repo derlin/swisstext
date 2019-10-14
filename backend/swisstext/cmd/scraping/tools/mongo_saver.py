@@ -27,7 +27,7 @@ class MongoSaver(ISaver):
         super().__init__()
         get_connection(db, **kwargs)
 
-    def get_page(self, url: str, **kwargs):
+    def get_page(self, url: str, **kwargs) -> Page:
         mu: MongoURL = MongoURL.get(url)
         score: PageScore = None
 

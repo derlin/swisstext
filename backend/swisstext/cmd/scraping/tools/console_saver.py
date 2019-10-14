@@ -53,7 +53,7 @@ class ConsoleSaver(ISaver):
                 self.sfile.write("\n".join((s.text for s in page.new_sg)))
         print("SAVING %s " % page)
 
-    def get_page(self, url: str, **kwargs):
+    def get_page(self, url: str, **kwargs) -> Page:
         if url in self._pages:
             return self._pages[url]
         return Page(url=url, score=PageScore(), **kwargs)
