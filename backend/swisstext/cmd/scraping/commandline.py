@@ -155,18 +155,18 @@ def gen_seeds(ctx, num_sentences, num, new, confirm):
 
 @cli.command('from_mongo')
 @click.option('-n', '--num-urls', type=int, default=20, help="Max URLs crawled in one pass.")
-@click.option('--new/--any', default=False, help="Only crawl new URLs")
+@click.option('--what', type=click.Choice(['any', 'new', 'ext']), default='any',
+              help='Pull any URLs / new URLs / new URLs from external source (seed, file)')
 @click.pass_obj
-def crawl_mongo(ctx, num_urls, new):
+def crawl_mongo(ctx, num_urls, what):
     """
     Scrape using mongo URLs as base.
 
     This script runs the scraping pipeline using -n bootstrap URLs pulled from Mongo. Those URLs are
     selected depending on the number of visits and the date of the last visit (less visited first, oldest visit first).
-    If --new is specified, only URLs that have never been visited will be used (so the number of bootstrap URLs
-    actually used might be less than -n, if not enough new URLs are present).
-    If --any is specified, exactly -n URLs are selected (except if -n is less than the total number of URLs in the
-    collection).
+    The --what argument can be used to control which URLs will be pulled from mongo to start the process.
+    Use 'new' for URLs never visited before, 'seed' for non-visited URLs found using the search engine or 'any' (default).
+    Except with what=any, the actual number of URLs pulled is not guaranteed to be -n.
 
     Note that to connect to MongoDB, it relies on the host, port and db options present in the `saver_options` property
     of the configuration. So whatever saver you use, ensure that those properties are correct
@@ -174,11 +174,15 @@ def crawl_mongo(ctx, num_urls, new):
     """
     from swisstext.mongo.models import MongoURL, get_connection
     with get_connection(**ctx.config.get('saver_options')):
-        if new:
-            # just get the URLs never visited
-            for u in MongoURL.get_never_crawled().order_by("+date_added").fields(url=True).limit(num_urls):
-                print(u.url)
-                _enqueue(ctx, u.url)
+        if what != 'any':
+            # get the URLs never visited
+            kwargs = {} if what == 'new' else {'source__type___ne': 'auto'}
+            for u in MongoURL.get_never_crawled(**kwargs).order_by("+date_added").limit(num_urls):
+                assert len(u.crawl_history) == 0
+                assert what != 'seed' or u.source.type_ != 'auto'
+                print(u.source.type_, u.url)
+                if not _enqueue(ctx, u.url):
+                    logger.error(f'URL {u.url} not enqueued.')
         else:
             # order URLs by number of visits (ascending), last visited date (ascending) and date added (ascending)
             # hence, URLs never seen will be visited from oldest to latest adds.
@@ -196,9 +200,11 @@ def crawl_mongo(ctx, num_urls, new):
             ]
             for u in MongoURL.objects.aggregate(*aggregation_pipeline):
                 if u['typ'] == 'auto' and u['extra'].startswith('http'):
-                    _enqueue(ctx, u['url'], parent_url=u['extra'])
+                    ok = _enqueue(ctx, u['url'], parent_url=u['extra'])
                 else:
-                    _enqueue(ctx, u['url'])
+                    ok = (_enqueue(ctx, u['url']))
+                if not ok:
+                    logger.error(f'URL {u.url} not enqueued.')
 
     logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
@@ -219,7 +225,7 @@ def crawl_from_file(ctx, urlfile):
         if not u.startswith('#'):
             _enqueue(ctx, u)
 
-    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i+1} URLs from {urlfile.name}.')
+    logger.info(f'enqueued {ctx.queue.unfinished_tasks}/{i + 1} URLs from {urlfile.name}.')
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
 
 

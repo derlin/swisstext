@@ -102,9 +102,9 @@ class AbstractMongoURL(Document):
             return cls.objects(url=url).first()
 
     @classmethod
-    def get_never_crawled(cls) -> QuerySet:
+    def get_never_crawled(cls, **kwargs) -> QuerySet:
         """Get a :py:class:`~mongoengine.queryset.QuerySet` of URLs that have never been visited."""
-        return cls.objects(crawl_history__size=0)
+        return cls.objects(crawl_history__size=0, **kwargs)
 
     @classmethod
     def try_delete(cls, url: str = None, id: str = None):
