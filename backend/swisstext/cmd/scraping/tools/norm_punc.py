@@ -34,8 +34,10 @@ spaces_pattern = re.compile(
 normalization_patterns = [
     (t, r if t == STR else re.compile(r), s) for (t, r, s) in
     [  # largely inspired from Moses normalize-punctuation.perl (lang=de)
-        # strip control chars and \t, \r, and soft-hyphen but not \n (0x0A)
-        (REG, u'[\x00-\x09\x0B-\x1F\x7F-\x9F\u00AD]', ' '),
+        # strip control chars and \t, \r, but not \n (0x0A)
+        (REG, u'[\x00-\x09\x0B-\x1F\x7F-\x9F]', ' '),
+        # strip soft-hyphen (and don't replace it by space: http://jkorpela.fi/shy.html)
+        (STR, '\u00AD', ''),
         # strip extra combining diacritics (given unicodedata.normalize was run prior to this)
         (REG, '[\u0300-\u036F\uFE00-\uFE0F]', ''),
         # replace variation selectors (0xFE0F is often used, sometimes in a row...)
