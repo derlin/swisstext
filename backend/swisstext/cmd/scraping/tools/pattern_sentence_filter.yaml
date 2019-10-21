@@ -118,11 +118,19 @@
 
 
 - dashes:
-  descr: too many dashes
+  descr: too many dashes (before or after a space)
   find:
     pattern: '([\u00AF\u2010-\u2015\u2212\uFE58\uFF0D-] )|( [\u00AF\u2010-\u2015\u2212\uFE58\uFF0D-])'
     count:
       max: 2
+
+# 3 or 4 ??
+- dashes_slashes:
+  descr: too many dash/slash-separated words in a row
+  find:
+    pattern: '(\p{L}+[\/-]){3,}'
+    count:
+      max: 0
 
 - arrows:
   descr: too many arrows
