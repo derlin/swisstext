@@ -161,7 +161,7 @@ class PipelineWorker():
             logger.debug(f'W[{self.id}]: processing {page.url} (depth={page_depth})')
             if page_depth > max_depth:
                 logger.info(
-                    f'W[{self.id}]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).')
+                    f'W[{self.id}]: reached max depth for recursive scraping (still {queue.qsize()} links in queue).')
                 break
 
             if p.decider.should_page_be_crawled(page):

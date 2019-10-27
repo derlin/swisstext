@@ -1,3 +1,5 @@
+from threading import Lock
+
 from mongoengine import NotUniqueError
 
 from ..interfaces import ISaver
@@ -7,7 +9,6 @@ from swisstext.mongo.models import *
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 class MongoSaver(ISaver):
     """
@@ -26,6 +27,7 @@ class MongoSaver(ISaver):
         """
         super().__init__()
         get_connection(db, **kwargs)
+        self.lock = Lock()
 
     def get_page(self, url: str, **kwargs) -> Page:
         mu: MongoURL = MongoURL.get(url)
@@ -43,34 +45,35 @@ class MongoSaver(ISaver):
         return MongoSentence.exists(sentence)
 
     def save_page(self, page: Page):
-        # save sentences first, ignoring duplicates
-        for sentence in page.new_sg:
-            try:
-                MongoSentence.create(sentence.text, page.url, sentence.proba).save()
-            except NotUniqueError:
-                # TODO decrease new_sg ?
-                logger.warning(f'Exception ignored -- Duplicate sentence found (url: {page.url}.')
+        with self.lock:
+            # save sentences first, ignoring duplicates
+            for sentence in page.new_sg:
+                try:
+                    MongoSentence.create(sentence.text, page.url, sentence.proba).save()
+                except NotUniqueError:
+                    # TODO decrease new_sg ?
+                    logger.warning(f'Exception ignored -- Duplicate sentence found (url: {page.url}.')
 
-        # save or update url
-        new_count = len(page.new_sg)
-        mu: MongoURL = MongoURL.get(page.url)
-        if mu is None:
-            source = Source(SourceType.AUTO, page.parent_url) if page.parent_url else Source()
-            mu = MongoURL.create(page.url, source=source)
+            # save or update url
+            new_count = len(page.new_sg)
+            mu: MongoURL = MongoURL.get(page.url)
+            if mu is None:
+                source = Source(SourceType.AUTO, page.parent_url) if page.parent_url else Source()
+                mu = MongoURL.create(page.url, source=source)
 
-        # save raw, unormalized text
-        text: MongoText = MongoText.create_or_update(mu.id, page.crawl_results.text)
-        if len(text.urls) > 1:
-            logger.info(f'duplicate text found: {text.urls}')
+            # save raw, unormalized text
+            text: MongoText = MongoText.create_or_update(mu.id, page.crawl_results.text)
+            if len(text.urls) > 1:
+                logger.info(f'duplicate text found: {text.urls}')
 
-        # add crawl history
-        mu.add_crawl_history(new_count, hash=text.id, sents_count=page.sentence_count, sg_sents_count=page.sg_count)
-        # persist
-        text.save()
-        mu.save()
+            # add crawl history
+            mu.add_crawl_history(new_count, hash=text.id, sents_count=page.sentence_count, sg_sents_count=page.sg_count)
+            # persist
+            text.save()
+            mu.save()
 
-        logger.info("saved %s (crawled=%d times, new_count=%d)" %
-                    (page, len(mu.crawl_history), new_count))
+            logger.info("saved %s (crawled=%d times, new_count=%d)" %
+                        (page, len(mu.crawl_history), new_count))
 
     def is_url_blacklisted(self, url: str):
         return MongoBlacklist.exists(url)

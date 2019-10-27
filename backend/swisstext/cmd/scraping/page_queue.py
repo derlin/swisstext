@@ -1,5 +1,6 @@
 import logging
 from queue import Queue
+from threading import Lock
 from typing import Set
 
 from .data import Page
@@ -24,6 +25,8 @@ class PageQueue(Queue):
         to correctly filter child URLs (using for example :py:mod:`~swisstext.cmd.link_utils`)?
     """
 
+    lock = Lock()
+
     def _init(self, maxsize):
         super()._init(maxsize)
         self.uniq: Set[Page] = set()
@@ -38,6 +41,10 @@ class PageQueue(Queue):
             assert isinstance(page, Page)
 
         url = page.url
-        if url not in self.uniq:
-            self.uniq.add(url)
-            super()._put((page, depth))
+        try:
+            self.lock.acquire() # better safe than sorry...
+            if url not in self.uniq:
+                self.uniq.add(url)
+                super()._put((page, depth))
+        finally:
+            self.lock.release()
