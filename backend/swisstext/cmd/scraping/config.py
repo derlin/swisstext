@@ -14,6 +14,7 @@ _pipeline_entries = [
     'sentence_filter',
     'sg_detector',
     'seed_creator',
+    'url_filter',
     'decider',
     'saver']
 

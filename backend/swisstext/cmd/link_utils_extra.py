@@ -2,21 +2,24 @@ import urllib.parse as up
 from typing import Optional
 import re
 
+
 def _ignore(*args, **kwargs):
     return None
 
-# ========== MAGENTO-LIKE
 
-def strip_sid(parsed: up.ParseResult) -> up.ParseResult:
+# ========== REMOVE QUERY PARAMS
+
+def filter_query_params(url: str, parsed: up.ParseResult) -> up.ParseResult:
     """
-    Remove the SID parameter from an url. SIDs are mostly used
-    by magento to track the users and won't change the page rendered. See also
-    `why-do-my-magento-urls-have-a-query-sid <https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/>`_.
+    Remove the following query params from an URL:
+     * ``sid=\w+``: SIDs are mostly used by magento to track the users when cookies are disabled
+     * ``s=\w{32}``: same as SID, but from vBulletin sites
+     * ``replytocom=\d+``: used by wordpress when clicking on "answer" from a comment
 
     :param url: the url
-    :return: the url without sid
+    :return: the url without sid and the likes
     """
-    if 'sid=' in parsed.query:
+    if any(l in parsed.query for l in ['s=', 'sid=', 'replytocom=']):
         # TODO: here, the behavior of parse is inconsistant/changes the URL
         # e.g.:
         #   >>> up.parse_qsl('a=%7E_%7E%3B')
@@ -24,9 +27,14 @@ def strip_sid(parsed: up.ParseResult) -> up.ParseResult:
         #   >>> up.urlencode([('a', '~_~;')])
         #   'a=~_~%3B'
         qs = up.parse_qsl(parsed.query)
-        new_qs = up.urlencode(list(filter(lambda t: t[0] != 'sid', qs)))
+        new_qs = up.urlencode([q for q in qs if not (
+                (q[0] == 'sid') or  # magento
+                (q[0] == 's' and len(q[1]) == 32) or  # vBulletin
+                (q[0] == 'replytocom')  # wordpress
+        )])
         return parsed._replace(query=new_qs)
     return parsed
+
 
 # ========== TWITTER
 
@@ -52,7 +60,7 @@ _twitter_remap = {
 }
 
 
-def fix_twitter_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
+def fix_twitter_url(url: str, parsed: up.ParseResult) -> Optional[up.ParseResult]:
     """
     (this method does nothing on URLs outside of the twitter.com domain).
     [Potentially] modify the twitter.com URLs by applying the following:
@@ -120,7 +128,7 @@ _facebook_remap = {
 }
 
 
-def fix_fb_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
+def fix_fb_url(url: str, parsed: up.ParseResult) -> Optional[up.ParseResult]:
     """
     (this method does nothing on URLs outside of the facebook.com domain).
     [Potentially] modify the twitter.com URLs by applying the following:
@@ -157,9 +165,16 @@ def fix_fb_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
     parsed = parsed._replace(query='')
     return parsed
 
+
 # ========== ZSCFANS / CELICA
 
-def filter_zscfans_celica_url(parsed: up.ParseResult) -> Optional[up.ParseResult]:
+def filter_zscfans_celica_url(url: str, parsed: up.ParseResult) -> Optional[up.ParseResult]:
+    if '#p' in url:
+        # anchors in url mean we pressed on the file button under the title of a post
+        # it has a different p=XXX, but it is just an anchor really.
+        # !! ATTENTION: this supposes URLs submitted using from_file (e.g. leipzig), don't have anchors
+        #    -> will only filter out child URLs.
+        return None
     if 'forum.zscfans.ch' in parsed.netloc:
         if parsed.path == '/posting.php':
             # ignore, this is just to "quote" a post (authentication required)

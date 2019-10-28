@@ -70,6 +70,7 @@ class Pipeline:
                  filter: ISentenceFilter,
                  detector: ISgDetector,
                  seeder: ISeedCreator,
+                 url_filter: IUrlFilter,
                  decider: IDecider,
                  saver: ISaver,
                  min_proba=0.85):
@@ -79,6 +80,7 @@ class Pipeline:
         self.filter: ISentenceFilter = filter
         self.detector: ISgDetector = detector
         self.seeder: ISeedCreator = seeder
+        self.url_filter: IUrlFilter = url_filter
         self.saver: ISaver = saver
         self.decider: IDecider = decider
         self.min_proba = min_proba
@@ -194,7 +196,8 @@ class PipelineWorker():
                         p.saver.save_page(page)
                         if p.decider.should_children_be_crawled(page):
                             added_children = 0
-                            for l in page.crawl_results.links:
+                            links = p.url_filter.filter(page.crawl_results.links)
+                            for l in links:
                                 if not p.saver.is_url_blacklisted(l):
                                     child_page = p.saver.get_page(l, parent_url=page.url)
                                     # TODO redondant ?

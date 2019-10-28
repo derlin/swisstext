@@ -176,8 +176,10 @@ class BaseConfig(ABC):
         base_package = root.get('_base_package', '')
 
         for e in self.valid_tool_entries:
-            if e not in root or root[e] == self.INTERFACE_WILDCARD:
+            if e not in root:
                 self.logger.warning("missing entry in toolchain '%s'" % e)
+
+            if e not in root or root[e] == self.INTERFACE_WILDCARD:
                 module_name = self.interfaces_package
                 class_name = "I%s" % self._to_camelcase(e)
             else:

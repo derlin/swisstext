@@ -10,8 +10,9 @@ pipeline:
   normalizer: .Normalizer
   splitter: .MocySplitter
   sentence_filter: .PatternSentenceFilter
-  sg_detector: .SwigspotLangid # swisstext.mclid.TfLangidGsw
+  sg_detector: .SwigspotLangid
   decider: .OneNewSgDecider
+  url_filter: _I_
   saver: .MongoSaver
   seed_creator: .IdfSeedCreator
 

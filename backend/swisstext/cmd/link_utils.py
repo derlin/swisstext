@@ -80,7 +80,7 @@ _ADDITIONAL_FIXES = [
     link_utils_extra.fix_fb_url,
     link_utils_extra.fix_twitter_url,
     link_utils_extra.filter_zscfans_celica_url,
-    link_utils_extra.strip_sid, # do it last, since others may change the URL (e.g. facebook redirects)
+    link_utils_extra.filter_query_params, # do it last, since others may change the URL (e.g. facebook redirects)
 ]
 
 
@@ -179,6 +179,11 @@ def fix_url(url: str, base_url: str = None) -> (str, bool):
     """
     if base_url is not None:
         # make relative into absolute links
+        if base_url.endswith('/'):
+            # remove the ending "/", because of a weird behavior of urljoin:
+            #  urljoin('http://example.com/page1/', 'page2') => 'http://example.com/page1/page2'
+            #  urljoin('http://example.com/page1', 'page2') => 'http://example.com/page2'
+            base_url = base_url[:-1]
         url = up.urljoin(base_url, url)
 
     parsed: up.ParseResult = up.urlparse(url)
@@ -187,8 +192,9 @@ def fix_url(url: str, base_url: str = None) -> (str, bool):
         parsed = parsed._replace(fragment='')
 
     for fix in _ADDITIONAL_FIXES:
-        # do it first, because the URL may change completely (e.g. facebook redirection)
-        parsed = fix(parsed)
+        # do it before _should_url_be_kept,
+        # because the URL may change completely (e.g. facebook redirection)
+        parsed = fix(url, parsed) # pass the original URL as well, which also contains fragments
         if parsed is None:
             return url, False
 

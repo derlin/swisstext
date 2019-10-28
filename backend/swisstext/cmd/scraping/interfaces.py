@@ -6,7 +6,7 @@ See the :py:mod:`swisstext.cmd.scraping.tools` module for implementations.
 """
 
 from abc import abstractmethod, ABC
-from typing import List
+from typing import List, Optional, Set
 
 from .data import Page
 
@@ -85,6 +85,29 @@ class ISplitter:
     def split_all(self, texts: List[str]) -> List[str]:
         """Takes a list of texts and returns a list of sentences (see :py:meth:`split`)."""
         return [splitted for t in texts for splitted in self.split(t)]
+
+
+class IUrlFilter:
+    """
+    A URL filter can transform or remove links found on a page before they are saved/crawled.
+
+    .. note::
+        IUrlFilter will only be called on URLs discovered during the scraping process (child URLs), not on the
+        URLs used to bootstrap the process (using st_scrape from_file/from_mongo).
+    """
+
+    def fix(self, url: str) -> Optional[str]:
+        """
+        This should be overriden. The default implementation just returns the URL.
+
+        :param url: the current URL
+        :return: the potentially transformed URL, or None if it should be ignored
+        """
+        return url
+
+    def filter(self, urls: List[str]) -> Set[str]:
+        """Fix and filter a list of URLs by calling :py:meth:`IUrlFilter.fix` on each element and removing None."""
+        return set(filter(lambda u: u is not None, map(self.fix, urls)))
 
 
 class ISentenceFilter:
