@@ -157,8 +157,10 @@ def gen_seeds(ctx, num_sentences, num, new, confirm):
 @click.option('-n', '--num-urls', type=int, default=20, help="Max URLs crawled in one pass.")
 @click.option('--what', type=click.Choice(['any', 'new', 'ext']), default='any',
               help='Pull any URLs / new URLs / new URLs from external source (seed, file)')
+@click.option('--how', type=click.Choice(['oldest', 'random']), default='oldest',
+              help='Pull URLs oldest first / at random')
 @click.pass_obj
-def crawl_mongo(ctx, num_urls, what):
+def crawl_mongo(ctx, num_urls, what, how):
     """
     Scrape using mongo URLs as base.
 
@@ -172,39 +174,49 @@ def crawl_mongo(ctx, num_urls, what):
     of the configuration. So whatever saver you use, ensure that those properties are correct
     (default: localhost:27017, db=swisstext).
     """
+
+    # == create aggregation pipeline
+    what_stage = {
+        'any': {},  # no filtering
+        'new': {"crawl_history.0": {"$exists": False}},  # just new
+        'ext': {  # new AND from seed or file
+            "crawl_history.0": {"$exists": False},
+            "source.type": {"$ne": "auto"}
+        }}
+    how_stage = {
+        'random': [{"$sample": {"size": num_urls}}],
+        'oldest': [  # still prioritize non visited first
+            {"$sort": {"num_crawls": 1, "last_crawl": 1, "added": 1}},
+            {"$limit": num_urls}
+        ]}
+    aggregation_pipeline = \
+        [
+            {"$match": what_stage[what]},
+            {"$project": {
+                "url": "$url",
+                "added": "$date_added",
+                "typ": "$source.type",
+                "extra": "$source.extra",
+                "last_crawl": {"$ifNull": ["$delta_date", None]},
+                "num_crawls": {"$size": {"$ifNull": ["$crawl_history", []]}}
+            }}
+        ] + how_stage[how]
+
+    # == run query and enqueue results
     from swisstext.mongo.models import MongoURL, get_connection
     with get_connection(**ctx.config.get('saver_options')):
-        if what != 'any':
-            # get the URLs never visited
-            kwargs = {} if what == 'new' else {'source__type___ne': 'auto'}
-            for u in MongoURL.get_never_crawled(**kwargs).order_by("+date_added").limit(num_urls):
-                assert len(u.crawl_history) == 0
-                assert what != 'seed' or u.source.type_ != 'auto'
-                print(u.source.type_, u.url)
-                if not _enqueue(ctx, u.url):
-                    logger.error(f'URL {u.url} not enqueued.')
-        else:
-            # order URLs by number of visits (ascending), last visited date (ascending) and date added (ascending)
-            # hence, URLs never seen will be visited from oldest to latest adds.
-            aggregation_pipeline = [  # TODO check this order
-                {"$project": {
-                    "url": "$url",
-                    "added": "$date_added",
-                    "typ": "$source.type",
-                    "extra": "$source.extra",
-                    "last_crawl": {"$ifNull": ["$delta_date", None]},
-                    "num_crawls": {"$size": {"$ifNull": ["$crawl_history", []]}}
-                }},
-                {"$sort": {"num_crawls": 1, "last_crawl": 1, "added": 1}},
-                {"$limit": num_urls}
-            ]
-            for u in MongoURL.objects.aggregate(*aggregation_pipeline):
-                if u['typ'] == 'auto' and u['extra'].startswith('http'):
-                    ok = _enqueue(ctx, u['url'], parent_url=u['extra'])
-                else:
-                    ok = (_enqueue(ctx, u['url']))
-                if not ok:
-                    logger.error(f'URL {u.url} not enqueued.')
+
+        for u in MongoURL.objects.aggregate(*aggregation_pipeline):
+            # add
+            if u['typ'] == 'auto' and u['extra'].startswith('http'):
+                ok = _enqueue(ctx, u['url'], parent_url=u['extra'])
+            else:
+                ok = (_enqueue(ctx, u['url']))
+            # log
+            if ok:
+                logger.debug(f"  {u['url']} {u['typ']} ({u['num_crawls']})")
+            else:
+                logger.error(f'URL {u.url} not enqueued.')
 
     logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
