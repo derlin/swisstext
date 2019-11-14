@@ -43,6 +43,13 @@
     count:
       max: 2
 
+- letter_density:
+  descr: not enough letter density
+  find:
+    pattern: '\p{L}'
+    ratio:
+      min: 0.6
+
 # =================================
 # SYMBOLS AND NON-LETTERS
 # =================================
