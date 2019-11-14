@@ -7,6 +7,12 @@ import re
 
 class SgUrlFilter(IUrlFilter):
 
+    EXCLUDED_DOMAINS = {
+        'woerterbuchnetz.de/', # sort of dictionary online, hard to parse
+        'researchgate.net/', # parsing from PDFs
+        '://yigg.de', # redirect + show errors
+    }
+
     def fix(self, url: str) -> Optional[str]:
         if '://www.schnupfspruch.ch/' in url:
             # remove the parameter saying from which page we got there
@@ -26,9 +32,10 @@ class SgUrlFilter(IUrlFilter):
                 return None
             # remove the viewfull
             return re.sub('[&\?]viewfull=1', '', url)
-        if '://yigg.de' in url:
-            # redirects + show error...
+
+        if any(excl in url for excl in self.EXCLUDED_DOMAINS):
             return None
+
         return url
 
 if __name__ == '__main__':
@@ -43,6 +50,9 @@ if __name__ == '__main__':
     http://www.fcbforum.ch/forum/showthread.php?s=3a4a96e31e37ae9ece97d59866386fa2&p=1062865
     http://www.fcbforum.ch/forum/showthread.php?30899-Cablecom-so-eine-scheisse&s=3a4a96e31e37ae9ece97d59866386fa2&p=1062920&viewfull=1
     http://yigg.de/neu?exturl=http%3A%2F%2Fwww.fcbforum.ch%2Fforum%2Fshowthread.php%3Ft%3D1873&title=Chiumiento+und+Behrami+im+Nati-Aufgebot
+    http://woerterbuchnetz.de/cgi-bin/WBNetz/call_wbgui_py_from_form?sigle=DWB&mode=Volltextsuche&hitlist=&patternlist=&lemid=GN01312
+    http://www.zeno.org/Wander-1867/A/Metzger
+    http://web.archive.org/web/20010302135845/http://www.stillerhas.ch/texte/aare.html
     """.split('\n')]
 
     url_filter = SgUrlFilter()

@@ -216,7 +216,7 @@ def crawl_mongo(ctx, num_urls, what, how):
             if ok:
                 logger.debug(f"  {u['url']} {u['typ']} ({u['num_crawls']})")
             else:
-                logger.error(f'URL {u.url} not enqueued.')
+                logger.error(f"URL {u['url']} not enqueued.")
 
     logger.info("Enqueued %d URLs from Mongo" % ctx.queue.unfinished_tasks)
     _scrape(ctx.config, ctx.queue, ctx.pipeline)
