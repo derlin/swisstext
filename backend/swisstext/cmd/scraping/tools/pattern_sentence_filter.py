@@ -192,8 +192,7 @@ class Find:
         if self.count and self.count.is_out_of_range(nb_matches):
             return True
         if self.ratio:
-            s_len = len(s)
-            ratio = s_len / (s_len - nb_matches + 1)
+            ratio = nb_matches / len(s)
             return self.ratio.is_out_of_range(ratio)
         return False
 

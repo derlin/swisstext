@@ -28,19 +28,13 @@
     count:
       min: 5
 
-#- ascii_letters:
-#  descr: not enough ascii letter
-#  find:
-#    pattern: '[a-zA-Z]'
-#    ratio:
-#      min: 1.5
-
-#- letters_proportional:
-#  descr: not enough letters proportion
-#  find:
-#    pattern: '[\W|\d]'
-#    ratio:
-#      max: 1.4
+- spaces:
+  descr: too many or not enough spaces
+  find:
+    pattern: ' '
+    ratio:
+      min: 0.065
+      max: 0.25
 
 - non_sg_letters:
   descr: too much non SG letters
@@ -142,6 +136,12 @@
 # =================================
 # OTHER SPECIALTIES
 # =================================
+- word_too_long:
+  descr: word too long (30+ chars)
+  find:
+    pattern: '[\p{L}#]{30,}'
+    count:
+      max: 0
 
 - spelled_words:
   descr: W O R D
@@ -198,6 +198,17 @@
   examples:
     - '2014.03.12, ??? !!'
     - 'prod-324383391-235913 im Stock'
+
+- at_least_one_small_word:
+  descr: at least on small word (6 or less)
+  find:
+    pattern: '(^|\s)\p{L}{1,6}(\s|$)'
+    count:
+      min: 1
+  examples:
+    - 'Mal luege, ob/wänn die nöchst Chance chunt.'
+  counterexamples:
+    - 'gspannt pfarrer Zuletzt natürlich hochzyt Morelia similein Location janedoe richtig chleider eigentlich irgendwie santhia bearbeitet'
 
 - too_many_caps:
   descr: too many caps (upper/(lower+1)) > 1.5
