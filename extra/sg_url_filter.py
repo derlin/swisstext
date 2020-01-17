@@ -1,16 +1,45 @@
 from typing import Optional
 
 from swisstext.cmd.scraping.interfaces import IUrlFilter
-from swisstext.cmd import  link_utils
+from swisstext.cmd import link_utils
 import urllib.parse as up
 import re
 
-class SgUrlFilter(IUrlFilter):
 
+class SgUrlFilter(IUrlFilter):
     EXCLUDED_DOMAINS = {
-        'woerterbuchnetz.de/', # sort of dictionary online, hard to parse
-        'researchgate.net/', # parsing from PDFs
-        '://yigg.de', # redirect + show errors
+        # pdfs
+        'epdf.pub',
+        'archive.org',
+        'www.researchgate.net',
+
+        # cgi interface of dictionary / book
+        'woerterbuchnetz.de',
+        'reichstagsakten.de',  # old deutsch
+        'www.dididoktor.de',  # old deutsch
+        'www.dwds.de',
+        'ahdw.saw-leipzig.de',
+        'awb.saw-leipzig.de',
+        'mvdok.lbmv.de',  # scans of old German books / affidavits
+        'www.lindehe.de',
+        'wwwmayr.in.tum.de',
+        # https://wwwmayr.in.tum.de/spp1307/patterns/patterns_text-german_1024_edit_32.txt German .txt with strange encoding
+
+        # misc
+        'neon.niederlandistik.fu-berlin.de',  # netherlands
+
+        # songs
+        # 'www.karaoke-lyrics.net',
+        # 'www.musixmatch.com',
+        # 'greatsong.net',
+
+        # schwäbisch
+        'www.schoofseggl.de',
+        'www.schwaebisch-englisch.de',
+        'www.theater-in-bach.de',
+
+        # other
+        'yigg.de',  # redirects
     }
 
     def fix(self, url: str) -> Optional[str]:
@@ -33,10 +62,11 @@ class SgUrlFilter(IUrlFilter):
             # remove the viewfull
             return re.sub('[&\?]viewfull=1', '', url)
 
-        if any(excl in url for excl in self.EXCLUDED_DOMAINS):
+        elif any(f'://{excl}' in url for excl in self.EXCLUDED_DOMAINS):
             return None
 
         return url
+
 
 if __name__ == '__main__':
     links = [l.strip() for l in """
@@ -53,6 +83,7 @@ if __name__ == '__main__':
     http://woerterbuchnetz.de/cgi-bin/WBNetz/call_wbgui_py_from_form?sigle=DWB&mode=Volltextsuche&hitlist=&patternlist=&lemid=GN01312
     http://www.zeno.org/Wander-1867/A/Metzger
     http://web.archive.org/web/20010302135845/http://www.stillerhas.ch/texte/aare.html
+    http://archive.org/web/20010302135845/http://www.stillerhas.ch/texte/aare.html
     """.split('\n')]
 
     url_filter = SgUrlFilter()

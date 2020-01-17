@@ -215,7 +215,8 @@ class AbstractMongoSentence(Document):
     Note that this field can be absent (never labelled by anyone) or its label empty (all labels removed)."""
 
     meta = {'collection': 'sentences', 'abstract': True, 'indexes': [
-        {'fields': ['-date_added']}  # add a sorted (descending) index on the date_added
+        {'fields': ['-date_added']},  # add a sorted (descending) index on the date_added
+        {'fields': ['#url']} # hashed index on url
     ]}
 
     @property

@@ -57,6 +57,7 @@ class AbstractMongoText(Document):
         Notes: if the hash of the text has already been computed for the text, it can be specified to avoid
         a recomputation; URL should be the id of the related URL document (a hash in latest versions).
         """
+        # TODO: make this method thread-safe !!!
         if hash is None: hash = cls.get_hash(text)
         txt: Document = cls.get(text, hash=hash)
         if txt is not None:
