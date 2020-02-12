@@ -150,13 +150,12 @@ class ISeedCreator(ABC):
     """
 
     @abstractmethod
-    def generate_seeds(self, sentences: List[str], max=10, stopwords: List[str] = list()) -> List[str]:
+    def generate_seeds(self, sentences: List[str], max=10, **kwargs) -> List[str]:
         """
         [ABSTRACT] Should generate interesting seeds.
 
         :param sentences: the sentences
         :param max: maximum number of seeds to return
-        :param stopwords: an optional list of words to exclude from generated seeds
         :return: a list of seeds
         """
         # TODO use a generator instead of a list as return type ?

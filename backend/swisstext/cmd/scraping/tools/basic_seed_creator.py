@@ -1,6 +1,12 @@
 """
 This module contains multiple :py:class:`~swisstext.cmd.scraping.interfaces.ISeedCreator` implementations.
 They all use sklearn vectorizers (word N-grams) under the hood.
+
+.. warning::
+
+    This utility was never really used in experiments.
+    We usually generated the seeds using the scripts in the `seeding` directory on GitHub.
+
 """
 
 from ..interfaces import ISeedCreator
@@ -23,7 +29,7 @@ class BasicSeedCreator(ISeedCreator):
     def __init__(self, ngram_range=(3, 3)):
         self.ngram_range = ngram_range  #: ngram range parameter passed to the CountVectorizer
 
-    def generate_seeds(self, sentences: List[str], max=10, stopwords: List[str] = None) -> List[str]:
+    def generate_seeds(self, sentences: List[str], max=10, stopwords: List[str] = None, **kwargs) -> List[str]:
         """Return a list of seeds composed of the most frequent n-grams."""
         counts = self._get_ngrams(sentences, stopwords)
         return [t[1] for t in counts[:max]]
@@ -57,7 +63,7 @@ class IdfSeedCreator(ISeedCreator):
         """The arguments to pass to the vectorizer. They can be overriden in the constructor."""
         self.kwargs.update(kwargs)
 
-    def generate_seeds(self, sentences: List[str], max=10, stopwords: List[str] = None) -> List[str]:
+    def generate_seeds(self, sentences: List[str], max=10, stopwords: List[str] = None, **kwargs) -> List[str]:
         """Return a list of seeds composed of the most frequent n-grams (ponderated by IDF)."""
         if sentences:
             counts = self._get_ngrams(sentences, stopwords)

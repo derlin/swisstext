@@ -1,3 +1,8 @@
+"""
+This UrlFilter is especially made for Swiss German. It fixes some of the problems we discovered while running
+tests and gathering the SwissCrawl corpus.
+"""
+
 from typing import Optional
 
 from swisstext.cmd.scraping.interfaces import IUrlFilter

@@ -40,6 +40,15 @@ class SwigspotLangid(ISgDetector):
         else:
             return []
 
+    def predict_lang(self, sentences: List[str]) -> List[float]:
+        if sentences is not None and len(sentences) > 0:
+            import numpy as np
+            san = (self.sanitize(s) for s in sentences)
+            return [[_model_labels[proba.argmax()], s] + proba.tolist()
+                    for s, proba in zip(sentences, self.pipe.predict_proba(san))]
+        else:
+            return []
+
     def sanitize(self, s: str) -> str:
         san = s.lower()
         san = re.sub(_RR, "", san)

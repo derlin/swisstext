@@ -72,6 +72,17 @@ Sentence Filters
     :undoc-members:
     :show-inheritance:
 
+Link Filters
+==============================
+
+It is optionally possible to add a custom URL filtering logic that will be called for each new URL found on a page.
+
+This let's you:
+
+1. ignore child URLs (by returning ``None``) or
+2. modify child URLs, for example by normalizing subdomains, stripping url parameters, etc.
+
+Just create an instance of the :py:class:`~swisstext.cmd.scraping.interfaces.IUrlFilter` interface and implement its ``fix`` method.
 
 Language Detectors
 ==============================

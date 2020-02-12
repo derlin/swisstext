@@ -65,6 +65,9 @@ in place of the try-except, like so:
         print(f"Processing url: {url}")
         # ... do something more with the result ...
 """
+from datetime import datetime, timedelta
+from time import sleep
+
 from ..interfaces import ISearcher
 
 import requests
@@ -91,16 +94,26 @@ class GoogleGenerator(Iterable[str]):
         In this case, the exception message should contain the error code and error message as delivered
         by the Google API.
     """
-    def __init__(self, query, apikey: str, context='015058622601103575455:cpfpm27mio8'):
-        self.key = apikey #: the Google API key
-        self.ctx = context #: the context to use
+    def __init__(self, query, apikey: str, context='015058622601103575455:cpfpm27mio8',
+                qps=20, qpm=200):
 
+        self.key = apikey #: the Google API key
+        """The Google Custom Search API key"""
+        self.ctx = context
+        """
+        The context to use (see the official API reference for more info).
+        The default context is usually fine: it is parameterized to search all the web.
+        """
         self.params = dict(key=self.key, cx=self.ctx, q='%s' % query, fields=_links_fields)
         self._start_offset = 1  # offset for the next query (begins at result 1)
         self._count = 10  # the API returns at most ten results, so always pull the max results possible per query
 
         self._current_results: List = [] # cache of the results returned by the last query
         self._has_next = True # flag to detect if we reached the last page or not
+
+        self.qps, self.qpm = qps, qpm
+        self._qp: List[datetime] = []
+
         logger.debug("Searching %s" % query)
 
     def __iter__(self):
@@ -146,11 +159,27 @@ class GoogleGenerator(Iterable[str]):
             self._has_next = 'queries' in json_response and 'nextPage' in json_response['queries']
 
     def _send_query(self) -> requests.Response:
+        self._wait()
         r = requests.get(BASE_URL, params=self.params)
         if r.status_code != 200:
             json = r.json()
             raise Exception('%s (code: %d)' % (json['error']['message'], json['error']['code']))
         return r
+
+    def _wait(self):
+        s1 = datetime.now() - timedelta(seconds=1.)
+        m1 = datetime.now() - timedelta(seconds=60)
+        # cleanup
+        self._qp = [d for d in self._qp if d >= m1]
+        # wait
+        if len(self._qp) >= self.qpm:
+            logger.debug("QPM exceeded. Sleeping for 30s.")
+            sleep(30)
+        elif sum(1 for d in self._qp if d >= s1) >= self.qps:
+            logger.debug("QPS exceeded. Sleeping for 2s.")
+            sleep(2)
+        # mark this exact time as a new query
+        self._qp.append(datetime.now())
 
     def _extract_results(self, json_response: Dict) -> List:
         return [o['link'] for o in json_response['items']]
@@ -160,15 +189,10 @@ class GoogleGeneratorFactory(ISearcher):
     This factory creates a new :py:class:`GoogleGenerator` for each query.
     """
 
-    def __init__(self, apikey: str, context='015058622601103575455:cpfpm27mio8', **kwargs):
-        self.key = apikey
-        """The Google Custom Search API key"""
-        self.ctx = context
-        """
-        The context to use (see the official API reference for more info).
-        The default context is usually fine: it is parameterized to search all the web.
-        """
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
 
     def search(self, query) -> GoogleGenerator:
         """Search for a query using the Google Custom Search API."""
-        return GoogleGenerator(query, self.key, self.ctx)
+        return GoogleGenerator(query, **self.kwargs)

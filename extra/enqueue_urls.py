@@ -1,3 +1,17 @@
+"""
+A script that adds a list of URLs to MongoDB.
+
+Usually, you would run this script with a list of URLs, then launch st_scrape in mongo mode (i.e. the URLs should
+be pulled from mongo). Example:
+```bash
+st_scrape from_mongo --what new --how oldest
+```
+
+Doing it in this order instead of using `st_scrape from_file` is useful when you have a lot of URLs and want to
+run the crawler in small batches. Instead of trying to segment your URL text file by hand, you can simply specify
+how many new URLs to crawl using st_scrape's `-n` option.
+"""
+
 import argparse
 import sys
 
@@ -18,10 +32,10 @@ def is_url(url):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('url_file', type=argparse.FileType('r'), default=sys.stdin)
-    parser.add_argument('-source_info', type=str, default=None)
-    parser.add_argument('-host', type=str, default='localhost')
-    parser.add_argument('-port', type=int, default=27017)
-    parser.add_argument('-db', type=str, default='swisstext')
+    parser.add_argument('-s', '--source_info', type=str, default=None)
+    parser.add_argument('--host', type=str, default='localhost')
+    parser.add_argument('--port', type=int, default=27017)
+    parser.add_argument('--db', type=str, default='swisstext')
     parser.add_argument('-d', action='store_true')
     args = parser.parse_args()
 
@@ -30,7 +44,7 @@ def main():
         format="[%(levelname)-5s] %(message)s",
         level=logging.DEBUG if args.d else logging.INFO)
 
-    get_connection(db=args.db, host=args.host, port=args.port)
+    get_connection(db=args.db, host=args.mongo_host, port=args.port)
 
     enqueued, malformed, ignored, dup = 0, 0, 0, 0
     for i, line in enumerate(args.url_file):
@@ -57,7 +71,7 @@ def main():
             enqueued += 1
             logging.debug(f'enqueued {url}')
 
-    print(f'Enqueued URLs: {enqueued}/{i+1} ({malformed} malformed) ({ignored} ignored) ({dup} duplicates).')
+    print(f'Enqueued URLs: {enqueued}/{i + 1} ({malformed} malformed) ({ignored} ignored) ({dup} duplicates).')
 
 
 if __name__ == '__main__':
