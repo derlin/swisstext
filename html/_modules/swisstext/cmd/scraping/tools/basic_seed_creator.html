@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -269,6 +274,12 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains multiple :py:class:`~swisstext.cmd.scraping.interfaces.ISeedCreator` implementations.</span>
 <span class="sd">They all use sklearn vectorizers (word N-grams) under the hood.</span>
+
+<span class="sd">.. warning::</span>
+
+<span class="sd">    This utility was never really used in experiments.</span>
+<span class="sd">    We usually generated the seeds using the scripts in the `seeding` directory on GitHub.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISeedCreator</span>
@@ -291,7 +302,7 @@
 <div class="viewcode-block" id="BasicSeedCreator.__init__"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ngram_range</span> <span class="o">=</span> <span class="n">ngram_range</span>  <span class="c1">#: ngram range parameter passed to the CountVectorizer</span></div>
 
-<div class="viewcode-block" id="BasicSeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.generate_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="BasicSeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.generate_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return a list of seeds composed of the most frequent n-grams.&quot;&quot;&quot;</span>
         <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ngrams</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">[:</span><span class="nb">max</span><span class="p">]]</span></div>
@@ -325,7 +336,7 @@
         <span class="sd">&quot;&quot;&quot;The arguments to pass to the vectorizer. They can be overriden in the constructor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="IdfSeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator.generate_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="IdfSeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator.generate_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return a list of seeds composed of the most frequent n-grams (ponderated by IDF).&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sentences</span><span class="p">:</span>
             <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ngrams</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">)</span>

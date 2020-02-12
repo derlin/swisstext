@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -395,6 +400,11 @@ the page’s <a class="reference internal" href="pipeline-implementation.html#sw
 <span id="seed-creators"></span><h2>Seed creators<a class="headerlink" href="#module-swisstext.cmd.scraping.tools.basic_seed_creator" title="Permalink to this headline">¶</a></h2>
 <p>This module contains multiple <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISeedCreator" title="swisstext.cmd.scraping.interfaces.ISeedCreator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISeedCreator</span></code></a> implementations.
 They all use sklearn vectorizers (word N-grams) under the hood.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This utility was never really used in experiments.
+We usually generated the seeds using the scripts in the <cite>seeding</cite> directory on GitHub.</p>
+</div>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.tools.basic_seed_creator.</code><code class="sig-name descname">BasicSeedCreator</code><span class="sig-paren">(</span><em class="sig-param">ngram_range=(3</em>, <em class="sig-param">3)</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/basic_seed_creator.html#BasicSeedCreator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator" title="Permalink to this definition">¶</a></dt>
@@ -409,7 +419,7 @@ The generated seeds are simply the x most frequent N-grams found.</p>
 
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.generate_seeds">
-<code class="sig-name descname">generate_seeds</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str], max=10, stopwords: List[str] = None</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/basic_seed_creator.html#BasicSeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_seeds</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str], max=10, stopwords: List[str] = None, **kwargs</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/basic_seed_creator.html#BasicSeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of seeds composed of the most frequent n-grams.</p>
 </dd></dl>
 
@@ -435,7 +445,7 @@ The generated seeds are the x n-grams with the highest score.</p>
 
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator.generate_seeds">
-<code class="sig-name descname">generate_seeds</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str], max=10, stopwords: List[str] = None</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/basic_seed_creator.html#IdfSeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_seeds</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str], max=10, stopwords: List[str] = None, **kwargs</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/basic_seed_creator.html#IdfSeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of seeds composed of the most frequent n-grams (ponderated by IDF).</p>
 </dd></dl>
 
@@ -626,7 +636,7 @@ If unset, keep only paragraphs with a context-free class of “neargood” or �
 <dl class="class">
 <dt id="swisstext.cmd.scraping.tools.norm_punc.Normalizer">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.tools.norm_punc.</code><code class="sig-name descname">Normalizer</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/norm_punc.html#Normalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.norm_punc.Normalizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A wrapper around <a class="reference internal" href="#swisstext.cmd.scraping.tools.norm_punc.normalize_text" title="swisstext.cmd.scraping.tools.norm_punc.normalize_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">normalize_text()</span></code></a></p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.norm_punc.Normalizer.__init__">
@@ -1076,6 +1086,16 @@ You can override this by passing a path to the constructor (<code class="docutil
 
 </div>
 </div>
+<div class="section" id="link-filters">
+<h2>Link Filters<a class="headerlink" href="#link-filters" title="Permalink to this headline">¶</a></h2>
+<p>It is optionally possible to add a custom URL filtering logic that will be called for each new URL found on a page.</p>
+<p>This let’s you:</p>
+<ol class="arabic simple">
+<li><p>ignore child URLs (by returning <code class="docutils literal notranslate"><span class="pre">None</span></code>) or</p></li>
+<li><p>modify child URLs, for example by normalizing subdomains, stripping url parameters, etc.</p></li>
+</ol>
+<p>Just create an instance of the <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter" title="swisstext.cmd.scraping.interfaces.IUrlFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">IUrlFilter</span></code></a> interface and implement its <code class="docutils literal notranslate"><span class="pre">fix</span></code> method.</p>
+</div>
 <div class="section" id="module-swisstext.cmd.scraping.tools.swigspot_langid">
 <span id="language-detectors"></span><h2>Language Detectors<a class="headerlink" href="#module-swisstext.cmd.scraping.tools.swigspot_langid" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -1100,6 +1120,11 @@ The notebook for recreating the model is available <a class="reference external"
 <dd><p>Predict the Swiss German probability (between 0 and 1) of a list of sentences.
 Always return 1 by default.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid.predict_lang">
+<code class="sig-name descname">predict_lang</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str]</em><span class="sig-paren">)</span> &#x2192; List[float]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/swigspot_langid.html#SwigspotLangid.predict_lang"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid.predict_lang" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid.sanitize">
@@ -1142,7 +1167,7 @@ Note that the file is overriden on each run.</p>
 
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.console_saver.ConsoleSaver.get_page">
-<code class="sig-name descname">get_page</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/console_saver.html#ConsoleSaver.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.console_saver.ConsoleSaver.get_page" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_page</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.data.Page<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/console_saver.html#ConsoleSaver.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.console_saver.ConsoleSaver.get_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a page. The simplest implementation is just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">Page(url)</span></code>.
 If the subclass uses a data store, it should also populate the other page attributes (e.g. the score
 information) so that the :py:class::<cite>IDecider</cite> can make clever decisions.</p>
@@ -1227,7 +1252,7 @@ a MongoDB database.</p>
 
 <dl class="method">
 <dt id="swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.get_page">
-<code class="sig-name descname">get_page</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/mongo_saver.html#MongoSaver.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.get_page" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_page</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.data.Page<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/tools/mongo_saver.html#MongoSaver.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.get_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a page. The simplest implementation is just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">Page(url)</span></code>.
 If the subclass uses a data store, it should also populate the other page attributes (e.g. the score
 information) so that the :py:class::<cite>IDecider</cite> can make clever decisions.</p>

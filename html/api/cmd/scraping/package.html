@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -341,10 +346,9 @@ The file should have one URL per line. Any line starting with something other th
 <p>Scrape using mongo URLs as base.</p>
 <p>This script runs the scraping pipeline using -n bootstrap URLs pulled from Mongo. Those URLs are
 selected depending on the number of visits and the date of the last visit (less visited first, oldest visit first).
-If –new is specified, only URLs that have never been visited will be used (so the number of bootstrap URLs
-actually used might be less than -n, if not enough new URLs are present).
-If –any is specified, exactly -n URLs are selected (except if -n is less than the total number of URLs in the
-collection).</p>
+The –what argument can be used to control which URLs will be pulled from mongo to start the process.
+Use ‘new’ for URLs never visited before, ‘seed’ for non-visited URLs found using the search engine or ‘any’ (default).
+Except with what=any, the actual number of URLs pulled is not guaranteed to be -n.</p>
 <p>Note that to connect to MongoDB, it relies on the host, port and db options present in the <cite>saver_options</cite> property
 of the configuration. So whatever saver you use, ensure that those properties are correct
 (default: localhost:27017, db=swisstext).</p>
@@ -359,9 +363,25 @@ of the configuration. So whatever saver you use, ensure that those properties ar
 </dd></dl>
 
 <dl class="option">
-<dt id="cmdoption-st-scrape-from-mongo-new">
-<code class="sig-name descname">--new</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--any</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-st-scrape-from-mongo-new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only crawl new URLs  [default: False]</p>
+<dt id="cmdoption-st-scrape-from-mongo-what">
+<code class="sig-name descname">--what</code><code class="sig-prename descclassname"> &lt;what&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-from-mongo-what" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pull any URLs / new URLs / new URLs from external source (seed, file)  [default: any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>any|new|ext</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-st-scrape-from-mongo-how">
+<code class="sig-name descname">--how</code><code class="sig-prename descclassname"> &lt;how&gt;</code><a class="headerlink" href="#cmdoption-st-scrape-from-mongo-how" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pull URLs oldest first / at random  [default: oldest]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>oldest|random</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

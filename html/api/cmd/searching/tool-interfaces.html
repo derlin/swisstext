@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -281,20 +286,62 @@
 This makes it easy to test new ways or to tune one aspect of the search engine while keeping most of the code unchanged.</p>
 <p>See the <a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.searching.tools" title="swisstext.cmd.searching.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.cmd.searching.tools</span></code></a> module for implementations.</p>
 <dl class="class">
+<dt id="swisstext.cmd.searching.interfaces.IQueryBuilder">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.interfaces.</code><code class="sig-name descname">IQueryBuilder</code><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#IQueryBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.IQueryBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Do some preprocessing on the query before submitting it to a search engine.
+The builder can be used to prepare a query from a seed, such as quoting words, using “AND” keywords, etc.</p>
+<dl class="method">
+<dt id="swisstext.cmd.searching.interfaces.IQueryBuilder.prepare">
+<code class="sig-name descname">prepare</code><span class="sig-paren">(</span><em class="sig-param">query: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#IQueryBuilder.prepare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.IQueryBuilder.prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>By default, does nothing.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="swisstext.cmd.searching.interfaces.ISaver">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.interfaces.</code><code class="sig-name descname">ISaver</code><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>[ABSTRACT] The saver is responsible for persisting everything somewhere, such as a database, a file or the console.</p>
+<dl class="class">
+<dt id="swisstext.cmd.searching.interfaces.ISaver.LinkStatus">
+<em class="property">class </em><code class="sig-name descname">LinkStatus</code><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver.LinkStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.LinkStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></a></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.interfaces.ISaver.LinkStatus.BLACKLISTED">
+<code class="sig-name descname">BLACKLISTED</code><em class="property"> = 2</em><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.LinkStatus.BLACKLISTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.interfaces.ISaver.LinkStatus.EXISTS">
+<code class="sig-name descname">EXISTS</code><em class="property"> = 1</em><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.LinkStatus.EXISTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.interfaces.ISaver.LinkStatus.NOT_EXIST">
+<code class="sig-name descname">NOT_EXIST</code><em class="property"> = 0</em><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.LinkStatus.NOT_EXIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="method">
 <dt id="swisstext.cmd.searching.interfaces.ISaver.link_exists">
-<code class="sig-name descname">link_exists</code><span class="sig-paren">(</span><em class="sig-param">url: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver.link_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.link_exists" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">link_exists</code><span class="sig-paren">(</span><em class="sig-param">url: str</em><span class="sig-paren">)</span> &#x2192; swisstext.cmd.searching.interfaces.ISaver.LinkStatus<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver.link_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.link_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if the url already exists in the persistence layer. Returns false by default.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="swisstext.cmd.searching.interfaces.ISaver.save_seed">
-<em class="property">abstract </em><code class="sig-name descname">save_seed</code><span class="sig-paren">(</span><em class="sig-param">seed: swisstext.cmd.searching.data.Seed</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver.save_seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.save_seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>[ABSTRACT] Should persist a seed and its associated results.</p>
+<em class="property">abstract </em><code class="sig-name descname">save_seed</code><span class="sig-paren">(</span><em class="sig-param">seed: swisstext.cmd.searching.data.Seed</em>, <em class="sig-param">was_used: bool</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver.save_seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.save_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>[ABSTRACT] Should persist a seed and, if was_used is true, its associated results.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.interfaces.ISaver.seed_exists">
+<code class="sig-name descname">seed_exists</code><span class="sig-paren">(</span><em class="sig-param">seed: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISaver.seed_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISaver.seed_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether a seed already exist in the backend.</p>
 </dd></dl>
 
 </dd></dl>
@@ -302,7 +349,7 @@ This makes it easy to test new ways or to tune one aspect of the search engine w
 <dl class="class">
 <dt id="swisstext.cmd.searching.interfaces.ISearcher">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.interfaces.</code><code class="sig-name descname">ISearcher</code><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/interfaces.html#ISearcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.interfaces.ISearcher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>[ABSTRACT] This tool is the core of the pipeline: it is an interface to a real search engine.</p>
 <dl class="method">
 <dt id="swisstext.cmd.searching.interfaces.ISearcher.search">

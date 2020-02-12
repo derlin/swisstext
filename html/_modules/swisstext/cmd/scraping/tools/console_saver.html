@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -321,7 +326,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">sfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">s</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="p">)))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAVING </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">page</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConsoleSaver.get_page"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.console_saver.ConsoleSaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConsoleSaver.get_page"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.console_saver.ConsoleSaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Page</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">url</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pages</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pages</span><span class="p">[</span><span class="n">url</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">Page</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">PageScore</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>

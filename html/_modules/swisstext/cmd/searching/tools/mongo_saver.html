@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -269,7 +274,7 @@
 <span></span><span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="n">connect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">swisstext.mongo.models</span> <span class="k">import</span> <span class="n">MongoSeed</span><span class="p">,</span> <span class="n">MongoURL</span><span class="p">,</span> <span class="n">SourceType</span><span class="p">,</span> <span class="n">Source</span>
+<span class="kn">from</span> <span class="nn">swisstext.mongo.models</span> <span class="k">import</span> <span class="n">MongoSeed</span><span class="p">,</span> <span class="n">MongoURL</span><span class="p">,</span> <span class="n">SourceType</span><span class="p">,</span> <span class="n">Source</span><span class="p">,</span> <span class="n">MongoBlacklist</span>
 <span class="kn">from</span> <span class="nn">..data</span> <span class="k">import</span> <span class="n">Seed</span>
 <span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISaver</span>
 
@@ -289,19 +294,25 @@
 <div class="viewcode-block" id="MongoSaver.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">27017</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s1">&#39;st1&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MongoSaver.save_seed"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.save_seed">[docs]</a>    <span class="k">def</span> <span class="nf">save_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Seed</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="p">:</span>
-            <span class="c1"># TODO ensure it is new ?</span>
-            <span class="n">MongoURL</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">Source</span><span class="p">(</span><span class="n">SourceType</span><span class="o">.</span><span class="n">SEED</span><span class="p">,</span> <span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<div class="viewcode-block" id="MongoSaver.seed_exists"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.seed_exists">[docs]</a>    <span class="k">def</span> <span class="nf">seed_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MongoSeed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
-        <span class="n">new_links_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="p">)</span>
+<div class="viewcode-block" id="MongoSaver.save_seed"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.save_seed">[docs]</a>    <span class="k">def</span> <span class="nf">save_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Seed</span><span class="p">,</span> <span class="n">was_used</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">MongoSeed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span> <span class="ow">or</span> <span class="n">MongoSeed</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">add_search_history</span><span class="p">(</span><span class="n">new_links_count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">was_used</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="p">:</span>
+                <span class="n">MongoURL</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">Source</span><span class="p">(</span><span class="n">SourceType</span><span class="o">.</span><span class="n">SEED</span><span class="p">,</span> <span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="n">new_links_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">add_search_history</span><span class="p">(</span><span class="n">new_links_count</span><span class="p">)</span>
         <span class="n">s</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;saved </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">seed</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MongoSaver.link_exists"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.link_exists">[docs]</a>    <span class="k">def</span> <span class="nf">link_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="MongoSaver.link_exists"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.link_exists">[docs]</a>    <span class="k">def</span> <span class="nf">link_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ISaver</span><span class="o">.</span><span class="n">LinkStatus</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">MongoBlacklist</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ISaver</span><span class="o">.</span><span class="n">LinkStatus</span><span class="o">.</span><span class="n">BLACKLISTED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ISaver</span><span class="o">.</span><span class="n">LinkStatus</span><span class="p">(</span><span class="n">MongoURL</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">url</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -283,14 +288,14 @@ This makes it easy to test new ways or to tune one aspect of the scraper while k
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ICrawler">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">ICrawler</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ICrawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ICrawler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>[ABSTRACT] This tool is in charge of crawling a page. More specifically, it should be able to:
 1. extract the text of the page (stripped of any HTML or other structural clue),
 2. extract links pointing to other pages</p>
 <dl class="exception">
 <dt id="swisstext.cmd.scraping.interfaces.ICrawler.CrawlError">
 <em class="property">exception </em><code class="sig-name descname">CrawlError</code><span class="sig-paren">(</span><em class="sig-param">name='CrawlError'</em>, <em class="sig-param">message=''</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ICrawler.CrawlError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ICrawler.CrawlError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>This wrapper should be used for any exception that arise during scraping.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ICrawler.CrawlError.__init__">
@@ -309,7 +314,7 @@ This makes it easy to test new ways or to tune one aspect of the scraper while k
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults">
 <em class="property">class </em><code class="sig-name descname">CrawlResults</code><span class="sig-paren">(</span><em class="sig-param">text: str, links: List[str]</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ICrawler.CrawlResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Holds the results of a page crawl.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults.__init__">
@@ -352,7 +357,7 @@ Should crawl the page and extract the text and the links into a <a class="refere
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.IDecider">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">IDecider</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#IDecider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.IDecider" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A decider should implement the logic behind whether or not a URL is considered interesting/should be crawled.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.IDecider.should_children_be_crawled">
@@ -381,7 +386,7 @@ the persistence layer).</p>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.INormalizer">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">INormalizer</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#INormalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.INormalizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A normalizer should take a [long] text (extracted from a web page) and clean it in a consistant way.
 For example: uncurling quotes, normalizing punctuation, fix unicode, etc.
 The default implementation just return the text as-is.</p>
@@ -402,7 +407,7 @@ The default implementation just return the text as-is.</p>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ISaver">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">ISaver</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISaver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISaver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>[ABSTRACT] The saver is responsible for persisting everything somewhere, such as a database, a file or the console.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ISaver.__init__">
@@ -417,7 +422,7 @@ The default implementation just return the text as-is.</p>
 
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ISaver.get_page">
-<code class="sig-name descname">get_page</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISaver.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">get_page</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; swisstext.cmd.scraping.data.Page<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISaver.get_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a page. The simplest implementation is just <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">Page(url)</span></code>.
 If the subclass uses a data store, it should also populate the other page attributes (e.g. the score
 information) so that the :py:class::<cite>IDecider</cite> can make clever decisions.</p>
@@ -477,18 +482,17 @@ Only new sentences will be added to the page’s <a class="reference internal" h
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ISeedCreator">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">ISeedCreator</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISeedCreator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISeedCreator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>[ABSTRACT] A seed creator should generate seeds, i.e. search queries, out of Swiss German sentences.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds">
-<em class="property">abstract </em><code class="sig-name descname">generate_seeds</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str], max=10, stopwords: List[str] = []</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">generate_seeds</code><span class="sig-paren">(</span><em class="sig-param">sentences: List[str], max=10, **kwargs</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISeedCreator.generate_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds" title="Permalink to this definition">¶</a></dt>
 <dd><p>[ABSTRACT] Should generate interesting seeds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sentences</strong> – the sentences</p></li>
 <li><p><strong>max</strong> – maximum number of seeds to return</p></li>
-<li><p><strong>stopwords</strong> – an optional list of words to exclude from generated seeds</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -502,7 +506,7 @@ Only new sentences will be added to the page’s <a class="reference internal" h
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ISentenceFilter">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">ISentenceFilter</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISentenceFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISentenceFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A sentence filter should be able to tell if a given sentence is well-formed (i.e. valid) or not.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ISentenceFilter.filter">
@@ -521,7 +525,7 @@ Only new sentences will be added to the page’s <a class="reference internal" h
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ISgDetector">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">ISgDetector</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISgDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISgDetector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>[ABSTRACT] An SG Detector is a Language Identifier supporting Swiss German.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.interfaces.ISgDetector.predict">
@@ -541,7 +545,7 @@ Always return 1 by default.</p>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.interfaces.ISplitter">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">ISplitter</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISplitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISplitter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A splitter should take a [long] text (extracted from a web page) and split it into well-formed sentences.
 The default implementation just splits on the newline character.</p>
 <dl class="method">
@@ -554,6 +558,38 @@ The default implementation just splits on the newline character.</p>
 <dt id="swisstext.cmd.scraping.interfaces.ISplitter.split_all">
 <code class="sig-name descname">split_all</code><span class="sig-paren">(</span><em class="sig-param">texts: List[str]</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#ISplitter.split_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.ISplitter.split_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a list of texts and returns a list of sentences (see <a class="reference internal" href="#swisstext.cmd.scraping.interfaces.ISplitter.split" title="swisstext.cmd.scraping.interfaces.ISplitter.split"><code class="xref py py-meth docutils literal notranslate"><span class="pre">split()</span></code></a>).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.cmd.scraping.interfaces.IUrlFilter">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.interfaces.</code><code class="sig-name descname">IUrlFilter</code><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#IUrlFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.IUrlFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A URL filter can transform or remove links found on a page before they are saved/crawled.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>IUrlFilter will only be called on URLs discovered during the scraping process (child URLs), not on the
+URLs used to bootstrap the process (using st_scrape from_file/from_mongo).</p>
+</div>
+<dl class="method">
+<dt id="swisstext.cmd.scraping.interfaces.IUrlFilter.filter">
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">urls: List[str]</em><span class="sig-paren">)</span> &#x2192; Set[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#IUrlFilter.filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.IUrlFilter.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fix and filter a list of URLs by calling <a class="reference internal" href="#swisstext.cmd.scraping.interfaces.IUrlFilter.fix" title="swisstext.cmd.scraping.interfaces.IUrlFilter.fix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IUrlFilter.fix()</span></code></a> on each element and removing None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.scraping.interfaces.IUrlFilter.fix">
+<code class="sig-name descname">fix</code><span class="sig-paren">(</span><em class="sig-param">url: str</em><span class="sig-paren">)</span> &#x2192; Optional[str]<a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/interfaces.html#IUrlFilter.fix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.interfaces.IUrlFilter.fix" title="Permalink to this definition">¶</a></dt>
+<dd><p>This should be overriden. The default implementation just returns the URL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> – the current URL</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the potentially transformed URL, or None if it should be ignored</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

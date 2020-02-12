@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -266,7 +271,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for swisstext.cmd.scraping.tools.mongo_saver</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="n">NotUniqueError</span>
+<span></span><span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Lock</span>
+
+<span class="kn">from</span> <span class="nn">mongoengine</span> <span class="k">import</span> <span class="n">NotUniqueError</span>
 
 <span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISaver</span>
 <span class="kn">from</span> <span class="nn">..data</span> <span class="k">import</span> <span class="n">Page</span><span class="p">,</span> <span class="n">PageScore</span>
@@ -275,7 +282,6 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
 
 <div class="viewcode-block" id="MongoSaver"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver">[docs]</a><span class="k">class</span> <span class="nc">MongoSaver</span><span class="p">(</span><span class="n">ISaver</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -293,9 +299,10 @@
 <span class="sd">        :param kwargs: may include ``host`` and ``port``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="n">get_connection</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="n">get_connection</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="MongoSaver.get_page"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="MongoSaver.get_page"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Page</span><span class="p">:</span>
         <span class="n">mu</span><span class="p">:</span> <span class="n">MongoURL</span> <span class="o">=</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">score</span><span class="p">:</span> <span class="n">PageScore</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -311,34 +318,35 @@
         <span class="k">return</span> <span class="n">MongoSentence</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MongoSaver.save_page"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.save_page">[docs]</a>    <span class="k">def</span> <span class="nf">save_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">):</span>
-        <span class="c1"># save sentences first, ignoring duplicates</span>
-        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">MongoSentence</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">sentence</span><span class="o">.</span><span class="n">proba</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">NotUniqueError</span><span class="p">:</span>
-                <span class="c1"># TODO decrease new_sg ?</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Exception ignored -- Duplicate sentence found (url: </span><span class="si">{page.url}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="c1"># save sentences first, ignoring duplicates</span>
+            <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">MongoSentence</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">sentence</span><span class="o">.</span><span class="n">proba</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="k">except</span> <span class="n">NotUniqueError</span><span class="p">:</span>
+                    <span class="c1"># TODO decrease new_sg ?</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Exception ignored -- Duplicate sentence found (url: </span><span class="si">{page.url}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
-        <span class="c1"># save or update url</span>
-        <span class="n">new_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="p">)</span>
-        <span class="n">mu</span><span class="p">:</span> <span class="n">MongoURL</span> <span class="o">=</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mu</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">source</span> <span class="o">=</span> <span class="n">Source</span><span class="p">(</span><span class="n">SourceType</span><span class="o">.</span><span class="n">AUTO</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">parent_url</span><span class="p">)</span> <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">parent_url</span> <span class="k">else</span> <span class="n">Source</span><span class="p">()</span>
-            <span class="n">mu</span> <span class="o">=</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
+            <span class="c1"># save or update url</span>
+            <span class="n">new_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="p">)</span>
+            <span class="n">mu</span><span class="p">:</span> <span class="n">MongoURL</span> <span class="o">=</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mu</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="n">Source</span><span class="p">(</span><span class="n">SourceType</span><span class="o">.</span><span class="n">AUTO</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">parent_url</span><span class="p">)</span> <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">parent_url</span> <span class="k">else</span> <span class="n">Source</span><span class="p">()</span>
+                <span class="n">mu</span> <span class="o">=</span> <span class="n">MongoURL</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
 
-        <span class="c1"># save raw, unormalized text</span>
-        <span class="n">text</span><span class="p">:</span> <span class="n">MongoText</span> <span class="o">=</span> <span class="n">MongoText</span><span class="o">.</span><span class="n">create_or_update</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">urls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;duplicate text found: </span><span class="si">{text.urls}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># save raw, unormalized text</span>
+            <span class="n">text</span><span class="p">:</span> <span class="n">MongoText</span> <span class="o">=</span> <span class="n">MongoText</span><span class="o">.</span><span class="n">create_or_update</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">urls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;duplicate text found: </span><span class="si">{text.urls}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1"># add crawl history</span>
-        <span class="n">mu</span><span class="o">.</span><span class="n">add_crawl_history</span><span class="p">(</span><span class="n">new_count</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="n">text</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="c1"># persist</span>
-        <span class="n">text</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">mu</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="c1"># add crawl history</span>
+            <span class="n">mu</span><span class="o">.</span><span class="n">add_crawl_history</span><span class="p">(</span><span class="n">new_count</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="n">text</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">sents_count</span><span class="o">=</span><span class="n">page</span><span class="o">.</span><span class="n">sentence_count</span><span class="p">,</span> <span class="n">sg_sents_count</span><span class="o">=</span><span class="n">page</span><span class="o">.</span><span class="n">sg_count</span><span class="p">)</span>
+            <span class="c1"># persist</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">mu</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saved </span><span class="si">%s</span><span class="s2"> (crawled=</span><span class="si">%d</span><span class="s2"> times, new_count=</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span>
-                    <span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">crawl_history</span><span class="p">),</span> <span class="n">new_count</span><span class="p">))</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saved </span><span class="si">%s</span><span class="s2"> (crawled=</span><span class="si">%d</span><span class="s2"> times, new_count=</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span>
+                        <span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">crawl_history</span><span class="p">),</span> <span class="n">new_count</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="MongoSaver.is_url_blacklisted"><a class="viewcode-back" href="../../../../../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.is_url_blacklisted">[docs]</a>    <span class="k">def</span> <span class="nf">is_url_blacklisted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">MongoBlacklist</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div>

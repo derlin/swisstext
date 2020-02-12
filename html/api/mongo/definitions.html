@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -278,7 +283,7 @@
   <div class="section" id="abstract-definitions">
 <h1>Abstract Definitions<a class="headerlink" href="#abstract-definitions" title="Permalink to this headline">¶</a></h1>
 <p>All defined in the <a class="reference internal" href="#module-swisstext.mongo.abstract" title="swisstext.mongo.abstract"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo.abstract</span></code></a> package:</p>
-<span class="target" id="module-swisstext.mongo.abstract"></span><p>This module contains abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> definitions for all the objects in the SwissText system
+<span class="target" id="module-swisstext.mongo.abstract"></span><p>This module contains abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> definitions for all the objects in the SwissText system
 database.</p>
 <p>When using mongoengine directly, you can use the concrete classes defined in <a class="reference internal" href="#module-swisstext.mongo.models" title="swisstext.mongo.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">swisstext.mongo.models</span></code></a>.</p>
 <p>When using Flask-MongoEngine, just subclass all abstract classes (i.e. the ones prefixed with <cite>Abstract</cite>)
@@ -400,7 +405,7 @@ p. 62 (see category <em>Alle SDS- und SADS- Daten 10 Dialektregionen</em>)</p>
 <dl class="class">
 <dt id="swisstext.mongo.abstract.generic.SourceType">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.generic.</code><code class="sig-name descname">SourceType</code><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/generic.html#SourceType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.generic.SourceType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Possible sources for a URL or a Seed.</p>
 <dl class="attribute">
 <dt id="swisstext.mongo.abstract.generic.SourceType.AUTO">
@@ -446,7 +451,7 @@ can also add seeds manually to the collection using the Frontend (see <code clas
 <dt id="swisstext.mongo.abstract.seeds.AbstractMongoSeed">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.seeds.</code><code class="sig-name descname">AbstractMongoSeed</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**values</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a seed, stored in the <code class="docutils literal notranslate"><span class="pre">seeds</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a seed, stored in the <code class="docutils literal notranslate"><span class="pre">seeds</span></code> collection.</p>
 <dl class="method">
 <dt id="swisstext.mongo.abstract.seeds.AbstractMongoSeed.add_search_history">
 <code class="sig-name descname">add_search_history</code><span class="sig-paren">(</span><em class="sig-param">new_links_count</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/seeds.html#AbstractMongoSeed.add_search_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.seeds.AbstractMongoSeed.add_search_history" title="Permalink to this definition">¶</a></dt>
@@ -614,7 +619,7 @@ Once a sentence is added to the collection, it is never deleted, except if the U
 <dt id="swisstext.mongo.abstract.sentences.AbstractMongoSentence">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.sentences.</code><code class="sig-name descname">AbstractMongoSentence</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**values</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/sentences.html#AbstractMongoSentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.AbstractMongoSentence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a sentence, stored in the <code class="docutils literal notranslate"><span class="pre">sentence</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for a sentence, stored in the <code class="docutils literal notranslate"><span class="pre">sentence</span></code> collection.</p>
 <p>To avoid duplicates, the primary key is a hash derived from the text. We currently use
 <a class="reference external" href="https://opensource.googleblog.com/2011/04/introducing-cityhash.html">CityHash64</a>, a hashing function
 especially made for hashtables instead of cryptography. Note that the hash is case-sensitive and that
@@ -781,7 +786,7 @@ Note that this field can be absent (never labelled by anyone) or its label empty
 <dt id="swisstext.mongo.abstract.sentences.DialectInfo">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.sentences.</code><code class="sig-name descname">DialectInfo</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/sentences.html#DialectInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.sentences.DialectInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.EmbeddedDocument</span></code></p>
-<p>A <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.EmbeddedDocument" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.EmbeddedDocument</span></code></a> that Encapsulates all the dialect-tagging information for a sentence.</p>
+<p>A <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.EmbeddedDocument" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.EmbeddedDocument</span></code></a> that Encapsulates all the dialect-tagging information for a sentence.</p>
 <p>Usually, a sentence will be presented to a given user only once. If the user knows the dialect, an
 entry in <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.labels" title="swisstext.mongo.abstract.sentences.DialectInfo.labels"><code class="xref py py-attr docutils literal notranslate"><span class="pre">labels</span></code></a> is added. If the user doesn’t know, his ID is added to <a class="reference internal" href="#swisstext.mongo.abstract.sentences.DialectInfo.skipped_by" title="swisstext.mongo.abstract.sentences.DialectInfo.skipped_by"><code class="xref py py-attr docutils literal notranslate"><span class="pre">skipped_by</span></code></a>.
 Thus, a user ID should be present <em>at most</em> in one of the two lists.</p>
@@ -793,9 +798,9 @@ while <a class="reference internal" href="#swisstext.mongo.abstract.sentences.Di
 <p>Most of the methods here call <code class="xref py py-meth docutils literal notranslate"><span class="pre">mongoengine.EmbeddedDocument.save()</span></code> under the hood, thus persisting
 the changes automatically to the DB.</p>
 <p>This usually works fine, but this means you CAN NOT manipulate a
-<code class="docutils literal notranslate"><span class="pre">DialectInfo</span></code> instance if it is not attached to a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a>.</p>
+<code class="docutils literal notranslate"><span class="pre">DialectInfo</span></code> instance if it is not attached to a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a>.</p>
 <p>Moreover, you can sometimes run into a
-‘<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ReferenceError" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferenceError</span></code></a>: <em>weakly-referenced object no longer exists’</em>
+‘<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ReferenceError" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReferenceError</span></code></a>: <em>weakly-referenced object no longer exists’</em>
 (only when using Flask-Mongoengine ?). If this is the case, ensure that you have a strong reference to the
 parent document in your code. Here is an example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># let&#39;s say MongoSentence implements AbstractMongoSentence</span>
@@ -936,7 +941,7 @@ updated or moved to the <cite>blacklist</cite> after the first visit.</p>
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoBlacklist">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.urls.</code><code class="sig-name descname">AbstractMongoBlacklist</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**values</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoBlacklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoBlacklist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>uninteresting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">blacklist</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>uninteresting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">blacklist</span></code> collection.</p>
 <dl class="method">
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoBlacklist.add_url">
 <em class="property">classmethod </em><code class="sig-name descname">add_url</code><span class="sig-paren">(</span><em class="sig-param">url: str</em>, <em class="sig-param">source: swisstext.mongo.abstract.generic.Source = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoBlacklist.add_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoBlacklist.add_url" title="Permalink to this definition">¶</a></dt>
@@ -984,15 +989,18 @@ updated or moved to the <cite>blacklist</cite> after the first visit.</p>
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.urls.</code><code class="sig-name descname">AbstractMongoURL</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**values</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.document.Document</span></code></p>
-<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>interesting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">urls</span></code> collection.</p>
+<p>An abstract <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mongoengine.Document</span></code></a> for <em>interesting</em> URLs, stored in the <code class="docutils literal notranslate"><span class="pre">urls</span></code> collection.</p>
 <dl class="method">
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history">
-<code class="sig-name descname">add_crawl_history</code><span class="sig-paren">(</span><em class="sig-param">new_sg_count</em>, <em class="sig-param">hash=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL.add_crawl_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_crawl_history</code><span class="sig-paren">(</span><em class="sig-param">new_sg_count</em>, <em class="sig-param">hash=None</em>, <em class="sig-param">sents_count=None</em>, <em class="sig-param">sg_sents_count=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL.add_crawl_history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a crawl history entry. Note that this will update the document instance,
-but won’t persist the change to mongo. You need to call <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document.save" title="(in MongoEngine v0.18.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mongoengine.Document.save()</span></code></a> yourself.</p>
+but won’t persist the change to mongo. You need to call <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.Document.save" title="(in MongoEngine v0.19.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mongoengine.Document.save()</span></code></a> yourself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_sg_count</strong> – the number of new sentences found on this crawl.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_sg_count</strong> – the number of new sentences found on this crawl.</p></li>
+<li><p><strong>kwargs</strong> – see <a class="reference internal" href="#swisstext.mongo.abstract.urls.UrlCrawlMeta" title="swisstext.mongo.abstract.urls.UrlCrawlMeta"><code class="xref py py-class docutils literal notranslate"><span class="pre">UrlCrawlMeta</span></code></a></p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>self</p>
@@ -1061,8 +1069,8 @@ You need to call the <code class="docutils literal notranslate"><span class="pre
 
 <dl class="method">
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled">
-<em class="property">classmethod </em><code class="sig-name descname">get_never_crawled</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; mongoengine.queryset.queryset.QuerySet<a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL.get_never_crawled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.queryset.QuerySet" title="(in MongoEngine v0.18.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuerySet</span></code></a> of URLs that have never been visited.</p>
+<em class="property">classmethod </em><code class="sig-name descname">get_never_crawled</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; mongoengine.queryset.queryset.QuerySet<a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#AbstractMongoURL.get_never_crawled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a <a class="reference external" href="http://docs.mongoengine.org/apireference.html#mongoengine.queryset.QuerySet" title="(in MongoEngine v0.19.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuerySet</span></code></a> of URLs that have never been visited.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1088,6 +1096,25 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
 <dt id="swisstext.mongo.abstract.urls.AbstractMongoURL.url">
 <code class="sig-name descname">url</code><a class="headerlink" href="#swisstext.mongo.abstract.urls.AbstractMongoURL.url" title="Permalink to this definition">¶</a></dt>
 <dd><p>The URL, indexed by hash.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="swisstext.mongo.abstract.urls.UrlCrawlMeta">
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.urls.</code><code class="sig-name descname">UrlCrawlMeta</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/urls.html#UrlCrawlMeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.urls.UrlCrawlMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swisstext.mongo.abstract.generic.CrawlMeta" title="swisstext.mongo.abstract.generic.CrawlMeta"><code class="xref py py-class docutils literal notranslate"><span class="pre">swisstext.mongo.abstract.generic.CrawlMeta</span></code></a></p>
+<p>Keep more information on the crawl</p>
+<dl class="attribute">
+<dt id="swisstext.mongo.abstract.urls.UrlCrawlMeta.sents_count">
+<code class="sig-name descname">sents_count</code><a class="headerlink" href="#swisstext.mongo.abstract.urls.UrlCrawlMeta.sents_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of quality sentences found on the page.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.mongo.abstract.urls.UrlCrawlMeta.sg_sents_count">
+<code class="sig-name descname">sg_sents_count</code><a class="headerlink" href="#swisstext.mongo.abstract.urls.UrlCrawlMeta.sg_sents_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of quality sentences spotted as GSW (new or not).</p>
 </dd></dl>
 
 </dd></dl>
@@ -1156,7 +1183,7 @@ Possible sources are defined in <a class="reference internal" href="#swisstext.m
 <dl class="class">
 <dt id="swisstext.mongo.abstract.users.UserRoles">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.mongo.abstract.users.</code><code class="sig-name descname">UserRoles</code><a class="reference internal" href="../../_modules/swisstext/mongo/abstract/users.html#UserRoles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.mongo.abstract.users.UserRoles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Currently, users can either be <a class="reference internal" href="#swisstext.mongo.abstract.users.UserRoles.ADMIN" title="swisstext.mongo.abstract.users.UserRoles.ADMIN"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ADMIN</span></code></a> or <a class="reference internal" href="#swisstext.mongo.abstract.users.UserRoles.USER" title="swisstext.mongo.abstract.users.UserRoles.USER"><code class="xref py py-attr docutils literal notranslate"><span class="pre">USER</span></code></a>.</p>
 <dl class="attribute">
 <dt id="swisstext.mongo.abstract.users.UserRoles.ADMIN">

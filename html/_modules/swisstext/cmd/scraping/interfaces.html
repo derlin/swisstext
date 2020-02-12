@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -274,7 +279,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABC</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
 
 <span class="kn">from</span> <span class="nn">.data</span> <span class="k">import</span> <span class="n">Page</span>
 
@@ -355,6 +360,29 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">splitted</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span> <span class="k">for</span> <span class="n">splitted</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span></div></div>
 
 
+<div class="viewcode-block" id="IUrlFilter"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter">[docs]</a><span class="k">class</span> <span class="nc">IUrlFilter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A URL filter can transform or remove links found on a page before they are saved/crawled.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        IUrlFilter will only be called on URLs discovered during the scraping process (child URLs), not on the</span>
+<span class="sd">        URLs used to bootstrap the process (using st_scrape from_file/from_mongo).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IUrlFilter.fix"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter.fix">[docs]</a>    <span class="k">def</span> <span class="nf">fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This should be overriden. The default implementation just returns the URL.</span>
+
+<span class="sd">        :param url: the current URL</span>
+<span class="sd">        :return: the potentially transformed URL, or None if it should be ignored</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">url</span></div>
+
+<div class="viewcode-block" id="IUrlFilter.filter"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Fix and filter a list of URLs by calling :py:meth:`IUrlFilter.fix` on each element and removing None.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fix</span><span class="p">,</span> <span class="n">urls</span><span class="p">)))</span></div></div>
+
+
 <div class="viewcode-block" id="ISentenceFilter"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISentenceFilter">[docs]</a><span class="k">class</span> <span class="nc">ISentenceFilter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A sentence filter should be able to tell if a given sentence is well-formed (i.e. valid) or not.</span>
@@ -395,13 +423,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ISeedCreator.generate_seeds"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISeedCreator.generate_seeds">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">generate_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [ABSTRACT] Should generate interesting seeds.</span>
 
 <span class="sd">        :param sentences: the sentences</span>
 <span class="sd">        :param max: maximum number of seeds to return</span>
-<span class="sd">        :param stopwords: an optional list of words to exclude from generated seeds</span>
 <span class="sd">        :return: a list of seeds</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO use a generator instead of a list as return type ?</span>
@@ -504,7 +531,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ISaver.get_page"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.get_page">[docs]</a>    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ISaver.get_page"><a class="viewcode-back" href="../../../../api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.get_page">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Page</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a page. The simplest implementation is just ``return Page(url)``.</span>
 <span class="sd">        If the subclass uses a data store, it should also populate the other page attributes (e.g. the score</span>

@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -287,20 +292,27 @@
 This is the best way to understand what options are available.</p>
 <dl class="class">
 <dt id="swisstext.cmd.searching.config.Config.Options">
-<em class="property">class </em><code class="sig-name descname">Options</code><span class="sig-paren">(</span><em class="sig-param">max_results=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-name descname">Options</code><span class="sig-paren">(</span><em class="sig-param">max_fetches=-1</em>, <em class="sig-param">max_results=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="swisstext.cmd.searching.config.Config.Options.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">max_results=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/config.html#Config.Options.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">max_fetches=-1</em>, <em class="sig-param">max_results=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/config.html#Config.Options.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="swisstext.cmd.searching.config.Config.Options.max_fetches">
+<code class="sig-name descname">max_fetches</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options.max_fetches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max number of URLs retrieved in one search (-1 for no limit).
+Note that this is only the number of URLs returned by the search engine, not the number of
+URLs added to the db. Indeed, duplicates or uninteresting URLs won’t be saved (see max_results).</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="swisstext.cmd.searching.config.Config.Options.max_results">
 <code class="sig-name descname">max_results</code><em class="property"> = None</em><a class="headerlink" href="#swisstext.cmd.searching.config.Config.Options.max_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Max number of URLs retrieved in one search.
-Note that this is only the number of URLs returned by the search engine, not the number of
-URLs added to the db. Indeed, duplicates or uninteresting URLs won’t be saved.</p>
+<dd><p>Max number of URLs saved from one search.
+Note that it should always be &lt;= max_fetches.</p>
 </dd></dl>
 
 </dd></dl>
@@ -322,7 +334,7 @@ file object of a YAML configuration, or a dictionary</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.7)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,7 +378,7 @@ They have been thought to be decoupled from MongoDB for better flexibility/adapt
 <dl class="class">
 <dt id="swisstext.cmd.searching.data.Seed">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.data.</code><code class="sig-name descname">Seed</code><span class="sig-paren">(</span><em class="sig-param">query: str</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/data.html#Seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.data.Seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Holds informations on a seed, i.e. a query.</p>
 <dl class="method">
 <dt id="swisstext.cmd.searching.data.Seed.__init__">
@@ -394,14 +406,30 @@ They have been thought to be decoupled from MongoDB for better flexibility/adapt
 <p>This module contains the core of the searching system.</p>
 <dl class="class">
 <dt id="swisstext.cmd.searching.pipeline.SearchEngine">
-<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.pipeline.</code><code class="sig-name descname">SearchEngine</code><span class="sig-paren">(</span><em class="sig-param">searcher: swisstext.cmd.searching.interfaces.ISearcher</em>, <em class="sig-param">saver: swisstext.cmd.searching.interfaces.ISaver</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.searching.pipeline.</code><code class="sig-name descname">SearchEngine</code><span class="sig-paren">(</span><em class="sig-param">query_builder: swisstext.cmd.searching.interfaces.IQueryBuilder</em>, <em class="sig-param">searcher: swisstext.cmd.searching.interfaces.ISearcher</em>, <em class="sig-param">saver: swisstext.cmd.searching.interfaces.ISaver</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>The search engine implements all the logic of searching seeds and persisting results.</p>
 <p>Note that this class is usually instantiated by a <a class="reference internal" href="#swisstext.cmd.searching.config.Config" title="swisstext.cmd.searching.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> object.</p>
 <dl class="method">
 <dt id="swisstext.cmd.searching.pipeline.SearchEngine.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">searcher: swisstext.cmd.searching.interfaces.ISearcher</em>, <em class="sig-param">saver: swisstext.cmd.searching.interfaces.ISaver</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">query_builder: swisstext.cmd.searching.interfaces.IQueryBuilder</em>, <em class="sig-param">searcher: swisstext.cmd.searching.interfaces.ISearcher</em>, <em class="sig-param">saver: swisstext.cmd.searching.interfaces.ISaver</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.pipeline.SearchEngine.check_link">
+<code class="sig-name descname">check_link</code><span class="sig-paren">(</span><em class="sig-param">raw_link: str</em><span class="sig-paren">)</span> &#x2192; Tuple[str, bool]<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.check_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.check_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Potentially “fix” the url (see <a class="reference internal" href="../package.html#module-swisstext.cmd.link_utils" title="swisstext.cmd.link_utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">link_utils</span></code></a>) and check that
+is is unique (not found on a previous search with this instance and not already present
+in the backend). Turn on debug to follow what is going on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raw_link</strong> – the raw URL (must be absolute)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a tuple with the fixed URL and a “ok” flag</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -412,10 +440,29 @@ They have been thought to be decoupled from MongoDB for better flexibility/adapt
 
 <dl class="method">
 <dt id="swisstext.cmd.searching.pipeline.SearchEngine.process">
-<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">seeds: List[swisstext.cmd.searching.data.Seed], max_results=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">seeds: List[swisstext.cmd.searching.data.Seed], **kwargs</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do the magic.</p>
 <p>Note that this method was not been implemented with multithreading in mind, as most of the time
 search engine APIs are limited and pretty fast…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="swisstext.cmd.searching.pipeline.SearchEngine.process_one">
+<code class="sig-name descname">process_one</code><span class="sig-paren">(</span><em class="sig-param">seed: swisstext.cmd.searching.data.Seed</em>, <em class="sig-param">max_results=10</em>, <em class="sig-param">max_fetches=-1</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../../../_modules/swisstext/cmd/searching/pipeline.html#SearchEngine.process_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.searching.pipeline.SearchEngine.process_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process one seed. Note that if called multiple times, the previous results
+are still saved in <a class="reference internal" href="#swisstext.cmd.searching.pipeline.SearchEngine.new_urls" title="swisstext.cmd.searching.pipeline.SearchEngine.new_urls"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SearchEngine.new_urls</span></code></a> so duplicate URLs will be skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed</strong> – the seed to search for</p></li>
+<li><p><strong>max_results</strong> – the target number of URLs to find</p></li>
+<li><p><strong>max_fetches</strong> – the maximum number of URLs fetched from the search engine</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of URLs, with 0 &lt;= length &lt;= max_results</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

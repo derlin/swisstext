@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -348,7 +353,7 @@ It is used by both commandline tools.</p>
 <dl class="class">
 <dt id="swisstext.cmd.base_config.BaseConfig">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.base_config.</code><code class="sig-name descname">BaseConfig</code><span class="sig-paren">(</span><em class="sig-param">default_config_path: str</em>, <em class="sig-param">option_class: classmethod = &lt;class 'dict'&gt;</em>, <em class="sig-param">config: Union[str</em>, <em class="sig-param">dict</em>, <em class="sig-param">io.IOBase] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/swisstext/cmd/base_config.html#BaseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.base_config.BaseConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>This class encapsulates the configuration options of a toolchain. It is able to load options from YAML files
 and also to instantiate tools from a dictionary of module+class names.</p>
 <dl class="attribute">
@@ -374,7 +379,7 @@ file object of a YAML configuration, or a dictionary</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.7)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
 </dd>
 </dl>
 </dd></dl>
@@ -416,7 +421,7 @@ In case a tool is not defined and <a class="reference internal" href="#swisstext
 <dd class="field-odd"><p>a list of tool instances, in the same order as <a class="reference internal" href="#swisstext.cmd.base_config.BaseConfig.interfaces_package" title="swisstext.cmd.base_config.BaseConfig.interfaces_package"><code class="xref py py-attr docutils literal notranslate"><span class="pre">interfaces_package</span></code></a></p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.7)"><strong>RuntimeError</strong></a> – if a tool could not be instantiated</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.8)"><strong>RuntimeError</strong></a> – if a tool could not be instantiated</p>
 </dd>
 </dl>
 </dd></dl>
@@ -481,12 +486,11 @@ this list, we might as well provide a general way to do so.</p>
 <h3>Dealing with search results<a class="headerlink" href="#dealing-with-search-results" title="Permalink to this headline">¶</a></h3>
 <p>When querying Google or another search engine for results, returned URLs might point to PDFs, videos or other
 uninteresting websites. The <a class="reference internal" href="#swisstext.cmd.link_utils.fix_url" title="swisstext.cmd.link_utils.fix_url"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fix_url()</span></code></a> method is here to help normalize URLs and filtering out those “bad” results.</p>
-<dl class="data">
-<dt id="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS">
-<code class="sig-prename descclassname">swisstext.cmd.link_utils.</code><code class="sig-name descname">EXCLUDED_EXTENSIONS</code><em class="property"> = {'3dv': True, '3g2': True, '3gp': True, 'ai': True, 'amf': True, 'amv': True, 'art': True, 'ase': True, 'asf': True, 'avi': True, 'awg': True, 'blp': True, 'bmp': True, 'bw': True, 'cd5': True, 'cdr': True, 'cgm': True, 'cit': True, 'cmx': True, 'cpt': True, 'cr2': True, 'cur': True, 'cut': True, 'dds': True, 'dib': True, 'djvu': True, 'doc': True, 'docx': True, 'drc': True, 'dxf': True, 'e2d': True, 'ecw': True, 'egt': True, 'emf': True, 'eps': True, 'exif': True, 'f4a': True, 'f4b': True, 'f4p': True, 'f4v': True, 'flv': True, 'fs': True, 'gbr': True, 'gif': True, 'gifv': True, 'gpl': True, 'grf': True, 'hdp': True, 'icns': True, 'ico': True, 'iff': True, 'int': True, 'inta': True, 'jfif': True, 'jng': True, 'jp2': True, 'jpeg': True, 'jpg': True, 'jps': True, 'jxr': True, 'lbm': True, 'liff': True, 'm2v': True, 'm4p': True, 'm4v': True, 'max': True, 'miff': True, 'mkv': True, 'mng': True, 'mov': True, 'mp2': True, 'mp4': True, 'mpe': True, 'mpeg': True, 'mpg': True, 'mpv': True, 'msp': True, 'mxf': True, 'nitf': True, 'nrrd': True, 'nsv': True, 'odg': True, 'ogg': True, 'ogv': True, 'ota': True, 'pam': True, 'pbm': True, 'pc1': True, 'pc2': True, 'pc3': True, 'pcf': True, 'pct': True, 'pcx': True, 'pdd': True, 'pdf': True, 'pdn': True, 'pgf': True, 'pgm': True, 'pi1': True, 'pi2': True, 'pi3': True, 'pict': True, 'png': True, 'pnm': True, 'pns': True, 'ppm': True, 'ppt': True, 'pptx': True, 'psb': True, 'psd': True, 'psp': True, 'px': True, 'pxm': True, 'pxr': True, 'qfx': True, 'qt': True, 'ras': True, 'raw': True, 'rgb': True, 'rgba': True, 'rle': True, 'rm': True, 'rmvb': True, 'roq': True, 'sct': True, 'sgi': True, 'sid': True, 'stl': True, 'sun': True, 'svg': True, 'svi': True, 'sxd': True, 'tga': True, 'tif': True, 'tiff': True, 'v2d': True, 'vnd': True, 'vob': True, 'vrml': True, 'vtf': True, 'wdp': True, 'webm': True, 'webp': True, 'wmf': True, 'wmv': True, 'x3d': True, 'xar': True, 'xbm': True, 'xcf': True, 'xls': True, 'xlsx': True, 'xpm': True, 'yuv': True}</em><a class="headerlink" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quick lookup dictionary to exclude URLs with an extensions typical of non text resources</p>
-</dd></dl>
-
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the stability of the whole system, it is primordial for <strong>all URLs</strong> to pass through this module before
+being added to the persistance layer (e.g. Mongo Database).</p>
+</div>
 <dl class="data">
 <dt id="swisstext.cmd.link_utils.EXCLUDED_TLDS">
 <code class="sig-prename descclassname">swisstext.cmd.link_utils.</code><code class="sig-name descname">EXCLUDED_TLDS</code><em class="property"> = {'ac': True, 'ad': True, 'ae': True, 'af': True, 'ag': True, 'ai': True, 'al': True, 'am': True, 'an': True, 'ao': True, 'aq': True, 'ar': True, 'as': True, 'at': True, 'au': True, 'aw': True, 'ax': True, 'az': True, 'ba': True, 'bb': True, 'bd': True, 'be': True, 'bf': True, 'bg': True, 'bh': True, 'bi': True, 'bj': True, 'bl': True, 'bm': True, 'bn': True, 'bo': True, 'bq': True, 'br': True, 'bs': True, 'bt': True, 'bv': True, 'bw': True, 'by': True, 'bz': True, 'ca': True, 'cat': True, 'cc': True, 'cd': True, 'cf': True, 'cg': True, 'ci': True, 'ck': True, 'cl': True, 'cm': True, 'cn': True, 'co': True, 'cr': True, 'cu': True, 'cv': True, 'cw': True, 'cx': True, 'cy': True, 'cz': True, 'dj': True, 'dk': True, 'dm': True, 'do': True, 'dz': True, 'ec': True, 'ee': True, 'eg': True, 'eh': True, 'er': True, 'es': True, 'et': True, 'eus': True, 'fi': True, 'fj': True, 'fk': True, 'fm': True, 'fo': True, 'ga': True, 'gal': True, 'gd': True, 'ge': True, 'gf': True, 'gg': True, 'gh': True, 'gi': True, 'gl': True, 'gm': True, 'gn': True, 'gp': True, 'gq': True, 'gr': True, 'gs': True, 'gt': True, 'gu': True, 'gw': True, 'gy': True, 'hk': True, 'hm': True, 'hn': True, 'hr': True, 'ht': True, 'hu': True, 'id': True, 'ie': True, 'il': True, 'im': True, 'in': True, 'io': True, 'iq': True, 'ir': True, 'is': True, 'je': True, 'jm': True, 'jo': True, 'jp': True, 'ke': True, 'kg': True, 'kh': True, 'ki': True, 'km': True, 'kn': True, 'kp': True, 'kr': True, 'kw': True, 'ky': True, 'kz': True, 'la': True, 'lb': True, 'lc': True, 'li': True, 'lk': True, 'lr': True, 'ls': True, 'lt': True, 'lu': True, 'lv': True, 'ly': True, 'ma': True, 'mc': True, 'md': True, 'me': True, 'mf': True, 'mg': True, 'mh': True, 'mk': True, 'ml': True, 'mm': True, 'mn': True, 'mo': True, 'mp': True, 'mq': True, 'mr': True, 'ms': True, 'mt': True, 'mu': True, 'mv': True, 'mw': True, 'mx': True, 'my': True, 'mz': True, 'na': True, 'nc': True, 'ne': True, 'nf': True, 'ng': True, 'ni': True, 'nl': True, 'no': True, 'np': True, 'nr': True, 'nu': True, 'nz': True, 'om': True, 'pa': True, 'pe': True, 'pf': True, 'pg': True, 'ph': True, 'pk': True, 'pl': True, 'pm': True, 'pn': True, 'pr': True, 'ps': True, 'pt': True, 'pw': True, 'py': True, 'qa': True, 're': True, 'ro': True, 'rs': True, 'ru': True, 'rw': True, 'sa': True, 'sb': True, 'sc': True, 'sd': True, 'se': True, 'sg': True, 'sh': True, 'si': True, 'sj': True, 'sk': True, 'sl': True, 'sm': True, 'sn': True, 'so': True, 'sr': True, 'ss': True, 'st': True, 'sv': True, 'sx': True, 'sy': True, 'sz': True, 'tc': True, 'td': True, 'tf': True, 'tg': True, 'th': True, 'tj': True, 'tk': True, 'tl': True, 'tm': True, 'tn': True, 'to': True, 'tp': True, 'tr': True, 'tt': True, 'tv': True, 'tw': True, 'tz': True, 'ua': True, 'ug': True, 'uy': True, 'uz': True, 'va': True, 'vc': True, 've': True, 'vg': True, 'vi': True, 'vn': True, 'vu': True, 'wf': True, 'ws': True, 'ye': True, 'yt': True, 'za': True, 'zm': True, 'zw': True}</em><a class="headerlink" href="#swisstext.cmd.link_utils.EXCLUDED_TLDS" title="Permalink to this definition">¶</a></dt>
@@ -529,7 +533,15 @@ automatically) and trailing slashes (in this case, the first encountered link wi
     <span class="s1">&#39;https://als.wikipedia.org&#39;</span><span class="p">,</span>
     <span class="s1">&#39;http://other.resource.test&#39;</span><span class="p">,</span>
     <span class="s1">&#39;javascript:return false&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;?p=66383&amp;sid=aaece0dfd1e47e08505dcb5fae2d3f03&#39;</span>
+    <span class="s1">&#39;?p=66383&amp;sid=aaece0dfd1e47e08505dcb5fae2d3f03&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;http://www.twitter.com/some-hashtag?lang=en-gb&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;https://twitter.com/share?text=blabla&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;http://zh-cn.facebook.com/XXXX&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;https://facebook.com/&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;https://www.facebook.com&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;https://graph.facebook.com&#39;</span>
 <span class="p">]</span>
 <span class="n">links</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">filter_links</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">hrefs</span><span class="p">))</span>
 
@@ -537,15 +549,17 @@ automatically) and trailing slashes (in this case, the first encountered link wi
 <span class="c1">#  http://example.ch/other/</span>
 <span class="c1">#  http://example.ch/page/1?page=2&amp;q=isch</span>
 <span class="c1">#  http://example.ch/page/1?page=2</span>
-<span class="c1">#  https://als.wikipedia.org</span>
 <span class="c1">#  http://other.resource.test</span>
 <span class="c1">#  http://example.ch/page/1?p=66383</span>
+<span class="c1">#  https://twitter.com/some-hashtag</span>
+<span class="c1">#  https://www.facebook.com/XXXX</span>
+<span class="c1">#  https://www.facebook.com/</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>base_url</strong> – the URL of the current page (not returned and used to resolve relative links).</p></li>
+<li><p><strong>base_url</strong> – the URL of the current page (not returned and used to resolve relative links). Use ‘’ to ignore.</p></li>
 <li><p><strong>links</strong> – a list of links found, relative or absolute</p></li>
 </ul>
 </dd>
@@ -572,8 +586,8 @@ automatically) and trailing slashes (in this case, the first encountered link wi
 <div><ul class="simple">
 <li><p>relative URLs (so ensure to provide a base_url if the url is relative)</p></li>
 <li><p>non HTTP links (<cite>mailto:</cite>, <cite>javascript:</cite>, anchors, …)</p></li>
-<li><p>URLs pointing to non text resources (see <a class="reference internal" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS"><code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code></a>)</p></li>
-<li><p>URLs with a Country Code TLD unlikely to contain Swiss German (see <a class="reference internal" href="#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS" title="swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS"><code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code></a>)</p></li>
+<li><p>URLs pointing to non text resources (see <code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code>)</p></li>
+<li><p>URLs with a Country Code TLD unlikely to contain Swiss German (see <code class="xref py py-const docutils literal notranslate"><span class="pre">EXCLUDED_EXTENSIONS</span></code>)</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -585,22 +599,6 @@ automatically) and trailing slashes (in this case, the first encountered link wi
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a tuple (fixed_url, is_interesting)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="swisstext.cmd.link_utils.strip_sid">
-<code class="sig-prename descclassname">swisstext.cmd.link_utils.</code><code class="sig-name descname">strip_sid</code><span class="sig-paren">(</span><em class="sig-param">url: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/swisstext/cmd/link_utils.html#strip_sid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.link_utils.strip_sid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the SID parameter from an url. SIDs are mostly used
-by magento to track the users and won’t change the page rendered. See also
-<a class="reference external" href="https://feedarmy.com/kb/why-do-my-magento-urls-have-a-query-sid/">why-do-my-magento-urls-have-a-query-sid</a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>url</strong> – the url</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the url without sid</p>
 </dd>
 </dl>
 </dd></dl>

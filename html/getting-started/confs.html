@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -277,8 +282,11 @@
 <p>Some tool options are more suited together, so in this section I try to detail some of the tips and tricks to get the best system.</p>
 <div class="section" id="current-best-pipeline-configuration">
 <h2>Current ?best? pipeline configuration<a class="headerlink" href="#current-best-pipeline-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-default-tools">
+<h3>Using default tools<a class="headerlink" href="#using-default-tools" title="Permalink to this headline">¶</a></h3>
 <p>The current best configuration for Swiss-German spotting is the following:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">pipeline</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># scraping</span>
+<span class="nt">pipeline</span><span class="p">:</span>
   <span class="nt">crawler</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.JustextCrawler</span>
   <span class="nt">normalizer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.Normalizer</span>
   <span class="nt">splitter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.MocySplitter</span>
@@ -297,6 +305,12 @@
 <span class="nt">splitter_options</span><span class="p">:</span>
   <span class="nt">more</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
   <span class="nt">keep_newlines</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="c1"># searching</span>
+<span class="nt">search_engine</span><span class="p">:</span>
+  <span class="nt">query_builder</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.QuoteWordsQueryBuilder</span>
+  <span class="nt">saver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.MongoSaver</span>
+  <span class="nt">searcher</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.StartPageGeneratorFactory</span>
 </pre></div>
 </div>
 <p>The <a class="reference internal" href="../api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.justext_crawler.JustextCrawler" title="swisstext.cmd.scraping.tools.justext_crawler.JustextCrawler"><code class="xref py py-class docutils literal notranslate"><span class="pre">JustextCrawler</span></code></a> is quite efficient at extracting <em>and</em>
@@ -317,6 +331,70 @@ combine a title or a button text (both lacking punctuation) with a content.
 To see the difference, try crawling <a class="reference external" href="https://twitter.com/agnesiumm/status/1171531642969546757?lang=en-gb">twitter</a>
 with and without <code class="docutils literal notranslate"><span class="pre">keep_newlines</span></code> ! Without, we will basically crawl all possible versions of a page (different <code class="docutils literal notranslate"><span class="pre">lang=xxx</span></code>) and always find new sentences because button texts are appended and change depending on the language…</p>
 <p>The rest of the tools are less critical and their behavior is not impacted by the behavior of the previous tools.</p>
+</div>
+<div class="section" id="using-extra-tools">
+<h3>Using extra tools<a class="headerlink" href="#using-extra-tools" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># scraping</span>
+<span class="nt">pipeline</span><span class="p">:</span>
+  <span class="nt">crawler</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.JustextCrawler</span>
+  <span class="nt">normalizer</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.Normalizer</span>
+  <span class="nt">splitter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.MocySplitter</span>
+  <span class="nt">sentence_filter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.PatternSentenceFilter</span>
+  <span class="nt">decider</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">decider.Decider</span>
+  <span class="nt">url_filter</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra.sg_url_filter.SgUrlFilter</span>
+  <span class="nt">sg_detector</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra.bert_torch_predictor.BertPredictor</span>
+
+<span class="nt">crawler_options</span><span class="p">:</span>
+  <span class="nt">keep_bad</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">normalizer_options</span><span class="p">:</span>
+  <span class="nt">fix_encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">strip_emojis</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">splitter_options</span><span class="p">:</span>
+  <span class="nt">keep_newlines</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">more</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">sg_detector_options</span><span class="p">:</span>
+  <span class="nt">chunk_size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1000</span>
+
+<span class="c1"># searching</span>
+<span class="nt">search_engine</span><span class="p">:</span>
+  <span class="nt">query_builder</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.QuoteWordsQueryBuilder</span>
+  <span class="nt">saver</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.MongoSaver</span>
+  <span class="nt">searcher</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.StartPageGeneratorFactory</span>
+
+<span class="c1"># general options</span>
+<span class="nt">options</span><span class="p">:</span>
+  <span class="nt">crawl_depth</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+  <span class="nt">max_fetches</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-1</span>
+  <span class="nt">max_results</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+  <span class="nt">min_proba</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.92</span>
+  <span class="nt">num_workers</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+</pre></div>
+</div>
+<p>The big difference here is the use of a custom URL filter, decider and language detector. More precisely:</p>
+<ol class="arabic simple">
+<li><p><em>URL filter</em>: the <code class="docutils literal notranslate"><span class="pre">extra</span></code> directory contains a specific implementation of URL filter that deals with some of GSW blogs that have strange URL patterns. It ensures we do not scrape for nothing by blacklisting some and normalizing others;</p></li>
+<li><p><em>SG detector</em>: we use a better language identifier, a BERT model that was finetuned on the task of language identification; The model is available in another repo, the code in <code class="docutils literal notranslate"><span class="pre">extra</span></code> is just a wrapper around it to make it compatible with swisstext;</p></li>
+<li><p><em>decider</em>: the decider implementation varies depending on the needs. On our latest runs to find Swiss German quickly, we used the following:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Decider</span><span class="p">(</span><span class="n">BasicDecider</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">should_page_be_crawled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns true only if the page is new.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">page</span><span class="o">.</span><span class="n">is_new</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">should_children_be_crawled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">should_children_be_crawled</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+            <span class="c1"># just don&#39;t try going further if no new sg is found</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">new_sg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>More information can be found in our publication:
+<a class="reference external" href="https://arxiv.org/abs/1912.00159">Automatic Creation of Text Corpora for Low-Resource Languages from the Internet: The Case of Swiss German</a>.</p>
+</div>
 </div>
 <div class="section" id="tool-dependencies">
 <h2>Tool dependencies<a class="headerlink" href="#tool-dependencies" title="Permalink to this headline">¶</a></h2>

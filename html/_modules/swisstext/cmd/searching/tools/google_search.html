@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -333,6 +338,9 @@
 <span class="sd">        print(f&quot;Processing url: {url}&quot;)</span>
 <span class="sd">        # ... do something more with the result ...</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">sleep</span>
+
 <span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISearcher</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
@@ -348,26 +356,7 @@
 <span class="n">_links_fields</span> <span class="o">=</span> <span class="s2">&quot;items(link),queries(nextPage)&quot;</span> <span class="c1"># we only need the links and the current page info in the results</span>
 
 
-<div class="viewcode-block" id="GoogleGeneratorFactory"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory">[docs]</a><span class="k">class</span> <span class="nc">GoogleGeneratorFactory</span><span class="p">(</span><span class="n">ISearcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This factory creates a new :py:class:`GoogleGenerator` for each query.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="GoogleGeneratorFactory.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;015058622601103575455:cpfpm27mio8&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">apikey</span>
-        <span class="sd">&quot;&quot;&quot;The Google Custom Search API key&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The context to use (see the official API reference for more info).</span>
-<span class="sd">        The default context is usually fine: it is parameterized to search all the web.</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-
-<div class="viewcode-block" id="GoogleGeneratorFactory.search"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Search for a query using the Google Custom Search API.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">GoogleGenerator</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="GoogleGenerator"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator">[docs]</a><span class="k">class</span> <span class="nc">GoogleGenerator</span><span class="p">():</span>
+<div class="viewcode-block" id="GoogleGenerator"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator">[docs]</a><span class="k">class</span> <span class="nc">GoogleGenerator</span><span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A new Google Generator should be created for each query. It allows for lazy loading of</span>
 <span class="sd">    results, thus sparing API quotas.</span>
@@ -378,16 +367,26 @@
 <span class="sd">        In this case, the exception message should contain the error code and error message as delivered</span>
 <span class="sd">        by the Google API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="GoogleGenerator.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">apikey</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;015058622601103575455:cpfpm27mio8&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">apikey</span> <span class="c1">#: the Google API key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span> <span class="c1">#: the context to use</span>
+<div class="viewcode-block" id="GoogleGenerator.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">apikey</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">&#39;015058622601103575455:cpfpm27mio8&#39;</span><span class="p">,</span>
+                <span class="n">qps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">qpm</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">apikey</span> <span class="c1">#: the Google API key</span>
+        <span class="sd">&quot;&quot;&quot;The Google Custom Search API key&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The context to use (see the official API reference for more info).</span>
+<span class="sd">        The default context is usually fine: it is parameterized to search all the web.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">cx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">query</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">_links_fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_offset</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># offset for the next query (begins at result 1)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_count</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># the API returns at most ten results, so always pull the max results possible per query</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># cache of the results returned by the last query</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># flag to detect if we reached the last page or not</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">qps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qpm</span> <span class="o">=</span> <span class="n">qps</span><span class="p">,</span> <span class="n">qpm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qp</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Searching </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">query</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -433,14 +432,43 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="s1">&#39;queries&#39;</span> <span class="ow">in</span> <span class="n">json_response</span> <span class="ow">and</span> <span class="s1">&#39;nextPage&#39;</span> <span class="ow">in</span> <span class="n">json_response</span><span class="p">[</span><span class="s1">&#39;queries&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_send_query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait</span><span class="p">()</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BASE_URL</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> (code: </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">],</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">][</span><span class="s1">&#39;code&#39;</span><span class="p">]))</span>
         <span class="k">return</span> <span class="n">r</span>
 
+    <span class="k">def</span> <span class="nf">_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="n">m1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+        <span class="c1"># cleanup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qp</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qp</span> <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;=</span> <span class="n">m1</span><span class="p">]</span>
+        <span class="c1"># wait</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_qp</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qpm</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;QPM exceeded. Sleeping for 30s.&quot;</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qp</span> <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;=</span> <span class="n">s1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qps</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;QPS exceeded. Sleeping for 2s.&quot;</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># mark this exact time as a new query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
     <span class="k">def</span> <span class="nf">_extract_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="s1">&#39;link&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">json_response</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="GoogleGeneratorFactory"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory">[docs]</a><span class="k">class</span> <span class="nc">GoogleGeneratorFactory</span><span class="p">(</span><span class="n">ISearcher</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This factory creates a new :py:class:`GoogleGenerator` for each query.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="GoogleGeneratorFactory.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
+
+
+<div class="viewcode-block" id="GoogleGeneratorFactory.search"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GoogleGenerator</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Search for a query using the Google Custom Search API.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GoogleGenerator</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -282,6 +287,7 @@
     <span class="s1">&#39;sentence_filter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sg_detector&#39;</span><span class="p">,</span>
     <span class="s1">&#39;seed_creator&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;url_filter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;decider&#39;</span><span class="p">,</span>
     <span class="s1">&#39;saver&#39;</span><span class="p">]</span>
 
@@ -296,6 +302,14 @@
         <span class="sd">&quot;&quot;&quot;Holds the general options for the scraping pipeline.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Config.Options.__init__"><a class="viewcode-back" href="../../../../api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.config.Config.Options.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_proba</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">crawl_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="c1"># do some checks first</span>
+            <span class="k">if</span> <span class="n">num_workers</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Wrong value for argument num_workers: should be &gt; 0&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">min_proba</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Wrong value for argument min_proba: should be between 0 and 1&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">crawl_depth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Wrong value for argument crawl_depth: should be &gt; 0&#39;</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>  <span class="c1">#: maximum number of threads to use</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">min_proba</span> <span class="o">=</span> <span class="n">min_proba</span>  <span class="c1">#: minimum Swiss German probability to keep a sentence</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">crawl_depth</span> <span class="o">=</span> <span class="n">crawl_depth</span>  <span class="c1">#: maximum depth of the crawl, inclusive.</span></div></div>

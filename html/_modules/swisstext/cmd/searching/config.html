@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -279,6 +284,7 @@
 <span class="c1"># should be the same as the interface name (but camelcase =&gt; underscore)</span>
 <span class="c1"># and in the order expected by the Pipeline&#39;s __init__ method.</span>
 <span class="n">_search_engine_entries</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;query_builder&#39;</span><span class="p">,</span>
     <span class="s1">&#39;searcher&#39;</span><span class="p">,</span>
     <span class="s1">&#39;saver&#39;</span>
 <span class="p">]</span>
@@ -289,13 +295,26 @@
 <span class="sd">    The default configuration file for the searching pipeline (search engine) is defined in ``config.yaml``.</span>
 <span class="sd">    This is the best way to understand what options are available.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Config.Options"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.Options">[docs]</a>    <span class="k">class</span> <span class="nc">Options</span><span class="p">:</span>
-<div class="viewcode-block" id="Config.Options.__init__"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.Options.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Config.Options.__init__"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.Options.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_fetches</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="c1"># do some checks first</span>
+            <span class="k">if</span> <span class="n">max_fetches</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">max_fetches</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Wrong value for argument max_fetches: should be -1 or &gt; 0&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">max_results</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">max_fetches</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">max_results</span> <span class="o">&gt;</span> <span class="n">max_fetches</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Wrong value for argument max_results: should be &gt; 0 and &lt;= max_fetches&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_fetches</span> <span class="o">=</span> <span class="n">max_fetches</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Max number of URLs retrieved in one search (-1 for no limit).</span>
+<span class="sd">            Note that this is only the number of URLs returned by the search engine, not the number of</span>
+<span class="sd">            URLs added to the db. Indeed, duplicates or uninteresting URLs won&#39;t be saved (see max_results).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">max_results</span> <span class="o">=</span> <span class="n">max_results</span>
             <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Max number of URLs retrieved in one search.</span>
-<span class="sd">            Note that this is only the number of URLs returned by the search engine, not the number of</span>
-<span class="sd">            URLs added to the db. Indeed, duplicates or uninteresting URLs won&#39;t be saved.</span>
+<span class="sd">            Max number of URLs saved from one search.</span>
+<span class="sd">            Note that it should always be &lt;= max_fetches. </span>
 <span class="sd">            &quot;&quot;&quot;</span></div></div>
 
 <div class="viewcode-block" id="Config.__init__"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">IOBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>

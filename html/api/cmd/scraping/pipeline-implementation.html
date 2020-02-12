@@ -95,7 +95,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -128,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -288,7 +293,7 @@ to understand what options are available.</p>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.config.Config.Options">
 <em class="property">class </em><code class="sig-name descname">Options</code><span class="sig-paren">(</span><em class="sig-param">num_workers=1</em>, <em class="sig-param">min_proba=0.85</em>, <em class="sig-param">crawl_depth=2</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/config.html#Config.Options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.config.Config.Options" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Holds the general options for the scraping pipeline.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.config.Config.Options.__init__">
@@ -333,7 +338,7 @@ file object of a YAML configuration, or a dictionary</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.7)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – if config is not of a supported type</p>
 </dd>
 </dl>
 </dd></dl>
@@ -377,7 +382,7 @@ They have been thought to be decoupled from MongoDB for better flexibility/adapt
 <dl class="class">
 <dt id="swisstext.cmd.scraping.data.Page">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.data.</code><code class="sig-name descname">Page</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">score=None</em>, <em class="sig-param">parent_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Page" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Information about a page.
 Some attributes should be defined upon creation (see <a class="reference internal" href="tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.get_page" title="swisstext.cmd.scraping.interfaces.ISaver.get_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swisstext.cmd.scraping.interfaces.ISaver.get_page()</span></code></a>),
 will other will be added/used incrementally by the different tools of the pipeline.</p>
@@ -452,7 +457,7 @@ will other will be added/used incrementally by the different tools of the pipeli
 <dl class="class">
 <dt id="swisstext.cmd.scraping.data.PageScore">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.data.</code><code class="sig-name descname">PageScore</code><span class="sig-paren">(</span><em class="sig-param">count=0</em>, <em class="sig-param">delta_count=0</em>, <em class="sig-param">delta_date=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#PageScore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.PageScore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Scoring information for a page used, among other things, to decide if a URL should be crawled or not.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.data.PageScore.__init__">
@@ -483,7 +488,7 @@ will other will be added/used incrementally by the different tools of the pipeli
 <dl class="class">
 <dt id="swisstext.cmd.scraping.data.Sentence">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.data.</code><code class="sig-name descname">Sentence</code><span class="sig-paren">(</span><em class="sig-param">text: str</em>, <em class="sig-param">proba: float</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/data.html#Sentence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.data.Sentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Information about a sentence.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.data.Sentence.__init__">
@@ -511,11 +516,16 @@ will other will be added/used incrementally by the different tools of the pipeli
 <dl class="class">
 <dt id="swisstext.cmd.scraping.page_queue.PageQueue">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.page_queue.</code><code class="sig-name descname">PageQueue</code><span class="sig-paren">(</span><em class="sig-param">maxsize=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/page_queue.html#PageQueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.page_queue.PageQueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">queue.Queue</span></code></a></p>
-<p>A <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that ensures enqueued pages are unique and not clearly pointing to images or PDFs
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">queue.Queue</span></code></a></p>
+<p>A <a class="reference external" href="https://docs.python.org/3/library/queue.html#queue.Queue" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that ensures enqueued pages are unique and not clearly pointing to images or PDFs
 (i.e. ending with .jpg, .jpeg, .png or .pdf).</p>
 <p>Elements in the queue should be <strong>tuples</strong>, with the first element a <code class="xref py py-class docutils literal notranslate"><span class="pre">Page</span></code> and the second the
 crawl depth (as int)</p>
+<dl class="attribute">
+<dt id="swisstext.cmd.scraping.page_queue.PageQueue.lock">
+<code class="sig-name descname">lock</code><em class="property"> = &lt;unlocked _thread.lock object&gt;</em><a class="headerlink" href="#swisstext.cmd.scraping.page_queue.PageQueue.lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -557,14 +567,14 @@ are delegated to instances of classes defined in <a class="reference internal" h
 </div>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.pipeline.Pipeline">
-<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.pipeline.</code><code class="sig-name descname">Pipeline</code><span class="sig-paren">(</span><em class="sig-param">crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em class="sig-param">normalizer: swisstext.cmd.scraping.interfaces.INormalizer</em>, <em class="sig-param">splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em class="sig-param">filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em class="sig-param">detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em class="sig-param">seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em class="sig-param">decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em class="sig-param">saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em class="sig-param">min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#Pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.pipeline.</code><code class="sig-name descname">Pipeline</code><span class="sig-paren">(</span><em class="sig-param">crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em class="sig-param">normalizer: swisstext.cmd.scraping.interfaces.INormalizer</em>, <em class="sig-param">splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em class="sig-param">filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em class="sig-param">detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em class="sig-param">seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em class="sig-param">url_filter: swisstext.cmd.scraping.interfaces.IUrlFilter</em>, <em class="sig-param">decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em class="sig-param">saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em class="sig-param">min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#Pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Holds instances of all needed interfaces and variables.</p>
 <p>Note that pipelines are meant to be instantiated by a <a class="reference internal" href="#swisstext.cmd.scraping.config.Config" title="swisstext.cmd.scraping.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a> object,
 not manually.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.pipeline.Pipeline.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em class="sig-param">normalizer: swisstext.cmd.scraping.interfaces.INormalizer</em>, <em class="sig-param">splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em class="sig-param">filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em class="sig-param">detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em class="sig-param">seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em class="sig-param">decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em class="sig-param">saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em class="sig-param">min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#Pipeline.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">crawler: swisstext.cmd.scraping.interfaces.ICrawler</em>, <em class="sig-param">normalizer: swisstext.cmd.scraping.interfaces.INormalizer</em>, <em class="sig-param">splitter: swisstext.cmd.scraping.interfaces.ISplitter</em>, <em class="sig-param">filter: swisstext.cmd.scraping.interfaces.ISentenceFilter</em>, <em class="sig-param">detector: swisstext.cmd.scraping.interfaces.ISgDetector</em>, <em class="sig-param">seeder: swisstext.cmd.scraping.interfaces.ISeedCreator</em>, <em class="sig-param">url_filter: swisstext.cmd.scraping.interfaces.IUrlFilter</em>, <em class="sig-param">decider: swisstext.cmd.scraping.interfaces.IDecider</em>, <em class="sig-param">saver: swisstext.cmd.scraping.interfaces.ISaver</em>, <em class="sig-param">min_proba=0.85</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#Pipeline.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.Pipeline.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -573,7 +583,7 @@ not manually.</p>
 <dl class="class">
 <dt id="swisstext.cmd.scraping.pipeline.PipelineWorker">
 <em class="property">class </em><code class="sig-prename descclassname">swisstext.cmd.scraping.pipeline.</code><code class="sig-name descname">PipelineWorker</code><span class="sig-paren">(</span><em class="sig-param">id=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/swisstext/cmd/scraping/pipeline.html#PipelineWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#swisstext.cmd.scraping.pipeline.PipelineWorker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Pipeline workers actually do the magic and can be run in parallel.</p>
 <dl class="method">
 <dt id="swisstext.cmd.scraping.pipeline.PipelineWorker.__init__">

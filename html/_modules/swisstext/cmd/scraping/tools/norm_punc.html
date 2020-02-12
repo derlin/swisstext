@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -302,8 +307,10 @@
 <span class="n">normalization_patterns</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">r</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">STR</span> <span class="k">else</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span>
     <span class="p">[</span>  <span class="c1"># largely inspired from Moses normalize-punctuation.perl (lang=de)</span>
-        <span class="c1"># strip control chars and \t, \r, and soft-hyphen but not \n (0x0A)</span>
-        <span class="p">(</span><span class="n">REG</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;[</span><span class="se">\x00</span><span class="s1">-</span><span class="se">\x09\x0B</span><span class="s1">-</span><span class="se">\x1F\x7F</span><span class="s1">-</span><span class="se">\x9F\u00AD</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">),</span>
+        <span class="c1"># strip control chars and \t, \r, but not \n (0x0A) + \u200d (zero-width joiner)</span>
+        <span class="p">(</span><span class="n">REG</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;[</span><span class="se">\x00</span><span class="s1">-</span><span class="se">\x09\x0B</span><span class="s1">-</span><span class="se">\x1F\x7F</span><span class="s1">-</span><span class="se">\x9F\u200d</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">),</span>
+        <span class="c1"># strip soft-hyphen (and don&#39;t replace it by space: http://jkorpela.fi/shy.html)</span>
+        <span class="p">(</span><span class="n">STR</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\u00AD</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
         <span class="c1"># strip extra combining diacritics (given unicodedata.normalize was run prior to this)</span>
         <span class="p">(</span><span class="n">REG</span><span class="p">,</span> <span class="s1">&#39;[</span><span class="se">\u0300</span><span class="s1">-</span><span class="se">\u036F\uFE00</span><span class="s1">-</span><span class="se">\uFE0F</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
         <span class="c1"># replace variation selectors (0xFE0F is often used, sometimes in a row...)</span>

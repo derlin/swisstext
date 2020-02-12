@@ -94,7 +94,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -127,6 +131,7 @@
 <li class="toctree-l4"><a class="reference internal" href="api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -304,14 +309,33 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
+    --how &lt;how&gt;
+
+      <ul>
+        <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-how">st_scrape-from_mongo command line option</a>
+</li>
+      </ul></li>
+      <li>
     --new, --any
 
       <ul>
-        <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-new">st_scrape-from_mongo command line option</a>
-</li>
         <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-gen-seeds-new">st_scrape-gen_seeds command line option</a>
 </li>
         <li><a href="api/cmd/searching/package.html#cmdoption-st-search-from-mongo-new">st_search-from_mongo command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --no-search
+
+      <ul>
+        <li><a href="api/cmd/searching/package.html#cmdoption-st-search-from-file-no-search">st_search-from_file command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --what &lt;what&gt;
+
+      <ul>
+        <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-what">st_scrape-from_mongo command line option</a>
 </li>
       </ul></li>
       <li>
@@ -352,6 +376,8 @@
         <li><a href="api/alswiki/package.html#cmdoption-st-alswiki-download-d">st_alswiki-download command line option</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     -f, --format &lt;format&gt;
 
@@ -359,8 +385,6 @@
         <li><a href="api/alswiki/package.html#cmdoption-st-alswiki-txt-f">st_alswiki-txt command line option</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     -l, --log-level &lt;log_level&gt;
 
@@ -559,6 +583,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.data.Page.blacklisted">blacklisted (swisstext.cmd.scraping.data.Page attribute)</a>
 </li>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver.LinkStatus.BLACKLISTED">BLACKLISTED (swisstext.cmd.searching.interfaces.ISaver.LinkStatus attribute)</a>
+</li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.bs_crawler.BsCrawler">BsCrawler (class in swisstext.cmd.scraping.tools.bs_crawler)</a>
 </li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.generic.Deleted.by">by (swisstext.mongo.abstract.generic.Deleted attribute)</a>
@@ -569,6 +595,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.check_link">check_link() (swisstext.cmd.searching.pipeline.SearchEngine method)</a>
+</li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mocy_splitter.MocySplitter.cleanup_spaces">cleanup_spaces() (swisstext.cmd.scraping.tools.mocy_splitter.MocySplitter class method)</a>
 
       <ul>
@@ -646,11 +674,7 @@
       <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.create_search_engine">create_search_engine() (swisstext.cmd.searching.config.Config method)</a>
 </li>
       <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator.ctx">ctx (swisstext.cmd.searching.tools.google_search.GoogleGenerator attribute)</a>
-
-      <ul>
-        <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.ctx">(swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory attribute)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -726,9 +750,9 @@
 </li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.generic.SourceType.ERROR">ERROR (swisstext.mongo.abstract.generic.SourceType attribute)</a>
 </li>
-      <li><a href="api/cmd/package.html#swisstext.cmd.link_utils.EXCLUDED_EXTENSIONS">EXCLUDED_EXTENSIONS (in module swisstext.cmd.link_utils)</a>
-</li>
       <li><a href="api/cmd/package.html#swisstext.cmd.link_utils.EXCLUDED_TLDS">EXCLUDED_TLDS (in module swisstext.cmd.link_utils)</a>
+</li>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver.LinkStatus.EXISTS">EXISTS (swisstext.cmd.searching.interfaces.ISaver.LinkStatus attribute)</a>
 </li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.exists">exists() (swisstext.mongo.abstract.seeds.AbstractMongoSeed class method)</a>
 
@@ -759,12 +783,18 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISentenceFilter.filter">filter() (swisstext.cmd.scraping.interfaces.ISentenceFilter method)</a>
+
+      <ul>
+        <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter.filter">(swisstext.cmd.scraping.interfaces.IUrlFilter method)</a>
 </li>
+      </ul></li>
       <li><a href="api/cmd/package.html#swisstext.cmd.link_utils.filter_links">filter_links() (in module swisstext.cmd.link_utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.seeds.AbstractMongoSeed.find_similar">find_similar() (swisstext.mongo.abstract.seeds.AbstractMongoSeed class method)</a>
+</li>
+      <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter.fix">fix() (swisstext.cmd.scraping.interfaces.IUrlFilter method)</a>
 </li>
       <li><a href="api/cmd/package.html#swisstext.cmd.link_utils.fix_url">fix_url() (in module swisstext.cmd.link_utils)</a>
 </li>
@@ -889,8 +919,6 @@
 </li>
       <li><a href="api/cmd/package.html#swisstext.cmd.base_config.BaseConfig.INTERFACE_WILDCARD">INTERFACE_WILDCARD (swisstext.cmd.base_config.BaseConfig attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/package.html#swisstext.cmd.base_config.BaseConfig.interfaces_package">interfaces_package() (swisstext.cmd.base_config.BaseConfig property)</a>
 
       <ul>
@@ -899,6 +927,10 @@
         <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.interfaces_package">(swisstext.cmd.searching.config.Config property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.IQueryBuilder">IQueryBuilder (class in swisstext.cmd.searching.interfaces)</a>
+</li>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.data.Page.is_new">is_new() (swisstext.cmd.scraping.data.Page method)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISaver.is_url_blacklisted">is_url_blacklisted() (swisstext.cmd.scraping.interfaces.ISaver method)</a>
@@ -921,6 +953,8 @@
         <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver">(class in swisstext.cmd.searching.interfaces)</a>
 </li>
       </ul></li>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver.LinkStatus">ISaver.LinkStatus (class in swisstext.cmd.searching.interfaces)</a>
+</li>
       <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISearcher">ISearcher (class in swisstext.cmd.searching.interfaces)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISeedCreator">ISeedCreator (class in swisstext.cmd.scraping.interfaces)</a>
@@ -930,6 +964,8 @@
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISgDetector">ISgDetector (class in swisstext.cmd.scraping.interfaces)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISplitter">ISplitter (class in swisstext.cmd.scraping.interfaces)</a>
+</li>
+      <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IUrlFilter">IUrlFilter (class in swisstext.cmd.scraping.interfaces)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -946,15 +982,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGenerator.key">key (swisstext.cmd.searching.tools.google_search.GoogleGenerator attribute)</a>
-
-      <ul>
-        <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory.key">(swisstext.cmd.searching.tools.google_search.GoogleGeneratorFactory attribute)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.pipeline.PipelineWorker.kill_received">kill_received (swisstext.cmd.scraping.pipeline.PipelineWorker attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator.kwargs">kwargs (swisstext.cmd.scraping.tools.basic_seed_creator.IdfSeedCreator attribute)</a>
 
       <ul>
@@ -977,14 +1009,14 @@
 </li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mocy_splitter.MocySplitter.langs">langs (swisstext.cmd.scraping.tools.mocy_splitter.MocySplitter attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver.link_exists">link_exists() (swisstext.cmd.searching.interfaces.ISaver method)</a>
 
       <ul>
         <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.link_exists">(swisstext.cmd.searching.tools.mongo_saver.MongoSaver method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults.links">links (swisstext.cmd.scraping.interfaces.ICrawler.CrawlResults attribute)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mocy_splitter.MocySplitter.load_nb_prefixes">load_nb_prefixes() (swisstext.cmd.scraping.tools.mocy_splitter.MocySplitter class method)</a>
@@ -993,6 +1025,8 @@
         <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.moses_splitter.MosesSplitter.load_nb_prefixes">(swisstext.cmd.scraping.tools.moses_splitter.MosesSplitter class method)</a>
 </li>
       </ul></li>
+      <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.page_queue.PageQueue.lock">lock (swisstext.cmd.scraping.page_queue.PageQueue attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1005,6 +1039,8 @@
         <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.mark_deleted">(swisstext.mongo.abstract.sentences.AbstractMongoSentence class method)</a>
 </li>
       </ul></li>
+      <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.Options.max_fetches">max_fetches (swisstext.cmd.searching.config.Config.Options attribute)</a>
+</li>
       <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.config.Config.Options.max_results">max_results (swisstext.cmd.searching.config.Config.Options attribute)</a>
 </li>
       <li><a href="api/cmd/package.html#swisstext.cmd.base_config.BaseConfig.merge_dicts">merge_dicts() (swisstext.cmd.base_config.BaseConfig class method)</a>
@@ -1031,10 +1067,10 @@
       </ul></li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.models.MongoSeed">MongoSeed (class in swisstext.mongo.models)</a>
 </li>
-      <li><a href="api/mongo/definitions.html#swisstext.mongo.models.MongoSeed.DoesNotExist">MongoSeed.DoesNotExist</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/mongo/definitions.html#swisstext.mongo.models.MongoSeed.DoesNotExist">MongoSeed.DoesNotExist</a>
+</li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.models.MongoSeed.MultipleObjectsReturned">MongoSeed.MultipleObjectsReturned</a>
 </li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.models.MongoSentence">MongoSentence (class in swisstext.mongo.models)</a>
@@ -1085,10 +1121,10 @@
         <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGenerator.next">(swisstext.cmd.searching.tools.start_page.StartPageGenerator method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator.ngram_range">ngram_range (swisstext.cmd.scraping.tools.basic_seed_creator.BasicSeedCreator attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.INormalizer.normalize">normalize() (swisstext.cmd.scraping.interfaces.INormalizer method)</a>
 
       <ul>
@@ -1100,6 +1136,8 @@
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.norm_punc.normalize_text">normalize_text() (in module swisstext.cmd.scraping.tools.norm_punc)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.norm_punc.Normalizer">Normalizer (class in swisstext.cmd.scraping.tools.norm_punc)</a>
+</li>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver.LinkStatus.NOT_EXIST">NOT_EXIST (swisstext.cmd.searching.interfaces.ISaver.LinkStatus attribute)</a>
 </li>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.config.Config.Options.num_workers">num_workers (swisstext.cmd.scraping.config.Config.Options attribute)</a>
 </li>
@@ -1135,21 +1173,27 @@
 </li>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.pipeline.Pipeline">Pipeline (class in swisstext.cmd.scraping.pipeline)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.pipeline.PipelineWorker">PipelineWorker (class in swisstext.cmd.scraping.pipeline)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISgDetector.predict">predict() (swisstext.cmd.scraping.interfaces.ISgDetector method)</a>
 
       <ul>
         <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid.predict">(swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid method)</a>
 </li>
       </ul></li>
+      <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid.predict_lang">predict_lang() (swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid method)</a>
+</li>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.ISgDetector.predict_one">predict_one() (swisstext.cmd.scraping.interfaces.ISgDetector method)</a>
+</li>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.IQueryBuilder.prepare">prepare() (swisstext.cmd.searching.interfaces.IQueryBuilder method)</a>
 </li>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.data.Sentence.proba">proba (swisstext.cmd.scraping.data.Sentence attribute)</a>
 </li>
       <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.process">process() (swisstext.cmd.searching.pipeline.SearchEngine method)</a>
+</li>
+      <li><a href="api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.process_one">process_one() (swisstext.cmd.searching.pipeline.SearchEngine method)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.punkt_splitter.PunktSplitter">PunktSplitter (class in swisstext.cmd.scraping.tools.punkt_splitter)</a>
 </li>
@@ -1239,6 +1283,12 @@
 </li>
       <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.generic.SourceType.SEED">SEED (swisstext.mongo.abstract.generic.SourceType attribute)</a>
 </li>
+      <li><a href="api/cmd/searching/tool-interfaces.html#swisstext.cmd.searching.interfaces.ISaver.seed_exists">seed_exists() (swisstext.cmd.searching.interfaces.ISaver method)</a>
+
+      <ul>
+        <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.mongo_saver.MongoSaver.seed_exists">(swisstext.cmd.searching.tools.mongo_saver.MongoSaver method)</a>
+</li>
+      </ul></li>
       <li>
     SEEDSFILE
 
@@ -1258,9 +1308,13 @@
         <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.sentence_exists">(swisstext.cmd.scraping.tools.mongo_saver.MongoSaver method)</a>
 </li>
       </ul></li>
+      <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.urls.UrlCrawlMeta.sents_count">sents_count (swisstext.mongo.abstract.urls.UrlCrawlMeta attribute)</a>
+</li>
       <li><a href="api/cmd/package.html#swisstext.cmd.base_config.BaseConfig.set">set() (swisstext.cmd.base_config.BaseConfig method)</a>
 </li>
       <li><a href="api/cmd/scraping/pipeline-implementation.html#swisstext.cmd.scraping.data.Page.sg_count">sg_count (swisstext.cmd.scraping.data.Page attribute)</a>
+</li>
+      <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.urls.UrlCrawlMeta.sg_sents_count">sg_sents_count (swisstext.mongo.abstract.urls.UrlCrawlMeta attribute)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-interfaces.html#swisstext.cmd.scraping.interfaces.IDecider.should_children_be_crawled">should_children_be_crawled() (swisstext.cmd.scraping.interfaces.IDecider method)</a>
 
@@ -1400,7 +1454,9 @@
     st_scrape-from_mongo command line option
 
       <ul>
-        <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-new">--new, --any</a>
+        <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-how">--how &lt;how&gt;</a>
+</li>
+        <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-what">--what &lt;what&gt;</a>
 </li>
         <li><a href="api/cmd/scraping/package.html#cmdoption-st-scrape-from-mongo-n">-n, --num-urls &lt;num_urls&gt;</a>
 </li>
@@ -1440,6 +1496,8 @@
     st_search-from_file command line option
 
       <ul>
+        <li><a href="api/cmd/searching/package.html#cmdoption-st-search-from-file-no-search">--no-search</a>
+</li>
         <li><a href="api/cmd/searching/package.html#cmdoption-st-search-from-file-arg-seedsfile">SEEDSFILE</a>
 </li>
       </ul></li>
@@ -1455,8 +1513,6 @@
       <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGenerator">StartPageGenerator (class in swisstext.cmd.searching.tools.start_page)</a>
 </li>
       <li><a href="api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory">StartPageGeneratorFactory (class in swisstext.cmd.searching.tools.start_page)</a>
-</li>
-      <li><a href="api/cmd/package.html#swisstext.cmd.link_utils.strip_sid">strip_sid() (in module swisstext.cmd.link_utils)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.swigspot_langid.SwigspotLangid">SwigspotLangid (class in swisstext.cmd.scraping.tools.swigspot_langid)</a>
 </li>
@@ -1612,6 +1668,8 @@
       <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.sentences.AbstractMongoSentence.url_id">url_id() (swisstext.mongo.abstract.sentences.AbstractMongoSentence property)</a>
 </li>
       <li><a href="api/cmd/scraping/tool-implementations.html#swisstext.cmd.scraping.tools.mongo_saver.MongoSaver.url_to_filename">url_to_filename() (swisstext.cmd.scraping.tools.mongo_saver.MongoSaver static method)</a>
+</li>
+      <li><a href="api/mongo/definitions.html#swisstext.mongo.abstract.urls.UrlCrawlMeta">UrlCrawlMeta (class in swisstext.mongo.abstract.urls)</a>
 </li>
       <li>
     URLFILE

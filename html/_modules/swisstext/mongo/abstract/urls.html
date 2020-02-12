@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -289,6 +294,13 @@
 
 <span class="kn">from</span> <span class="nn">.generic</span> <span class="k">import</span> <span class="n">Source</span><span class="p">,</span> <span class="n">CrawlMeta</span>
 
+<div class="viewcode-block" id="UrlCrawlMeta"><a class="viewcode-back" href="../../../../api/mongo/definitions.html#swisstext.mongo.abstract.urls.UrlCrawlMeta">[docs]</a><span class="k">class</span> <span class="nc">UrlCrawlMeta</span><span class="p">(</span><span class="n">CrawlMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Keep more information on the crawl &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The creation/added date, in UTC.&quot;&quot;&quot;</span>
+    <span class="n">sents_count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Number of quality sentences found on the page.&quot;&quot;&quot;</span>
+    <span class="n">sg_sents_count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Number of quality sentences spotted as GSW (new or not).&quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="AbstractMongoURL"><a class="viewcode-back" href="../../../../api/mongo/definitions.html#swisstext.mongo.abstract.urls.AbstractMongoURL">[docs]</a><span class="k">class</span> <span class="nc">AbstractMongoURL</span><span class="p">(</span><span class="n">Document</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -313,7 +325,7 @@
     <span class="n">date_added</span> <span class="o">=</span> <span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
     <span class="sd">&quot;&quot;&quot;When the URL was added to the collection, in UTC.&quot;&quot;&quot;</span>
 
-    <span class="n">crawl_history</span> <span class="o">=</span> <span class="n">EmbeddedDocumentListField</span><span class="p">(</span><span class="n">CrawlMeta</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">crawl_history</span> <span class="o">=</span> <span class="n">EmbeddedDocumentListField</span><span class="p">(</span><span class="n">UrlCrawlMeta</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
     <span class="sd">&quot;&quot;&quot;One entry for each visit of this URL by the scraper, ordered by the visit date ascending.&quot;&quot;&quot;</span>
 
     <span class="n">count</span> <span class="o">=</span> <span class="n">IntField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -363,9 +375,9 @@
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AbstractMongoURL.get_never_crawled"><a class="viewcode-back" href="../../../../api/mongo/definitions.html#swisstext.mongo.abstract.urls.AbstractMongoURL.get_never_crawled">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_never_crawled</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuerySet</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_never_crawled</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuerySet</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Get a :py:class:`~mongoengine.queryset.QuerySet` of URLs that have never been visited.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">crawl_history__size</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">crawl_history__size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AbstractMongoURL.try_delete"><a class="viewcode-back" href="../../../../api/mongo/definitions.html#swisstext.mongo.abstract.urls.AbstractMongoURL.try_delete">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">try_delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -373,15 +385,16 @@
         <span class="c1"># remove from url if it exists</span>
         <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span> <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">))</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AbstractMongoURL.add_crawl_history"><a class="viewcode-back" href="../../../../api/mongo/definitions.html#swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history">[docs]</a>    <span class="k">def</span> <span class="nf">add_crawl_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sg_count</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractMongoURL.add_crawl_history"><a class="viewcode-back" href="../../../../api/mongo/definitions.html#swisstext.mongo.abstract.urls.AbstractMongoURL.add_crawl_history">[docs]</a>    <span class="k">def</span> <span class="nf">add_crawl_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_sg_count</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sents_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sg_sents_count</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a crawl history entry. Note that this will update the document instance,</span>
 <span class="sd">        but won&#39;t persist the change to mongo. You need to call :py:meth:`mongoengine.Document.save` yourself.</span>
 
 <span class="sd">        :param new_sg_count: the number of new sentences found on this crawl.</span>
+<span class="sd">        :param kwargs: see :py:class:`~UrlCrawlMeta`</span>
 <span class="sd">        :return: self</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">meta</span> <span class="o">=</span> <span class="n">CrawlMeta</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">new_sg_count</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="nb">hash</span><span class="p">)</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">UrlCrawlMeta</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">new_sg_count</span><span class="p">,</span> <span class="nb">hash</span><span class="o">=</span><span class="nb">hash</span><span class="p">,</span> <span class="n">sents_count</span><span class="o">=</span><span class="n">sents_count</span><span class="p">,</span> <span class="n">sg_sents_count</span><span class="o">=</span><span class="n">sg_sents_count</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">crawl_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="n">new_sg_count</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">count</span>

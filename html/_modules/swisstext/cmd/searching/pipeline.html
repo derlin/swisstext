@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -270,11 +275,15 @@
 <span class="sd">This module contains the core of the searching system.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">..link_utils</span> <span class="k">import</span> <span class="n">filter_links</span>
+<span class="kn">from</span> <span class="nn">..link_utils</span> <span class="k">import</span> <span class="n">filter_links</span><span class="p">,</span> <span class="n">fix_url</span>
 <span class="kn">from</span> <span class="nn">.data</span> <span class="k">import</span> <span class="n">Seed</span>
-<span class="kn">from</span> <span class="nn">.interfaces</span> <span class="k">import</span> <span class="n">ISearcher</span><span class="p">,</span> <span class="n">ISaver</span>
+<span class="kn">from</span> <span class="nn">.interfaces</span> <span class="k">import</span> <span class="n">IQueryBuilder</span><span class="p">,</span> <span class="n">ISearcher</span><span class="p">,</span> <span class="n">ISaver</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="SearchEngine"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine">[docs]</a><span class="k">class</span> <span class="nc">SearchEngine</span><span class="p">:</span>
@@ -284,28 +293,98 @@
 <span class="sd">    Note that this class is usually instantiated by a :py:class:`~swisstext.cmd.searching.config.Config` object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SearchEngine.__init__"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">searcher</span><span class="p">:</span> <span class="n">ISearcher</span><span class="p">,</span> <span class="n">saver</span><span class="p">:</span> <span class="n">ISaver</span><span class="p">):</span>
+<div class="viewcode-block" id="SearchEngine.__init__"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_builder</span><span class="p">:</span> <span class="n">IQueryBuilder</span><span class="p">,</span> <span class="n">searcher</span><span class="p">:</span> <span class="n">ISearcher</span><span class="p">,</span> <span class="n">saver</span><span class="p">:</span> <span class="n">ISaver</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_builder</span> <span class="o">=</span> <span class="n">query_builder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">searcher</span> <span class="o">=</span> <span class="n">searcher</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saver</span> <span class="o">=</span> <span class="n">saver</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1">#: the list of URLs discovered during the lifetime of the object</span></div>
 
-<div class="viewcode-block" id="SearchEngine.process"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Seed</span><span class="p">],</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="SearchEngine.process"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seeds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Seed</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Do the magic.</span>
 
 <span class="sd">        Note that this method was not been implemented with multithreading in mind, as most of the time</span>
 <span class="sd">        search engine APIs are limited and pretty fast...</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">added_urls</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">new_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">filter_links</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">searcher</span><span class="o">.</span><span class="n">top_results</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">,</span> <span class="n">max_results</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="n">link</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">link_exists</span><span class="p">(</span><span class="n">link</span><span class="p">):</span>
-                        <span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-                        <span class="n">added_urls</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">added_urls</span></div></div>
+            <span class="n">new_count</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_one</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_count</span></div>
+
+<div class="viewcode-block" id="SearchEngine.process_one"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.process_one">[docs]</a>    <span class="k">def</span> <span class="nf">process_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Seed</span><span class="p">,</span> <span class="n">max_results</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_fetches</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process one seed. Note that if called multiple times, the previous results</span>
+<span class="sd">        are still saved in :py:attr:`SearchEngine.new_urls` so duplicate URLs will be skipped.</span>
+
+<span class="sd">        :param seed: the seed to search for</span>
+<span class="sd">        :param max_results: the target number of URLs to find</span>
+<span class="sd">        :param max_fetches: the maximum number of URLs fetched from the search engine</span>
+<span class="sd">        :return: a list of URLs, with 0 &lt;= length &lt;= max_results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_builder</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">links_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Searching seed=&#39;</span><span class="si">{seed.query}</span><span class="s2">&#39;, query=&#39;</span><span class="si">{query}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">raw_counter</span><span class="p">,</span> <span class="n">raw_link</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">searcher</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)):</span>
+            <span class="c1"># check the link first</span>
+            <span class="n">link</span><span class="p">,</span> <span class="n">ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_link</span><span class="p">(</span><span class="n">raw_link</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
+                <span class="c1"># == got a new link !! save it</span>
+                <span class="n">seed</span><span class="o">.</span><span class="n">new_links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+                <span class="n">links_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># == check the end of iterations</span>
+                <span class="k">if</span> <span class="n">links_counter</span> <span class="o">&gt;=</span> <span class="n">max_results</span><span class="p">:</span>
+                    <span class="c1"># don&#39;t pull more than the given limit</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;reached max results </span><span class="si">{max_results}</span><span class="s1">.&#39;</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">max_fetches</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">raw_counter</span> <span class="o">&gt;=</span> <span class="n">max_fetches</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;reached max fetches </span><span class="si">{max_fetches}</span><span class="s1">.&#39;</span><span class="p">)</span>
+                    <span class="c1"># we didn&#39;t get as many results as expected,</span>
+                    <span class="c1"># but we stop anyhow (hence avoid too many API calls)</span>
+                    <span class="k">break</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">was_used</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;  found {len(seed.new_links)} new URLs.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">links_counter</span></div>
+
+<div class="viewcode-block" id="SearchEngine.check_link"><a class="viewcode-back" href="../../../../api/cmd/searching/pipeline-implementation.html#swisstext.cmd.searching.pipeline.SearchEngine.check_link">[docs]</a>    <span class="k">def</span> <span class="nf">check_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_link</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Potentially &quot;fix&quot; the url (see :py:mod:`~swisstext.cmd.link_utils`) and check that</span>
+<span class="sd">        is is unique (not found on a previous search with this instance and not already present</span>
+<span class="sd">        in the backend). Turn on debug to follow what is going on.</span>
+
+<span class="sd">        :param raw_link: the raw URL (must be absolute)</span>
+<span class="sd">        :return: a tuple with the fixed URL and a &quot;ok&quot; flag</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># &quot;fix&quot; the URL we got</span>
+        <span class="n">link</span><span class="p">,</span> <span class="n">ok</span> <span class="o">=</span> <span class="n">fix_url</span><span class="p">(</span><span class="n">raw_link</span><span class="p">)</span>
+
+        <span class="c1"># == first basic checks</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="c1"># the link is &quot;blacklisted&quot; by the link_utils module</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;  NOT OK: </span><span class="si">{link}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">link</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_urls</span><span class="p">:</span>
+            <span class="c1"># the link is already in the previous results</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;     DUP: </span><span class="si">{link}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># == query the saver</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">link_exists</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">ISaver</span><span class="o">.</span><span class="n">LinkStatus</span><span class="o">.</span><span class="n">BLACKLISTED</span><span class="p">:</span>
+                <span class="c1"># the link has been blacklisted</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39; BLCKLST: </span><span class="si">{link}</span><span class="s1">.&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">ISaver</span><span class="o">.</span><span class="n">LinkStatus</span><span class="o">.</span><span class="n">EXISTS</span><span class="p">:</span>
+                <span class="c1"># the link is already in the DB</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;   DUP_S: </span><span class="si">{link}</span><span class="s1">.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># all checks are preformed</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;   SAVED: </span><span class="si">{link}</span><span class="s1">.&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">link</span><span class="p">,</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">link</span><span class="p">,</span> <span class="kc">False</span></div></div>
 </pre></div>
 
            </div>

@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -277,10 +282,11 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span> <span class="k">as</span> <span class="n">Soup</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">up</span>
 
 <span class="c1"># link to the search startpage</span>
 <span class="kn">from</span> <span class="nn">..interfaces</span> <span class="k">import</span> <span class="n">ISearcher</span>
@@ -292,6 +298,7 @@
 <span class="n">_DEFAULT_PARAMS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cat</span><span class="o">=</span><span class="s1">&#39;web&#39;</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;process_search&#39;</span><span class="p">,</span> <span class="n">dgf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hmb</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pl</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ff</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="c1"># CSS selector used to retrieve all the results links from startpage</span>
 <span class="n">_RESULT_LINK_CSS_SELECTOR</span> <span class="o">=</span> <span class="s1">&#39;a[class$=&quot;result-url&quot;]&#39;</span>
+
 <span class="c1"># regex excluding some URLs we know are not interested</span>
 <span class="n">excludes</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;www.youtube.com&#39;</span><span class="p">,</span>
@@ -302,32 +309,21 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="StartPageGeneratorFactory"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory">[docs]</a><span class="k">class</span> <span class="nc">StartPageGeneratorFactory</span><span class="p">(</span><span class="n">ISearcher</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implementation of a searcher using startpage. Its usage is similar to the factory described in the</span>
-<span class="sd">    :py:mod:`~swisstext.cmd.searching.tools.google_search` module.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="StartPageGeneratorFactory.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="StartPageGeneratorFactory.search"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">StartPageGenerator</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="StartPageGenerator"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGenerator">[docs]</a><span class="k">class</span> <span class="nc">StartPageGenerator</span><span class="p">:</span>
+<div class="viewcode-block" id="StartPageGenerator"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGenerator">[docs]</a><span class="k">class</span> <span class="nc">StartPageGenerator</span><span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A new generator is created for each query. Its usage is similar to the generator described in the</span>
 <span class="sd">    :py:mod:`~swisstext.cmd.searching.tools.google_search` module.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="StartPageGenerator.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGenerator.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36&#39;</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">_DEFAULT_PARAMS</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_offset</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">_DEFAULT_PARAMS</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>  <span class="c1">#: parameters for the first search</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of links found on the current page and not yet consumed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_page</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># counter that reflects the current page we are returning the results from</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># true if there is a next page</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># keep track of the parameters for fetching the next page</span></div>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -349,29 +345,36 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_form</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_page</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;Page is 0 but _form is not None&#39;</span>
             <span class="c1"># first request, do a simple get to fetch page 1</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_SEARCH_LINK</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_form</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;There is no form, but page counter is at </span><span class="si">{self._current_page}</span><span class="s1">&#39;</span>
             <span class="c1"># not the first request, use a POST with the navigation form</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;startat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_offset</span>  <span class="c1"># update the page</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
+
+        <span class="c1"># update page</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_page</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Fetched page </span><span class="si">{self._current_page}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># get data</span>
         <span class="n">soup</span> <span class="o">=</span> <span class="n">Soup</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_links</span><span class="p">(</span><span class="n">soup</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_offset</span> <span class="o">+=</span> <span class="mi">10</span>
 
         <span class="c1"># get the navigation form for further queries</span>
-        <span class="n">forms</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;#jumpsbar form&#39;</span><span class="p">)</span>
+        <span class="n">forms</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;form:has(input[id=&quot;page&quot;][value=&quot;{self._current_page + 1}&quot;])&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">forms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># not more data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_has_next</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Page </span><span class="si">{self._current_page}</span><span class="s1"> is the last one.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;action&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">_SEARCH_LINK</span><span class="p">,</span> <span class="n">forms</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;action&#39;</span><span class="p">])</span>
             <span class="n">form_data</span> <span class="o">=</span> <span class="p">[(</span><span class="n">hidden</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">hidden</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">hidden</span> <span class="ow">in</span> <span class="n">forms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;input[type=hidden]&#39;</span><span class="p">)]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">form_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">form_data</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="s1">&#39;page&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="ow">and</span> \
+                   <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_page_form</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;page&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_page</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_get_links</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soup</span><span class="p">:</span> <span class="n">Soup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -392,6 +395,19 @@
 <span class="sd">        :return: False if the link should be excluded from the results</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span> <span class="k">for</span> <span class="n">exc</span> <span class="ow">in</span> <span class="n">excludes</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="StartPageGeneratorFactory"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory">[docs]</a><span class="k">class</span> <span class="nc">StartPageGeneratorFactory</span><span class="p">(</span><span class="n">ISearcher</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a searcher using startpage. Its usage is similar to the factory described in the</span>
+<span class="sd">    :py:mod:`~swisstext.cmd.searching.tools.google_search` module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StartPageGeneratorFactory.__init__"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="StartPageGeneratorFactory.search"><a class="viewcode-back" href="../../../../../api/cmd/searching/tool-implementations.html#swisstext.cmd.searching.tools.start_page.StartPageGeneratorFactory.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StartPageGenerator</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">StartPageGenerator</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

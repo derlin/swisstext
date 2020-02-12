@@ -93,7 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting-started/confs.html">Configuration options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#current-best-pipeline-configuration">Current ?best? pipeline configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-default-tools">Using default tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../getting-started/confs.html#using-extra-tools">Using extra tools</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../getting-started/confs.html#tool-dependencies">Tool dependencies</a></li>
 </ul>
 </li>
@@ -126,6 +130,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.norm_punc">Normalizers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.punkt_splitter">Splitters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.pattern_sentence_filter">Sentence Filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#link-filters">Link Filters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.swigspot_langid">Language Detectors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../api/cmd/scraping/tool-implementations.html#module-swisstext.cmd.scraping.tools.console_saver">Savers</a></li>
 </ul>
@@ -338,6 +343,7 @@
                  <span class="nb">filter</span><span class="p">:</span> <span class="n">ISentenceFilter</span><span class="p">,</span>
                  <span class="n">detector</span><span class="p">:</span> <span class="n">ISgDetector</span><span class="p">,</span>
                  <span class="n">seeder</span><span class="p">:</span> <span class="n">ISeedCreator</span><span class="p">,</span>
+                 <span class="n">url_filter</span><span class="p">:</span> <span class="n">IUrlFilter</span><span class="p">,</span>
                  <span class="n">decider</span><span class="p">:</span> <span class="n">IDecider</span><span class="p">,</span>
                  <span class="n">saver</span><span class="p">:</span> <span class="n">ISaver</span><span class="p">,</span>
                  <span class="n">min_proba</span><span class="o">=</span><span class="mf">0.85</span><span class="p">):</span>
@@ -347,6 +353,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">:</span> <span class="n">ISentenceFilter</span> <span class="o">=</span> <span class="nb">filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="p">:</span> <span class="n">ISgDetector</span> <span class="o">=</span> <span class="n">detector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seeder</span><span class="p">:</span> <span class="n">ISeedCreator</span> <span class="o">=</span> <span class="n">seeder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url_filter</span><span class="p">:</span> <span class="n">IUrlFilter</span> <span class="o">=</span> <span class="n">url_filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saver</span><span class="p">:</span> <span class="n">ISaver</span> <span class="o">=</span> <span class="n">saver</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">decider</span><span class="p">:</span> <span class="n">IDecider</span> <span class="o">=</span> <span class="n">decider</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_proba</span> <span class="o">=</span> <span class="n">min_proba</span></div></div>
@@ -429,14 +436,14 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">]: processing </span><span class="si">{page.url}</span><span class="s1"> (depth=</span><span class="si">{page_depth}</span><span class="s1">)&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">page_depth</span> <span class="o">&gt;</span> <span class="n">max_depth</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">]: reached max depth for recursive scraping (still ${queue.qsize()} links in queue).&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">]: reached max depth for recursive scraping (still {queue.qsize()} links in queue).&#39;</span><span class="p">)</span>
                 <span class="k">break</span>
 
             <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">decider</span><span class="o">.</span><span class="n">should_page_be_crawled</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crawl_page</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">crawler</span><span class="p">,</span> <span class="n">page</span><span class="p">)</span>
                     <span class="n">page</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                    <span class="n">splitted</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">splitted</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_uniq</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
                     <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">splitted</span><span class="p">)</span>
 
                     <span class="n">page</span><span class="o">.</span><span class="n">sentence_count</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># count all the sentences found</span>
@@ -462,7 +469,8 @@
                         <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">save_page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">decider</span><span class="o">.</span><span class="n">should_children_be_crawled</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
                             <span class="n">added_children</span> <span class="o">=</span> <span class="mi">0</span>
-                            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">links</span><span class="p">:</span>
+                            <span class="n">links</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">url_filter</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">crawl_results</span><span class="o">.</span><span class="n">links</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">is_url_blacklisted</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
                                     <span class="n">child_page</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">parent_url</span><span class="o">=</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
                                     <span class="c1"># TODO redondant ?</span>
@@ -472,7 +480,6 @@
                             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">] </span><span class="si">{page.url}</span><span class="s1">: added </span><span class="si">{added_children}</span><span class="s1"> child URLs&#39;</span><span class="p">)</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="c1"># TODO blacklist url ?</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">ICrawler</span><span class="o">.</span><span class="n">CrawlError</span><span class="p">):</span>
                         <span class="n">p</span><span class="o">.</span><span class="n">saver</span><span class="o">.</span><span class="n">blacklist_url</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">]: exception -- </span><span class="si">{e}</span><span class="s1">. </span><span class="si">{page.url}</span><span class="s1"> blacklisted.&#39;</span><span class="p">)</span>
@@ -485,7 +492,14 @@
             <span class="n">queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">]: my job is done.&#39;</span><span class="p">)</span></div></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;W[</span><span class="si">{self.id}</span><span class="s1">]: my job is done.&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_uniq</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+        <span class="c1"># remove duplicates from a list while preserving order</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seq</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span></div>
 </pre></div>
 
            </div>
