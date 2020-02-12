@@ -11,7 +11,6 @@ The :mod:`swisstext` namespace contains the following:
    * :mod:`scraping <swisstext.cmd.scraping>`: scrape the web and discover new Swiss German sentences;
 
 - Package ``frontend``: a Flask application for visualisation and labelling;
-- Package :mod:`alswiki <swisstext.cmd.alswiki>`: a commandline tool to extract sentences from wikipedia dumps.
 
 .. toctree::
     :caption: packages
@@ -21,4 +20,3 @@ The :mod:`swisstext` namespace contains the following:
     cmd/scraping/package
     cmd/searching/package
     mongo/package
-    alswiki/package
