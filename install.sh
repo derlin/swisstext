@@ -22,7 +22,7 @@ while getopts "h?d" opt; do
 done
 
 dirs="mongo backend frontend"
-
+cd src
 for dir in $dirs; do
     cd $dir
     echo "======== installing $dir ..."
@@ -33,3 +33,4 @@ for dir in $dirs; do
     $cmd; [ $? -ne 0 ] && echo Something went wrong. Stopping... && exit 1
     cd ..
 done
+cd ..
