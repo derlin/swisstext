@@ -91,7 +91,7 @@ class StartPageGenerator(Iterable[str]):
         self._current_results.extend(self._get_links(soup))
 
         # get the navigation form for further queries
-        forms = soup.select(f'form:has(input[id="page"][value="{self._current_page + 1}"])')
+        forms = soup.select(f'form:has(input[name="page"][value="{self._current_page + 1}"])')
         if len(forms) == 0:
             # not more data
             self._has_next = False
