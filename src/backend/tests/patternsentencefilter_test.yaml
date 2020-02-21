@@ -1,0 +1,19 @@
+- min_length:
+  descr: too short
+  length:
+    min: 1
+
+- only_letters_and_spaces:
+  descr: only lowercase letters and spaces
+  find:
+    pattern: '[^a-z ]'
+    count:
+      max: 0
+
+- as_much_space_as_letters:
+  descr: space ratio
+  compare:
+    num: ' '
+    denom: '[^ ]'
+    ratio:
+      min: 0.5

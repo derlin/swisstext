@@ -41,5 +41,9 @@ setuptools.setup(
         "click>=6.7",
         "jusText==2.2.0",
         "ftfy"
+    ],
+    tests_require=[
+        'pytest',
+        'pytest-check'
     ]
 )

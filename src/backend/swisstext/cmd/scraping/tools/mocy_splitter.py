@@ -51,9 +51,9 @@ class MocySplitter(ISplitter):
 
     """
 
-    def __init__(self, langs=None, prefix_file=None, more=True, keep_newlines=True):
+    def __init__(self, langs=('en', 'de'), prefix_file=None, more=True, keep_newlines=True):
         """
-        :param lang: a List[str] of language(s) for nonbreaking_prefix file to load (default: en, de)
+        :param lang: an Iterable[str] of language(s) for nonbreaking_prefix file to load (default: en, de)
         :param prefix_file: path to a custom nonbreaking_prefix file
         :param more: if set, systematically split on ``:;``
         :param keep_newlines: if set, treat newlines as paragraph delimiters that will be preserved.
@@ -61,7 +61,7 @@ class MocySplitter(ISplitter):
             (Moses original behavior, see :py:meth:`split`).
 
         """
-        self.langs = langs if langs is not None else ['en', 'de']  #: nonbreaking prefixes files to load
+        self.langs = langs  #: nonbreaking prefixes files to load
         self.more = more  #: whether or not to split on ``:;``
         self.nb_prefixes = self.load_nb_prefixes(self.langs, prefix_file)  #: nonbreaking prefix lookup table
         self.keep_newlines = keep_newlines
@@ -213,6 +213,10 @@ class MocySplitter(ISplitter):
         if prefix_file is not None:
             print(f'Using custom prefix file: {prefix_file}', file=sys.stderr)
             return cls._read_prefix_file(prefix_file)
+        elif langs is None:
+            # nothing to do
+            logger.warning('No prefixes loaded.')
+            return dict()
 
         this_dir = os.path.dirname(os.path.realpath(__file__))
         prefix_file_pattern = os.path.join(this_dir, 'moses_splitter_prefixes.{}.txt')

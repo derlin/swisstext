@@ -23,6 +23,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ),
     install_requires=[
-        "mongoengine>=0.15.0",
+        "mongoengine<0.19,>=0.18",
     ],
 )

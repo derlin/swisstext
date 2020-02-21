@@ -46,7 +46,6 @@ normalization_patterns = [
         (REG, r'([^\u0084]?)\uFFFD+', r'\1'),
         # normalize unicode punctuation
         (STR, '`', "'"),
-        (STR, "''", ' " '),
         (STR, '„', '"'),
         (STR, '“', '"'),
         (STR, '”', '"'),
@@ -56,6 +55,7 @@ normalization_patterns = [
         (REG, r'([^\W\d_])[‘’]([^\W\d_])', r"\1'\2"),  # I
         (STR, '‘', '"'),
         (STR, '’', '"'),
+        (STR, '‛', '"'),
         (STR, u'\u0092', "'"),
         (STR, u'\u0093', '"'),
         (STR, '‚', '"'),
@@ -84,13 +84,14 @@ normalization_patterns = [
         (STR, '\u00A0?', '?'),
         (STR, '\u00A0!', '!'),
         (STR, '\u00A0;', ';'),
+        # numbers
+        (REG, r'(\d)[\u00A0,](\d)', r'\1\2'),  # remove non-breakable spaces or "," in numbers
+        # German/Spanish/French "quotation", followed by comma, style
+        (REG, r'(\.+)"(\s*[^<])', r'"\1\2'),  # don't fix period at end of sentence TODO: what ??
+        (STR, ',"', '",'),
         # ensure , is not left alone
         (STR, ' ,', ','),
         (STR, ',', ', '),
-        # German/Spanish/French "quotation", followed by comma, style
-        (STR, ',"', '",'),
-        (REG, r'(\.+)"(\s*[^<])', r'"\1\2'),  # don't fix period at end of sentence
-        (REG, r'(\d)\u00A0(\d)', r'\1,\2'),
         # normalize space
         (REG, spaces_pattern, ' '),
         # normalize spaces

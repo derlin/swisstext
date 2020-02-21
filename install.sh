@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 editable_mode=''
-install_extra=''
 
 function show_help {
 cat <<'EOF'
@@ -22,9 +21,9 @@ while getopts "h?d" opt; do
 done
 
 dirs="mongo backend frontend"
-cd src
+cd src || exit
 for dir in $dirs; do
-    cd $dir
+    cd $dir || exit
     echo "======== installing $dir ..."
 
     cmd="pip install $editable_mode ."

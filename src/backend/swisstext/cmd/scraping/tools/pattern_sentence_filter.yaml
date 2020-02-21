@@ -213,9 +213,9 @@
     count:
       min: 1
   examples:
-    - 'Mal luege, ob/wänn die nöchst Chance chunt.'
-  counterexamples:
     - 'gspannt pfarrer Zuletzt natürlich hochzyt Morelia similein Location janedoe richtig chleider eigentlich irgendwie santhia bearbeitet'
+  counterexamples:
+    - 'Mal luege, ob/wänn die nöchst Chance chunt.'
 
 - too_many_caps:
   descr: too many caps (upper/(lower+1)) > 1.5
