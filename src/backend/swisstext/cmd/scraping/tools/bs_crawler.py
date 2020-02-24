@@ -3,23 +3,13 @@ This module contains the implementation of a :py:class:`~swisstext.cmd.scraping.
 that uses BeautifulSoup to extract text and links.
 """
 import logging
-from typing import List, Generator, Tuple, Union
+from typing import Generator, Tuple
 
-import requests
 from bs4 import BeautifulSoup
-
-from ..interfaces import ICrawler
 from swisstext.cmd.link_utils import filter_links
 
-# suppress warning for invalid SSL certificates
-requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-
-#: Headers passed with each request
-DEFAULT_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36'}
-
-#: Timeout used in requests.get
-GET_TIMEOUT = 60
+from ..interfaces import ICrawler
+from .. import crawler_utils
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +48,7 @@ class BsCrawler(ICrawler):
             links=links)
 
     @classmethod
-    def get_content(cls, url) -> Tuple[bytes,str]:
+    def get_content(cls, url) -> Tuple[bytes, str]:
         """
         Get the raw content from a URL (as a string), with the response encoding as reported by the requests module.
         Exceptions may be raised if:
@@ -67,9 +57,7 @@ class BsCrawler(ICrawler):
         * the response body is empty
         """
         try:
-            # ignore SSL certificates
-            resp = requests.get(url, verify=False, stream=True, headers=DEFAULT_HEADERS, timeout=GET_TIMEOUT)
-            content = resp.content  # trigger content decoding to catch ContentDecodingError as well
+            resp = crawler_utils.do_get(url)
         except Exception as e:
             # here, don't use from_ex so we can trim the error message
             raise ICrawler.CrawlError(name=e.__class__.__name__, message=str(e)[:50])
@@ -84,11 +72,11 @@ class BsCrawler(ICrawler):
             raise ICrawler.CrawlError(name='CtypeError', message=f'{url} not HTML (ctype={ctype})')
 
         # also test the .text, so that we avoid returning content with only unprintable chars, e.g. b'\xef\xbb\xbf'
-        if len(content) == 0 or len(resp.text.strip()) == 0:
+        if len(resp.content) == 0 or len(resp.text.strip()) == 0:
             raise ICrawler.CrawlError(name=f'EmptyDocumentError', message='Content is empty.')
 
         # the resp.encoding is an educated guess about the encoding of the response based on the HTTP headers
-        return content, resp.encoding
+        return resp.content, resp.encoding
 
     @classmethod
     def get_soup(cls, url) -> Tuple[BeautifulSoup, bytes]:
