@@ -18,7 +18,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 __all__ = ['do_get']
 
-if os.getenv('RENDER_JS', '0').lower().strip() in ['1', 'true', 'yes', 'y']:
+if os.getenv('RENDER_JS', '0').lower().strip() not in ['0', 'no', 'n', 'off']:
 
     try:
         import websockets
@@ -53,28 +53,43 @@ if os.getenv('RENDER_JS', '0').lower().strip() in ['1', 'true', 'yes', 'y']:
         class JsRenderer:
 
             def __init__(self, loop=None, headless=True, ignoreHTTPSErrors=True, browser_args=['--no-sandbox']):
-                self.loop = loop or asyncio.get_event_loop()
-                self.__browser_args = dict(
-                    headless=headless, dumpio=True, ignoreHTTPSErrors=ignoreHTTPSErrors, args=browser_args)
+                # the loop will be attached to the thread calling init
+                self.loop = loop or asyncio.new_event_loop()
+                self.__browser_args = dict(headless=headless, ignoreHTTPSErrors=ignoreHTTPSErrors, args=browser_args)
+                self.__lock = threading.Lock()
 
             @property
             async def _async_browser(self):
                 if not hasattr(self, "_browser"):
-                    self._browser = await pyppeteer.launch(**self.__browser_args)
+                    self._browser = await pyppeteer.launch(
+                        # avoid exception "signal only works in main thread"
+                        # see https://stackoverflow.com/a/54030151
+                        handleSIGINT=False,
+                        handleSIGTERM=False,
+                        handleSIGHUP=False,
+                        devtools=False,
+                        # if not set, will freeze after ~12 requests
+                        # see https://github.com/miyakogi/pyppeteer/issues/167#issuecomment-442389039
+                        # note that another way to avoid too much output AND the bug is to change line 165 of
+                        # pyppeteer's launcher.py:
+                        #    options['stderr'] = subprocess.DEVNULL # vs subprocess.STDOUT
+                        dumpio=True,
+                        logLevel='ERROR',
+                        **self.__browser_args)
                 return self._browser
 
             @property
             def browser(self):
                 if not hasattr(self, "_browser"):
-                    self.loop = asyncio.get_event_loop()
-                    if self.loop.is_running():
-                        raise RuntimeError("Cannot use jsRenderer within an existing event loop.")
+                    # self.loop = asyncio.get_event_loop()
+                    # if self.loop.is_running():
+                    #    raise RuntimeError("Cannot use jsRenderer within an existing event loop.")
                     self._browser = self.loop.run_until_complete(self._async_browser)
                 return self._browser
 
             async def _async_render(self, url, wait=0.2, timeout=60, waitUntil='networkidle0', **kwargs):
                 try:
-                    page = await self.browser.newPage()
+                    page = await (await self._async_browser).newPage()
                     # Wait before rendering the page, to prevent timeouts.
                     await asyncio.sleep(wait)
                     # Load the given page (GET request, obviously.)
@@ -92,40 +107,39 @@ if os.getenv('RENDER_JS', '0').lower().strip() in ['1', 'true', 'yes', 'y']:
                     return None
 
             def render(self, url, retries=1, **kwargs):
-                response = None
-                for i in range(retries):
-                    try:
-                        response = self.loop.run_until_complete(self._async_render(url=url, **kwargs))
-                        if response is not None:
-                            break
-                    except TypeError:
-                        pass
+                try:
+                    self.__lock.acquire()
+                    response = None
+                    for i in range(retries):
+                        try:
+                            response = self.loop.run_until_complete(self._async_render(url=url, **kwargs))
+                            if response is not None:
+                                break
+                        except TypeError:
+                            pass
 
-                if not response:
-                    raise Exception("Unable to render the page. Try increasing timeout")
-                return response
+                    if not response:
+                        raise Exception("Unable to render the page. Try increasing timeout")
+                    return response
+                finally:
+                    self.__lock.release()
 
 
-        # This is to avoid `RuntimeError: There is no current event loop in thread 'XXX'.` when using threads.
-        # See https://github.com/psf/requests-html/issues/155#issuecomment-377723137
-        _RENDERER = JsRenderer()
-        _ = _RENDERER.browser
-        _LOCK = threading.Lock()
+        from collections import defaultdict
+
+        if os.getenv('RENDER_JS', '0') == '2':
+            _RENDERER = defaultdict(lambda: JsRenderer())
+        else:
+            renderer = JsRenderer()
+            _RENDERER = defaultdict(lambda: renderer)
 
 
         def do_get(url, headers=None, timeout=RENDER_TIMEOUT):  # -> Response
             if headers is None:
                 headers = dict()
             headers.setdefault('User-Agent', DEFAULT_USER_AGENT)
-
-            try:
-                while not _LOCK.acquire(timeout=60 * 2):
-                   logger.debug(f'@{threading.currentThread().name} still waiting for lock after 2 minutes')
-                print(f'@{threading.currentThread().name} got lock: {url}')
-                resp = _RENDERER.render(url, timeout=timeout)
-            finally:
-                logger.debug(f'@{threading.currentThread().name} releasing lock')
-                _LOCK.release()
+            renderer = _RENDERER[threading.current_thread().name]
+            resp = renderer.render(url, timeout=timeout)
 
             return resp
 
