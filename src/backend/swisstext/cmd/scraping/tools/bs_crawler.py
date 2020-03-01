@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from swisstext.cmd.link_utils import filter_links
 
 from ..interfaces import ICrawler
-from .. import crawler_utils
+from get_html.env_defined_get import do_get
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class BsCrawler(ICrawler):
         * the response body is empty
         """
         try:
-            resp = crawler_utils.do_get(url)
+            resp = do_get(url)
         except Exception as e:
             # here, don't use from_ex so we can trim the error message
             raise ICrawler.CrawlError(name=e.__class__.__name__, message=str(e)[:50])

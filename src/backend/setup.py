@@ -40,7 +40,8 @@ setuptools.setup(
         "regex",
         "click>=6.7",
         "jusText==2.2.0",
-        "ftfy"
+        "ftfy",
+        "get-html"
     ],
     tests_require=[
         'pytest',
