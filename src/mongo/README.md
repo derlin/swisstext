@@ -20,6 +20,7 @@ The available collections are:
 * `urls`: the URLs clawled so far that contained _at least one_ Swiss German sentence,
 * `blacklist`: all other URLs crawled,
 * `users`: the users and their roles (for the frontend)
+* `text`: the "raw" texts (after crawling, but before normalization)
 
 ## About the code
 
