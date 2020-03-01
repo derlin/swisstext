@@ -1,4 +1,4 @@
-# SwissText
+# SwissText (LREC branch, v0.4)
 
 This branch is SwissText frozen at version **v0.4**, with minor bug fixes that do not impact the overall behavior. 
 v0.4 is the one used for the creation of **[SwissCrawl](https://icosys.ch/swisscrawl)**, a corpus of 500,000 Swiss German sentences. 
