@@ -71,7 +71,8 @@ class AbstractMongoURL(Document):
     """The date of the last visit (same as ``crawl_history[-1].date``). Inexistant if the URL was never crawled."""
 
     meta = {'collection': 'urls', 'abstract': True, 'indexes': [
-        {'fields': ['#url', 'source.extra']}  # add a hashed index on URL / one for speeding up seeds view in frontend
+        {'fields': ['#url']}, # add a hashed index on URL
+        {'fields': ['source.extra']}  # one for speeding up seeds view in frontend
     ]}
 
     @staticmethod
